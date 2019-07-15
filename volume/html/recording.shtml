@@ -1,0 +1,46 @@
+<div id="pg-recording" style="height:100%;display:none">
+
+  <table class="unstriped" style="table-layout:fixed;margin:0"><tbody>
+    <tr style="border:0">
+        <td style="position:relative;vertical-align:top;padding:0;display:none" layout1>
+            <video controls="true" autoplay muted>
+                <source type="video/mp4"/>
+            </video>
+            <div style="display:block;position:absolute;top:0;left:0;opacity:0.9;background-color:white;pointer-events:none"></div>
+            <svg style="position:absolute;top:0;left:0;pointer-events:none" xmlns="http://www.w3.org/2000/svg" />
+        </td>
+        <td style="position:relative;vertical-align:top;padding:0" layout4>
+            <video controls="true" autoplay muted>
+                <source type="video/mp4"/>
+            </video>
+            <div style="display:block;position:absolute;top:0;left:0;opacity:0.9;background-color:white"></div>
+        </td>
+        <td style="position:relative;vertical-align:top;padding:0" layout4>
+            <video controls="true" autoplay muted>
+                <source type="video/mp4"/>
+            </video>
+            <div style="display:block;position:absolute;top:0;left:0;opacity:0.9;background-color:white"></div>
+        </td>
+        <td style="width:20%;height:100%;vertical-align:top;padding:0" rowspan=2 playlist-section>
+            <table class="unstripped" style="table-layout:fixed;margin:0">
+                <tbody play-list style="display:block;height:100%;border:0;overflow:auto"></tbody>
+            </table>
+        </td>
+    </tr>
+    <tr style="border:0">
+        <td style="position:relative;vertical-align:top;padding:0" layout4>
+            <video controls="true" autoplay muted>
+                <source type="video/mp4"/>
+            </video>
+            <div style="display:block;position:absolute;top:0;left:0;opacity:0.9;background-color:white"></div>
+        </td>
+        <td style="position:relative;vertical-align:top;padding:0" layout4>
+            <video controls="true" autoplay muted>
+                <source type="video/mp4"/>
+            </video>
+            <div style="display:block;position:absolute;top:0;left:0;opacity:0.9;background-color:white"></div>
+        </td>
+    </tr>
+  </tbody></table>
+
+</div>

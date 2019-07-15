@@ -1,0 +1,3 @@
+paho-mqtt
+ply
+watchdog

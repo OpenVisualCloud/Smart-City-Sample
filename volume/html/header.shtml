@@ -1,0 +1,72 @@
+<div class="top-bar" style="background-color:#0071c5">
+  <div class="top-bar-left">
+    <ul class="menu" style="background-color:#0071c5">
+      <li class="menu-text">
+        <h4 id="header-text" style="color:#FDEDEC">Smart City E2E Pipeline<span id="header-alert"></span></h4>
+      </li>
+    </ul>
+  </div>
+  <div class="top-bar-right">
+    <ul class="menu" style="background-color:#0071c5;bottom:-8px">
+      <li style="min-width:400px"><input id="homeSearch" type="search" placeholder="Search" style="max-width:100%" autocomplete="off"></li>
+      <li><div class="button-group">
+        <button class="button tiny" id="homeButton"><i class="fi-home" style="font-size:1rem"></i></button>
+        <button class="button tiny" id="layoutButton" style="display:none"><i class="fi-arrows-in" style="font-size:1rem"></i></button>
+        <button class="button tiny" id="cloudButton" style="display:none"><i class="fi-cloud" style="font-size:1rem"></i></button>
+        <button class="button tiny" data-open="settingPanel"><i class="fi-wrench" style="font-size:1rem"></i></button>
+      </div></li>
+    </ul>
+  </div>
+
+  <div hint-panel style="position:absolute;line-height:1.2em;background-color:white;z-index:9999;overflow:hidden;display:none;font-size:small">
+  </div>
+</div>
+
+<div class="reveal" id="settingPanel" data-reveal>
+  <button class="close-button" data-close aria-label="Close modal" type="button">
+    <span aria-hidden="true">&times;</span>
+  </button>
+
+  <BR>
+
+  <div class="input-group">
+    <span class="input-group-label" style="width:40%"><b>Map Radius (m):</b></span>
+    <input class="input-group-field" id="mapRadius" type="number" value=2000000>
+  </div>
+
+  <div class="input-group">
+    <span class="input-group-label" style="width:40%"><b>Sensor Update (ms):</b></span>
+    <input class="input-group-field" id="sensorUpdate" type="number" value=2000>
+  </div>
+
+  <div class="input-group">
+    <span class="input-group-label" style="width:40%"><b>Analytics Update (ms):</b></span>
+    <input class="input-group-field" id="analyticsUpdate" type="number" value=5000>
+  </div>
+
+  <div class="input-group">
+    <span class="input-group-label" style="width:40%"><b>Trigger Update (ms):</b></span>
+    <input class="input-group-field" id="triggerUpdate" type="number" value=5000>
+  </div>
+
+  <div class="input-group">
+    <span class="input-group-label" style="width:40%"><b>Frame Duration (ms):</b></span>
+    <input class="input-group-field" id="frameDuration" type="number" value=180>
+  </div>
+
+  <div class="input-group">
+    <span class="input-group-label" style="width:40%"><b>Preview Queries:</b></span>
+    <input class="input-group-field" id="previewQueries" type="text" value="time>=now-200000">
+  </div>
+
+  <div class="input-group">
+    <span class="input-group-label" style="width:40%"><b>Density Map Queries:</b></span>
+    <input class="input-group-field" id="heatmapQueries" type="text" value="time>=now-75000">
+  </div>
+
+  <div class="input-group">
+    <span class="input-group-label" style="width:40%"><b>Statistics Queries:</b></span>
+    <input class="input-group-field" id="statsQueries" type="text" value="time>=now-200000">
+  </div>
+
+</div>

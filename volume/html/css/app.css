@@ -1,0 +1,31 @@
+
+form .form-icons {
+  text-align: center;
+}
+
+form .form-icons h4 {
+  margin-bottom: 1rem;
+}
+
+form .form-icons .input-group-label {
+  background-color: #1779ba;
+  border-color: #1779ba;
+}
+
+form .form-icons .input-group-field {
+  border-color: #1779ba;
+}
+
+form .form-icons .fa {
+  color: white;
+  width: 1rem;
+}
+
+.tooltip_text {
+  color: navy; 
+  font-weight: bold;
+  background: transparent;
+  border:0;
+  box-shadow: none;
+  font-size:1.25em;
+}

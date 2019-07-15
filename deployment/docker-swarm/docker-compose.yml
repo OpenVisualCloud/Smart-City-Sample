@@ -1,0 +1,298 @@
+
+version: '3.1'
+
+services:
+
+    database:
+        image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.6.0
+        environment:
+            - 'discovery.type=single-node'
+            - 'ES_JAVA_OPTS=-Xms4096m -Xmx4096m'
+        ulimits:
+            memlock:
+                soft: -1
+                hard: -1
+        deploy:
+            replicas: 1
+        restart: always
+
+    web:
+        image: smtc_web:latest
+        ports:
+            - "443:8080"
+        deploy:
+            replicas: 1
+        volumes:
+            - ${HTML_VOLUME}:/var/www/html:ro
+            - ${STORAGE_VOLUME}:/mnt/storage:ro
+            - /etc/localtime:/etc/localtime:ro
+        secrets:
+            - source: self_crt
+              target: self.crt
+              uid: ${USER_ID}
+              gid: ${GROUP_ID}
+              mode: 0444
+            - source: self_key
+              target: self.key
+              uid: ${USER_ID}
+              gid: ${GROUP_ID}
+              mode: 0440
+            - source: dhparam_pem
+              target: dhparam.pem
+              uid: ${USER_ID}
+              gid: ${GROUP_ID}
+              mode: 0444
+        restart: always
+        
+    simulated_camera_street_sensor1:
+        image: smtc_sensor_simulation:latest
+        environment:
+            OFFICE: '45.543797,-122.962038'
+            LOCATION: '45.550043,-122.973526'
+            FILES: '.mp4$$'
+            SENSOR_ID: 0
+            RESOLUTION: '1920x1080'
+            THETA: 105
+            MNTH: 15.0
+            ALPHA: 45
+            FOVH: 90
+            FOVV: 68
+        volumes:
+            - ${SIMULATED_VOLUME}:/mnt/simulated:ro
+        restart: always
+         
+    simulated_camera_street_sensor2:
+        image: smtc_sensor_simulation:latest
+        environment:
+            OFFICE: '45.543797,-122.962038'
+            LOCATION: '45.538905,-122.972792'
+            FILES: '.mp4$$'
+            SENSOR_ID: 1
+            RESOLUTION: '1920x1080'
+            THETA: 105
+            MNTH: 15.0
+            ALPHA: 45
+            FOVH: 90
+            FOVV: 68
+        volumes:
+            - ${SIMULATED_VOLUME}:/mnt/simulated:ro
+        restart: always
+         
+    simulated_camera_street_sensor3:
+        image: smtc_sensor_simulation:latest
+        environment:
+            OFFICE: '45.543797,-122.962038'
+            LOCATION: '45.536643,-122.957053'
+            FILES: '.mp4$$'
+            SENSOR_ID: 2
+            RESOLUTION: '1920x1080'
+            THETA: 105
+            MNTH: 15.0
+            ALPHA: 45
+            FOVH: 90
+            FOVV: 68
+        volumes:
+            - ${SIMULATED_VOLUME}:/mnt/simulated:ro
+        restart: always
+         
+#    simulated_camera_parking_zone_a:
+#        image: smtc_sensor_simulation:latest
+#        environment:
+#            OFFICE:   '33.310955,-111.932443'
+#            LOCATION: '33.31546,-111.95283'
+#            FILES: '.mp4$$'
+#            SENSOR_ID: 0
+#            RESOLUTION: '1024x768'
+#            THETA: 0.0
+#            MNTH: 15.0
+#            ALPHA: 45
+#            FOVH: 90
+#            FOVV: 68
+#        volumes:
+#            - ${SIMULATED_VOLUME}:/mnt/simulated:ro
+#        restart: always
+         
+#    simulated_camera_parking_zone_b:
+#        image: smtc_sensor_simulation:latest
+#        environment:
+#            OFFICE:   '33.310955,-111.932443'
+#            LOCATION: '33.32697,-111.92573'
+#            FILES: '.mp4$$'
+#            SENSOR_ID: 1
+#            RESOLUTION: '1024x768'
+#            THETA: -90.0
+#            MNTH: 15.0
+#            ALPHA: 45
+#            FOVH: 90
+#            FOVV: 68
+#        volumes:
+#            - ${SIMULATED_VOLUME}:/mnt/simulated:ro
+#        restart: always
+
+#    simulated_camera_parking_zone_c:
+#        image: smtc_sensor_simulation:latest
+#        environment:
+#            OFFICE:   '33.310955,-111.932443'
+#            LOCATION: '33.29499,-111.93933'
+#            FILES: '.mp4$$'
+#            SENSOR_ID: 2
+#            RESOLUTION: '1024x768'
+#            THETA: 90.0
+#            MNTH: 15.0
+#            ALPHA: 45
+#            FOVH: 90
+#            FOVV: 68
+#        volumes:
+#            - ${SIMULATED_VOLUME}:/mnt/simulated:ro
+#        restart: always
+
+#    simulated_camera_parking_zone_d:
+#        image: smtc_sensor_simulation:latest
+#        environment:
+#            OFFICE:   '33.310955,-111.932443'
+#            LOCATION: '33.30605,-111.91205'
+#            FILES: '.mp4$$'
+#            SENSOR_ID: 3
+#            RESOLUTION: '1024x768'
+#            THETA: 180
+#            MNTH: 15.0
+#            ALPHA: 45
+#            FOVH: 90
+#            FOVV: 68
+#        volumes:
+#            - ${SIMULATED_VOLUME}:/mnt/simulated:ro
+#        restart: always
+
+#    simulated_camera_stadium_east:
+#        image: smtc_sensor_simulation:latest
+#        environment:
+#            OFFICE:   '37.39726,-121.94831'
+#            LOCATION: '37.38800,-121.94822'
+#            FILES: '.mp4$$'
+#            SENSOR_ID: 0
+#            RESOLUTION: '1024x768'
+#            THETA: -135.0
+#            MNTH: 15.0
+#            ALPHA: 45
+#            FOVH: 90
+#            FOVV: 68
+#        volumes:
+#            - ${SIMULATED_VOLUME}:/mnt/simulated:ro
+#        restart: always
+
+#    simulated_camera_stadium_north:
+#        image: smtc_sensor_simulation:latest
+#        environment:
+#            OFFICE:   '37.39726,-121.94831'
+#            LOCATION: '37.39878,-121.95916'
+#            FILES: '.mp4$$'
+#            SENSOR_ID: 1
+#            RESOLUTION: '1024x768'
+#            THETA: -45.0
+#            MNTH: 15.0
+#            ALPHA: 45
+#            FOVH: 90
+#            FOVV: 68
+#        volumes:
+#            - ${SIMULATED_VOLUME}:/mnt/simulated:ro
+#        restart: always
+
+#    simulated_camera_stadium_west:
+#        image: smtc_sensor_simulation:latest
+#        environment:
+#            OFFICE:   '37.39726,-121.94831'
+#            LOCATION: '37.38673,-121.97672'
+#            FILES: '.mp4$$'
+#            SENSOR_ID: 2
+#            RESOLUTION: '1024x768'
+#            THETA: 45.0
+#            MNTH: 15.0
+#            ALPHA: 45
+#            FOVH: 90
+#            FOVV: 68
+#        volumes:
+#            - ${SIMULATED_VOLUME}:/mnt/simulated:ro
+#        restart: always
+
+#    simulated_camera_stadium_south:
+#        image: smtc_sensor_simulation:latest
+#        environment:
+#            OFFICE:   '37.39726,-121.94831'
+#            LOCATION: '37.37889,-121.96269'
+#            FILES: '.mp4$$'
+#            SENSOR_ID: 3
+#            RESOLUTION: '1024x768'
+#            THETA: 135.0
+#            MNTH: 15.0
+#            ALPHA: 45
+#            FOVH: 90
+#            FOVV: 68
+#        volumes:
+#            - ${SIMULATED_VOLUME}:/mnt/simulated:ro
+#        restart: always
+
+    storage_cleanup_local:
+        image: smtc_storage_cleanup:latest
+        volumes:
+            - ${STORAGE_VOLUME}:/mnt/storage:rw
+        environment:
+            INDEXES: 'recordings,analytics'
+            RETENTION_TIME: '14400'
+            SERVICE_INTERVAL: '14400'
+        restart: always
+
+    onvif-discovery:
+        image: smtc_onvif_discovery:latest
+        environment:
+            IP_SCAN_RANGE: '192.168.1.0/24'
+            PORT_SCAN_RANGE: '0-65535'
+            OFFICE: '45.543797,-122.962038'
+            DISTANCE: 10
+            ANGLEOFFSET: 15
+        deploy:
+            replicas: 1
+        restart: always
+
+    health_check:
+        image: smtc_trigger_health
+        volumes:
+            - /etc/localtime:/etc/localtime:ro
+        environment:
+            SERVICE_INTERVAL: '300'
+        restart: always
+
+    where_indexing_local:
+        image: smtc_where_indexing
+        environment:
+            INDEXES: 'recordings,analytics'
+            SERVICE_INTERVAL: '30'
+            UPDATE_INTERVAL: '5'
+            SEARCH_BATCH: '3000'
+            UPDATE_BATCH: '500'
+        restart: always
+
+    video_analytics:
+        image: smtc_video_analytics:latest
+        environment:
+            OFFICE: '45.543797,-122.962038'
+            DBHOST: 'http://database:9200'
+            MQTTHOST: 'mqtt'
+            STORAGE_VOLUME: '/home/video-analytics/app/server/recordings'
+            EVERY_NTH_FRAME: 6
+        volumes:
+            - ${STORAGE_VOLUME}:/home/video-analytics/app/server/recordings:rw
+            - /etc/localtime:/etc/localtime:ro
+        deploy:
+            replicas: 5
+        restart: always
+    
+    mqtt:
+        image: eclipse-mosquitto:1.5.8
+
+secrets:
+    self_key:
+        file: ../certificate/self.key
+    self_crt:
+        file: ../certificate/self.crt
+    dhparam_pem:
+        file: ../certificate/dhparam.pem
