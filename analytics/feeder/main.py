@@ -154,113 +154,115 @@ class Feeder():
             logger.debug("Searching for sensors...")
 
             sensors = self.db_sensors.search("sensor:'camera' and status:'idle' and office:[" + str(self.office[0]) + "," + str(self.office[1]) + "]")
-
-            for sensor in sensors:
-                logger.debug(sensor)
-                try:
-                    fswatch = None
-                    logger.debug("Sensor found! " + sensor["_id"])
-                    logger.debug("Setting sensor " + sensor["_id"] + " to streaming")
-                    r = self.db_sensors.update(sensor["_id"], {"status": "streaming"}, version=sensor["_version"])
-
-                    logger.debug("Setting algorithm to streaming from sensor " + sensor["_id"])
-                    r = self.db_alg.update(self.alg_id, {
-                        "source": sensor["_id"],
-                        "status": "processing"
-                    })
-
-                    # Attempt to POST to VA service
-                    jsonData = {
-                        "source": {
-                            "uri": "",
-                            "type":"uri"
-                        },
-                        "destination": {
-                            "type": "mqtt",
-                            "host": None,
-                            "topic": None
-                        },
-                        "tags": {
-                            "algorithm": None,
-                            "sensor": None,
-                            "office": None
-                        },
-                        "parameters": {
-                            "every-nth-frame": None,
-                            "recording_prefix": None
-                        }
-                    }
-
-                    jsonData['source']['uri'] = sensor["_source"]["url"]
-                    jsonData['destination']['host'] = self.mqtthost
-                    jsonData['destination']['topic'] = self.mqtttopic
-                    jsonData['tags']['algorithm'] = self.alg_id
-                    jsonData['tags']['sensor'] = sensor["_id"]
-                    jsonData['tags']['office'] = {
-                        "lat": self.office[0],
-                        "lon": self.office[1]
-                    }
-                    jsonData['parameters']['every-nth-frame'] = self.every_nth_frame
-                    jsonData['parameters']['recording_prefix'] = "recordings/" + sensor["_id"]
-
-                    folderpath = os.path.join(os.path.realpath(self.recording_volume), sensor["_id"])
-                    if not os.path.exists(folderpath):
-                        os.makedirs(folderpath)
-
-                    logger.debug("Adding folder watch for " + folderpath)
-                    filehandler = FSHandler(sensor=sensor["_id"], office=self.office, dbhost=self.dbhost, rec_volume=self.recording_volume)
-                    fswatch = self.observer.schedule(filehandler, folderpath, recursive=True)
-
+            try:
+                for sensor in sensors:
+                    logger.debug(sensor)
                     try:
-                        logger.info("Posting Request to VA Service")
-                        r = requests.post(self.vahost + "/object_detection/2", json=jsonData, timeout=10)
-                        r.raise_for_status()
-                        pipeline_id = None
-                        
-                        if r.status_code == 200:
-                            logger.debug("Started pipeline " + r.text)
-                            pipeline_id = int(r.text)
+                        fswatch = None
+                        logger.debug("Sensor found! " + sensor["_id"])
+                        logger.debug("Setting sensor " + sensor["_id"] + " to streaming")
+                        r = self.db_sensors.update(sensor["_id"], {"status": "streaming"}, version=sensor["_version"])
 
-                        while r.status_code == 200:
-                            logger.debug("Querying status of pipeline")
-                            r = requests.get(self.vahost + "/object_detection/2/" + str(pipeline_id) + "/status", timeout=10)
+                        logger.debug("Setting algorithm to streaming from sensor " + sensor["_id"])
+                        r = self.db_alg.update(self.alg_id, {
+                            "source": sensor["_id"],
+                            "status": "processing"
+                        })
+
+                        # Attempt to POST to VA service
+                        jsonData = {
+                            "source": {
+                                "uri": "",
+                                "type":"uri"
+                            },
+                            "destination": {
+                                "type": "mqtt",
+                                "host": None,
+                                "topic": None
+                            },
+                            "tags": {
+                                "algorithm": None,
+                                "sensor": None,
+                                "office": None
+                            },
+                            "parameters": {
+                                "every-nth-frame": None,
+                                "recording_prefix": None
+                            }
+                        }
+
+                        jsonData['source']['uri'] = sensor["_source"]["url"]
+                        jsonData['destination']['host'] = self.mqtthost
+                        jsonData['destination']['topic'] = self.mqtttopic
+                        jsonData['tags']['algorithm'] = self.alg_id
+                        jsonData['tags']['sensor'] = sensor["_id"]
+                        jsonData['tags']['office'] = {
+                            "lat": self.office[0],
+                            "lon": self.office[1]
+                        }
+                        jsonData['parameters']['every-nth-frame'] = self.every_nth_frame
+                        jsonData['parameters']['recording_prefix'] = "recordings/" + sensor["_id"]
+
+                        folderpath = os.path.join(os.path.realpath(self.recording_volume), sensor["_id"])
+                        if not os.path.exists(folderpath):
+                            os.makedirs(folderpath)
+
+                        logger.debug("Adding folder watch for " + folderpath)
+                        filehandler = FSHandler(sensor=sensor["_id"], office=self.office, dbhost=self.dbhost, rec_volume=self.recording_volume)
+                        fswatch = self.observer.schedule(filehandler, folderpath, recursive=True)
+
+                        try:
+                            logger.info("Posting Request to VA Service")
+                            r = requests.post(self.vahost + "/object_detection/2", json=jsonData, timeout=10)
                             r.raise_for_status()
-                            jsonValue = r.json()
-                            if "avg_pipeline_latency" not in jsonValue:
-                                jsonValue["avg_pipeline_latency"] = 0
-                            state = jsonValue["state"]
-                            try:
-                                logger.debug("fps: ")
-                                logger.debug(str(jsonValue))
-                            except:
-                                logger.debug("error")
-                            logger.debug("Pipeline state is " + str(state))
-                            if state == "COMPLETED" or state == "ABORTED" or state == "ERROR":
-                                logger.debug("Pipeline ended")
-                                break
+                            pipeline_id = None
 
-                            self.db_alg.update(self.alg_id, {"performance": jsonValue["avg_fps"], "latency": jsonValue["avg_pipeline_latency"]*1000})
-                            
-                            time.sleep(10)
+                            if r.status_code == 200:
+                                logger.debug("Started pipeline " + r.text)
+                                pipeline_id = int(r.text)
 
-                        logger.debug("Setting sensor " + sensor["_id"] + " to disconnected")
-                        r = self.db_sensors.update(sensor["_id"], {"status": "disconnected"})
+                            while r.status_code == 200:
+                                logger.debug("Querying status of pipeline")
+                                r = requests.get(self.vahost + "/object_detection/2/" + str(pipeline_id) + "/status", timeout=10)
+                                r.raise_for_status()
+                                jsonValue = r.json()
+                                if "avg_pipeline_latency" not in jsonValue:
+                                    jsonValue["avg_pipeline_latency"] = 0
+                                state = jsonValue["state"]
+                                try:
+                                    logger.debug("fps: ")
+                                    logger.debug(str(jsonValue))
+                                except:
+                                    logger.debug("error")
+                                logger.debug("Pipeline state is " + str(state))
+                                if state == "COMPLETED" or state == "ABORTED" or state == "ERROR":
+                                    logger.debug("Pipeline ended")
+                                    break
 
-                    except requests.exceptions.RequestException as e:
-                        logger.error("Feeder: Request to VA Service Failed: " + str(e))
-                        logger.debug("Setting sensor " + sensor["_id"] + " to idle")
-                        r = self.db_sensors.update(sensor["_id"], {"status": "idle"})
+                                self.db_alg.update(self.alg_id, {"performance": jsonValue["avg_fps"], "latency": jsonValue["avg_pipeline_latency"]*1000})
 
-                except Exception as e:
-                    logger.error("Feeder Exception: " + str(e))
+                                time.sleep(10)
 
-                if fswatch:
-                    self.observer.unschedule(fswatch)
-                    del(filehandler)
+                            logger.debug("Setting sensor " + sensor["_id"] + " to disconnected")
+                            r = self.db_sensors.update(sensor["_id"], {"status": "disconnected"})
 
-                logger.debug("Setting algorithm to idle")
-                r = self.db_alg.update(self.alg_id, {"status": "idle"})
-                break
+                        except requests.exceptions.RequestException as e:
+                            logger.error("Feeder: Request to VA Service Failed: " + str(e))
+                            logger.debug("Setting sensor " + sensor["_id"] + " to idle")
+                            r = self.db_sensors.update(sensor["_id"], {"status": "idle"})
+
+                    except Exception as e:
+                        logger.error("Feeder Exception: " + str(e))
+
+                    if fswatch:
+                        self.observer.unschedule(fswatch)
+                        del(filehandler)
+
+                    logger.debug("Setting algorithm to idle")
+                    r = self.db_alg.update(self.alg_id, {"status": "idle"})
+                    break
+            except Exception as e:
+                print(e, flush=True)
 
             time.sleep(5)
         
