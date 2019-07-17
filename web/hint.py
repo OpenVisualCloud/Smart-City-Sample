@@ -4,7 +4,7 @@ from urllib.parse import unquote
 from tornado import web,gen
 from tornado.concurrent import run_on_executor
 from concurrent.futures import ThreadPoolExecutor
-from db_query import DBQuery
+from db_hint import DBHint
 import os
 
 class HintHandler(web.RequestHandler):
@@ -21,7 +21,7 @@ class HintHandler(web.RequestHandler):
         try:
             hints={}
             for index in indexes:
-                db=DBQuery(index=index,office="*",host=self.dbhost)
+                db=DBHint(index=index,office="*",host=self.dbhost)
                 hints[index]=db.hints(size=100)
             return hints
         except Exception as e:
