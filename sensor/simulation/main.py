@@ -19,6 +19,7 @@ def geo_point(origin, distance, tc):
 
 office=list(map(float,os.environ["OFFICE"].split(",")))
 resolution=list(map(int,os.environ["RESOLUTION"].split("x")))
+dbhost=os.environ["DBHOST"]
 
 pattern=str(os.environ["FILES"])
 hostname=socket.gethostbyname(socket.gethostname())
@@ -42,7 +43,7 @@ fovh = float(os.environ["FOVH"])
 fovv = float(os.environ["FOVV"])
 
 # register sensor
-db=DBIngest("sensors")
+db=DBIngest(index="sensors",office=office,host=dbhost)
 r=db.ingest({
     "sensor": "camera",
     "icon": "camera.gif",

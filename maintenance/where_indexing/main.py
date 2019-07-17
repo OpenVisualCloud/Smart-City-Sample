@@ -9,9 +9,11 @@ service_interval=float(os.environ["SERVICE_INTERVAL"])  # in seconds
 update_interval=float(os.environ["UPDATE_INTERVAL"])  # in seconds
 search_batch=int(os.environ["SEARCH_BATCH"])
 update_batch=int(os.environ["UPDATE_BATCH"])
+office=list(map(float, os.environ["OFFICE"].split(",")))
+dbhost=os.environ["DBHOST"]
 
-dbq=DBQuery(indexes[0])
-dba=DBQuery(indexes[1])
+dbq=DBQuery(index=indexes[0],office=office,host=dbhost)
+dba=DBQuery(index=indexes[1],office=office,host=dbhost)
 while True:
     while True:
         print("Searching...",flush=True)

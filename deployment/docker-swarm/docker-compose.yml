@@ -22,6 +22,8 @@ services:
             - "443:8080"
         deploy:
             replicas: 1
+        environment:
+            DBHOST: 'http://database:9200'
         volumes:
             - ${HTML_VOLUME}:/var/www/html:ro
             - ${STORAGE_VOLUME}:/mnt/storage:ro
@@ -44,62 +46,66 @@ services:
               mode: 0444
         restart: always
         
-    simulated_camera_street_sensor1:
-        image: smtc_sensor_simulation:latest
-        environment:
-            OFFICE: '45.543797,-122.962038'
-            LOCATION: '45.550043,-122.973526'
-            FILES: '.mp4$$'
-            SENSOR_ID: 0
-            RESOLUTION: '1920x1080'
-            THETA: 105
-            MNTH: 15.0
-            ALPHA: 45
-            FOVH: 90
-            FOVV: 68
-        volumes:
-            - ${SIMULATED_VOLUME}:/mnt/simulated:ro
-        restart: always
+#    simulated_camera_street_sensor1:
+#        image: smtc_sensor_simulation:latest
+#        environment:
+#            OFFICE: '45.543797,-122.962038'
+#            LOCATION: '45.550043,-122.973526'
+#            DBHOST: 'http://database:9200'
+#            FILES: '.mp4$$'
+#            SENSOR_ID: 0
+#            RESOLUTION: '1920x1080'
+#            THETA: 105
+#            MNTH: 15.0
+#            ALPHA: 45
+#            FOVH: 90
+#            FOVV: 68
+#        volumes:
+#            - ${SIMULATED_VOLUME}:/mnt/simulated:ro
+#        restart: always
          
-    simulated_camera_street_sensor2:
-        image: smtc_sensor_simulation:latest
-        environment:
-            OFFICE: '45.543797,-122.962038'
-            LOCATION: '45.538905,-122.972792'
-            FILES: '.mp4$$'
-            SENSOR_ID: 1
-            RESOLUTION: '1920x1080'
-            THETA: 105
-            MNTH: 15.0
-            ALPHA: 45
-            FOVH: 90
-            FOVV: 68
-        volumes:
-            - ${SIMULATED_VOLUME}:/mnt/simulated:ro
-        restart: always
+#    simulated_camera_street_sensor2:
+#        image: smtc_sensor_simulation:latest
+#        environment:
+#            OFFICE: '45.543797,-122.962038'
+#            LOCATION: '45.538905,-122.972792'
+#            DBHOST: 'http://database:9200'
+#            FILES: '.mp4$$'
+#            SENSOR_ID: 1
+#            RESOLUTION: '1920x1080'
+#            THETA: 105
+#            MNTH: 15.0
+#            ALPHA: 45
+#            FOVH: 90
+#            FOVV: 68
+#        volumes:
+#            - ${SIMULATED_VOLUME}:/mnt/simulated:ro
+#        restart: always
          
-    simulated_camera_street_sensor3:
-        image: smtc_sensor_simulation:latest
-        environment:
-            OFFICE: '45.543797,-122.962038'
-            LOCATION: '45.536643,-122.957053'
-            FILES: '.mp4$$'
-            SENSOR_ID: 2
-            RESOLUTION: '1920x1080'
-            THETA: 105
-            MNTH: 15.0
-            ALPHA: 45
-            FOVH: 90
-            FOVV: 68
-        volumes:
-            - ${SIMULATED_VOLUME}:/mnt/simulated:ro
-        restart: always
+#    simulated_camera_street_sensor3:
+#        image: smtc_sensor_simulation:latest
+#        environment:
+#            OFFICE: '45.543797,-122.962038'
+#            LOCATION: '45.536643,-122.957053'
+#            DBHOST: 'http://database:9200'
+#            FILES: '.mp4$$'
+#            SENSOR_ID: 2
+#            RESOLUTION: '1920x1080'
+#            THETA: 105
+#            MNTH: 15.0
+#            ALPHA: 45
+#            FOVH: 90
+#            FOVV: 68
+#        volumes:
+#            - ${SIMULATED_VOLUME}:/mnt/simulated:ro
+#        restart: always
          
 #    simulated_camera_parking_zone_a:
 #        image: smtc_sensor_simulation:latest
 #        environment:
 #            OFFICE:   '33.310955,-111.932443'
 #            LOCATION: '33.31546,-111.95283'
+#            DBHOST: 'http://database:9200'
 #            FILES: '.mp4$$'
 #            SENSOR_ID: 0
 #            RESOLUTION: '1024x768'
@@ -117,6 +123,7 @@ services:
 #        environment:
 #            OFFICE:   '33.310955,-111.932443'
 #            LOCATION: '33.32697,-111.92573'
+#            DBHOST: 'http://database:9200'
 #            FILES: '.mp4$$'
 #            SENSOR_ID: 1
 #            RESOLUTION: '1024x768'
@@ -134,6 +141,7 @@ services:
 #        environment:
 #            OFFICE:   '33.310955,-111.932443'
 #            LOCATION: '33.29499,-111.93933'
+#            DBHOST: 'http://database:9200'
 #            FILES: '.mp4$$'
 #            SENSOR_ID: 2
 #            RESOLUTION: '1024x768'
@@ -151,6 +159,7 @@ services:
 #        environment:
 #            OFFICE:   '33.310955,-111.932443'
 #            LOCATION: '33.30605,-111.91205'
+#            DBHOST: 'http://database:9200'
 #            FILES: '.mp4$$'
 #            SENSOR_ID: 3
 #            RESOLUTION: '1024x768'
@@ -168,6 +177,7 @@ services:
 #        environment:
 #            OFFICE:   '37.39726,-121.94831'
 #            LOCATION: '37.38800,-121.94822'
+#            DBHOST: 'http://database:9200'
 #            FILES: '.mp4$$'
 #            SENSOR_ID: 0
 #            RESOLUTION: '1024x768'
@@ -185,6 +195,7 @@ services:
 #        environment:
 #            OFFICE:   '37.39726,-121.94831'
 #            LOCATION: '37.39878,-121.95916'
+#            DBHOST: 'http://database:9200'
 #            FILES: '.mp4$$'
 #            SENSOR_ID: 1
 #            RESOLUTION: '1024x768'
@@ -202,6 +213,7 @@ services:
 #        environment:
 #            OFFICE:   '37.39726,-121.94831'
 #            LOCATION: '37.38673,-121.97672'
+#            DBHOST: 'http://database:9200'
 #            FILES: '.mp4$$'
 #            SENSOR_ID: 2
 #            RESOLUTION: '1024x768'
@@ -219,6 +231,7 @@ services:
 #        environment:
 #            OFFICE:   '37.39726,-121.94831'
 #            LOCATION: '37.37889,-121.96269'
+#            DBHOST: 'http://database:9200'
 #            FILES: '.mp4$$'
 #            SENSOR_ID: 3
 #            RESOLUTION: '1024x768'
@@ -231,7 +244,7 @@ services:
 #            - ${SIMULATED_VOLUME}:/mnt/simulated:ro
 #        restart: always
 
-    storage_cleanup_local:
+    storage_cleanup_street:
         image: smtc_storage_cleanup:latest
         volumes:
             - ${STORAGE_VOLUME}:/mnt/storage:rw
@@ -239,9 +252,11 @@ services:
             INDEXES: 'recordings,analytics'
             RETENTION_TIME: '14400'
             SERVICE_INTERVAL: '14400'
+            OFFICE: '45.543797,-122.962038'
+            DBHOST: 'http://database:9200'
         restart: always
 
-    onvif-discovery:
+    onvif-discovery_street:
         image: smtc_onvif_discovery:latest
         environment:
             IP_SCAN_RANGE: '192.168.1.0/24'
@@ -249,29 +264,34 @@ services:
             OFFICE: '45.543797,-122.962038'
             DISTANCE: 10
             ANGLEOFFSET: 15
+            DBHOST: 'http://database:9200'
         deploy:
             replicas: 1
         restart: always
 
-    health_check:
+    health_check_street:
         image: smtc_trigger_health
         volumes:
             - /etc/localtime:/etc/localtime:ro
         environment:
             SERVICE_INTERVAL: '300'
+            OFFICE: '45.543797,-122.962038'
+            DBHOST: 'http://database:9200'
         restart: always
 
-    where_indexing_local:
+    where_indexing_street:
         image: smtc_where_indexing
         environment:
             INDEXES: 'recordings,analytics'
+            OFFICE: '45.543797,-122.962038'
+            DBHOST: 'http://database:9200'
             SERVICE_INTERVAL: '30'
             UPDATE_INTERVAL: '5'
             SEARCH_BATCH: '3000'
             UPDATE_BATCH: '500'
         restart: always
 
-    video_analytics:
+    video_analytics_street:
         image: smtc_video_analytics:latest
         environment:
             OFFICE: '45.543797,-122.962038'

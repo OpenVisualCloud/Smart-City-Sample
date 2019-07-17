@@ -7,18 +7,20 @@ import time
 import os
 
 service_interval=float(os.environ["SERVICE_INTERVAL"])
+office=list(map(float, os.environ["OFFICE"].split(",")))
+dbhost=os.environ["DBHOST"]
 
 # register trigger
-dbt=DBIngest("triggers")
+dbt=DBIngest(index="triggers",office=office,host=dbhost)
 rt=dbt.ingest({
     "name": "health_check",
     "status": "idle",
 })
 print(rt,flush=True)
 
-dbs=DBQuery("sensors")
-dba=DBQuery("algorithms")
-dbat=DBIngest("alerts")
+dbs=DBQuery(index="sensors",office=office,host=dbhost)
+dba=DBQuery(index="algorithms",office=office,host=dbhost)
+dbat=DBIngest(index="alerts",office=office,host=dbhost)
     
 try:
     dbt.update(rt["_id"], { "status": "processing" })

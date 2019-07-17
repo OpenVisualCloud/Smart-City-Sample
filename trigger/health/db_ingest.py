@@ -2,12 +2,14 @@
 
 import requests
 import json
+import re
 
 class DBIngest(object):
-    def __init__(self, index, host="http://database:9200"):
+    def __init__(self, index, office, host):
         super(DBIngest,self).__init__()
         self._host=host
-        self._index=index
+        office=re.sub(r'[.-]','$','$'.join(map(str,office)))
+        self._index=index+"$"+office
         self._type="_doc"
         self._mappings={
             "sensors": {
