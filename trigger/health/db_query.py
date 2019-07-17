@@ -113,8 +113,10 @@ class DBQuery(object):
         keywords = {}
         r=requests.get(self._host+"/"+self._index+"/"+self._type+"/_mapping")
         if r.status_code == 200:
-            for x in list(self._get_keywords(None, r.json()[self._index]["mappings"][self._type]["properties"])):
-                keywords[x[0]] = {"type": x[1]}
+            r=r.json()
+            for index1 in r:
+                for x in list(self._get_keywords(None, r[index1]["mappings"][self._type]["properties"])):
+                    keywords[x[0]] = {"type": x[1]}
 
         # TODO: nested aggs
         aggs = {}

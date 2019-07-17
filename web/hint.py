@@ -18,7 +18,6 @@ class HintHandler(web.RequestHandler):
 
     @run_on_executor
     def _hint(self, indexes):
-        return {}
         try:
             hints={}
             for index in indexes:

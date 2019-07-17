@@ -46,59 +46,59 @@ services:
               mode: 0444
         restart: always
         
-#    simulated_camera_street_sensor1:
-#        image: smtc_sensor_simulation:latest
-#        environment:
-#            OFFICE: '45.543797,-122.962038'
-#            LOCATION: '45.550043,-122.973526'
-#            DBHOST: 'http://database:9200'
-#            FILES: '.mp4$$'
-#            SENSOR_ID: 0
-#            RESOLUTION: '1920x1080'
-#            THETA: 105
-#            MNTH: 15.0
-#            ALPHA: 45
-#            FOVH: 90
-#            FOVV: 68
-#        volumes:
-#            - ${SIMULATED_VOLUME}:/mnt/simulated:ro
-#        restart: always
+    simulated_camera_street_sensor1:
+        image: smtc_sensor_simulation:latest
+        environment:
+            OFFICE: '45.543797,-122.962038'
+            LOCATION: '45.550043,-122.973526'
+            DBHOST: 'http://database:9200'
+            FILES: '.mp4$$'
+            SENSOR_ID: 0
+            RESOLUTION: '1920x1080'
+            THETA: 105
+            MNTH: 15.0
+            ALPHA: 45
+            FOVH: 90
+            FOVV: 68
+        volumes:
+            - ${SIMULATED_VOLUME}:/mnt/simulated:ro
+        restart: always
          
-#    simulated_camera_street_sensor2:
-#        image: smtc_sensor_simulation:latest
-#        environment:
-#            OFFICE: '45.543797,-122.962038'
-#            LOCATION: '45.538905,-122.972792'
-#            DBHOST: 'http://database:9200'
-#            FILES: '.mp4$$'
-#            SENSOR_ID: 1
-#            RESOLUTION: '1920x1080'
-#            THETA: 105
-#            MNTH: 15.0
-#            ALPHA: 45
-#            FOVH: 90
-#            FOVV: 68
-#        volumes:
-#            - ${SIMULATED_VOLUME}:/mnt/simulated:ro
-#        restart: always
+    simulated_camera_street_sensor2:
+        image: smtc_sensor_simulation:latest
+        environment:
+            OFFICE: '45.543797,-122.962038'
+            LOCATION: '45.538905,-122.972792'
+            DBHOST: 'http://database:9200'
+            FILES: '.mp4$$'
+            SENSOR_ID: 1
+            RESOLUTION: '1920x1080'
+            THETA: 105
+            MNTH: 15.0
+            ALPHA: 45
+            FOVH: 90
+            FOVV: 68
+        volumes:
+            - ${SIMULATED_VOLUME}:/mnt/simulated:ro
+        restart: always
          
-#    simulated_camera_street_sensor3:
-#        image: smtc_sensor_simulation:latest
-#        environment:
-#            OFFICE: '45.543797,-122.962038'
-#            LOCATION: '45.536643,-122.957053'
-#            DBHOST: 'http://database:9200'
-#            FILES: '.mp4$$'
-#            SENSOR_ID: 2
-#            RESOLUTION: '1920x1080'
-#            THETA: 105
-#            MNTH: 15.0
-#            ALPHA: 45
-#            FOVH: 90
-#            FOVV: 68
-#        volumes:
-#            - ${SIMULATED_VOLUME}:/mnt/simulated:ro
-#        restart: always
+    simulated_camera_street_sensor3:
+        image: smtc_sensor_simulation:latest
+        environment:
+            OFFICE: '45.543797,-122.962038'
+            LOCATION: '45.536643,-122.957053'
+            DBHOST: 'http://database:9200'
+            FILES: '.mp4$$'
+            SENSOR_ID: 2
+            RESOLUTION: '1920x1080'
+            THETA: 105
+            MNTH: 15.0
+            ALPHA: 45
+            FOVH: 90
+            FOVV: 68
+        volumes:
+            - ${SIMULATED_VOLUME}:/mnt/simulated:ro
+        restart: always
          
 #    simulated_camera_parking_zone_a:
 #        image: smtc_sensor_simulation:latest
