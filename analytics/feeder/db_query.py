@@ -4,15 +4,17 @@ import requests
 import time
 import json
 from dsl_yacc import compile
+import re
 
 class DBQuery(object):
-    def __init__(self, index, host="http://database:9200"):
+    def __init__(self, index, office, host):
         super(DBQuery,self).__init__()
         self._host=host
         indexes=index.split(",")
-        self._index=indexes[0]
+        if isinstance(office,list): office=re.sub(r'[.-]','$','$'.join(map(str,office)))
+        self._index=indexes[0]+"$"+office
         self._type="_doc"
-        self._where=indexes[1] if len(indexes)>1 else None
+        self._where=indexes[1]+"$"+office if len(indexes)>1 else None
 
     def _check_error(self, r):
         if r.status_code==200 or r.status_code==201: return
@@ -27,22 +29,25 @@ class DBQuery(object):
             if "type" in properties[field]:
                 type1=properties[field]["type"]
                 if type1=="nested":
-                    spec["nested"].append(prefix+field)
+                    if prefix+field not in spec["nested"]: 
+                        spec["nested"].append(prefix+field)
                 else:
                     spec["types"][prefix+field]=type1
             if "properties" in properties[field]:
                 self._spec_from_mapping(spec, prefix+field+".", properties[field]["properties"])
 
+    def _spec_from_index(self, specs, index):
+        specs.append({"nested":[],"types":{}})
+        r=requests.get(self._host+"/"+index+"/"+self._type+"/_mapping")
+        if r.status_code!=200: return
+        r=r.json()
+        for index1 in r: 
+            self._spec_from_mapping(specs[-1],"",r[index1]["mappings"][self._type]["properties"])
+
     def _specs(self):
-        specs=[{"nested":[],"types":{}}]
-        r=requests.get(self._host+"/"+self._index+"/"+self._type+"/_mapping")
-        if r.status_code==200:
-            self._spec_from_mapping(specs[0],"",r.json()[self._index]["mappings"][self._type]["properties"])
-        if self._where:
-            specs.append({"nested":[],"types":{}})
-            r=requests.get(self._host+"/"+self._where+"/"+self._type+"/_mapping")
-            if r.status_code==200:
-                self._spec_from_mapping(specs[-1],"",r.json()[self._where]["mappings"][self._type]["properties"])
+        specs=[]
+        self._spec_from_index(specs,self._index)
+        if self._where: self._spec_from_index(specs,self._where)
         return specs
 
     def search(self, queries, size=10000, where_size=200):
@@ -108,8 +113,10 @@ class DBQuery(object):
         keywords = {}
         r=requests.get(self._host+"/"+self._index+"/"+self._type+"/_mapping")
         if r.status_code == 200:
-            for x in list(self._get_keywords(None, r.json()[self._index]["mappings"][self._type]["properties"])):
-                keywords[x[0]] = {"type": x[1]}
+            r=r.json()
+            for index1 in r:
+                for x in list(self._get_keywords(None, r[index1]["mappings"][self._type]["properties"])):
+                    keywords[x[0]] = {"type": x[1]}
 
         # TODO: nested aggs
         aggs = {}

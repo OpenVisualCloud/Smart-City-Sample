@@ -23,7 +23,6 @@ import tempfile
 import shutil
 import re
 
-
 logger = logging.get_logger('main', is_static=True)
 
 class Feeder():
@@ -84,9 +83,9 @@ class Feeder():
 
         # Register Algorithm
         logger.debug("Registering as algorithm in the DB")
-        self.db_alg = DBIngest(host=self.dbhost, index="algorithms")
-        self.db_inf = DBIngest(host=self.dbhost, index="analytics")
-        self.db_sensors = DBQuery(host=self.dbhost, index="sensors")
+        self.db_alg = DBIngest(host=self.dbhost, index="algorithms", office=self.office)
+        self.db_inf = DBIngest(host=self.dbhost, index="analytics", office=self.office)
+        self.db_sensors = DBQuery(host=self.dbhost, index="sensors", office=self.office)
 
         self.alg_id = self.db_alg.ingest({
             "name": "object_detection",
@@ -153,9 +152,8 @@ class Feeder():
         while self._threadflag:
             logger.debug("Searching for sensors...")
 
-            sensors = self.db_sensors.search("sensor:'camera' and status:'idle' and office:[" + str(self.office[0]) + "," + str(self.office[1]) + "]")
             try:
-                for sensor in sensors:
+                for sensor in self.db_sensors.search("sensor:'camera' and status:'idle' and office:[" + str(self.office[0]) + "," + str(self.office[1]) + "]"):
                     logger.debug(sensor)
                     try:
                         fswatch = None
@@ -273,8 +271,8 @@ class FSHandler(FileSystemEventHandler):
     def __init__(self, sensor, office, dbhost, rec_volume):
         self.sensor = sensor
         self.office = office
-        self.db_rec = DBIngest(host=dbhost, index="recordings")
-        self.db_sensors = DBQuery(host=dbhost, index="sensors")
+        self.db_rec = DBIngest(host=dbhost, index="recordings", office=office)
+        self.db_sensors = DBQuery(host=dbhost, index="sensors", office=office)
         self.recording_volume = rec_volume
 
         self.last_file = None

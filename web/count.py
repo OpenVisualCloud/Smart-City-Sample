@@ -5,18 +5,20 @@ from tornado import web,gen
 from tornado.concurrent import run_on_executor
 from concurrent.futures import ThreadPoolExecutor
 from db_query import DBQuery
+import os
 
 class CountHandler(web.RequestHandler):
     def __init__(self, app, request, **kwargs):
         super(CountHandler, self).__init__(app, request, **kwargs)
         self.executor= ThreadPoolExecutor(8)
+        self.dbhost=os.environ["DBHOST"]
 
     def check_origin(self, origin):
         return True
 
     @run_on_executor
     def _count(self, index, queries):
-        db=DBQuery(index)
+        db=DBQuery(index=index,office="*",host=self.dbhost)
         try:
             return db.count(queries)
         except Exception as e:

@@ -247,6 +247,7 @@ def discover_all_onvif_cameras():
     office = list(map(float,os.environ["OFFICE"].split(",")))
     distance = float(os.environ["DISTANCE"])
     angleoffset = float(os.environ["ANGLEOFFSET"])
+    dbhost= os.environ["DBHOST"]
 
     sensor_index = 0
     mac_sensor_id = {}
@@ -256,8 +257,8 @@ def discover_all_onvif_cameras():
         onvifcams = scan_onvif_camera(ip_range, port_range)
         nsensors = len(onvifcams)
 
-        db = DBIngest("sensors")
-        dbs = DBQuery("sensors")
+        db = DBIngest(index="sensors",office=office,host=dbhost)
+        dbs = DBQuery(index="sensors",office=office,host=dbhost)
         for cam in onvifcams:
             ip = cam['ip']
             port = int(cam['port'])
