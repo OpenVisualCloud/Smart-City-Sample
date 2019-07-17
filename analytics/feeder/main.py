@@ -23,7 +23,6 @@ import tempfile
 import shutil
 import re
 
-
 logger = logging.get_logger('main', is_static=True)
 
 class Feeder():
@@ -153,9 +152,8 @@ class Feeder():
         while self._threadflag:
             logger.debug("Searching for sensors...")
 
-            sensors = self.db_sensors.search("sensor:'camera' and status:'idle' and office:[" + str(self.office[0]) + "," + str(self.office[1]) + "]")
             try:
-                for sensor in sensors:
+                for sensor in self.db_sensors.search("sensor:'camera' and status:'idle' and office:[" + str(self.office[0]) + "," + str(self.office[1]) + "]"):
                     logger.debug(sensor)
                     try:
                         fswatch = None

@@ -12,7 +12,7 @@ class DBIngest(object):
         self._index=index+"$"+office
         self._type="_doc"
         self._mappings={
-            "sensors": {
+            "sensors$"+office: {
                 "mappings": {
                     self._type: {
                         "properties": {
@@ -22,7 +22,7 @@ class DBIngest(object):
                     },
                 },
             },
-            "recordings": {
+            "recordings$"+office: {
                 "mappings": {
                     self._type: {
                         "properties": {
@@ -33,7 +33,7 @@ class DBIngest(object):
                     },
                 },
             },
-            "algorithms": {
+            "algorithms$"+office: {
                 "mappings": {
                     self._type: {
                         "properties": {
@@ -42,7 +42,7 @@ class DBIngest(object):
                     },
                 },
             },
-            "analytics": {
+            "analytics$"+office: {
                 "mappings": {
                     self._type: {
                         "properties": {
@@ -58,7 +58,7 @@ class DBIngest(object):
                     },
                 },
             },
-            "alerts": {
+            "alerts$"+office: {
                 "mappings": {
                     self._type: {
                         "properties": {
