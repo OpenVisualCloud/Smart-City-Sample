@@ -15,5 +15,5 @@ sudo docker build ${AD_INSERTION_REPO}\#master:${VA_FOLDER} --file platforms/Xeo
 #IMAGE="smtc_analytics_recording"
 DIR=$(dirname $(readlink -f "$0"))
 
-cp -f "$DIR/../../script"/db_*.py "$DIR/../../script"/dsl_*.py "$DIR/../../script/probe.py" "$DIR"
+cp -f "$DIR/../../script/db_query.py" "$DIR/../../script/db_ingest.py" "$DIR/../../script"/dsl_*.py "$DIR/../../script/probe.py" "$DIR"
 . "$DIR/../../script/build.sh"
