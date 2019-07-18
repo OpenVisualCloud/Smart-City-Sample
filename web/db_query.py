@@ -3,7 +3,7 @@
 import requests
 import time
 import json
-from dsl_yacc import compile
+from dsl_yacc import compile, check_nested_label
 import re
 
 class DBQuery(object):
@@ -69,6 +69,25 @@ class DBQuery(object):
         self._check_error(r)
         return r.json()["count"]
 
+    def bucketize(self, queries, field):
+        specs=self._specs()
+        nested,var=check_nested_label(specs[0],field)
+        if "types" in specs[0]:
+            if var in specs[0]["types"]:
+                if specs[0]["types"][var]=="text":
+                    var=var+".keyword"
+        aggs={"terms":{"field":var}}
+        if nested: aggs={"nested":{"path":nested[0]},"aggs":{"agg2":aggs}}
+        dsl={"query":compile(queries,specs)[0],"aggs":{"agg1":aggs},"size":0}
+        r=requests.post(self._host+"/"+self._index+"/"+self._type+"/_search",json=dsl)
+        self._check_error(r)
+        r=r.json()["aggregations"]["agg1"]
+        if "buckets" not in r: r=r["agg2"]
+        buckets={}
+        for x in r["buckets"]:
+            buckets[x["key"]]=x["doc_count"]
+        return buckets
+
     def update(self, _id, info, version=None):
         options={} if version is None else { "version": version }
         r=requests.post(self._host+"/"+self._index+"/"+self._type+"/"+_id+"/_update",params=options,json={"doc":info})
@@ -98,42 +117,3 @@ class DBQuery(object):
         r=requests.delete(self._host+"/"+self._index+"/"+self._type+"/"+_id,headers={'Content-Type':'application/json'})
         self._check_error(r)
         return r.json()
-
-    def _get_keywords(self, prefix, mapping):
-        for p in mapping:
-            keyword = p if not prefix else prefix + "." + p
-            if "properties" in mapping[p]:
-                for keyword1 in self._get_keywords(keyword, mapping[p]["properties"]):
-                    yield (keyword1[0], keyword1[1])
-            if "type" in mapping[p]:
-                if mapping[p]["type"] != "nested":
-                    yield (keyword, mapping[p]["type"])
-
-    def hints(self, size=50):
-        keywords = {}
-        r=requests.get(self._host+"/"+self._index+"/"+self._type+"/_mapping")
-        if r.status_code == 200:
-            r=r.json()
-            for index1 in r:
-                for x in list(self._get_keywords(None, r[index1]["mappings"][self._type]["properties"])):
-                    keywords[x[0]] = {"type": x[1]}
-
-        # TODO: nested aggs
-        aggs = {}
-        for k in keywords:
-            if keywords[k]["type"] != "text": continue
-            aggs[k] = {"terms": {"field": k + ".keyword", "size": size}}
-
-        cmds = [{"index": self._index, "type": self._type}]
-        cmds.append({"size": 0, "aggs": aggs})
-        cmds="\n".join([json.dumps(x) for x in cmds])+"\n"
-        r=requests.post(self._host+"/_msearch",data=cmds,headers={"content-type":"application/x-ndjson"})
-        if r.status_code == 200:
-            for response in r.json()["responses"]:
-                if response["status"] != 200: continue
-                for k in response["aggregations"]:
-                    values = {}
-                    for value in [b["key"] for b in response["aggregations"][k]["buckets"] if b["key"]]:
-                        if value: values[value] = True
-                    keywords[k]["values"] = list(values.keys())
-        return keywords

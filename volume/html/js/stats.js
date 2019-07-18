@@ -1,13 +1,5 @@
 
 var stats={
-    pretty: function(value) {
-        if (value<1000) return value.toString(10);
-        for (var unit of ['K','M','B']) {
-            value=value/1000;
-            if (value<1000) return ((value<10)?value.toFixed(1):Math.floor(value))+unit;
-        }
-        return ((value<10)?value.toFixed(1):Math.floor(value))+'B';
-    },
     create: function (ctx) {
 	    ctx.circle=L.circleMarker(ctx.marker.getLatLng(), {radius:20,color:"green"});
 	    ctx.text=L.tooltip({permanent:true,direction:'center',className:'tooltip_text'});
@@ -17,16 +9,16 @@ var stats={
             type: 'bar',
             data: {
                 labels: [],
-                datasets: [{
-                    label: "statistics",
-                    data: [],
-                }],
+                datasets: [],
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
                 title: { display: false },
-                legend: { display: false },
+                tooltips: {
+                    mode: 'index',
+                    intersect: false,
+                },
                 scales: {
                     yAxes: [{ 
                         display: true, 
@@ -36,6 +28,7 @@ var stats={
                         ticks: {
                            maxTicksLimit: 5,
                         },
+                        stacked: true,
                     }], 
                     xAxes: [{
                         display: true,
@@ -53,6 +46,7 @@ var stats={
                             maxRotation: 0,
                             minRotation: 0,
                         },
+                        stacked: true,
                     }],
                 },
             },
@@ -60,26 +54,51 @@ var stats={
         ctx.circle.bindPopup(canvas.parent()[0],{ maxWidth:"auto",maxHeight:"auto" });
     },
     update: function (layer, ctx, zoom, sensor_id, sensor_location) {
-        var update_chart=function (count) {
+        var update_chart=function (data) {
             var labels=ctx.chart.config.data.labels;
             var time=new Date();
             labels.push(time);
 
             var datasets=ctx.chart.config.data.datasets;
-            datasets[0].data.push({t:time,y:count});
+            $.each(datasets, function (k,v) {
+                if (!(v.label in data)) return;
+                v.data.push({t:time,y:data[v.label]});
+                delete data[v.label];
+            });
+            $.each(data, function (k,v) {
+                 datasets.push({label:k,data:[{t:time,y:v}]});
+            });
 
             if (labels.length>25) {
                 labels.shift();
-                datasets[0].data.shift();
+                for (var k=datasets.length-1;k>=0;k--) {
+                    while (datasets[k].data.length>0) {
+                        if (datasets[k].data[0].t>=labels[0]) break;
+                        datasets[k].data.shift();
+                    }
+                    if (datasets[k].data.length==0) 
+                        datasets.splice(k,1);
+                }
             }
             ctx.chart.update();
         };
-        apiHost.count("analytics",'sensor="'+sensor_id+'" and '+settings.stats_query()).then(function (count) {
-            count=parseInt(count,10);
-            update_chart(count);
+        apiHost.stats("analytics",'sensor="'+sensor_id+'" and '+settings.stats_query(),settings.stats_histogram()).then(function (data) {
+            var count=0;
+            for (var k in data) 
+                count=count+data[k];
+            update_chart(data);
             if (count>0) {
+                var pretty=function(value) {
+                    if (value<1000) return value.toString(10);
+                    for (var unit of ['K','M','B']) {
+                        value=value/1000;
+                        if (value<1000) 
+                            return ((value<10)?value.toFixed(1):Math.floor(value))+unit;
+                    }
+                    return ((value<10)?value.toFixed(1):Math.floor(value))+'B';
+                };
                 ctx.circle.setLatLng([sensor_location.lat+0.003*Math.pow(2,14-zoom),sensor_location.lon]).addTo(layer);
-                ctx.text.setLatLng(ctx.circle.getLatLng()).setContent(stats.pretty(count)).addTo(layer);
+                ctx.text.setLatLng(ctx.circle.getLatLng()).setContent(pretty(count)).addTo(layer);
             } else {
                 ctx.circle.remove();
                 ctx.text.remove();
