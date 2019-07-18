@@ -1,5 +1,7 @@
 
 function draw_analytics(video, doc) {
+    var colors_id=["#24693d","#44914e","#73ba67","#ced7c3","#f8816b","#e33f43","#a3123a"];
+    var colors_label={ "person": "red", "vehicle": "cyan", "bike": "lime" };
     apiHost.search("analytics",'sensor="'+doc._source.sensor+'" and time>='+doc._source.time+' and time<'+(doc._source.time+doc._source.duration*1000),10000).then(function (data) {
         /* group time into time buckets */
         var timed={};
@@ -43,15 +45,16 @@ function draw_analytics(video, doc) {
                                             y:syoff+ymin,
                                             width:xmax-xmin,
                                             height:ymax-ymin,
-                                            stroke:"cyan",
+                                            stroke:colors_label[v1.detection.label],
                                             "stroke-width":1,
                                             fill:"none",
                                         }));
+                                        var id=("id" in v1)?":#"+v1.id+":":":";
                                         svg.append($(document.createElementNS(svg.attr('xmlns'),"text")).attr({
                                             x:sxoff+xmin,
                                             y:syoff+ymin,
-                                            fill: 'cyan',
-                                        }).text(v1.detection.label+":"+Math.floor(v1.detection.confidence*100)+"%"));
+                                            fill: ("id" in v1)?colors_id[v1.id%colors_id.length]:"cyan",
+                                        }).text(v1.detection.label+id+Math.floor(v1.detection.confidence*100)+"%"));
                                     }
                                 }
                             }
