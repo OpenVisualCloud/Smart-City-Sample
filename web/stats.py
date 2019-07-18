@@ -20,9 +20,13 @@ class StatsHandler(web.RequestHandler):
     def _bucketize(self, index, queries, aggs):
         db=DBQuery(index=index,office="*",host=self.dbhost)
         try:
-            return db.bucketize(queries, aggs)
+            buckets=db.bucketize(queries, aggs)
         except Exception as e:
             return str(e)
+        # reformat buckets to have str keys
+        buckets1={}
+        for k in buckets: buckets1[str(k)]=buckets[k]
+        return buckets1
 
     @gen.coroutine
     def get(self):
