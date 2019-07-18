@@ -6,6 +6,7 @@ $(window).on("popstate", function (e) {
 });
 
 $(window).on("load", function () {
+    Chart.defaults.global.defaultFontSize=10;
     $(window).resize();
     selectPage("home");
     $("#pg-office").trigger(":setup-alerts");
