@@ -32,6 +32,10 @@ var settings={
         if (typeof(val)!="undefined") $("#statsQueries").val(val);
         return $("#statsQueries").val();
     },
+    stats_histogram: function (val) {
+        if (typeof(val)!="undefined") $("#statsHistogram").val(val);
+        return $("#statsHistogram").val();
+    },
     street_center: function () {
         return [45.5421086,-122.9628635];
     },

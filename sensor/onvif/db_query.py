@@ -3,7 +3,7 @@
 import requests
 import time
 import json
-from dsl_yacc import compile
+from dsl_yacc import compile, check_nested_label
 import re
 
 class DBQuery(object):
@@ -68,6 +68,25 @@ class DBQuery(object):
         r=requests.post(self._host+"/"+self._index+"/"+self._type+"/_count",json=dsl)
         self._check_error(r)
         return r.json()["count"]
+
+    def bucketize(self, queries, field):
+        specs=self._specs()
+        nested,var=check_nested_label(specs[0],field)
+        if "types" in specs[0]:
+            if var in specs[0]["types"]:
+                if specs[0]["types"][var]=="text":
+                    var=var+".keyword"
+        aggs={"terms":{"field":var}}
+        if nested: aggs={"nested":{"path":nested[0]},"aggs":{"agg2":aggs}}
+        dsl={"query":compile(queries,specs)[0],"aggs":{"agg1":aggs},"size":0}
+        r=requests.post(self._host+"/"+self._index+"/"+self._type+"/_search",json=dsl)
+        self._check_error(r)
+        r=r.json()["aggregations"]["agg1"]
+        if "buckets" not in r: r=r["agg2"]
+        buckets={}
+        for x in r["buckets"]:
+            buckets[x["key"]]=x["doc_count"]
+        return buckets
 
     def update(self, _id, info, version=None):
         options={} if version is None else { "version": version }

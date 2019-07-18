@@ -7,9 +7,9 @@ var apiHost={
         console.log("GET "+url);
         return $.get(url,args);
     },
-    count: function (index, queries) {
-        var url="api/count";
-        var args={ index: index, queries: queries };
+    stats: function (index, queries, aggs) {
+        var url="api/stats";
+        var args={ index: index, queries: queries, aggs: aggs };
         console.log("GET "+url);
         return $.get(url,args);
     },

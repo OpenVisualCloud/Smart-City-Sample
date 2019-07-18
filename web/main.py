@@ -3,14 +3,14 @@
 from tornado import ioloop, web
 from tornado.options import define, options, parse_command_line
 from search import SearchHandler
-from count import CountHandler
+from stats import StatsHandler
 from workload import WorkloadHandler
 from hint import HintHandler
 from thumbnail import ThumbnailHandler
 
 app = web.Application([
     (r'/search',SearchHandler),
-    (r'/count',CountHandler),
+    (r'/stats',StatsHandler),
     (r'/workload',WorkloadHandler),
     (r'/hint',HintHandler),
     (r'/thumbnail/.*.png',ThumbnailHandler),
