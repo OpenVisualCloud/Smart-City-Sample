@@ -75,7 +75,7 @@ var heatmaps={
             sensor._source.location.lon,
             sensor._source.theta
         );
-        apiHost.search("analytics",'sensor="'+sensor._id+'" and objects.detection:* and '+settings.heatmap_query(),100).then(function (arecords) {
+        apiHost.search("analytics",'sensor="'+sensor._id+'" and objects.detection:* and '+settings.heatmap_query(),sensor._source.office,100).then(function (arecords) {
             var latlngs = [];
             $.each(arecords.response, function( keya, a ) {
                 var w = a._source.resolution.width;

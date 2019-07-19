@@ -6,6 +6,7 @@ from tornado.concurrent import run_on_executor
 from concurrent.futures import ThreadPoolExecutor
 from db_query import DBQuery
 import os
+import json
 
 class StatsHandler(web.RequestHandler):
     def __init__(self, app, request, **kwargs):
@@ -17,12 +18,13 @@ class StatsHandler(web.RequestHandler):
         return True
 
     @run_on_executor
-    def _bucketize(self, index, queries, aggs):
-        db=DBQuery(index=index,office="*",host=self.dbhost)
+    def _bucketize(self, index, queries, aggs, office):
+        db=DBQuery(index=index,office=office,host=self.dbhost)
         try:
             buckets=db.bucketize(queries, aggs)
         except Exception as e:
             return str(e)
+
         # reformat buckets to have str keys
         buckets1={}
         for k in buckets: buckets1[str(k)]=buckets[k]
@@ -33,8 +35,9 @@ class StatsHandler(web.RequestHandler):
         queries=unquote(str(self.get_argument("queries")))
         index=unquote(str(self.get_argument("index")))
         aggs=unquote(str(self.get_argument("aggs")))
+        office=unquote(str(self.get_argument("office"))).split(",")
 
-        r=yield self._bucketize(index, queries, aggs)
+        r=yield self._bucketize(index, queries, aggs, office)
         if isinstance(r,str):
             self.set_status(400, str(r))
             return

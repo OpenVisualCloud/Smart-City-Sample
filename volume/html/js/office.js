@@ -1,4 +1,4 @@
-$("#pg-office").on(":initpage", function(e, queries) {
+$("#pg-office").on(":initpage", function(e, queries, office) {
     var page=$(this);
     $("#layoutButton").hide();
     $("#cloudButton").hide();
@@ -19,7 +19,7 @@ $("#pg-office").on(":initpage", function(e, queries) {
         if (timer) clearTimeout(timer);
         
         /* fill the algorithm table */
-        apiHost.search(index,queries).then(function (data) {
+        apiHost.search(index,queries,office).then(function (data) {
             var tbody=page.find("[algorithm-table] tbody");
             tbody.empty();
             $.each(data.response,function (i,v) {
@@ -45,7 +45,7 @@ $("#pg-office").on(":initpage", function(e, queries) {
         if (!page.is(":visible")) return;
 
         /* fill the trigger table */
-        apiHost.search("triggers","name:*").then(function (data) {
+        apiHost.search("triggers","name:*",office).then(function (data) {
             var tbody=page.find("[trigger-table] tbody");
             tbody.empty();
             $.each(data.response,function (i,v) {
@@ -62,10 +62,10 @@ $("#pg-office").on(":initpage", function(e, queries) {
     updateTrigger();
 
     /* enable recording queries */
-    search.data('index',index).data('invoke',updateAlgos).val(queries).focus().trigger($.Event("keydown",{keyCode:13}));
+    search.data('index',index).data('office',office).data('invoke',updateAlgos).val(queries).focus().trigger($.Event("keydown",{keyCode:13}));
 
     /* enable workload charts */
-    workloadSetup(page.find('canvas'),"Server Workload");
+    workloadSetup(page.find('canvas'),"Server Workload", office);
 }).on(":closepage",function() {
     var page=$(this);
     var timer=page.data('timer');

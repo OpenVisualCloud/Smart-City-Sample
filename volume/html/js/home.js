@@ -87,7 +87,7 @@ $("#pg-home").on(":initpage", function(e) {
         if (timer) clearTimeout(timer);
 
         var center=map.getCenter();
-        apiHost.search(index,"("+queries+") and location:["+center.lat+","+center.lng+","+settings.radius()+"]").then(function (data) {
+        apiHost.search(index,"("+queries+") and location:["+center.lat+","+center.lng+","+settings.radius()+"]",null).then(function (data) {
             var sensors=page.data('sensors');
             var offices=page.data('offices');
             var stats_layer=page.data('stats');
@@ -142,12 +142,12 @@ $("#pg-home").on(":initpage", function(e) {
 
                     /* setup marker actions */
                     offices[officeid].marker.on('dblclick', function () {
-                        selectPage('office', ["office:["+info._source.office.lat+","+info._source.office.lon+"]"]);
+                        selectPage('office', ["office:["+info._source.office.lat+","+info._source.office.lon+"]",info._source.office]);
                     }).bindPopup('<div style="width:300px;height:200px" chart></div>',{maxWidth:"auto",maxHeight:"auto"}).on('popupopen',function () {
                         var e=$(this.getPopup().getElement()).find("[chart]");
                         e.find("canvas").empty();
                         e.append('<canvas style="width:100%;height:100%"></canvas>');
-                        workloadSetup(e.find("canvas"),'Office ['+officeid+']');
+                        workloadSetup(e.find("canvas"),'Office ['+officeid+']',info._source.office);
                     }).addTo(map);
                 }
 
@@ -168,7 +168,7 @@ $("#pg-home").on(":initpage", function(e) {
                         rotationAngle:"theta" in info._source?360-info._source.theta:0,
                         rotationOrigin:"center",
                     }).addTo(map).on('dblclick',function() {
-                        selectPage("recording",['sensor="'+info._id+'"']);
+                        selectPage("recording",['sensor="'+info._id+'"',info._source.office]);
                     });
                     sensors[info._id]={ 
                         marker: marker,
@@ -187,7 +187,7 @@ $("#pg-home").on(":initpage", function(e) {
                 sensors[info._id].line.setTooltipContent(bandwidth>0?bandwidth.toFixed(1)+unit:"");
 
                 /* show bubble stats */
-                if (map.hasLayer(stats_layer)) stats.update(stats_layer, sensors[info._id], map.getZoom(), info._id, info._source.location);
+                if (map.hasLayer(stats_layer)) stats.update(stats_layer, sensors[info._id], map.getZoom(), info);
 
                 /* show heatmaps */
                 if (map.hasLayer(heatmap_layer)) heatmaps.update(heatmap_layer, sensors[info._id], map.getZoom(), info);
@@ -226,7 +226,7 @@ $("#pg-home").on(":initpage", function(e) {
     };
 
     /* enable sensor queries */
-    search.val(page.data("queries")).data('index',index).data('invoke',update).focus().trigger($.Event("keydown",{keyCode:13}));
+    search.val(page.data("queries")).data('index',index).data('office',null).data('invoke',update).focus().trigger($.Event("keydown",{keyCode:13}));
 
 }).on(":closepage",function() {
     var page=$(this);

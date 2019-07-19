@@ -6,14 +6,12 @@ from search import SearchHandler
 from stats import StatsHandler
 from workload import WorkloadHandler
 from hint import HintHandler
-from thumbnail import ThumbnailHandler
 
 app = web.Application([
     (r'/search',SearchHandler),
     (r'/stats',StatsHandler),
     (r'/workload',WorkloadHandler),
     (r'/hint',HintHandler),
-    (r'/thumbnail/.*.png',ThumbnailHandler),
 ])
 
 if __name__ == "__main__":

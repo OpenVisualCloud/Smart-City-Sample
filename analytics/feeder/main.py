@@ -12,8 +12,7 @@ import requests
 from utils import logging
 from threading import Thread
 from threading import Timer
-from probe import probe
-import subprocess
+from probe import probe, run
 import time
 import datetime
 import os
@@ -281,16 +280,10 @@ class FSHandler(FileSystemEventHandler):
         self.timeout = 80 #set to 20 seconds... this should change according to recording chunk length
     
     def on_created(self, event):
-        
-        if event.is_directory:
-            return
-
-        if self.last_file and (self.last_file==event.src_path):
-            return
-
-        if self.finalize_timer:
-            self.finalize_timer.cancel()
-        
+        if event.is_directory: return
+        if event.src_path.endswith(".png"): return
+        if self.last_file and (self.last_file==event.src_path): return
+        if self.finalize_timer: self.finalize_timer.cancel()
         if self.last_file:
             try:
                 self.ingest()
@@ -311,10 +304,11 @@ class FSHandler(FileSystemEventHandler):
             tmpfilename = os.path.abspath(os.path.join(tmpdirname,os.path.basename(filename)))
             output=""
             try:
-                subprocess.call(["/usr/bin/ffmpeg","-i",filename,"-c","copy",tmpfilename],stderr=subprocess.STDOUT)
+                list(run(["/usr/bin/ffmpeg","-i",filename,"-c","copy",tmpfilename]))
                 shutil.move(tmpfilename,filename)
+                list(run(["/usr/bin/ffmpeg","-i",filename,"-vf","thumbnail,scale=640:360","-frames:v","1",filename+".png"]))
                 return filename,probe(filename)
-            except subprocess.CalledProcessError as error:
+            except Exception as error:
                 logger.error("Error converting mp4 with ffmpeg: %s %s" %(error,error.output))
                 raise
 
