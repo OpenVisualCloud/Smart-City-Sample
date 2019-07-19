@@ -1,5 +1,5 @@
 
-function workloadSetup(canvas, title) {
+function workloadSetup(canvas, title, office) {
     var chart=new Chart(canvas, {
         type: 'line',
         data: {
@@ -96,6 +96,6 @@ function workloadSetup(canvas, title) {
             datasets[2].data.shift();
         }
         chart.update();
-    });
+    }, office);
 }
 

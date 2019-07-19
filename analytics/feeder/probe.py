@@ -2,7 +2,7 @@
 
 from subprocess import Popen,PIPE,STDOUT
 
-def _run(cmd):
+def run(cmd):
     with Popen(cmd,stdout=PIPE,stderr=STDOUT,bufsize=1,universal_newlines=True) as p:
         for line in p.stdout:
             yield line.strip()
@@ -15,7 +15,7 @@ def probe(file1):
     codec_type=None
     start_time= -1
     streams=[]
-    for line in _run(["/usr/bin/ffprobe","-v","error","-show_streams",file1]):
+    for line in run(["/usr/bin/ffprobe","-v","error","-show_streams",file1]):
         if line=="[STREAM]": sinfo={}
         if line=="[/STREAM]": streams.append(sinfo)
 

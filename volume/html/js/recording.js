@@ -1,4 +1,4 @@
-$("#pg-recording").on(":initpage", function(e, queries) {
+$("#pg-recording").on(":initpage", function(e, queries, office) {
     var page=$(this);
 
     /* setup the layout button */
@@ -25,14 +25,15 @@ $("#pg-recording").on(":initpage", function(e, queries) {
 
     /* enable recording queries */
     var monitor=0;
-    $("#homeSearch").data('index',index).data('invoke',function (queries) {
+    $("#homeSearch").data('index',index).data('office',office).data('invoke',function (queries) {
         var plist=page.find("[play-list]");
         plist.empty();
-        apiHost.search($("#homeSearch").data('index'),queries).then(function (data) {
+        apiHost.search($("#homeSearch").data('index'),queries,office).then(function (data) {
             data.response.sort(function(a,b){return a._source.time-b._source.time});
             $.each(data.response, function (k,v) {
                 var time=new Date(v._source.time).toLocaleString();
-                var line=$('<tr><td style="padding:0"><a href="javascript:void(0)"><img src="thumbnail/'+v._source.path+'.png" draggable="true" style="width:'+plist.width()+'px"/><figcaption style="font-size:xx-small">'+time+' <pre>'+v._source.path+'</pre></figcaption></a></td></tr>');
+                v._source.path=v._source.path+'?'+$.param({office:office.lat+","+office.lon});
+                var line=$('<tr><td style="padding:0"><a href="javascript:void(0)"><img src="video/'+v._source.path.replace('mp4?','mp4.png?')+'" draggable="true" style="width:'+plist.width()+'px"/><figcaption style="font-size:xx-small">'+time+' <pre>'+v._source.path+'</pre></figcaption></a></td></tr>');
                 line.on("dragstart",function (e) {
                     e.originalEvent.dataTransfer.setData("application/json",JSON.stringify(v));
                 });

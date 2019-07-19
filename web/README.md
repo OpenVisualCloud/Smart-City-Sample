@@ -7,5 +7,4 @@ The following REST services are implemented:
 | GET /api/search | Search database and return the search results. |
 | GET /api/stat | Search database and return the statistics. |
 | GET /api/hint | Get search keyword hints. |
-| GET /thumbnail | Generate and return the thumbnail image of a recording clip. |
-| GET /video | Return the recoding clip. |
+| GET /video | Return the recoding clip and thumbnail. |

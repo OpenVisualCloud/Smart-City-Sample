@@ -6,6 +6,7 @@ from tornado.concurrent import run_on_executor
 from concurrent.futures import ThreadPoolExecutor
 from db_hint import DBHint
 import os
+import json
 
 class HintHandler(web.RequestHandler):
     def __init__(self, app, request, **kwargs):
@@ -17,11 +18,11 @@ class HintHandler(web.RequestHandler):
         return True
 
     @run_on_executor
-    def _hint(self, indexes):
+    def _hint(self, indexes,office):
         try:
             hints={}
             for index in indexes:
-                db=DBHint(index=index,office="*",host=self.dbhost)
+                db=DBHint(index=index,office=office,host=self.dbhost)
                 hints[index]=db.hints(size=100)
             return hints
         except Exception as e:
@@ -30,8 +31,10 @@ class HintHandler(web.RequestHandler):
     @gen.coroutine
     def get(self):
         indexes=unquote(str(self.get_argument("index"))).split(",")
+        office=unquote(str(self.get_argument("office")))
+        if office!="*": office=office.split(",")
 
-        r=yield self._hint(indexes)
+        r=yield self._hint(indexes,office)
         if isinstance(r,str):
             self.set_status(400, str(r))
             return

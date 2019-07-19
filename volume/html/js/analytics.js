@@ -2,7 +2,7 @@
 function draw_analytics(video, doc) {
     var colors_id=["#24693d","#44914e","#73ba67","#ced7c3","#f8816b","#e33f43","#a3123a"];
     var colors_label={ "person": "red", "vehicle": "cyan", "bike": "lime" };
-    apiHost.search("analytics",'sensor="'+doc._source.sensor+'" and time>='+doc._source.time+' and time<'+(doc._source.time+doc._source.duration*1000),10000).then(function (data) {
+    apiHost.search("analytics",'sensor="'+doc._source.sensor+'" and time>='+doc._source.time+' and time<'+(doc._source.time+doc._source.duration*1000),doc._source.office,10000).then(function (data) {
         /* group time into time buckets */
         var timed={};
         var duration=settings.frame_duration();

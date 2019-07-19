@@ -53,7 +53,7 @@ var stats={
         });
         ctx.circle.bindPopup(canvas.parent()[0],{ maxWidth:"auto",maxHeight:"auto" });
     },
-    update: function (layer, ctx, zoom, sensor_id, sensor_location) {
+    update: function (layer, ctx, zoom, sensor) {
         var update_chart=function (data) {
             var labels=ctx.chart.config.data.labels;
             var time=new Date();
@@ -82,7 +82,7 @@ var stats={
             }
             ctx.chart.update();
         };
-        apiHost.stats("analytics",'sensor="'+sensor_id+'" and '+settings.stats_query(),settings.stats_histogram()).then(function (data) {
+        apiHost.stats("analytics",'sensor="'+sensor._id+'" and '+settings.stats_query(),settings.stats_histogram(), sensor._source.office).then(function (data) {
             var count=0;
             for (var k in data) 
                 count=count+data[k];
@@ -97,7 +97,7 @@ var stats={
                     }
                     return ((value<10)?value.toFixed(1):Math.floor(value))+'B';
                 };
-                ctx.circle.setLatLng([sensor_location.lat+0.003*Math.pow(2,14-zoom),sensor_location.lon]).addTo(layer);
+                ctx.circle.setLatLng([sensor._source.location.lat+0.003*Math.pow(2,14-zoom),sensor._source.location.lon]).addTo(layer);
                 ctx.text.setLatLng(ctx.circle.getLatLng()).setContent(pretty(count)).addTo(layer);
             } else {
                 ctx.circle.remove();

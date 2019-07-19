@@ -1,9 +1,11 @@
 #!/usr/bin/python3
 
 from tornado import websocket, gen, ioloop
+from urllib.parse import unquote
 import datetime
 import time
 import psutil
+import json
 
 class WorkloadHandler(websocket.WebSocketHandler):
     def __init__(self, app, request, **kwargs):
@@ -17,10 +19,11 @@ class WorkloadHandler(websocket.WebSocketHandler):
 
     def open(self):
         self.set_nodelay(True)
-        ioloop.IOLoop.current().spawn_callback(self._send_workloads)
+        office=unquote(str(self.get_argument("office"))).split(",")
+        ioloop.IOLoop.current().spawn_callback(self._send_workloads,office)
 
     @gen.coroutine
-    def _send_workloads(self):
+    def _send_workloads(self, office):
         while True:
             yield self.write_message({
                 "time": int(time.mktime(datetime.datetime.now().timetuple())*1000),
