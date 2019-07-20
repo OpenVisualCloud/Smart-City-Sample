@@ -2,17 +2,25 @@
 
 import requests
 import json
-import re
 
 class DBIngest(object):
     def __init__(self, index, office, host):
         super(DBIngest,self).__init__()
         self._host=host
-        office=re.sub(r'[.-]','$','$'.join(map(str,office)))
-        self._index=index+"$"+office
+        if isinstance(office,list): office='$'+('$'.join(map(str,office)))
+        self._index=index+office
         self._type="_doc"
         self._mappings={
-            "sensors$"+office: {
+            "offices": {
+                "mappings": {
+                    self._type: {
+                        "properties": {
+                            "office": { "type": "geo_point", },
+                        },
+                    },
+                },
+            },
+            "sensors"+office: {
                 "mappings": {
                     self._type: {
                         "properties": {
@@ -22,7 +30,7 @@ class DBIngest(object):
                     },
                 },
             },
-            "recordings$"+office: {
+            "recordings"+office: {
                 "mappings": {
                     self._type: {
                         "properties": {
@@ -33,7 +41,7 @@ class DBIngest(object):
                     },
                 },
             },
-            "algorithms$"+office: {
+            "algorithms"+office: {
                 "mappings": {
                     self._type: {
                         "properties": {
@@ -42,7 +50,7 @@ class DBIngest(object):
                     },
                 },
             },
-            "analytics$"+office: {
+            "analytics"+office: {
                 "mappings": {
                     self._type: {
                         "properties": {
@@ -58,7 +66,7 @@ class DBIngest(object):
                     },
                 },
             },
-            "alerts$"+office: {
+            "alerts"+office: {
                 "mappings": {
                     self._type: {
                         "properties": {
@@ -94,9 +102,9 @@ class DBIngest(object):
             r=requests.post(self._host+"/_bulk",data=cmds,headers={"content-type":"application/x-ndjson"})
             self._check_error(r)
         
-    def ingest(self, info):
+    def ingest(self, info, id1=None):
         self._check_mapping()
-        r=requests.post(self._host+"/"+self._index+"/"+self._type,json=info)
+        r=requests.put(self._host+"/"+self._index+"/"+self._type+"/"+id1,json=info) if id1 else requests.post(self._host+"/"+self._index+"/"+self._type,json=info)
         self._check_error(r)
         return r.json()
 

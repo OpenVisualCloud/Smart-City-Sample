@@ -13,11 +13,11 @@ var apiHost={
         console.log("GET "+url+"?"+$.param(args));
         return $.get(url,args);
     },
-    workload: function (ondata, office) {
-        var worker=new Worker('js/worker.js');
-        worker.onmessage=ondata;
-        worker.postMessage(window.location.protocol.replace("http","ws")+window.location.host+window.location.pathname+"api/workload?"+$.param({office:office.lat+","+office.lon}));
-        return worker;
+    workload: function (office) {
+        var url="api/workload";
+        var args={ office:office.lat+","+office.lon }
+        console.log("GET "+url+"?"+$.param(args));
+        return $.get(url,args);
     },
     hint: function (index, office) {
         var url="api/hint";

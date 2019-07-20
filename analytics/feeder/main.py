@@ -334,7 +334,7 @@ class FSHandler(FileSystemEventHandler):
         
         converted_file,sinfo=self.ffmpeg_convert(self.last_file)
         recording_object.update(sinfo)
-        recording_object["path"] = os.path.abspath(converted_file).split(os.path.abspath(self.recording_volume))[1]
+        recording_object["path"] = os.path.abspath(converted_file).split(os.path.abspath(self.recording_volume)+"/")[1]
         recording_object["time"] = self.get_timestamp(converted_file)
         logger.debug("Ingesting record: %s" %(recording_object))
         

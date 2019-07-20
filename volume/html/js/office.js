@@ -65,9 +65,16 @@ $("#pg-office").on(":initpage", function(e, queries, office) {
     search.data('index',index).data('office',office).data('invoke',updateAlgos).val(queries).focus().trigger($.Event("keydown",{keyCode:13}));
 
     /* enable workload charts */
-    workloadSetup(page.find('canvas'),"Server Workload", office);
+    var ctx={};
+    workloads.create(ctx,page.find('canvas'),"Server Workload");
+    ctx.timer=setInterval(workloads.update,2000,ctx,office);
+    page.data('workload',ctx);
 }).on(":closepage",function() {
     var page=$(this);
+
     var timer=page.data('timer');
     if (timer) clearTimeout(timer);
+
+    var ctx=page.data('workload');
+    if (ctx) clearInterval(ctx.timer);
 });

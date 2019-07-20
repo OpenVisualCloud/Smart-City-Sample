@@ -16,8 +16,8 @@ services:
             replicas: 1
         restart: always
 
-    web:
-        image: smtc_web:latest
+    web_cloud:
+        image: smtc_web_cloud:latest
         ports:
             - "443:8080"
         deploy:
@@ -26,7 +26,6 @@ services:
             DBHOST: 'http://database:9200'
         volumes:
             - ${HTML_VOLUME}:/var/www/html:ro
-            - ${STORAGE_VOLUME}:/mnt/storage:ro
             - /etc/localtime:/etc/localtime:ro
         secrets:
             - source: self_crt
@@ -46,6 +45,19 @@ services:
               mode: 0444
         restart: always
         
+    web_street:
+        image: smtc_web_local:latest
+        deploy:
+            replicas: 1
+        environment:
+            DBHOST: 'http://database:9200'
+            OFFICE: '45.543797,-122.962038'
+            STORAGE_VOLUME: '/mnt/storage'
+        volumes:
+            - ${STORAGE_VOLUME}:/mnt/storage:ro
+            - /etc/localtime:/etc/localtime:ro
+        restart: always
+
     simulated_camera_street_sensor1:
         image: smtc_sensor_simulation:latest
         environment:

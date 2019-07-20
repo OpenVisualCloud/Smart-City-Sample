@@ -4,17 +4,16 @@ import requests
 import time
 import json
 from dsl_yacc import compile, check_nested_label
-import re
 
 class DBQuery(object):
     def __init__(self, index, office, host):
         super(DBQuery,self).__init__()
         self._host=host
         indexes=index.split(",")
-        if isinstance(office,list): office=re.sub(r'[.-]','$','$'.join(map(str,office)))
-        self._index=indexes[0]+"$"+office
+        if isinstance(office,list): office='$'+('$'.join(map(str,office)))
+        self._index=indexes[0]+office
         self._type="_doc"
-        self._where=indexes[1]+"$"+office if len(indexes)>1 else None
+        self._where=indexes[1]+office if len(indexes)>1 else None
 
     def _check_error(self, r):
         if r.status_code==200 or r.status_code==201: return
