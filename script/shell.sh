@@ -15,6 +15,6 @@ else
         DOCKERFILE="${DIR}/Dockerfile"
     fi
     args=("$@")
-    sudo docker run ${OPTIONS[@]} $(env | grep -E '_(proxy)=' | sed 's/^/-e /') $(grep '^ARG .*=' "$DOCKERFILE" | sed 's/^ARG /-e /') --entrypoint ${1:-/bin/bash} -it "${IMAGE}" ${args[@]:1}
+    sudo docker run --rm ${OPTIONS[@]} $(env | grep -E '_(proxy)=' | sed 's/^/-e /') $(grep '^ARG .*=' "$DOCKERFILE" | sed 's/^ARG /-e /') --entrypoint ${1:-/bin/bash} -it "${IMAGE}" ${args[@]:1}
 fi
 

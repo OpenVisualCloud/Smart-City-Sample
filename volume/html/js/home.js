@@ -132,7 +132,7 @@ $("#pg-home").on(":initpage", function(e) {
                         });
                     }
                     
-                    offices[officeid]={
+                    var ctx=offices[officeid]={
                         marker: L.marker(info._source.office, { 
                             icon: icons[icon],
                             riseOnHover: true,
@@ -141,14 +141,16 @@ $("#pg-home").on(":initpage", function(e) {
                     };
 
                     /* setup marker actions */
-                    offices[officeid].marker.on('dblclick', function () {
+                    var chartdiv=$('<div style="width:300px;height:200px"><canvas style="width:100%;height:100%"></canvas></div>');
+                    ctx.marker.on('dblclick', function () {
                         selectPage('office', ["office:["+info._source.office.lat+","+info._source.office.lon+"]",info._source.office]);
-                    }).bindPopup('<div style="width:300px;height:200px" chart></div>',{maxWidth:"auto",maxHeight:"auto"}).on('popupopen',function () {
-                        var e=$(this.getPopup().getElement()).find("[chart]");
-                        e.find("canvas").empty();
-                        e.append('<canvas style="width:100%;height:100%"></canvas>');
-                        workloadSetup(e.find("canvas"),'Office ['+officeid+']',info._source.office);
+                    }).bindPopup(chartdiv[0],{
+                        maxWidth:"auto",
+                        maxHeight:"auto"
                     }).addTo(map);
+
+                    /* setup workload chart */
+                    workloads.create(ctx,chartdiv.find("canvas"),'Office ['+officeid+']');
                 }
 
                 if (!(info._source.icon in icons)) {
@@ -187,10 +189,16 @@ $("#pg-home").on(":initpage", function(e) {
                 sensors[info._id].line.setTooltipContent(bandwidth>0?bandwidth.toFixed(1)+unit:"");
 
                 /* show bubble stats */
-                if (map.hasLayer(stats_layer)) stats.update(stats_layer, sensors[info._id], map.getZoom(), info);
+                if (map.hasLayer(stats_layer)) 
+                    stats.update(stats_layer, sensors[info._id], map.getZoom(), info);
 
                 /* show heatmaps */
-                if (map.hasLayer(heatmap_layer)) heatmaps.update(heatmap_layer, sensors[info._id], map.getZoom(), info);
+                if (map.hasLayer(heatmap_layer)) 
+                    heatmaps.update(heatmap_layer, sensors[info._id], map.getZoom(), info);
+
+                /* show workload */
+                if (offices[officeid].marker.getPopup().isOpen())
+                    workloads.update(offices[officeid],info._source.office);
 
                 if (sensors[info._id].title!=title) {
                     sensors[info._id].marker.unbindPopup().bindPopup(title);
@@ -207,6 +215,7 @@ $("#pg-home").on(":initpage", function(e) {
                     v.line.remove();
 		            stats.close(v);
                     heatmaps.close(v);
+                    workloads.close(v);
                     delete sensors[x];
                 }
             });

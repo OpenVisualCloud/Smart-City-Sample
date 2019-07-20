@@ -3,15 +3,15 @@
 from tornado import ioloop, web
 from tornado.options import define, options, parse_command_line
 from search import SearchHandler
-from stats import StatsHandler
-from workload import WorkloadHandler
 from hint import HintHandler
+from redirect import RedirectHandler
 
 app = web.Application([
-    (r'/search',SearchHandler),
-    (r'/stats',StatsHandler),
-    (r'/workload',WorkloadHandler),
-    (r'/hint',HintHandler),
+    (r'/api/search',SearchHandler),
+    (r'/api/stats',RedirectHandler),
+    (r'/api/workload',RedirectHandler),
+    (r'/api/hint',HintHandler),
+    (r'/recording/.*',RedirectHandler),
 ])
 
 if __name__ == "__main__":

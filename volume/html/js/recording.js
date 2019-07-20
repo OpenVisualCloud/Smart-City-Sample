@@ -32,8 +32,8 @@ $("#pg-recording").on(":initpage", function(e, queries, office) {
             data.response.sort(function(a,b){return a._source.time-b._source.time});
             $.each(data.response, function (k,v) {
                 var time=new Date(v._source.time).toLocaleString();
-                v._source.path=v._source.path+'?'+$.param({office:office.lat+","+office.lon});
-                var line=$('<tr><td style="padding:0"><a href="javascript:void(0)"><img src="video/'+v._source.path.replace('mp4?','mp4.png?')+'" draggable="true" style="width:'+plist.width()+'px"/><figcaption style="font-size:xx-small">'+time+' <pre>'+v._source.path+'</pre></figcaption></a></td></tr>');
+                v._source.path="recording/"+v._source.path+'?'+$.param({office:office.lat+","+office.lon});
+                var line=$('<tr><td style="padding:0"><a href="javascript:void(0)"><img src="'+v._source.path.replace('mp4?','mp4.png?')+'" draggable="true" style="width:'+plist.width()+'px"/><figcaption style="font-size:xx-small">'+time+' <pre>'+v._source.path+'</pre></figcaption></a></td></tr>');
                 line.on("dragstart",function (e) {
                     e.originalEvent.dataTransfer.setData("application/json",JSON.stringify(v));
                 });
@@ -77,7 +77,7 @@ $("#pg-recording [layout4] video").on("drop",function (e) {
     e.preventDefault();
     var page=$(this);
     var doc=JSON.parse(e.originalEvent.dataTransfer.getData("application/json"));
-    page.find("source").prop('src','video/'+doc._source.path);
+    page.find("source").prop('src',doc._source.path);
     page.get(0).load();
     page.parent().find("div").text(new Date(doc._source.time).toLocaleString());
 }).on("dragover",function (e) {
@@ -90,7 +90,7 @@ $("#pg-recording [layout1] video").on("drop",function (e) {
     var doc=JSON.parse(e.originalEvent.dataTransfer.getData('application/json'));
 
     page.parent().find("div").text(new Date(doc._source.time).toLocaleString());
-    page.find("source").prop('src','video/'+doc._source.path);
+    page.find("source").prop('src',doc._source.path);
     console.log(doc);
     draw_analytics(page, doc);
 }).on("dragover",function (e) {
