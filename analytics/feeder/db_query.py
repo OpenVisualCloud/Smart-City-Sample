@@ -68,24 +68,51 @@ class DBQuery(object):
         self._check_error(r)
         return r.json()["count"]
 
-    def bucketize(self, queries, field):
-        specs=self._specs()
-        nested,var=check_nested_label(specs[0],field)
-        if "types" in specs[0]:
-            if var in specs[0]["types"]:
-                if specs[0]["types"][var]=="text":
-                    var=var+".keyword"
-        aggs={"terms":{"field":var}}
-        if nested: aggs={"nested":{"path":nested[0]},"aggs":{"agg2":aggs}}
-        dsl={"query":compile(queries,specs)[0],"aggs":{"agg1":aggs},"size":0}
+    def _scan_bucket(self, buckets, r):
+        for k in r:
+            if k=="buckets":
+                for x in r[k]:
+                    buckets[x["key"]]=x["doc_count"]
+                continue
+            if isinstance(r[k],dict):
+                self._scan_bucket(buckets,r[k])
+
+    def _bucketize(self, queries, fields, size, specs):
+        if not specs: specs=self._specs()
+
+        dsl=compile(queries,specs)[0] if queries else {"match_all":{}} 
+        dsl={"query":dsl,"aggs":{},"size":0}
+
+        for field in fields:
+            nested,var=check_nested_label(specs[0],field)
+
+            # replace text field with field.keyword
+            if "types" in specs[0]:
+                if var in specs[0]["types"]:
+                    if specs[0]["types"][var]=="text":
+                        var=var+".keyword"
+            # nested aggs
+            aggs={"terms":{"field":var, "size":size}}
+            if nested: 
+                for nest1 in nested:
+                    aggs={"nested":{"path":nest1},"aggs":{nest1:aggs}}
+            dsl["aggs"][field]=aggs
+
+        # bucketize
         r=requests.post(self._host+"/"+self._index+"/"+self._type+"/_search",json=dsl)
         self._check_error(r)
-        r=r.json()["aggregations"]["agg1"]
-        if "buckets" not in r: r=r["agg2"]
+
+        # summariz results
         buckets={}
-        for x in r["buckets"]:
-            buckets[x["key"]]=x["doc_count"]
+        aggs=r.json()["aggregations"]
+        for field in aggs:
+            buckets[field]={}
+            self._scan_bucket(buckets[field],aggs[field])
         return buckets
+
+    def bucketize(self, queries, fields, size=25):
+        specs=self._specs()
+        return self._bucketize(queries,fields,size,specs)
 
     def update(self, _id, info, version=None):
         options={} if version is None else { "version": version }
@@ -116,3 +143,19 @@ class DBQuery(object):
         r=requests.delete(self._host+"/"+self._index+"/"+self._type+"/"+_id,headers={'Content-Type':'application/json'})
         self._check_error(r)
         return r.json()
+
+    def hints(self, size=50):
+        specs=self._specs()
+        keywords={}
+        fields=[]
+
+        types=specs[0]["types"]
+        for var in types:
+            keywords[var]={"type":types[var]}
+            if types[var]=="text": 
+                fields.append(var)
+
+        values=self._bucketize(None,fields,size,specs)
+        for var in values:
+            keywords[var]["values"]=list(values[var].keys())
+        return keywords

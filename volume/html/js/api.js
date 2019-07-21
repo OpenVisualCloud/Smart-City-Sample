@@ -7,9 +7,9 @@ var apiHost={
         console.log("GET "+url+"?"+$.param(args));
         return $.get(url,args);
     },
-    stats: function (index, queries, aggs, office) {
+    stats: function (index, queries, field, size, office) {
         var url="api/stats";
-        var args={ index:index, queries:queries, aggs:aggs, office:office.lat+","+office.lon};
+        var args={index:index,queries:queries,field:field,size:size,office:office.lat+","+office.lon};
         console.log("GET "+url+"?"+$.param(args));
         return $.get(url,args);
     },
