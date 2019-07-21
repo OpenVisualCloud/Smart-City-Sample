@@ -52,7 +52,6 @@ services:
         environment:
             DBHOST: 'http://database:9200'
             OFFICE: '45.543797,-122.962038'
-            STORAGE_VOLUME: '/mnt/storage'
         volumes:
             - ${STORAGE_VOLUME}:/mnt/storage:ro
             - /etc/localtime:/etc/localtime:ro

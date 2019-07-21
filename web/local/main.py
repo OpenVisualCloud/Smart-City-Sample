@@ -14,7 +14,6 @@ app = web.Application([
 if __name__ == "__main__":
     dbhost=os.environ["DBHOST"]
     office=list(map(float,os.environ["OFFICE"].split(",")))
-    storage=os.environ["STORAGE_VOLUME"]
     hostname=socket.gethostbyname(socket.gethostname())
     
     db=DBIngest(index="offices",office="",host=dbhost)
@@ -24,7 +23,6 @@ if __name__ == "__main__":
            "lon": office[1],
        },
        "uri": "http://"+hostname+":8080",
-       "storage": storage.replace("/mnt/storage",""),
     },"$".join(map(str,office)))
 
     define("port", default=2222, help="the binding port", type=int)

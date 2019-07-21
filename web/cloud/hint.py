@@ -11,7 +11,7 @@ import json
 class HintHandler(web.RequestHandler):
     def __init__(self, app, request, **kwargs):
         super(HintHandler, self).__init__(app, request, **kwargs)
-        self.executor= ThreadPoolExecutor(8)
+        self.executor= ThreadPoolExecutor(4)
         self.dbhost=os.environ["DBHOST"]
 
     def check_origin(self, origin):

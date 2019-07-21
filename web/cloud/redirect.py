@@ -16,7 +16,7 @@ offices={}
 class RedirectHandler(web.RequestHandler):
     def __init__(self, app, request, **kwargs):
         super(RedirectHandler, self).__init__(app, request, **kwargs)
-        self.executor= ThreadPoolExecutor(8)
+        self.executor= ThreadPoolExecutor(4)
 
     def check_origin(self, origin):
         return True
@@ -47,10 +47,6 @@ class RedirectHandler(web.RequestHandler):
             protocol=uri.split("://")[0]
             host=uri.split("/")[2]
             path="/".join(uri.split("/")[3:])
-
-            # apply office specific storage volume
-            if path.startswith("recording"):
-                path=path.replace("recording","recording"+r["_source"]["storage"])
 
             self.add_header('X-Accel-Redirect','/redirect/'+protocol+"/"+host+"/"+path)
             self.set_status(200,'OK')

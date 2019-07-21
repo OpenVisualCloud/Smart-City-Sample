@@ -12,7 +12,7 @@ import os
 class WorkloadHandler(web.RequestHandler):
     def __init__(self, app, request, **kwargs):
         super(WorkloadHandler, self).__init__(app, request, **kwargs)
-        self.executor= ThreadPoolExecutor(8)
+        self.executor= ThreadPoolExecutor(4)
         self.storage=os.environ["STORAGE_VOLUME"]
 
     def check_origin(self, origin):
