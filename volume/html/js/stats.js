@@ -82,7 +82,7 @@ var stats={
             }
             ctx.chart.update();
         };
-        apiHost.stats("analytics",'sensor="'+sensor._id+'" and '+settings.stats_query(),settings.stats_histogram(), sensor._source.office).then(function (data) {
+        apiHost.stats("analytics",'sensor="'+sensor._id+'" and '+settings.stats_query(),settings.stats_histogram(),25,sensor._source.office).then(function (data) {
             var count=0;
             for (var k in data) 
                 count=count+data[k];

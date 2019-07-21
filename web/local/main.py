@@ -2,14 +2,12 @@
 
 from tornado import ioloop, web
 from tornado.options import define, options, parse_command_line
-from stats import StatsHandler
 from workload import WorkloadHandler
 from db_ingest import DBIngest
 import socket
 import os
 
 app = web.Application([
-    (r'/api/stats',StatsHandler),
     (r'/api/workload',WorkloadHandler),
 ])
 

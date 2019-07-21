@@ -5,10 +5,11 @@ from tornado.options import define, options, parse_command_line
 from search import SearchHandler
 from hint import HintHandler
 from redirect import RedirectHandler
+from stats import StatsHandler
 
 app = web.Application([
     (r'/api/search',SearchHandler),
-    (r'/api/stats',RedirectHandler),
+    (r'/api/stats',StatsHandler),
     (r'/api/workload',RedirectHandler),
     (r'/api/hint',HintHandler),
     (r'/recording/.*',RedirectHandler),
