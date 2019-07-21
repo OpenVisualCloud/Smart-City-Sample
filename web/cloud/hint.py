@@ -19,14 +19,12 @@ class HintHandler(web.RequestHandler):
 
     @run_on_executor
     def _hint(self, indexes,office):
-        if True:
+        try:
             hints={}
             for index in indexes:
                 db=DBQuery(index=index,office=office,host=self.dbhost)
                 hints[index]=db.hints(size=100)
             return hints
-        try:
-            pass
         except Exception as e:
             return str(e)
 
