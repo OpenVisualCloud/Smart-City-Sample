@@ -3,7 +3,7 @@ FROM centos:7.6.1810
 
 RUN yum install -y epel-release && yum install -y python36-requests python36-ply && rm -rf /var/cache/yum/*
 COPY *.py /home/
-CMD  ["/bin/bash","-c","/home/main.py"]
+CMD  ["/home/main.py"]
 
 ####
 ARG  USER

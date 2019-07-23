@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 from db_query import DBQuery
+from signal import signal, SIGTERM
 import os
 import time
 
@@ -11,6 +12,12 @@ search_batch=int(os.environ["SEARCH_BATCH"])
 update_batch=int(os.environ["UPDATE_BATCH"])
 office=list(map(float, os.environ["OFFICE"].split(",")))
 dbhost=os.environ["DBHOST"]
+
+def quit_nicely(signum, sigframe):
+    exit(143)
+
+# set signal to quit nicely
+signal(SIGTERM, quit_nicely)
 
 dbq=DBQuery(index=indexes[0],office=office,host=dbhost)
 dba=DBQuery(index=indexes[1],office=office,host=dbhost)

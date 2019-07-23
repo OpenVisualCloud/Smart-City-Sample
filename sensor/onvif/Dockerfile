@@ -26,7 +26,7 @@ RUN  wget ${ZEEP_REPO} && \
      rm v${ONVIF_ZEEP_VER}.tar.gz
 
 COPY    *.py /home/
-CMD     ["/bin/bash","-c","/home/main.py"]
+CMD     ["/home/main.py"]
 WORKDIR /home
 EXPOSE  80
 

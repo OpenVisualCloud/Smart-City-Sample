@@ -4,6 +4,8 @@ from tornado import ioloop, web
 from tornado.options import define, options, parse_command_line
 from workload import WorkloadHandler
 from db_ingest import DBIngest
+from subprocess import Popen
+from signal import signal, SIGTERM, SIGQUIT
 import socket
 import os
 
@@ -31,4 +33,14 @@ if __name__ == "__main__":
     print("Listening to " + options.ip + ":" + str(options.port))
 
     app.listen(options.port, address=options.ip)
-    ioloop.IOLoop.instance().start()
+    tornado1=ioloop.IOLoop.instance();
+    nginx1=Popen(["/usr/sbin/nginx"])
+    
+    def quit_nicely(signum, frame):
+        tornado1.add_callback(tornado1.stop)
+        nginx1.send_signal(SIGQUIT)
+        db.delete(r["_id"])
+
+    signal(SIGTERM, quit_nicely)
+    tornado1.start()
+    nginx1.wait()

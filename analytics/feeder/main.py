@@ -2,6 +2,7 @@
 
 from db_ingest import DBIngest
 from db_query import DBQuery
+from signal import signal, SIGTERM
 
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
@@ -14,10 +15,7 @@ from threading import Thread
 from threading import Timer
 from probe import probe, run
 import time
-import datetime
 import os
-import sys
-import signal
 import tempfile
 import shutil
 import re
@@ -114,11 +112,12 @@ class Feeder():
         logger.info(" ### Stopping Feeder ### ")
 
         self._threadflag = False
-        self.mqttclient.loop_stop()
-        self.observer.stop()
 
         logger.debug("Unregistering algorithm from DB")
         self.db_alg.delete(self.alg_id)
+
+        self.mqttclient.loop_stop()
+        self.observer.stop()
 
     def startmqtt(self):
         self.mqttclient = mqtt.Client("feeder_" + self.alg_id)
@@ -345,6 +344,15 @@ class FSHandler(FileSystemEventHandler):
 
 if __name__ == '__main__':
     smtc_feeder = Feeder()
+
+    def quit_nicely(signum, sigframe):
+        try:
+            smtc_feeder.stop()
+        except Exception as e:
+            print("quit exception"+str(e))
+        exit(143)
+    signal(SIGTERM, quit_nicely)
+
     try:
         smtc_feeder.start()
     except KeyboardInterrupt:
