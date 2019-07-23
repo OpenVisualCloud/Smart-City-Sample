@@ -2,6 +2,7 @@
 
 from db_ingest import DBIngest
 from db_query import DBQuery
+from signal import SIGTERM, signal
 import datetime
 import time
 import os
@@ -17,6 +18,14 @@ rt=dbt.ingest({
     "status": "idle",
 })
 print(rt,flush=True)
+
+def quit_nicely(signum, sigframe):
+    try:
+        dbt.delete(rt["_id"])
+    except Exception as e:
+        print("quit exception: "+str(e))
+    exit(143)
+signal(SIGTERM, quit_nicely)
 
 dbs=DBQuery(index="sensors",office=office,host=dbhost)
 dba=DBQuery(index="algorithms",office=office,host=dbhost)

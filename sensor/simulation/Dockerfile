@@ -2,7 +2,7 @@
 FROM ubuntu:18.04
 RUN apt-get update && apt-get install -y -q python3-requests vlc && rm -rf /var/lib/apt/lists/*
 COPY *.py /home/
-ENTRYPOINT ["/bin/bash","-c","/home/main.py"]
+CMD ["/home/main.py"]
 
 ####
 ARG  USER

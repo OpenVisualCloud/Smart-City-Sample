@@ -8,6 +8,7 @@ import urllib.parse
 import subprocess
 from onvif import ONVIFCamera, ONVIFError
 import xml.etree.ElementTree as ET
+from signal import SIGTERM, signal
 
 from db_query import DBQuery
 from db_ingest import DBIngest
@@ -317,4 +318,8 @@ def discover_all_onvif_cameras():
         time.sleep(60)
 
 if __name__ == "__main__":
+    def quit_nicely(signum, sigframe):
+        exit(143)
+    signal(SIGTERM, quit_nicely)
+
     discover_all_onvif_cameras()

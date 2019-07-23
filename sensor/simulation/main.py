@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 from db_ingest import DBIngest
+from signal import signal, SIGTERM
 import subprocess
 import socket
 import math
@@ -60,6 +61,14 @@ r=db.ingest({
     'fovv': fovv,
     "status": "idle",
 })
+
+def quit_nicely(signum, sigframe):
+    try:
+        db.delete(r["_id"])
+    except Exception as e:
+        print("quit exception: "+str(e))
+    exit(143)
+signal(SIGTERM, quit_nicely)
 
 # run rtspatt
 while True:
