@@ -14,11 +14,10 @@ COPY *.py /home/
 COPY ./models /home/video-analytics/models
 COPY ./pipelines/gstreamer /home/video-analytics/pipelines
 COPY ./utils /home/utils
-COPY docker-entrypoint.sh /home/
+COPY start-service.sh /home/
 
 WORKDIR /home/
-
-ENTRYPOINT ["/bin/bash", "docker-entrypoint.sh"]
+ENTRYPOINT ["/home/start-service.sh"]
 
 ####
 ARG  USER
