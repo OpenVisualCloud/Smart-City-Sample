@@ -3,6 +3,7 @@
 from db_ingest import DBIngest
 from db_query import DBQuery
 from signal import signal, SIGTERM
+from subprocess import Popen
 
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
