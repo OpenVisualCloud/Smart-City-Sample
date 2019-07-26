@@ -21,11 +21,12 @@ for clip in "${CLIPS[@]}"; do
     fi
 
     if test ! -f "$DIR/$clip_mp4"; then
-        printf "Downloading $url for camera simulation...\n"
         if test "${ACCEPTS[$license]}" != "accept"; then
-            printf "\n\nData set subject to $license. The terms and conditions of the data set license apply. Intel does not grant any rights to the data files.\n\n\nPlease type \"accept\" or anything else to skip the download.\n"
+            printf "The Smart City sample requires you to have a dataset to simulate camera, please accept downloading $url for camera simulation where data set subject to $license. The terms and conditions of the data set license apply. Intel does not grant any rights to the data files.\n\n\nPlease type \"accept\" or anything else to skip the download.\n"
             read reply
             ACCEPTS[$license]="$reply"
+        else
+            printf "Downloading $url for camera simulation...\n"
         fi
         if test "${ACCEPTS[$license]}" = "accept"; then
             echo "Downloading..."
@@ -40,5 +41,5 @@ for clip in "${CLIPS[@]}"; do
 done
 
 if test "$(find $DIR -name '*.mp4' -print | wc -l)" -eq 0; then
-    printf "\n\nNo clip is detected for camera simulation.\n\n"
+    printf "\n\nNo clip is detected for camera simulation.\n\nYou can instead use your own video dataset. The database must be stored under volume/simulated and must contain MP4 files encoded with H.264 (baseline, closed-GOP and no-B-frames) and AAC.\n\nIf unsure, it is recommended that you transcode your dataset with FFmpeg:\n\nffmpeg -i <source>.mp4 -c:v libx264 -profile:v baseline -x264-params keyint=30:bframes=0 -c:a aac -ss 0 <target>.mp4.\n\n"
 fi
