@@ -1,9 +1,18 @@
 
+var origAfterFit = Chart.Legend.prototype.afterFit;
+Chart.Legend.prototype.afterFit = function () {
+    origAfterFit.call(this);
+    if (this.options && this.options.maxHeight) {
+        this.height = Math.min(this.height, this.options.maxHeight);
+        this.minSize.height = Math.min(this.minSize.height, this.height);
+    }
+};
+
 var stats={
     create: function (ctx) {
 	    ctx.circle=L.circleMarker(ctx.marker.getLatLng(), {radius:20,color:"green"});
 	    ctx.text=L.tooltip({permanent:true,direction:'center',className:'tooltip_text'});
-        var canvas=$('<div style="width:350px;height:150px"><canvas style="width:100%;height:100%"></canvas></div>').find("canvas");
+        var canvas=$('<div style="width:350px;height:150px"><canvas width="350" height="150"></canvas></div>').find("canvas");
 
         ctx.chart=new Chart(canvas, {
             type: 'bar',
@@ -18,6 +27,14 @@ var stats={
                 tooltips: {
                     mode: 'index',
                     intersect: false,
+                },
+                legend: {
+                    position: 'bottom',
+                    maxHeight: 25,
+                    labels: {
+                        fontSize: 9,
+                        usePointStyle: true,
+                    },
                 },
                 scales: {
                     yAxes: [{ 
