@@ -30,7 +30,6 @@ def geo_point(origin, distance, tc):
     return { "lat": math.degrees(lat), "lon": math.degrees(lon) }
 
 def discover_onvif_camera(ip, port):
-
     user = 'admin'
     passwd = 'admin'
     onvif_device_desc = {}
@@ -171,7 +170,6 @@ def discover_onvif_camera(ip, port):
     return onvif_device_desc
 
 def test_onvif_cam(ip, port):
-
     cmd = 'test_onvif_cam.py'
     user = 'admin'
     passwd = 'admin'
@@ -234,16 +232,8 @@ def scan_onvif_camera(ip_range, port_range):
     return onvifcams
 
 def discover_all_onvif_cameras():
-    
-    ip_range = '192.168.1.0/24'
-    port_range = '0-65535'
-
-    if('IP_SCAN_RANGE' in os.environ):
-        ip_range = os.environ['IP_SCAN_RANGE']
-
-    if('PORT_SCAN_RANGE' in os.environ):
-        port_range = os.environ['PORT_SCAN_RANGE']
-
+    ip_range = os.environ['IP_SCAN_RANGE']
+    port_range = os.environ['PORT_SCAN_RANGE']
 
     office = list(map(float,os.environ["OFFICE"].split(",")))
     distance = float(os.environ["DISTANCE"])
@@ -318,7 +308,4 @@ def quit_service(signum, sigframe):
     exit(143)
 
 signal(SIGTERM, quit_service)
-
-while True:
-    discover_all_onvif_cameras()
-    time.sleep(10)
+discover_all_onvif_cameras()
