@@ -9,6 +9,9 @@ from stats import StatsHandler
 from subprocess import Popen
 from signal import signal, SIGTERM, SIGQUIT
 
+tornado1=None
+nginx1=None
+
 app = web.Application([
     (r'/api/search',SearchHandler),
     (r'/api/stats',StatsHandler),
@@ -17,6 +20,10 @@ app = web.Application([
     (r'/recording/.*',RedirectHandler),
 ])
 
+def quit_service(signum, frame):
+    if tornado1: tornado1.add_callback(tornado1.stop)
+    if nginx1: nginx1.send_signal(SIGQUIT)
+        
 if __name__ == "__main__":
     define("port", default=2222, help="the binding port", type=int)
     define("ip", default="127.0.0.1", help="the binding ip")
@@ -28,10 +35,6 @@ if __name__ == "__main__":
     nginx1=Popen(["/usr/sbin/nginx"])
 
     # set SIGTERM/SIGQUIT handler
-    def quit_service(signum, frame):
-        nginx1.send_signal(SIGQUIT)
-        tornado1.add_callback(tornado1.stop)
-        
     signal(SIGTERM, quit_service)
     tornado1.start()
     nginx1.wait()
