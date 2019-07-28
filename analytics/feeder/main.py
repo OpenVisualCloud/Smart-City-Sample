@@ -66,24 +66,23 @@ class Feeder():
                 r = requests.Response()
                 r.status_code=400
 
-            time.sleep(2)
+            time.sleep(10)
         
-        logger.debug("Waiting for DB startup")
-        r.status_code=400
-        while r.status_code != 200 and r.status_code != 201:
-            try:
-                r = requests.get(self.dbhost)
-            except Exception as e:
-                r = requests.Response()
-                r.status_code=400
-
-            time.sleep(2)
-
         # Register Algorithm
         logger.debug("Registering as algorithm in the DB")
         self.db_alg = DBIngest(host=self.dbhost, index="algorithms", office=self.office)
         self.db_inf = DBIngest(host=self.dbhost, index="analytics", office=self.office)
         self.db_sensors = DBQuery(host=self.dbhost, index="sensors", office=self.office)
+
+        logger.debug("Waiting for DB to start up")
+        while True:
+            try:
+                # do a test query
+                list(self.db_sensors.search("sensor:*",size=1))
+                break
+            except Exception as e:
+                print("Exception: "+str(e), flush=True)
+            time.sleep(10)
 
         self.alg_id = self.db_alg.ingest({
             "name": "object_detection",
@@ -266,7 +265,6 @@ class Feeder():
         logger.debug("Sensor monitor thread done")
 
 class FSHandler(FileSystemEventHandler):
-
     def __init__(self, sensor, office, dbhost, rec_volume):
         self.sensor = sensor
         self.office = office
@@ -346,13 +344,13 @@ class FSHandler(FileSystemEventHandler):
 if __name__ == '__main__':
     smtc_feeder = Feeder()
 
-    def quit_nicely(signum, sigframe):
+    def quit_service(signum, sigframe):
         try:
             smtc_feeder.stop()
         except Exception as e:
-            print("quit exception"+str(e))
+            pass
         exit(143)
-    signal(SIGTERM, quit_nicely)
+    signal(SIGTERM, quit_service)
 
     try:
         smtc_feeder.start()
