@@ -46,13 +46,16 @@ fovv = float(os.environ["FOVV"])
 db=None
 r=None
 
-def start_service():
-    print("Start the camera simulation service...", flush=True)
+def quit_service(signum, sigframe):
+    try:
+        if db and r: db.delete(r["_id"])
+    except Exception as e:
+        pass
+    exit(143)
 
-    # register sensor
-    global db
-    db=DBIngest(index="sensors",office=office,host=dbhost)
-    global r
+signal(SIGTERM, quit_service)
+db=DBIngest(index="sensors",office=office,host=dbhost)
+while True:
     try:
         r=db.ingest({
             "sensor": "camera",
@@ -70,27 +73,14 @@ def start_service():
             'fovv': fovv,
             "status": "idle",
         })
-
-        # run rtspatt
-        while True:
-            simulated_root="/mnt/simulated"
-            files=[f for f in os.listdir(simulated_root) if re.search(pattern,f)]
-            file1=simulated_root+"/"+files[sensor_id%len(files)]
-            subprocess.call(["/usr/bin/cvlc","-vvv",file1,"--loop",":sout=#gather:rtp{sdp=rtsp://"+hostname+":8554/live.sdp}",":network-caching:1500",":sout-all",":sout-keep"])
-            time.sleep(10)
-
+        break
     except Exception as e:
         print("Exception: "+str(e), flush=True)
-
-def quit_service(signum, sigframe):
-    try:
-        if db and r: db.delete(r["_id"])
-    except Exception as e:
-        pass
-    exit(143)
-
-signal(SIGTERM, quit_service)
+    time.sleep(10)
 
 while True:
-    start_service()
+    simulated_root="/mnt/simulated"
+    files=[f for f in os.listdir(simulated_root) if re.search(pattern,f)]
+    file1=simulated_root+"/"+files[sensor_id%len(files)]
+    subprocess.call(["/usr/bin/cvlc","-vvv",file1,"--loop",":sout=#gather:rtp{sdp=rtsp://"+hostname+":8554/live.sdp}",":network-caching:1500",":sout-all",":sout-keep"])
     time.sleep(10)
