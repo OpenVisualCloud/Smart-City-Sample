@@ -299,27 +299,26 @@ def discover_all_onvif_cameras():
                 "status": "idle",
             }
 
-            print(camdesc)
-
-            found = False
             try:
-                for snr in dbs.search("sensor:'camera' and model:'ip_camera'"):
-                    if (desc['MAC'] == snr['_source']['mac']):
-                        found = True
+                found=list(dbs.search("sensor:'camera' and model:'ip_camera' and mac='"+desc['MAC']+"'", size=1)): 
+                if not found:
+                    desclist.append(camdesc)
             except Exception as e:
                 print(e)
 
-            if(found == False):
-                desclist.append(camdesc)
-
-        if(len(desclist) != 0):
-            db.ingest_bulk(desclist)
+        if desclist:
+            try:
+                db.ingest_bulk(desclist)
+            except Exception as e:
+                print("Exception: "+str(e), flush=True)
         
         time.sleep(60)
 
-if __name__ == "__main__":
-    def quit_nicely(signum, sigframe):
-        exit(143)
-    signal(SIGTERM, quit_nicely)
+def quit_service(signum, sigframe):
+    exit(143)
 
+signal(SIGTERM, quit_service)
+
+while True:
     discover_all_onvif_cameras()
+    time.sleep(10)

@@ -28,10 +28,10 @@ if __name__ == "__main__":
     nginx1=Popen(["/usr/sbin/nginx"])
 
     # set SIGTERM/SIGQUIT handler
-    def quit_nicely(signum, frame):
+    def quit_service(signum, frame):
         nginx1.send_signal(SIGQUIT)
         tornado1.add_callback(tornado1.stop)
         
-    signal(SIGTERM, quit_nicely)
+    signal(SIGTERM, quit_service)
     tornado1.start()
     nginx1.wait()
