@@ -76,11 +76,11 @@ while True:
         break
     except Exception as e:
         print("Exception: "+str(e), flush=True)
-    time.sleep(10)
+        time.sleep(10)
 
 while True:
     simulated_root="/mnt/simulated"
     files=[f for f in os.listdir(simulated_root) if re.search(pattern,f)]
     file1=simulated_root+"/"+files[sensor_id%len(files)]
-    subprocess.call(["/usr/bin/cvlc","-vvv",file1,"--loop",":sout=#gather:rtp{sdp=rtsp://"+hostname+":8554/live.sdp}",":network-caching:1500",":sout-all",":sout-keep"])
+    subprocess.call(["/usr/bin/cvlc","-vvv",file1,"--loop",":sout=#gather:rtp{sdp=rtsp://"+hostname+":8554/live.sdp}",":network-caching:1500",":sout-all",":sout-keep"],stdin=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
     time.sleep(10)

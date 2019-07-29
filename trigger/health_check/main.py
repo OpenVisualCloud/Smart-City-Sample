@@ -67,7 +67,7 @@ while True:
             alerts["trigger"]=rt["_id"]
             dbat.ingest(alerts)
 
-   except Exception as e:
-       print("Exception "+str(e),flush=True)
+    except Exception as e:
+        print("Exception "+str(e),flush=True)
 
-   time.sleep(service_interval)
+    time.sleep(service_interval)

@@ -290,7 +290,7 @@ def discover_all_onvif_cameras():
             }
 
             try:
-                found=list(dbs.search("sensor:'camera' and model:'ip_camera' and mac='"+desc['MAC']+"'", size=1)): 
+                found=list(dbs.search("sensor:'camera' and model:'ip_camera' and mac='"+desc['MAC']+"'", size=1))
                 if not found:
                     desclist.append(camdesc)
             except Exception as e:

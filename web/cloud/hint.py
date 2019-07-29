@@ -32,7 +32,7 @@ class HintHandler(web.RequestHandler):
     def get(self):
         indexes=unquote(str(self.get_argument("index"))).split(",")
         office=unquote(str(self.get_argument("office")))
-        if office!="*": office=office.split(",")
+        if office!="*": office=list(map(float,office.split(",")))
 
         r=yield self._hint(indexes,office)
         if isinstance(r,str):
