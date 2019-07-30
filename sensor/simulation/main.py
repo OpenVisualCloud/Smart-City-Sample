@@ -25,6 +25,12 @@ dbhost=os.environ["DBHOST"]
 pattern=str(os.environ["FILES"])
 hostname=socket.gethostbyname(socket.gethostname())
 
+theta = float(os.environ["THETA"])
+mnth = float(os.environ["MNTH"])
+alpha = float(os.environ["ALPHA"])
+fovh = float(os.environ["FOVH"])
+fovv = float(os.environ["FOVV"])
+
 try:
     sensor_id=int(os.environ["SENSOR_ID"])
 except:
@@ -35,13 +41,9 @@ if "LOCATION" in os.environ:
 else:
     distance=float(os.environ["DISTANCE"])
     nsensors=int(os.environ["SENSORS"])
-    location=geo_point(office, distance, math.pi*2/nsensors*(sensor_id%nsensors))
-
-theta = float(os.environ["THETA"])
-mnth = float(os.environ["MNTH"])
-alpha = float(os.environ["ALPHA"])
-fovh = float(os.environ["FOVH"])
-fovv = float(os.environ["FOVV"])
+    angle=math.pi*2/nsensors*(sensor_id%nsensors)
+    location=geo_point(office, distance, angle)
+    theta=theta+angle/math.pi*180
 
 db=None
 r=None
