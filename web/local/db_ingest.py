@@ -109,10 +109,12 @@ class DBIngest(object):
         return r.json()
 
     def _check_mapping(self):
-        if self._index not in self._mappings: return
-        r=requests.put(self._host+"/"+self._index,json=self._mappings.pop(self._index))
-        if r.status_code!=200 and r.status_code!=201:
-            print(r.text,flush=True)
+        if self._index in self._mappings:
+            try:
+                r=requests.put(self._host+"/"+self._index,json=self._mappings[self._index])
+                self._mappings.pop(self._index)
+            except:
+                raise
 
     def update(self, _id, info, version=None):
         self._check_mapping()

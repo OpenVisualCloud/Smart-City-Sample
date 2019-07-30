@@ -78,6 +78,7 @@ while True:
         print("Exception: "+str(e), flush=True)
         time.sleep(10)
 
+print("Created sensor "+r["_id"], flush=True)
 while True:
     simulated_root="/mnt/simulated"
     files=[f for f in os.listdir(simulated_root) if re.search(pattern,f)]
