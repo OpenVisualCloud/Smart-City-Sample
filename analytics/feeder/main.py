@@ -160,36 +160,27 @@ class Feeder():
                         # Attempt to POST to VA service
                         jsonData = {
                             "source": {
-                                "uri": "",
+                                "uri": sensor["_source"]["url"],
                                 "type":"uri"
                             },
                             "destination": {
                                 "type": "mqtt",
-                                "host": None,
-                                "topic": None
+                                "host": self.mqtthost,
+                                "topic": self.mqtttopic,
                             },
                             "tags": {
-                                "algorithm": None,
-                                "sensor": None,
-                                "office": None
+                                "algorithm": self.alg_id,
+                                "sensor": sensor["_id"],
+                                "office": {
+                                    "lat": self.office[0],
+                                    "lon": self.office[1],
+                                },
                             },
                             "parameters": {
-                                "every-nth-frame": None,
-                                "recording_prefix": None
-                            }
+                                "every-nth-frame": self.every_nth_frame,
+                                "recording_prefix": "recordings/" + sensor["_id"],
+                            },
                         }
-
-                        jsonData['source']['uri'] = sensor["_source"]["url"]
-                        jsonData['destination']['host'] = self.mqtthost
-                        jsonData['destination']['topic'] = self.mqtttopic
-                        jsonData['tags']['algorithm'] = self.alg_id
-                        jsonData['tags']['sensor'] = sensor["_id"]
-                        jsonData['tags']['office'] = {
-                            "lat": self.office[0],
-                            "lon": self.office[1]
-                        }
-                        jsonData['parameters']['every-nth-frame'] = self.every_nth_frame
-                        jsonData['parameters']['recording_prefix'] = "recordings/" + sensor["_id"]
 
                         folderpath = os.path.join(os.path.realpath(self.recording_volume), sensor["_id"])
                         if not os.path.exists(folderpath):
@@ -308,30 +299,25 @@ class FSHandler(FileSystemEventHandler):
 
     def ingest(self):
         logger.debug("Finished recording file " + self.last_file)
-        recording_object = {
-            "sensor": None,
-            "office": None,
-            "time": None,
-            "duration": None,
-            "path": None
-        }
-
-        recording_object["sensor"] = self.sensor
-        recording_object["office"] = {
-            "lat": self.office[0],
-            "lon": self.office[1]
-        }
-        
         converted_file,sinfo=self.ffmpeg_convert(self.last_file)
-        recording_object.update(sinfo)
-        recording_object["path"] = os.path.abspath(converted_file).split(os.path.abspath(self.recording_volume)+"/")[1]
-        recording_object["time"] = self.get_timestamp(converted_file)
-        logger.debug("Ingesting record: %s" %(recording_object))
+        sinfo.update({
+            "sensor": self.sensor,
+            "office": {
+                "lat": self.office[0],
+                "lon": self.office[1],
+            },
+            "time": self.get_timestamp(converted_file),
+            "path": os.path.abspath(converted_file).split(os.path.abspath(self.recording_volume)+"/")[1],
+        })
         
-        bandwidth = float(os.path.getsize(converted_file))*8 / sinfo["duration"] if sinfo["duration"] > 0 else 0
+        # calculate total bandwidth
+        bandwidth=0
+        for stream1 in sinfo["streams"]:
+            if "bit_rate" in stream1: 
+                bandwidth=bandwidth+stream1["bit_rate"]
         self.db_sensors.update(self.sensor, {"bandwidth": bandwidth})
-        self.db_rec.ingest(recording_object)
-        self.record_cache.append(recording_object)
+        self.db_rec.ingest(sinfo)
+        self.record_cache.append(sinfo)
 
 if __name__ == '__main__':
     smtc_feeder = Feeder()
