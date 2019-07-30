@@ -30,7 +30,6 @@ def geo_point(origin, distance, tc):
     return { "lat": math.degrees(lat), "lon": math.degrees(lon) }
 
 def discover_onvif_camera(ip, port):
-
     user = 'admin'
     passwd = 'admin'
     onvif_device_desc = {}
@@ -171,7 +170,6 @@ def discover_onvif_camera(ip, port):
     return onvif_device_desc
 
 def test_onvif_cam(ip, port):
-
     cmd = 'test_onvif_cam.py'
     user = 'admin'
     passwd = 'admin'
@@ -234,16 +232,8 @@ def scan_onvif_camera(ip_range, port_range):
     return onvifcams
 
 def discover_all_onvif_cameras():
-    
-    ip_range = '192.168.1.0/24'
-    port_range = '0-65535'
-
-    if('IP_SCAN_RANGE' in os.environ):
-        ip_range = os.environ['IP_SCAN_RANGE']
-
-    if('PORT_SCAN_RANGE' in os.environ):
-        port_range = os.environ['PORT_SCAN_RANGE']
-
+    ip_range = os.environ['IP_SCAN_RANGE']
+    port_range = os.environ['PORT_SCAN_RANGE']
 
     office = list(map(float,os.environ["OFFICE"].split(",")))
     distance = float(os.environ["DISTANCE"])
@@ -299,27 +289,23 @@ def discover_all_onvif_cameras():
                 "status": "idle",
             }
 
-            print(camdesc)
-
-            found = False
             try:
-                for snr in dbs.search("sensor:'camera' and model:'ip_camera'"):
-                    if (desc['MAC'] == snr['_source']['mac']):
-                        found = True
+                found=list(dbs.search("sensor:'camera' and model:'ip_camera' and mac='"+desc['MAC']+"'", size=1))
+                if not found:
+                    desclist.append(camdesc)
             except Exception as e:
                 print(e)
 
-            if(found == False):
-                desclist.append(camdesc)
-
-        if(len(desclist) != 0):
-            db.ingest_bulk(desclist)
+        if desclist:
+            try:
+                db.ingest_bulk(desclist)
+            except Exception as e:
+                print("Exception: "+str(e), flush=True)
         
         time.sleep(60)
 
-if __name__ == "__main__":
-    def quit_nicely(signum, sigframe):
-        exit(143)
-    signal(SIGTERM, quit_nicely)
+def quit_service(signum, sigframe):
+    exit(143)
 
-    discover_all_onvif_cameras()
+signal(SIGTERM, quit_service)
+discover_all_onvif_cameras()

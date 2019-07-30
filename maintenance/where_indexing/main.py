@@ -13,19 +13,20 @@ update_batch=int(os.environ["UPDATE_BATCH"])
 office=list(map(float, os.environ["OFFICE"].split(",")))
 dbhost=os.environ["DBHOST"]
 
-def quit_nicely(signum, sigframe):
+def quit_service(signum, sigframe):
     exit(143)
 
-# set signal to quit nicely
-signal(SIGTERM, quit_nicely)
-
+signal(SIGTERM, quit_service)
 dbq=DBQuery(index=indexes[0],office=office,host=dbhost)
 dba=DBQuery(index=indexes[1],office=office,host=dbhost)
 while True:
-    while True:
-        print("Searching...",flush=True)
+    print("Sleeping...")
+    time.sleep(service_interval)
+
+    print("Searching...",flush=True)
+    try:
         data=list(dba.search("not recording=*", size=search_batch))
-        if not data: break
+        if not data: continue
 
         updates=[]
         while data:
@@ -43,10 +44,10 @@ while True:
                             dba.update_bulk(updates)
                             time.sleep(update_interval)
                             updates=[]
+
         if updates:
             print("update "+str(len(updates)))
             dba.update_bulk(updates)
             time.sleep(update_interval)
-
-    print("Sleeping...")
-    time.sleep(service_interval)
+    except Exception as e:
+        print("Exception: "+str(e), flush=True)

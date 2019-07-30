@@ -43,40 +43,45 @@ alpha = float(os.environ["ALPHA"])
 fovh = float(os.environ["FOVH"])
 fovv = float(os.environ["FOVV"])
 
-# register sensor
-db=DBIngest(index="sensors",office=office,host=dbhost)
-r=db.ingest({
-    "sensor": "camera",
-    "icon": "camera.gif",
-    "office": { "lat": office[0], "lon": office[1] },
-    "model": "simulation",
-    "resolution": { "width": resolution[0], "height": resolution[1] },
-    "location": { "lat": location[0], "lon": location[1] },
-    "url": "rtsp://"+hostname+":8554/live.sdp",
-    "mac": "0098c00"+str(6963+sensor_id),
-    'theta': theta,
-    'mnth': mnth,
-    'alpha': alpha,
-    'fovh': fovh,
-    'fovv': fovv,
-    "status": "idle",
-})
+db=None
+r=None
 
-def quit_nicely(signum, sigframe):
+def quit_service(signum, sigframe):
     try:
-        db.delete(r["_id"])
+        if db and r: db.delete(r["_id"])
     except Exception as e:
-        print("quit exception: "+str(e))
+        pass
     exit(143)
-signal(SIGTERM, quit_nicely)
 
-# run rtspatt
+signal(SIGTERM, quit_service)
+db=DBIngest(index="sensors",office=office,host=dbhost)
+while True:
+    try:
+        r=db.ingest({
+            "sensor": "camera",
+            "icon": "camera.gif",
+            "office": { "lat": office[0], "lon": office[1] },
+            "model": "simulation",
+            "resolution": { "width": resolution[0], "height": resolution[1] },
+            "location": { "lat": location[0], "lon": location[1] },
+            "url": "rtsp://"+hostname+":8554/live.sdp",
+            "mac": "0098c00"+str(6963+sensor_id),
+            'theta': theta,
+            'mnth': mnth,
+            'alpha': alpha,
+            'fovh': fovh,
+            'fovv': fovv,
+            "status": "idle",
+        })
+        break
+    except Exception as e:
+        print("Exception: "+str(e), flush=True)
+        time.sleep(10)
+
+print("Created sensor "+r["_id"], flush=True)
 while True:
     simulated_root="/mnt/simulated"
     files=[f for f in os.listdir(simulated_root) if re.search(pattern,f)]
     file1=simulated_root+"/"+files[sensor_id%len(files)]
-    subprocess.call(["/usr/bin/cvlc","-vvv",file1,"--loop",":sout=#gather:rtp{sdp=rtsp://"+hostname+":8554/live.sdp}",":network-caching:1500",":sout-all",":sout-keep"])
+    subprocess.call(["/usr/bin/cvlc","-vvv",file1,"--loop",":sout=#gather:rtp{sdp=rtsp://"+hostname+":8554/live.sdp}",":network-caching:1500",":sout-all",":sout-keep"],stdin=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
     time.sleep(10)
-
-# unregister sensor
-db.delete(r["_id"])

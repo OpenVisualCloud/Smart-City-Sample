@@ -38,7 +38,7 @@ class StatsHandler(web.RequestHandler):
         index=unquote(str(self.get_argument("index")))
         field=unquote(str(self.get_argument("field")))
         size=int(self.get_argument("size"))
-        office=unquote(str(self.get_argument("office"))).split(",")
+        office=list(map(float,unquote(str(self.get_argument("office"))).split(",")))
 
         r=yield self._bucketize(index, queries, field, size, office)
         if isinstance(r,str):

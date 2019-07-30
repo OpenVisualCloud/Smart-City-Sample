@@ -33,19 +33,18 @@ class Feeder():
         self.recording_volume = os.environ["STORAGE_VOLUME"]
         self.every_nth_frame = int(os.environ["EVERY_NTH_FRAME"])
 
-        #Clients
-        self.db_alg = None
-        self.db_inf = None
-        self.db_rec = None
-        self.db_sensors = None
-        self.mqttclient = None
-        self.mqtttopic = None
-        self.observer = Observer()
-
         #Hosts
         self.dbhost = os.environ["DBHOST"]
         self.vahost = "http://localhost:8080/pipelines"
         self.mqtthost = os.environ["MQTTHOST"]
+
+        #Clients
+        self.db_alg = DBIngest(host=self.dbhost, index="algorithms", office=self.office)
+        self.db_inf = DBIngest(host=self.dbhost, index="analytics", office=self.office)
+        self.db_sensors = DBQuery(host=self.dbhost, index="sensors", office=self.office)
+        self.mqttclient = None
+        self.mqtttopic = None
+        self.observer = Observer()
 
         self.batchsize = 300
         self.inference_cache = []
@@ -66,34 +65,26 @@ class Feeder():
                 r = requests.Response()
                 r.status_code=400
 
-            time.sleep(2)
+            time.sleep(10)
         
-        logger.debug("Waiting for DB startup")
-        r.status_code=400
-        while r.status_code != 200 and r.status_code != 201:
-            try:
-                r = requests.get(self.dbhost)
-            except Exception as e:
-                r = requests.Response()
-                r.status_code=400
-
-            time.sleep(2)
-
         # Register Algorithm
         logger.debug("Registering as algorithm in the DB")
-        self.db_alg = DBIngest(host=self.dbhost, index="algorithms", office=self.office)
-        self.db_inf = DBIngest(host=self.dbhost, index="analytics", office=self.office)
-        self.db_sensors = DBQuery(host=self.dbhost, index="sensors", office=self.office)
 
-        self.alg_id = self.db_alg.ingest({
-            "name": "object_detection",
-            "office": {
-                "lat": self.office[0],
-                "lon": self.office[1]
-            },
-            "status": "idle",
-            "skip": self.every_nth_frame,
-        })["_id"]
+        while True:
+            try:
+                self.alg_id = self.db_alg.ingest({
+                    "name": "object_detection",
+                    "office": {
+                        "lat": self.office[0],
+                        "lon": self.office[1]
+                    },
+                    "status": "idle",
+                    "skip": self.every_nth_frame,
+                })["_id"]
+                break
+            except Exception as e:
+                logger.debug("Register algo exception: "+str(e))
+                time.sleep(10)
 
         self.mqtttopic = "smtc_va_inferences_" + self.alg_id
 
@@ -266,7 +257,6 @@ class Feeder():
         logger.debug("Sensor monitor thread done")
 
 class FSHandler(FileSystemEventHandler):
-
     def __init__(self, sensor, office, dbhost, rec_volume):
         self.sensor = sensor
         self.office = office
@@ -346,13 +336,13 @@ class FSHandler(FileSystemEventHandler):
 if __name__ == '__main__':
     smtc_feeder = Feeder()
 
-    def quit_nicely(signum, sigframe):
+    def quit_service(signum, sigframe):
         try:
             smtc_feeder.stop()
         except Exception as e:
-            print("quit exception"+str(e))
+            pass
         exit(143)
-    signal(SIGTERM, quit_nicely)
+    signal(SIGTERM, quit_service)
 
     try:
         smtc_feeder.start()

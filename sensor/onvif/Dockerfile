@@ -28,7 +28,6 @@ RUN  wget ${ZEEP_REPO} && \
 COPY    *.py /home/
 CMD     ["/home/main.py"]
 WORKDIR /home
-EXPOSE  80
 
 ####
 ARG  USER

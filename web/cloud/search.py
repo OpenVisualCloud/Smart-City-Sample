@@ -31,7 +31,7 @@ class SearchHandler(web.RequestHandler):
         index=unquote(str(self.get_argument("index")))
         size=int(self.get_argument("size"))
         office=unquote(str(self.get_argument("office")))
-        if office!="*": office=office.split(",")
+        if office!="*": office=list(map(float,office.split(",")))
 
         r=yield self._search(index, queries, size, office)
         if isinstance(r, str):

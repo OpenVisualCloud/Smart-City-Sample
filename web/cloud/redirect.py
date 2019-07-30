@@ -23,13 +23,13 @@ class RedirectHandler(web.RequestHandler):
 
     @run_on_executor
     def _office_info(self, office):
-        office_key=",".join(office)
+        office_key=",".join(map(str,office))
         if office_key in offices:
             if (datetime.datetime.now()-offices[office_key]["time"]).total_seconds()<5*60:
                 return offices[office_key]
         try:
             # search database for the office info
-            r=list(db.search("office:["+office[0]+","+office[1]+"]",1))
+            r=list(db.search("office:["+office_key+"]",1))
             r[0]["time"]=datetime.datetime.now()
             offices[office_key]=r[0]
             return r[0]
@@ -38,7 +38,7 @@ class RedirectHandler(web.RequestHandler):
 
     @gen.coroutine
     def get(self):
-        office=unquote(str(self.get_argument("office"))).split(",")
+        office=list(map(float,unquote(str(self.get_argument("office"))).split(",")))
         r=yield self._office_info(office)
         if isinstance(r, str):
             self.set_status(400, str(r))
