@@ -8,13 +8,8 @@ services:
         environment:
             - 'discovery.type=single-node'
             - 'ES_JAVA_OPTS=-Xms4096m -Xmx4096m'
-        ulimits:
-            memlock:
-                soft: -1
-                hard: -1
         deploy:
             replicas: 1
-        restart: always
 
     web_cloud:
         image: smtc_web_cloud:latest
@@ -43,7 +38,6 @@ services:
               uid: ${USER_ID}
               gid: ${GROUP_ID}
               mode: 0444
-        restart: always
         
     web_street:
         image: smtc_web_local:latest
@@ -55,7 +49,6 @@ services:
         volumes:
             - ${STORAGE_VOLUME}:/mnt/storage:ro
             - /etc/localtime:/etc/localtime:ro
-        restart: always
 
     simulated_camera_street_sensor1:
         image: smtc_sensor_simulation:latest
@@ -73,7 +66,6 @@ services:
             FOVV: 68
         volumes:
             - ${SIMULATED_VOLUME}:/mnt/simulated:ro
-        restart: always
          
     simulated_camera_street_sensor2:
         image: smtc_sensor_simulation:latest
@@ -91,7 +83,6 @@ services:
             FOVV: 68
         volumes:
             - ${SIMULATED_VOLUME}:/mnt/simulated:ro
-        restart: always
          
     simulated_camera_street_sensor3:
         image: smtc_sensor_simulation:latest
@@ -109,7 +100,6 @@ services:
             FOVV: 68
         volumes:
             - ${SIMULATED_VOLUME}:/mnt/simulated:ro
-        restart: always
          
 #    simulated_camera_parking_zone_a:
 #        image: smtc_sensor_simulation:latest
@@ -127,7 +117,6 @@ services:
 #            FOVV: 68
 #        volumes:
 #            - ${SIMULATED_VOLUME}:/mnt/simulated:ro
-#        restart: always
          
 #    simulated_camera_parking_zone_b:
 #        image: smtc_sensor_simulation:latest
@@ -145,7 +134,6 @@ services:
 #            FOVV: 68
 #        volumes:
 #            - ${SIMULATED_VOLUME}:/mnt/simulated:ro
-#        restart: always
 
 #    simulated_camera_parking_zone_c:
 #        image: smtc_sensor_simulation:latest
@@ -163,7 +151,6 @@ services:
 #            FOVV: 68
 #        volumes:
 #            - ${SIMULATED_VOLUME}:/mnt/simulated:ro
-#        restart: always
 
 #    simulated_camera_parking_zone_d:
 #        image: smtc_sensor_simulation:latest
@@ -181,7 +168,6 @@ services:
 #            FOVV: 68
 #        volumes:
 #            - ${SIMULATED_VOLUME}:/mnt/simulated:ro
-#        restart: always
 
 #    simulated_camera_stadium_east:
 #        image: smtc_sensor_simulation:latest
@@ -199,7 +185,6 @@ services:
 #            FOVV: 68
 #        volumes:
 #            - ${SIMULATED_VOLUME}:/mnt/simulated:ro
-#        restart: always
 
 #    simulated_camera_stadium_north:
 #        image: smtc_sensor_simulation:latest
@@ -217,7 +202,6 @@ services:
 #            FOVV: 68
 #        volumes:
 #            - ${SIMULATED_VOLUME}:/mnt/simulated:ro
-#        restart: always
 
 #    simulated_camera_stadium_west:
 #        image: smtc_sensor_simulation:latest
@@ -235,7 +219,6 @@ services:
 #            FOVV: 68
 #        volumes:
 #            - ${SIMULATED_VOLUME}:/mnt/simulated:ro
-#        restart: always
 
 #    simulated_camera_stadium_south:
 #        image: smtc_sensor_simulation:latest
@@ -253,7 +236,6 @@ services:
 #            FOVV: 68
 #        volumes:
 #            - ${SIMULATED_VOLUME}:/mnt/simulated:ro
-#        restart: always
 
     storage_cleanup_street:
         image: smtc_storage_cleanup:latest
@@ -265,7 +247,6 @@ services:
             SERVICE_INTERVAL: '14400'
             OFFICE: '45.543797,-122.962038'
             DBHOST: 'http://database:9200'
-        restart: always
 
     onvif-discovery_street:
         image: smtc_onvif_discovery:latest
@@ -278,7 +259,6 @@ services:
             DBHOST: 'http://database:9200'
         deploy:
             replicas: 1
-        restart: always
 
     health_check_street:
         image: smtc_trigger_health
@@ -288,7 +268,6 @@ services:
             SERVICE_INTERVAL: '300'
             OFFICE: '45.543797,-122.962038'
             DBHOST: 'http://database:9200'
-        restart: always
 
     where_indexing_street:
         image: smtc_where_indexing
@@ -300,7 +279,6 @@ services:
             UPDATE_INTERVAL: '5'
             SEARCH_BATCH: '3000'
             UPDATE_BATCH: '500'
-        restart: always
 
     video_analytics_street:
         image: smtc_video_analytics:latest
@@ -315,7 +293,6 @@ services:
             - /etc/localtime:/etc/localtime:ro
         deploy:
             replicas: 5
-        restart: always
     
     mqtt:
         image: eclipse-mosquitto:1.5.8
