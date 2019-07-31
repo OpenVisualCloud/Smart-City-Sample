@@ -1,11 +1,8 @@
 #!/bin/bash -e
 
 DIR=$(dirname $(readlink -f "$0"))
-export HTML_VOLUME=$(readlink -f "$DIR/../../volume/html")
 export STORAGE_VOLUME=$(readlink -f "$DIR/../../volume/storage")
 export SIMULATED_VOLUME=$(readlink -f "$DIR/../../volume/simulated")
-export PIPELINE_VOLUME=$(readlink -f "$DIR/../../analytics/feeder/pipelines")
-export MODELS_VOLUME=$(readlink -f "$DIR/../../volume/models")
 
 sudo docker container prune -f
 sudo docker volume prune -f
