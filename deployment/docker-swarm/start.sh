@@ -2,14 +2,12 @@
 
 DIR=$(dirname $(readlink -f "$0"))
 export STORAGE_VOLUME=$(readlink -f "$DIR/../../volume/storage")
-export SIMULATED_VOLUME=$(readlink -f "$DIR/../../volume/simulated")
 
 sudo docker container prune -f
 sudo docker volume prune -f
 sudo docker network prune -f
 rm -rf "$STORAGE_VOLUME"
 mkdir -p "$STORAGE_VOLUME"
-mkdir -p "$SIMULATED_VOLUME"
 
 yml="$DIR/docker-compose.$(hostname).yml"
 test -f "$yml" || yml="$DIR/docker-compose.yml"

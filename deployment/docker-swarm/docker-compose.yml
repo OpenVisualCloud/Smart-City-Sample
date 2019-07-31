@@ -55,8 +55,6 @@ services:
             ALPHA: 45
             FOVH: 90
             FOVV: 68
-        volumes:
-            - ${SIMULATED_VOLUME}:/mnt/simulated:ro
          
     simulated_camera_street_sensor2:
         image: smtc_sensor_simulation:latest
@@ -72,8 +70,6 @@ services:
             ALPHA: 45
             FOVH: 90
             FOVV: 68
-        volumes:
-            - ${SIMULATED_VOLUME}:/mnt/simulated:ro
          
     simulated_camera_street_sensor3:
         image: smtc_sensor_simulation:latest
@@ -89,8 +85,6 @@ services:
             ALPHA: 45
             FOVH: 90
             FOVV: 68
-        volumes:
-            - ${SIMULATED_VOLUME}:/mnt/simulated:ro
          
 #    simulated_camera_parking_zone_a:
 #        image: smtc_sensor_simulation:latest
@@ -106,8 +100,6 @@ services:
 #            ALPHA: 45
 #            FOVH: 90
 #            FOVV: 68
-#        volumes:
-#            - ${SIMULATED_VOLUME}:/mnt/simulated:ro
          
 #    simulated_camera_parking_zone_b:
 #        image: smtc_sensor_simulation:latest
@@ -123,8 +115,6 @@ services:
 #            ALPHA: 45
 #            FOVH: 90
 #            FOVV: 68
-#        volumes:
-#            - ${SIMULATED_VOLUME}:/mnt/simulated:ro
 
 #    simulated_camera_parking_zone_c:
 #        image: smtc_sensor_simulation:latest
@@ -140,8 +130,6 @@ services:
 #            ALPHA: 45
 #            FOVH: 90
 #            FOVV: 68
-#        volumes:
-#            - ${SIMULATED_VOLUME}:/mnt/simulated:ro
 
 #    simulated_camera_parking_zone_d:
 #        image: smtc_sensor_simulation:latest
@@ -157,8 +145,6 @@ services:
 #            ALPHA: 45
 #            FOVH: 90
 #            FOVV: 68
-#        volumes:
-#            - ${SIMULATED_VOLUME}:/mnt/simulated:ro
 
 #    simulated_camera_stadium_east:
 #        image: smtc_sensor_simulation:latest
@@ -174,8 +160,6 @@ services:
 #            ALPHA: 45
 #            FOVH: 90
 #            FOVV: 68
-#        volumes:
-#            - ${SIMULATED_VOLUME}:/mnt/simulated:ro
 
 #    simulated_camera_stadium_north:
 #        image: smtc_sensor_simulation:latest
@@ -191,8 +175,6 @@ services:
 #            ALPHA: 45
 #            FOVH: 90
 #            FOVV: 68
-#        volumes:
-#            - ${SIMULATED_VOLUME}:/mnt/simulated:ro
 
 #    simulated_camera_stadium_west:
 #        image: smtc_sensor_simulation:latest
@@ -208,8 +190,6 @@ services:
 #            ALPHA: 45
 #            FOVH: 90
 #            FOVV: 68
-#        volumes:
-#            - ${SIMULATED_VOLUME}:/mnt/simulated:ro
 
 #    simulated_camera_stadium_south:
 #        image: smtc_sensor_simulation:latest
@@ -225,8 +205,6 @@ services:
 #            ALPHA: 45
 #            FOVH: 90
 #            FOVV: 68
-#        volumes:
-#            - ${SIMULATED_VOLUME}:/mnt/simulated:ro
 
     storage_cleanup_street:
         image: smtc_storage_cleanup:latest
