@@ -5,6 +5,7 @@ RUN yum -y install epel-release && yum -y install nginx python36-tornado python3
 
 COPY    *.conf /etc/nginx/
 COPY    *.py /home/
+COPY    html /var/www/html
 CMD     ["/home/main.py"]
 EXPOSE  8080
 

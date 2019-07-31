@@ -8,20 +8,13 @@ services:
         environment:
             - 'discovery.type=single-node'
             - 'ES_JAVA_OPTS=-Xms4096m -Xmx4096m'
-        deploy:
-            replicas: 1
 
     web_cloud:
         image: smtc_web_cloud:latest
         ports:
             - "443:8080"
-        deploy:
-            replicas: 1
         environment:
             DBHOST: 'http://database:9200'
-        volumes:
-            - ${HTML_VOLUME}:/var/www/html:ro
-            - /etc/localtime:/etc/localtime:ro
         secrets:
             - source: self_crt
               target: self.crt
@@ -41,8 +34,6 @@ services:
         
     web_street:
         image: smtc_web_local:latest
-        deploy:
-            replicas: 1
         environment:
             DBHOST: 'http://database:9200'
             OFFICE: '45.543797,-122.962038'
@@ -257,8 +248,6 @@ services:
             DISTANCE: 10
             ANGLEOFFSET: 15
             DBHOST: 'http://database:9200'
-        deploy:
-            replicas: 1
 
     health_check_street:
         image: smtc_trigger_health
