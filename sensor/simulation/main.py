@@ -23,7 +23,7 @@ resolution=list(map(int,os.environ["RESOLUTION"].split("x")))
 dbhost=os.environ["DBHOST"]
 
 pattern=str(os.environ["FILES"])
-hostname=socket.gethostbyname(socket.gethostname())
+hostname=socket.gethostname()
 
 theta = float(os.environ["THETA"])
 mnth = float(os.environ["MNTH"])
