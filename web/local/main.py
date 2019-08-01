@@ -12,7 +12,7 @@ import time
 
 dbhost=os.environ["DBHOST"]
 office=list(map(float,os.environ["OFFICE"].split(",")))
-hostname=socket.gethostbyname(socket.gethostname())
+hostname=socket.gethostname()
 
 tornado1=None
 nginx1=None
