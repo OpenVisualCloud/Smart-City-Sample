@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 DIR=$(dirname $(readlink -f "$0"))
-CLIPS=(https://www.pexels.com/video/1388383/download,1388383.mp4,https://www.pexels.com/photo-license,10)
+CLIPS=(https://www.pexels.com/video/1388383/download,1388383.mp4,https://www.pexels.com/photo-license)
 
 declare -A ACCEPTS
 ACCEPTS["na"]="accept"
