@@ -163,11 +163,6 @@ class Feeder():
                                 "uri": sensor["_source"]["url"],
                                 "type":"uri"
                             },
-                            "destination": {
-                                "type": "mqtt",
-                                "host": self.mqtthost,
-                                "topic": self.mqtttopic,
-                            },
                             "tags": {
                                 "algorithm": self.alg_id,
                                 "sensor": sensor["_id"],
@@ -179,6 +174,10 @@ class Feeder():
                             "parameters": {
                                 "every-nth-frame": self.every_nth_frame,
                                 "recording_prefix": "recordings/" + sensor["_id"],
+                                "method": "mqtt",
+                                "address": self.mqtthost,
+                                "clientid": self.alg_id,
+                                "topic": self.mqtttopic
                             },
                         }
 
