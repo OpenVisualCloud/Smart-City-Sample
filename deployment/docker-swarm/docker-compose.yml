@@ -255,6 +255,8 @@ services:
             MQTTHOST: 'mqtt'
             STORAGE_VOLUME: '/home/video-analytics/app/server/recordings'
             EVERY_NTH_FRAME: 6
+        dns:
+            - 127.0.0.11
         volumes:
             - ${STORAGE_VOLUME}:/home/video-analytics/app/server/recordings:rw
             - /etc/localtime:/etc/localtime:ro
