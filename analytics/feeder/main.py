@@ -113,7 +113,15 @@ class Feeder():
 
     def startmqtt(self):
         self.mqttclient = mqtt.Client("feeder_" + self.alg_id)
-        self.mqttclient.connect(self.mqtthost)
+
+        while True:
+            try:
+                self.mqttclient.connect(self.mqtthost)
+                break
+            except Exception as e:
+                logger.debug("Exception: "+str(e))
+                time.sleep(10)
+
         self.mqttclient.on_message = self.mqtt_handler
         self.mqttclient.loop_start()
         self.mqttclient.subscribe(self.mqtttopic)
