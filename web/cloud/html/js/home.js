@@ -2,7 +2,6 @@ $("#pg-home").on(":initpage", function(e) {
     var page=$(this);
     $("#layoutButton").hide();
     $("#cloudButton").hide();
-    previews.play();
 
     /* create map */
     var map=page.data('map');
@@ -38,35 +37,33 @@ $("#pg-home").on(":initpage", function(e) {
             map.setView(page.data('center'),page.data('zoom'));
         });
 
-        /* add preview overlay */
-        var pane=map.createPane('invisible-switches');
-        $(pane).css({display:"none"});
-        var dummy_icon=L.divIcon({});
-        var preview_layer=L.marker([0,0],{pane:'invisible-switches',icon:dummy_icon});
-        preview_layer.on('add',function () {
-            previews.add(map);
-        }).on('remove',previews.remove).addTo(map);
-
         /* add layers switching widget */
         var heatmap_layer=L.layerGroup().addTo(map);
         page.data('heatmaps',heatmap_layer);
         var stats_layer=L.layerGroup().addTo(map);
         page.data('stats',stats_layer);
+        var preview_layer=L.layerGroup().addTo(map);
+        page.data('previews',preview_layer);
 
         L.control.layers({
             "City Planning": street_layer,
             "Parking Management": parking_layer,
             "Stadium Service": stadium_layer,
         },{
-            "Recording Preview": preview_layer,
             "Density Estimation": heatmap_layer,
             "Bubble Statistics": stats_layer,
+            "Preview Clips": preview_layer, 
         }).addTo(map);
 
         //var circle = new L.Circle([33.310955,-111.932443],2000).addTo(map);
         //console.log(circle.getBounds());
         //var circle = new L.Circle([37.388085,-121.963472],2000).addTo(map);
         //console.log(circle.getBounds());
+
+        previews.dropSetup(page.find("#mapCanvas"), map, preview_layer);
+        preview_layer.on("remove",function () {
+            preview_layer.clearLayers();
+        });
     }
 
     /* enable the office button */
@@ -92,6 +89,7 @@ $("#pg-home").on(":initpage", function(e) {
             var offices=page.data('offices');
             var stats_layer=page.data('stats');
             var heatmap_layer=page.data('heatmaps');
+            var preview_layer=page.data('previews');
             var icons=page.data('icons');
 
             $.each(data.response, function (x,info) {
@@ -140,10 +138,14 @@ $("#pg-home").on(":initpage", function(e) {
                         used: true,
                     };
 
+                    /* setup office tooltip */
+                    var office_loc="["+info._source.office.lat+","+info._source.office.lon+"]";
+                    ctx.marker.bindTooltip(office_loc);
+
                     /* setup marker actions */
                     var chartdiv=$('<div style="width:300px;height:200px"><canvas style="width:100%;height:100%"></canvas></div>');
                     ctx.marker.on('dblclick', function () {
-                        selectPage('office', ["office:["+info._source.office.lat+","+info._source.office.lon+"]",info._source.office]);
+                        selectPage('office', ["office:"+office_loc,info._source.office]);
                     }).bindPopup(chartdiv[0],{
                         maxWidth:"auto",
                         maxHeight:"auto"
@@ -172,13 +174,15 @@ $("#pg-home").on(":initpage", function(e) {
                     }).addTo(map).on('dblclick',function() {
                         selectPage("recording",['sensor="'+info._id+'"',info._source.office]);
                     });
-                    sensors[info._id]={ 
+
+                    var ctx=sensors[info._id]={ 
                         marker: marker,
                         line: L.polyline([info._source.location,info._source.office],options).addTo(map).bindTooltip("",{ permanent:true, direction:'center', opacity:0.7, className:'tooltip_text' }),
                         used: true 
                     };
-		            stats.create(sensors[info._id]);
-                    heatmaps.create(sensors[info._id],info._source.location);
+                    previews.create(page, ctx, info, preview_layer);
+		            stats.create(ctx);
+                    heatmaps.create(ctx,info._source.location);
                 }
 
                 /* show bandwidth */
@@ -201,7 +205,7 @@ $("#pg-home").on(":initpage", function(e) {
                     workloads.update(offices[officeid],info._source.office);
 
                 if (sensors[info._id].title!=title) {
-                    sensors[info._id].marker.unbindPopup().bindPopup(title);
+                    sensors[info._id].marker.unbindTooltip().bindTooltip(title);
                     sensors[info._id].title=title;
                 }
             });
@@ -211,6 +215,7 @@ $("#pg-home").on(":initpage", function(e) {
                 if ("used" in v) {
                     delete v.used;
                 } else {
+                    if ("video" in ctx) ctx.video.remove();
                     v.marker.remove();
                     v.line.remove();
 		            stats.close(v);

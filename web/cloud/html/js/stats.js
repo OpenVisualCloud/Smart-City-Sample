@@ -12,7 +12,7 @@ var stats={
     create: function (ctx) {
 	    ctx.circle=L.circleMarker(ctx.marker.getLatLng(), {radius:20,color:"green"});
 	    ctx.text=L.tooltip({permanent:true,direction:'center',className:'tooltip_text'});
-        var canvas=$('<div style="width:350px;height:150px"><canvas width="350" height="150"></canvas></div>').find("canvas");
+        var canvas=$('<div style="width:350px;height:200px;margin-top:5px"><canvas width="350" height="200"></canvas></div>').find("canvas");
 
         ctx.chart=new Chart(canvas, {
             type: 'bar',

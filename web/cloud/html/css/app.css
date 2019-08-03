@@ -29,3 +29,7 @@ form .form-icons .fa {
   box-shadow: none;
   font-size:1.25em;
 }
+
+.leaflet-popup-content {
+  margin:0 !important;
+}
