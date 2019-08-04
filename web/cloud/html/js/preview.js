@@ -1,6 +1,6 @@
 
 var previews={
-    create: function (page, ctx, sensor, layer) {
+    create: function (page, ctx, sensor, map, layer) {
         var div=page.find("[preview-template]").clone();
         div.removeAttr("preview-template").show();
         ctx.marker.bindPopup(div[0],{
@@ -16,12 +16,23 @@ var previews={
 
             div.attr('draggable','true').bind('dragstart',function (e) {
                 e.originalEvent.dataTransfer.setData("application/json",JSON.stringify(sensor));
+                page.find("#mapCanvas").unbind('dragover').on('dragover', function (e) {
+                    e.preventDefault();
+                }).unbind('drop').on('drop', function (e) {
+                    e.preventDefault();
+                    var div=page.find("[preview-template]").clone();
+                    div.removeAttr("preview-template").show();
+                    var icon=L.divIcon({html:div[0],iconSize:[300,200]});
+                    var marker=L.marker(map.mouseEventToLatLng(e),{icon:icon,draggable:true}).addTo(layer);
+                    var sensor1=JSON.parse(e.originalEvent.dataTransfer.getData("application/json"));
+                    previews.play(div,sensor1);
+                });
             });
         });
     },
     play: function (div, sensor) {
         var update=function () {
-            var error='<div style="line-height:200px;text-align:center">No Recording(s)</div>';
+            var error='<div style="line-height:200px;text-align:center">Recording Unavailable</div>';
             apiHost.search("recordings","time>=now-200000 and sensor='"+sensor._id+"'",sensor._source.office,1).then(function (r) {
                 r=r.response;
                 if (r.length==0) {
@@ -39,18 +50,5 @@ var previews={
             });
         };
         update();
-    },
-    dropSetup: function (canvas, map, layer) {
-        canvas.on('dragover', function (e) {
-            e.preventDefault();
-        }).on('drop', function (e) {
-            e.preventDefault();
-            var sensor=JSON.parse(e.originalEvent.dataTransfer.getData("application/json"));
-            var div=canvas.parent().find("[preview-template]").clone();
-            div.removeAttr("preview-template").show();
-            var icon=L.divIcon({html:div[0],iconSize:[300,200],shadowSize:[300,200]});
-            var marker=L.marker(map.mouseEventToLatLng(e),{icon:icon,draggable:true}).addTo(layer);
-            previews.play(div,sensor);
-        });
     },
 };
