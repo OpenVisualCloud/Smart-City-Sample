@@ -59,6 +59,18 @@ $("#pg-home").on(":initpage", function(e) {
         //console.log(circle.getBounds());
         //var circle = new L.Circle([37.388085,-121.963472],2000).addTo(map);
         //console.log(circle.getBounds());
+        map.on('zoomend', function () {
+            var update_layer=function (layer) {
+                var z=layer._zoomargs;
+                if (!z) return;
+                var scale=Math.pow(2.0,map.getZoom()-z.zoom);
+                var width=Math.floor(z.width*scale);
+                var height=Math.floor(z.height*scale);
+                $(layer._icon).css({width:width+'px',height:height+'px'});
+            };
+            stats_layer.eachLayer(update_layer);
+            preview_layer.eachLayer(update_layer);
+        });
     }
 
     /* enable the office button */
@@ -122,6 +134,7 @@ $("#pg-home").on(":initpage", function(e) {
                         icons[icon]=L.icon({
                             iconUrl: icon,
                             iconSize: [64,64],
+                            iconAnchor: [32,32],
                         });
                     }
                     
@@ -154,6 +167,7 @@ $("#pg-home").on(":initpage", function(e) {
                     icons[info._source.icon]=L.icon({
                         iconUrl: 'images/'+info._source.icon,
                         iconSize: [32,32],
+                        iconAnchor: [16,16],
                     });
                 }
 
