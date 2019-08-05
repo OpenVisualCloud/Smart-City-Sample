@@ -25,12 +25,11 @@ var stats={
                     intersect: false,
                 },
                 legend: {
-                    position: 'bottom',
-                    maxHeight: 25,
+                    position: 'top',
                     labels: {
                         fontSize: 9,
-                        usePointStyle: true,
                     },
+                    display: true,
                 },
                 scales: {
                     yAxes: [{ 
@@ -117,6 +116,7 @@ var stats={
                     datasets.splice(k,1);
             }
         }
+        chart.config.options.legend.display=(datasets.length<4);
         chart.update();
     },
     update: function (layer, ctx, zoom, sensor) {
