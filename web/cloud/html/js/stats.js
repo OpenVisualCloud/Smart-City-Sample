@@ -9,12 +9,8 @@ Chart.Legend.prototype.afterFit = function () {
 };
 
 var stats={
-    create: function (ctx) {
-	    ctx.circle=L.circleMarker(ctx.marker.getLatLng(), {radius:20,color:"green"});
-	    ctx.text=L.tooltip({permanent:true,direction:'center',className:'tooltip_text'});
-        var canvas=$('<div style="width:350px;height:200px;margin-top:5px"><canvas width="350" height="200"></canvas></div>').find("canvas");
-
-        ctx.chart=new Chart(canvas, {
+    create_chart: function (canvas) {
+        return new Chart(canvas, {
             type: 'bar',
             data: {
                 labels: [],
@@ -68,42 +64,71 @@ var stats={
                 },
             },
         });
-        ctx.circle.bindPopup(canvas.parent()[0],{ maxWidth:"auto",maxHeight:"auto" });
+    },
+    create: function (ctx, sensor, page, map, layer) {
+	    ctx.circle=L.circleMarker(ctx.marker.getLatLng(), {radius:20,color:"green"});
+	    ctx.text=L.tooltip({permanent:true,direction:'center',className:'tooltip_text'});
+        var div=$('<div style="width:350px;height:200px;padding-top:5px;padding-bottom:5px" draggable="true"><canvas style="width:100%;height:100%"></canvas></div>').on('dragstart', function (e) {
+            e.originalEvent.dataTransfer.setData('application/json',JSON.stringify(sensor));
+            page.find("#mapCanvas").unbind('dragover').on('dragover', function (e) {
+                e.preventDefault();
+            }).unbind('drop').on('drop', function (e) {
+                e.preventDefault();
+                var div1=div.clone().removeAttr('draggable').css({width:'100%',height:'100%'});
+                var icon1=L.divIcon({html:div1[0],iconSize:[350,200]});
+                var marker1=L.marker(map.mouseEventToLatLng(e),{icon:icon1,draggable:true}).addTo(layer);
+                marker1._sensor=JSON.parse(e.originalEvent.dataTransfer.getData('application/json'));
+                marker1._chart=stats.create_chart(div1.find('canvas'));
+
+                div1.append('<a class="leaflet-popup-close-button" href="javascript:void(0)" style="z-index:100">x</a>');
+                div1.find('a').click(function() {
+                    marker1.remove();
+                });
+            });
+        });
+        ctx.chart=stats.create_chart(div.find("canvas"));
+        ctx.circle.bindPopup(div[0],{ maxWidth:"auto",maxHeight:"auto" });
+    },
+    update_chart: function (chart, data) {
+        var labels=chart.config.data.labels;
+        var time=new Date();
+        labels.push(time);
+
+        data=Object.assign({},data);
+        var datasets=chart.config.data.datasets;
+        $.each(datasets, function (k,v) {
+            if (!(v.label in data)) return;
+            v.data.push({t:time,y:data[v.label]});
+            delete data[v.label];
+        });
+        $.each(data, function (k,v) {
+            datasets.push({label:k,data:[{t:time,y:v}]});
+        });
+
+        if (labels.length>25) {
+            labels.shift();
+            for (var k=datasets.length-1;k>=0;k--) {
+                while (datasets[k].data.length>0) {
+                    if (datasets[k].data[0].t>=labels[0]) break;
+                    datasets[k].data.shift();
+                }
+                if (datasets[k].data.length==0) 
+                    datasets.splice(k,1);
+            }
+        }
+        chart.update();
     },
     update: function (layer, ctx, zoom, sensor) {
-        var update_chart=function (data) {
-            var labels=ctx.chart.config.data.labels;
-            var time=new Date();
-            labels.push(time);
-
-            var datasets=ctx.chart.config.data.datasets;
-            $.each(datasets, function (k,v) {
-                if (!(v.label in data)) return;
-                v.data.push({t:time,y:data[v.label]});
-                delete data[v.label];
-            });
-            $.each(data, function (k,v) {
-                 datasets.push({label:k,data:[{t:time,y:v}]});
-            });
-
-            if (labels.length>25) {
-                labels.shift();
-                for (var k=datasets.length-1;k>=0;k--) {
-                    while (datasets[k].data.length>0) {
-                        if (datasets[k].data[0].t>=labels[0]) break;
-                        datasets[k].data.shift();
-                    }
-                    if (datasets[k].data.length==0) 
-                        datasets.splice(k,1);
-                }
-            }
-            ctx.chart.update();
-        };
         apiHost.stats("analytics",'sensor="'+sensor._id+'" and '+settings.stats_query(),settings.stats_histogram(),25,sensor._source.office).then(function (data) {
             var count=0;
             for (var k in data) 
                 count=count+data[k];
-            update_chart(data);
+            stats.update_chart(ctx.chart, data);
+            layer.eachLayer(function (layer1) {
+                if (!layer1._sensor || !layer1._chart) return;
+                if (layer1._sensor._id!=sensor._id || layer1._sensor._source.office.lat!=sensor._source.office.lat || layer1._sensor._source.office.lon!=sensor._source.office.lon) return;
+                stats.update_chart(layer1._chart,data);
+            });
             if (count>0) {
                 var pretty=function(value) {
                     if (value<1000) return value.toString(10);
@@ -123,7 +148,7 @@ var stats={
         }).catch(function () {
             ctx.circle.remove();
             ctx.text.remove();
-            update_chart(0);
+            stats.update_chart(ctx.chart, {});
         });
     },
     close: function (ctx) {

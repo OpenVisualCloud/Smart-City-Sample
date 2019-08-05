@@ -59,11 +59,6 @@ $("#pg-home").on(":initpage", function(e) {
         //console.log(circle.getBounds());
         //var circle = new L.Circle([37.388085,-121.963472],2000).addTo(map);
         //console.log(circle.getBounds());
-
-        previews.dropSetup(page.find("#mapCanvas"), map, preview_layer);
-        preview_layer.on("remove",function () {
-            preview_layer.clearLayers();
-        });
     }
 
     /* enable the office button */
@@ -180,8 +175,8 @@ $("#pg-home").on(":initpage", function(e) {
                         line: L.polyline([info._source.location,info._source.office],options).addTo(map).bindTooltip("",{ permanent:true, direction:'center', opacity:0.7, className:'tooltip_text' }),
                         used: true 
                     };
-                    previews.create(page, ctx, info, preview_layer);
-		            stats.create(ctx);
+                    previews.create(page, ctx, info, map, preview_layer);
+		            stats.create(ctx, info, page, map, stats_layer);
                     heatmaps.create(ctx,info._source.location);
                 }
 
