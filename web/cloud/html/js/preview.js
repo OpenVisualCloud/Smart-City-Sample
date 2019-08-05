@@ -39,11 +39,10 @@ var previews={
                     div.empty().append(error);
                     return setTimeout(update,5000);
                 }
-                var title=$('<div style="position:absolute;width:100%;top:0;text-align:center;font-size:1em">['+sensor._source.location.lat+","+sensor._source.location.lon+"]</div>");
-                var video=$('<video style="position:absolute;top:0;width:100%;height:100%" autoplay muted><source src="recording/'+r[0]._source.path+'?'+$.param({office:sensor._source.office.lat+","+sensor._source.office.lon})+'"></source></video>').bind('ended',update).bind('error',function () {
+                var video=$('<video style="width:100%;height:100%" autoplay muted><source src="recording/'+r[0]._source.path+'?'+$.param({office:sensor._source.office.lat+","+sensor._source.office.lon})+'"></source></video>').bind('ended',update).bind('error',function () {
                     setTimeout(update,5000);
                 });
-                div.empty().append(title).append(video);
+                div.empty().append(video);
             }).catch(function () {
                 div.empty().append(error);
                 setTimeout(update,5000);
