@@ -26,6 +26,10 @@ var previews={
                     var marker=L.marker(map.mouseEventToLatLng(e),{icon:icon,draggable:true}).addTo(layer);
                     var sensor1=JSON.parse(e.originalEvent.dataTransfer.getData("application/json"));
                     previews.play(div,sensor1);
+
+                    div.append('<a class="leaflet-popup-close-button" href="javascript:void(0)" style="z-index:100">x</a>').find('a').click(function() {
+                        marker.remove();
+                    });
                 });
             });
         });
@@ -34,17 +38,19 @@ var previews={
         var update=function () {
             var error='<div style="line-height:200px;text-align:center">Recording Unavailable</div>';
             apiHost.search("recordings","time>=now-200000 and sensor='"+sensor._id+"'",sensor._source.office,1).then(function (r) {
+                div.find("div,video").remove();
                 r=r.response;
                 if (r.length==0) {
-                    div.empty().append(error);
+                    div.append(error);
                     return setTimeout(update,5000);
                 }
                 var video=$('<video style="width:100%;height:100%" autoplay muted><source src="recording/'+r[0]._source.path+'?'+$.param({office:sensor._source.office.lat+","+sensor._source.office.lon})+'"></source></video>').bind('ended',update).bind('error',function () {
                     setTimeout(update,5000);
                 });
-                div.empty().append(video);
+                div.append(video);
             }).catch(function () {
-                div.empty().append(error);
+                div.find("div,video").remove();
+                div.append(error);
                 setTimeout(update,5000);
             });
         };

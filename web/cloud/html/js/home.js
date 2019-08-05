@@ -40,13 +40,9 @@ $("#pg-home").on(":initpage", function(e) {
         /* add layers switching widget */
         var heatmap_layer=L.layerGroup().addTo(map);
         page.data('heatmaps',heatmap_layer);
-        var stats_layer=L.layerGroup().addTo(map).on('remove', function () {
-            stats_layer.clearLayers();
-        });
+        var stats_layer=L.layerGroup().addTo(map);
         page.data('stats',stats_layer);
-        var preview_layer=L.layerGroup().addTo(map).on("remove",function () {
-            preview_layer.clearLayers();
-        });
+        var preview_layer=L.layerGroup().addTo(map);
         page.data('previews',preview_layer);
 
         L.control.layers({

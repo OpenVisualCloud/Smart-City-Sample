@@ -74,13 +74,16 @@ var stats={
                 e.preventDefault();
             }).unbind('drop').on('drop', function (e) {
                 e.preventDefault();
-                $(this).unbind('dragover').unbind('drop');
-
                 var div1=div.clone().removeAttr('draggable');
                 var icon1=L.divIcon({html:div1[0],iconSize:[350,200]});
                 var marker1=L.marker(map.mouseEventToLatLng(e),{icon:icon1,draggable:true}).addTo(layer);
                 marker1._sensor=JSON.parse(e.originalEvent.dataTransfer.getData('application/json'));
                 marker1._chart=stats.create_chart(div1.find('canvas'));
+
+                div1.append('<a class="leaflet-popup-close-button" href="javascript:void(0)" style="z-index:100">x</a>');
+                div1.find('a').click(function() {
+                    marker1.remove();
+                });
             });
         });
         ctx.chart=stats.create_chart(div.find("canvas"));
