@@ -74,7 +74,7 @@ var stats={
                 e.preventDefault();
             }).unbind('drop').on('drop', function (e) {
                 e.preventDefault();
-                var div1=div.clone().removeAttr('draggable');
+                var div1=div.clone().removeAttr('draggable').css({width:'100%',height:'100%'});
                 var icon1=L.divIcon({html:div1[0],iconSize:[350,200]});
                 var marker1=L.marker(map.mouseEventToLatLng(e),{icon:icon1,draggable:true}).addTo(layer);
                 marker1._sensor=JSON.parse(e.originalEvent.dataTransfer.getData('application/json'));
