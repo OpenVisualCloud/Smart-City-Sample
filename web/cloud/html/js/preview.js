@@ -22,8 +22,9 @@ var previews={
                     e.preventDefault();
                     var div=page.find("[preview-template]").clone().show();
                     div.removeAttr("preview-template").css({width:'100%',height:'100%'});
-                    var icon=L.divIcon({html:div[0],iconSize:[300,200]});
+                    var icon=L.divIcon({html:div[0],iconSize:[300,200],iconAnchor:[0,0]});
                     var marker=L.marker(map.mouseEventToLatLng(e),{icon:icon,draggable:true}).addTo(layer);
+                    marker._zoomargs={zoom:map.getZoom(),width:300,height:200};
                     var sensor1=JSON.parse(e.originalEvent.dataTransfer.getData("application/json"));
                     previews.play(div,sensor1);
 

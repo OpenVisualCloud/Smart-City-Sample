@@ -75,10 +75,11 @@ var stats={
             }).unbind('drop').on('drop', function (e) {
                 e.preventDefault();
                 var div1=div.clone().removeAttr('draggable').css({width:'100%',height:'100%'});
-                var icon1=L.divIcon({html:div1[0],iconSize:[350,200]});
+                var icon1=L.divIcon({html:div1[0],iconSize:[350,200],iconAnchor:[0,0]});
                 var marker1=L.marker(map.mouseEventToLatLng(e),{icon:icon1,draggable:true}).addTo(layer);
                 marker1._sensor=JSON.parse(e.originalEvent.dataTransfer.getData('application/json'));
                 marker1._chart=stats.create_chart(div1.find('canvas'));
+                marker1._zoomargs={zoom:map.getZoom(),width:350,height:200};
 
                 div1.append('<a class="leaflet-popup-close-button" href="javascript:void(0)" style="z-index:100">x</a>');
                 div1.find('a').click(function() {
