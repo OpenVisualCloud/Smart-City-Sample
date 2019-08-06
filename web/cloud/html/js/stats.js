@@ -79,6 +79,7 @@ var stats={
                 marker1._sensor=JSON.parse(e.originalEvent.dataTransfer.getData('application/json'));
                 marker1._chart=stats.create_chart(div1.find('canvas'));
                 marker1._zoomargs={zoom:map.getZoom(),width:350,height:200};
+                $(marker1._icon).css({'border-radius':'10px'});
 
                 div1.append('<a class="leaflet-popup-close-button" href="javascript:void(0)" style="z-index:100">x</a>');
                 div1.find('a').click(function() {
