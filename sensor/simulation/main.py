@@ -2,6 +2,7 @@
 
 from db_ingest import DBIngest
 from signal import signal, SIGTERM
+from probe import probe
 import subprocess
 import socket
 import math
@@ -19,7 +20,6 @@ def geo_point(origin, distance, tc):
     return [math.degrees(lat), math.degrees(lon)]
 
 office=list(map(float,os.environ["OFFICE"].split(",")))
-resolution=list(map(int,os.environ["RESOLUTION"].split("x")))
 dbhost=os.environ["DBHOST"]
 
 pattern=str(os.environ["FILES"])
@@ -56,6 +56,17 @@ def quit_service(signum, sigframe):
     exit(143)
 
 signal(SIGTERM, quit_service)
+simulated_root="/mnt/simulated"
+files=[f for f in os.listdir(simulated_root) if re.search(pattern,f)]
+file1=simulated_root+"/"+files[sensor_id%len(files)]
+
+sinfo=probe(file1)
+width=0
+height=0
+for stream in sinfo["streams"]:
+    if "coded_width" in stream: width=int(stream["coded_width"])
+    if "coded_height" in stream: height=int(stream["coded_height"])
+
 db=DBIngest(index="sensors",office=office,host=dbhost)
 while True:
     try:
@@ -64,7 +75,7 @@ while True:
             "icon": "camera.gif",
             "office": { "lat": office[0], "lon": office[1] },
             "model": "simulation",
-            "resolution": { "width": resolution[0], "height": resolution[1] },
+            "resolution": { "width": width, "height": height },
             "location": { "lat": location[0], "lon": location[1] },
             "url": "rtsp://"+hostname+":8554/live.sdp",
             "mac": "0098c00"+str(6963+sensor_id),
@@ -82,8 +93,5 @@ while True:
 
 print("Created sensor "+r["_id"], flush=True)
 while True:
-    simulated_root="/mnt/simulated"
-    files=[f for f in os.listdir(simulated_root) if re.search(pattern,f)]
-    file1=simulated_root+"/"+files[sensor_id%len(files)]
-    subprocess.call(["/usr/bin/cvlc","-vvv",file1,"--loop",":sout=#gather:rtp{sdp=rtsp://"+hostname+":8554/live.sdp}",":network-caching:1500",":sout-all",":sout-keep"],stdin=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
+    subprocess.call(["/usr/bin/cvlc","-vvv",file1,"--loop",":sout=#gather:rtp{sdp=rtsp://"+hostname+":8554/live.sdp}",":network-caching:1500",":sout-all",":sout-keep"])
     time.sleep(10)
