@@ -3,8 +3,7 @@
 from db_ingest import DBIngest
 from signal import signal, SIGTERM
 import paho.mqtt.client as mqtt
-from threading import Lock
-from interval import IntervalTimer
+from threading import Lock, Timer
 import json
 import time
 import sys
@@ -13,6 +12,13 @@ import os
 mqtthost = os.environ["MQTTHOST"]
 dbhost = os.environ["DBHOST"]
 office = list(map(float, os.environ["OFFICE"].split(",")))
+
+class IntervalTimer(Timer):
+    def run(self):
+        while not self.finished.is_set():
+            self.finished.wait(self.interval)
+            self.function(*self.args, **self.kwargs)
+        self.finished.set()
 
 class MQTT2DB(object):
     def __init__(self, algorithm):
