@@ -3,7 +3,10 @@
 from db_ingest import DBIngest
 from db_query import DBQuery
 from signal import signal, SIGTERM
-from subprocess import Popen
+from concurrent.futures import ThreadPoolExecutor
+from mqtt2db import MQTT2DB
+from rec2db import Rec2DB
+from runva import RunVA
 import os
 import time
 
@@ -13,32 +16,32 @@ every_nth_frame = int(os.environ["EVERY_NTH_FRAME"])
 
 mqtt2db=None
 rec2db=None
-va=None
+runva=None
 stop=False
 
 def connect(sensor, algorithm, uri):
-    global mqtt2db, rec2db, va
+    global mqtt2db, rec2db, runva
 
     try:
-        topic="smtc_va_inferences_"+algorithm
-        mqtt2db=Popen(["/home/mqtt2db.py",algorithm,topic])
-        rec2db=Popen(["/home/rec2db.py",sensor])
-        va=Popen(["/home/runva.py",sensor,uri,algorithm,topic])
-        va.wait()
+        mqtt2db=MQTT2DB(algorithm)  # this waits for mqtt
+        rec2db=Rec2DB(sensor)
+        runva=RunVA()
 
-        rec2db.send_signal(SIGTERM)
-        mqtt2db.send_signal(SIGTERM)
-        rec2db.wait()
-        mqtt2db.wait()
+        topic="smtc_va_inferences_"+algorithm
+        with ThreadPoolExecutor(3) as e:
+            e.submit(mqtt2db.loop, topic)
+            e.submit(rec2db.loop)
+            e.submit(runva.loop, sensor, uri, algorithm, topic)
+
     except Exception as e:
         print("Exception: "+str(e), flush=True)
 
 def quit_service(signum, sigframe):
     global stop
-    if mqtt2db: mqtt2db.send_signal(SIGTERM)
-    if rec2db: rec2db.send_signal(SIGTERM)
-    if va: va.send_signal(SIGTERM)
     stop=True
+    if mqtt2db: mqtt2db.stop()
+    if rec2db: rec2db.stop()
+    if runva: runva.stop()
 
 signal(SIGTERM, quit_service)
 dba=DBIngest(host=dbhost, index="algorithms", office=office)

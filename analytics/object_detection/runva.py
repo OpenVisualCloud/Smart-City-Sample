@@ -1,16 +1,11 @@
 #!/usr/bin/python3
 
 from db_ingest import DBIngest
-from signal import signal,SIGTERM
 from subprocess import Popen
 import requests
 import time
 import sys
 import os
-
-if len(sys.argv)<5:
-    print("Usage: <sensor> <uri> <algorithm> <topic>")
-    exit(-1)
 
 vahost = "http://localhost:8080/pipelines"
 mqtthost = os.environ["MQTTHOST"]
@@ -18,70 +13,69 @@ dbhost = os.environ["DBHOST"]
 every_nth_frame = int(os.environ["EVERY_NTH_FRAME"])
 office = list(map(float, os.environ["OFFICE"].split(",")))
 
-stop=False
-va=None
+class RunVA(object):
+    def __init__(self):
+        super(RunVA,self).__init__()
+        self._va=Popen(["/usr/bin/python3","-m","openapi_server"],cwd="/home/video-analytics/app/server")
+        self._db=DBIngest(host=dbhost, index="algorithms", office=office)
+        self._stop=None
 
-def quit_service(signum, sigframe):
-    global stop, va
-    if va: va.kill()
-    stop=True
+    def stop(self):
+        self._stop=True
 
-sensor=sys.argv[1]
-uri=sys.argv[2]
-algorithm=sys.argv[3]
-topic=sys.argv[4]
+    def loop(self, sensor, uri, algorithm, topic):
+        req={
+            "source": {
+                "uri": uri,
+                "type":"uri"
+            },
+            "tags": {
+                "sensor": sensor,
+                "algorithm": algorithm,
+            },
+            "parameters": {
+                "every-nth-frame": every_nth_frame,
+                "recording_prefix": "recordings/" + sensor,
+                "method": "mqtt",
+                "address": mqtthost,
+                "clientid": algorithm,
+                "topic": topic,
+            },
+        }
 
-db=DBIngest(host=dbhost, index="algorithms", office=office)
-va=Popen(["/usr/bin/python3","-m","openapi_server"],cwd="/home/video-analytics/app/server")
+        while True:
+            try:
+                r = requests.post(vahost+"/object_detection/2", json=req, timeout=10)
+                if r.status_code==200: 
+                    pid=int(r.text)
+                    break
+            except Exception as e:
+                print("Exception: "+str(e), flush=True)
+            time.sleep(10)
 
-req={
-    "source": {
-        "uri": uri,
-        "type":"uri"
-    },
-    "tags": {
-        "sensor": sensor,
-        "algorithm": algorithm,
-    },
-    "parameters": {
-        "every-nth-frame": every_nth_frame,
-        "recording_prefix": "recordings/" + sensor,
-        "method": "mqtt",
-        "address": mqtthost,
-        "clientid": algorithm,
-        "topic": topic,
-    },
-}
+        while not self._stop:
+            r=requests.get(vahost+"/object_detection/2/"+str(pid)+"/status", timeout=10)
+            if r.status_code!=200: 
+                print("pipeline status: "+str(r.status_code), flush=True)
+                print(r.text, flush=True)
+                break
 
-while True:
-    try:
-        print(vahost+"/object_detection/2",flush=True)
-        r = requests.post(vahost+"/object_detection/2", json=req, timeout=10)
-        if r.status_code==200: break
-    except Exception as e:
-        print("Exception: "+str(e), flush=True)
-    time.sleep(10)
+            pinfo=r.json()
+            print(pinfo, flush=True)
 
-print("pid: "+r.text, flush=True)
-pid=int(r.text)
-while r.status_code==200 and not stop:
-    r=requests.get(vahost+"/object_detection/2/"+str(pid)+"/status", timeout=10)
-    r.raise_for_status()
-    pinfo=r.json()
-    if "avg_pipeline_latency" not in pinfo: pinfo["avg_pipeline_latency"]=0
-    print(pinfo, flush=True)
+            state = pinfo["state"]
+            if state == "COMPLETED" or state == "ABORTED" or state == "ERROR":
+                print("pineline ended with "+str(state),flush=True)
+                break
 
-    state = pinfo["state"]
-    if state == "COMPLETED" or state == "ABORTED" or state == "ERROR":
-        print("pineline ended with "+str(state),flush=True)
-        break
+            if state == "RUNNING" or state == "COMPLETED":
+                if "avg_pipeline_latency" not in pinfo: pinfo["avg_pipeline_latency"]=0
+                self._db.update(algorithm, {
+                    "performance": pinfo["avg_fps"], 
+                    "latency": pinfo["avg_pipeline_latency"]*1000,
+                })
+            time.sleep(10)
 
-    db.update(algorithm, {
-        "performance": pinfo["avg_fps"], 
-        "latency": pinfo["avg_pipeline_latency"]*1000,
-    })
-    time.sleep(2)
-
-print("exiting va pipeline",flush=True)
-va.kill()
-va.wait()
+        print("exiting va pipeline",flush=True)
+        self._va.kill()
+        self._va.wait()
