@@ -236,8 +236,8 @@ services:
             SEARCH_BATCH: '3000'
             UPDATE_BATCH: '500'
 
-    video_analytics_street:
-        image: smtc_video_analytics:latest
+    analytics_street:
+        image: smtc_analytics_object_detection:latest
         environment:
             OFFICE: '45.543797,-122.962038'
             DBHOST: 'http://database:9200'
