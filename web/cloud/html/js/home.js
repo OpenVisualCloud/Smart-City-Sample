@@ -255,5 +255,4 @@ $("#pg-home").on(":initpage", function(e) {
     var page=$(this);
     var timer=page.data('timer');
     if (timer) clearTimeout(timer);
-    page.find("video").get(0).pause();
 });
