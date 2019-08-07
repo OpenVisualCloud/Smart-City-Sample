@@ -30,8 +30,8 @@ class Handler(FileSystemEventHandler):
         if event.src_path.endswith(".png"): return
         if self._last_file:
             if self._last_file==event.src_path: return
-            if psutil.cpu_percent()>60: time.sleep(2)  # yield on busy
             try:
+                if psutil.cpu_percent()>=80: time.sleep(2)  # yield on busy
                 self._process_file(self._last_file)
             except Exception as e:
                 print("Exception: "+str(e), flush=True)
