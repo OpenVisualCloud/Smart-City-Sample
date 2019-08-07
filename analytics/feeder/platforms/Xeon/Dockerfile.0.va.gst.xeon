@@ -12,7 +12,7 @@ RUN apt-get update \
 RUN rm -r /home/video-analytics/models && rm -r /home/video-analytics/pipelines
 COPY *.py /home/
 COPY ./models /home/video-analytics/models
-COPY ./pipelines/gstreamer /home/video-analytics/pipelines
+COPY ./platforms/Xeon/pipelines/gstreamer /home/video-analytics/pipelines
 COPY ./utils /home/utils
 COPY start-service.sh /home/
 
