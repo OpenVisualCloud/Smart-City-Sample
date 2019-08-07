@@ -1,9 +1,10 @@
 
-FROM video_analytics_service_gstreamer
+FROM smtc_analytics_common
 
 USER root
 RUN  apt-get update && apt-get install -y ffmpeg python3-paho-mqtt python3-ply python3-requests python3-watchdog
 RUN  rm -r /home/video-analytics/models && rm -r /home/video-analytics/pipelines
+RUN  sed -i 's/DEBUG/WARNING/' /home/video-analytics/app/common/settings.py
 
 COPY *.py /home/
 COPY models /home/video-analytics/models
