@@ -1,0 +1,32 @@
+{
+    "name": "emotion_recognition",
+    "version": 1,
+    "type": "GStreamer",
+    "template":"urisourcebin uri=\"{source[uri]}\" ! concat name=c ! decodebin ! video/x-raw ! videoconvert name=\"videoconvert\" ! gvadetect model=\"{models[face_detection_retail][1][network]}\" model-proc=\"{models[face_detection_retail][1][proc]}\" name=\"detection\" ! queue ! gvaclassify model=\"{models[emotion_recognition][1][network]}\" model-proc=\"{models[emotion_recognition][1][proc]}\" name=\"classification\" ! queue ! gvametaconvert converter=json method=detection source=\"{source[uri]}\" name=\"jsonmetaconvert\" ! queue ! appsink name=appsink",
+    "description": "Emotion Recognition Pipeline",
+    "parameters": {
+		"type" : "object",
+		"properties" : {
+			"every-nth-frame": {
+				"element":"detection",
+				"type": "integer",
+				"minimum": 0,
+				"maximum": 4294967295
+			},
+			"cpu-streams": {
+				"element":"detection",
+				"type": "string"
+			},
+			"n-threads": {
+				"element":"videoconvert",
+				"type": "integer"
+			},
+			"nireq": {
+				"element":"detection",
+				"type": "integer",
+				"minimum": 1,
+				"maximum": 64
+			}
+		}
+	}
+}
