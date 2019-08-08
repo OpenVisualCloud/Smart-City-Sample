@@ -13,6 +13,7 @@ wget -O repo.tar.gz "$REPO"
 tar xvfz repo.tar.gz --strip-components=3 --wildcards '*/ad-insertion/video-analytics-service'
 rm -rf platforms/VCAC*
 rm -rf platforms/Xeon/Dockerfile*ffmpeg*
+rm -rf platforms/Xeon/pipelines/ffmpeg
 cp -r app ..
 cp -r platforms ..
 cd ..
