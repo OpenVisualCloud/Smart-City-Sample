@@ -1,3 +1,4 @@
+# smtc_analytics_object_detection
 
 FROM smtc_analytics_common
 
@@ -7,7 +8,7 @@ RUN  sed -i 's/DEBUG/WARNING/' /home/video-analytics/app/common/settings.py
 
 COPY *.py /home/
 COPY models /home/video-analytics/models
-COPY pipelines/gstreamer /home/video-analytics/pipelines
+COPY platforms/Xeon/pipelines/gstreamer /home/video-analytics/pipelines
 ENTRYPOINT ["/home/main.py"]
 
 ####

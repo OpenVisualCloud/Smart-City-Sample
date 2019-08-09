@@ -43,7 +43,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y -q --no-
 
 COPY --from=gst-python-build /home/build_gst_python /
 COPY ./app/server/requirements.txt /
-RUN pip3 install  --no-cache-dir -r /requirements.txt
+RUN pip3 install  --no-cache-dir -r /requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
 
 COPY ./app /home/video-analytics/app
 
