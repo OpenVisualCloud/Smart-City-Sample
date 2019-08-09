@@ -32,6 +32,10 @@ class RunVA(object):
             "tags": {
                 "sensor": sensor,
                 "algorithm": algorithm,
+                "office": {
+                    "lat": office[0],
+                    "lon": office[1],
+                },
             },
             "parameters": {
                 "every-nth-frame": every_nth_frame,
