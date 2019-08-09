@@ -10,7 +10,7 @@ $("#pg-office").on(":setup-alerts", function () {
             if (alerts) $("#pg-office").trigger(":alert",[alerts]);
         });
     };
-    setTimeout(update,5000);
+    setInterval(update,10000);
 }).on(":alert", function (e, message) {
     $("#header-text")[0].style="color:red";
     $("#header-alert").text(" ("+message+")");
