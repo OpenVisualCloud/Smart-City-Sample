@@ -8,6 +8,8 @@ services:
         environment:
             - 'discovery.type=single-node'
             - 'ES_JAVA_OPTS=-Xms4096m -Xmx4096m'
+            - 'NO_PROXY=*'
+            - 'no_proxy=*'
 
     web_cloud:
         image: smtc_web_cloud:latest
@@ -15,6 +17,8 @@ services:
             - "443:8080"
         environment:
             DBHOST: 'http://database:9200'
+            NO_PROXY: '*'
+            no_proxy: '*'
         secrets:
             - source: self_crt
               target: self.crt
@@ -37,6 +41,8 @@ services:
         environment:
             DBHOST: 'http://database:9200'
             OFFICE: '45.543797,-122.962038'
+            NO_PROXY: '*'
+            no_proxy: '*'
         volumes:
             - ${STORAGE_VOLUME}:/mnt/storage:ro
             - /etc/localtime:/etc/localtime:ro
@@ -54,6 +60,8 @@ services:
             ALPHA: 45
             FOVH: 90
             FOVV: 68
+            NO_PROXY: '*'
+            no_proxy: '*'
          
     simulated_camera_street_sensor2:
         image: smtc_sensor_simulation:latest
@@ -68,6 +76,8 @@ services:
             ALPHA: 45
             FOVH: 90
             FOVV: 68
+            NO_PROXY: '*'
+            no_proxy: '*'
          
     simulated_camera_street_sensor3:
         image: smtc_sensor_simulation:latest
@@ -82,119 +92,9 @@ services:
             ALPHA: 45
             FOVH: 90
             FOVV: 68
+            NO_PROXY: '*'
+            no_proxy: '*'
          
-#    simulated_camera_parking_zone_a:
-#        image: smtc_sensor_simulation:latest
-#        environment:
-#            OFFICE:   '33.310955,-111.932443'
-#            LOCATION: '33.31546,-111.95283'
-#            DBHOST: 'http://database:9200'
-#            FILES: '.mp4$$'
-#            SENSOR_ID: 0
-#            THETA: 0.0
-#            MNTH: 15.0
-#            ALPHA: 45
-#            FOVH: 90
-#            FOVV: 68
-         
-#    simulated_camera_parking_zone_b:
-#        image: smtc_sensor_simulation:latest
-#        environment:
-#            OFFICE:   '33.310955,-111.932443'
-#            LOCATION: '33.32697,-111.92573'
-#            DBHOST: 'http://database:9200'
-#            FILES: '.mp4$$'
-#            SENSOR_ID: 1
-#            THETA: -90.0
-#            MNTH: 15.0
-#            ALPHA: 45
-#            FOVH: 90
-#            FOVV: 68
-
-#    simulated_camera_parking_zone_c:
-#        image: smtc_sensor_simulation:latest
-#        environment:
-#            OFFICE:   '33.310955,-111.932443'
-#            LOCATION: '33.29499,-111.93933'
-#            DBHOST: 'http://database:9200'
-#            FILES: '.mp4$$'
-#            SENSOR_ID: 2
-#            THETA: 90.0
-#            MNTH: 15.0
-#            ALPHA: 45
-#            FOVH: 90
-#            FOVV: 68
-
-#    simulated_camera_parking_zone_d:
-#        image: smtc_sensor_simulation:latest
-#        environment:
-#            OFFICE:   '33.310955,-111.932443'
-#            LOCATION: '33.30605,-111.91205'
-#            DBHOST: 'http://database:9200'
-#            FILES: '.mp4$$'
-#            SENSOR_ID: 3
-#            THETA: 180
-#            MNTH: 15.0
-#            ALPHA: 45
-#            FOVH: 90
-#            FOVV: 68
-
-#    simulated_camera_stadium_east:
-#        image: smtc_sensor_simulation:latest
-#        environment:
-#            OFFICE:   '37.39726,-121.94831'
-#            LOCATION: '37.38800,-121.94822'
-#            DBHOST: 'http://database:9200'
-#            FILES: '.mp4$$'
-#            SENSOR_ID: 0
-#            THETA: -135.0
-#            MNTH: 15.0
-#            ALPHA: 45
-#            FOVH: 90
-#            FOVV: 68
-
-#    simulated_camera_stadium_north:
-#        image: smtc_sensor_simulation:latest
-#        environment:
-#            OFFICE:   '37.39726,-121.94831'
-#            LOCATION: '37.39878,-121.95916'
-#            DBHOST: 'http://database:9200'
-#            FILES: '.mp4$$'
-#            SENSOR_ID: 1
-#            THETA: -45.0
-#            MNTH: 15.0
-#            ALPHA: 45
-#            FOVH: 90
-#            FOVV: 68
-
-#    simulated_camera_stadium_west:
-#        image: smtc_sensor_simulation:latest
-#        environment:
-#            OFFICE:   '37.39726,-121.94831'
-#            LOCATION: '37.38673,-121.97672'
-#            DBHOST: 'http://database:9200'
-#            FILES: '.mp4$$'
-#            SENSOR_ID: 2
-#            THETA: 45.0
-#            MNTH: 15.0
-#            ALPHA: 45
-#            FOVH: 90
-#            FOVV: 68
-
-#    simulated_camera_stadium_south:
-#        image: smtc_sensor_simulation:latest
-#        environment:
-#            OFFICE:   '37.39726,-121.94831'
-#            LOCATION: '37.37889,-121.96269'
-#            DBHOST: 'http://database:9200'
-#            FILES: '.mp4$$'
-#            SENSOR_ID: 3
-#            THETA: 135.0
-#            MNTH: 15.0
-#            ALPHA: 45
-#            FOVH: 90
-#            FOVV: 68
-
     storage_cleanup_street:
         image: smtc_storage_cleanup:latest
         volumes:
@@ -205,6 +105,8 @@ services:
             SERVICE_INTERVAL: '14400'
             OFFICE: '45.543797,-122.962038'
             DBHOST: 'http://database:9200'
+            NO_PROXY: '*'
+            no_proxy: '*'
 
     onvif-discovery_street:
         image: smtc_onvif_discovery:latest
@@ -215,6 +117,8 @@ services:
             DISTANCE: 10
             ANGLEOFFSET: 15
             DBHOST: 'http://database:9200'
+            NO_PROXY: '*'
+            no_proxy: '*'
 
     health_check_street:
         image: smtc_trigger_health
@@ -224,6 +128,8 @@ services:
             SERVICE_INTERVAL: '300'
             OFFICE: '45.543797,-122.962038'
             DBHOST: 'http://database:9200'
+            NO_PROXY: '*'
+            no_proxy: '*'
 
     where_indexing_street:
         image: smtc_where_indexing
@@ -235,6 +141,8 @@ services:
             UPDATE_INTERVAL: '5'
             SEARCH_BATCH: '3000'
             UPDATE_BATCH: '500'
+            NO_PROXY: '*'
+            no_proxy: '*'
 
     analytics_street:
         image: smtc_analytics_object_detection:latest
@@ -244,6 +152,8 @@ services:
             MQTTHOST: 'mqtt'
             STORAGE_VOLUME: '/home/video-analytics/app/server/recordings'
             EVERY_NTH_FRAME: 6
+            NO_PROXY: '*'
+            no_proxy: '*'
         volumes:
             - ${STORAGE_VOLUME}:/home/video-analytics/app/server/recordings:rw
             - /etc/localtime:/etc/localtime:ro
@@ -252,6 +162,9 @@ services:
     
     mqtt:
         image: eclipse-mosquitto:1.5.8
+        environment:
+            NO_PROXY: '*'
+            no_proxy: '*'
 
 secrets:
     self_key:
