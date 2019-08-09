@@ -1,7 +1,7 @@
 
 $("#pg-office").on(":setup-alerts", function () {
     var update=function () {
-        apiHost.search("alerts","time>now-5000",{}).then(function (data) {
+        apiHost.search("alerts","time>now-5000",null).then(function (data) {
             var alerts=null;
             $.each(data.response,function (x,v) {
                 if ("maintenance_required" in v._source) alerts="Maintenance Required";
