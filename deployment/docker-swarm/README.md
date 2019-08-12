@@ -38,4 +38,6 @@ make start_docker_swarm
 make stop_docker_swarm
 ```
 
-The recordings are stored under /mnt/storage on each swarm node labeled ```office?_zone```. You can run the [clean-volume.sh] script to clean up the recording data.   
+The recordings are stored under ```/mnt/storage``` on each swarm node labeled ```office?_zone```. You can run the [clean-volume.sh](../../script/clean-volume.sh) script to clean up the recording data.   
+
+If you use the [restore.sh](../../script/restore.sh) or [clean-volume.sh](../../script/clean-volume.sh) script, it is recommended that you setup passwordless access from the manager node to other swarm nodes.   
