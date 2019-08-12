@@ -6,6 +6,7 @@ from probe import probe
 import subprocess
 import socket
 import math
+import random
 import time
 import os
 import re
@@ -34,16 +35,16 @@ fovv = float(os.environ["FOVV"])
 try:
     sensor_id=int(os.environ["SENSOR_ID"])
 except:
-    sensor_id=int(socket.gethostbyname(hostname).split(".")[3])
+    sensor_id=int(random.random()*147)
 
 if "LOCATION" in os.environ:
     location=list(map(float,os.environ["LOCATION"].split(",")))
 else:
-    distance=float(os.environ["DISTANCE"])
     nsensors=int(os.environ["SENSORS"])
-    angle=math.pi*2/nsensors*(sensor_id%nsensors)
-    location=geo_point(office, distance, angle)
-    theta=theta+angle/math.pi*180
+    slot=float(sensor_id%nsensors)/nsensors
+    distance=float(os.environ["DISTANCE"])*(1.0-0.5*random.random())
+    location=geo_point(office, distance, math.pi*2.0*slot)
+    theta=theta+360*slot
 
 db=None
 r=None
