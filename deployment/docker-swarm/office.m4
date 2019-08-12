@@ -4,7 +4,7 @@ ifelse(eval(defn(`NOFFICES')>1),1,`dnl
         environment:
             - "cluster.name=db-cluster"
             - "node.name=defn(`OFFICE_NAME')_db"
-            - "node.master=true"
+            - "node.master=false"
             - "node.data=true"
             - "discovery.zen.minimum_master_nodes=1"
             - "discovery.zen.ping.unicast.hosts=cloud_db"
