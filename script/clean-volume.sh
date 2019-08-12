@@ -1,25 +1,21 @@
 #!/bin/bash -e
 
 if test -z "$1"; then
-    echo "Usage: [<user>]"
+    echo "Usage: <host|user@host> [...]"
     exit -1
 fi
 
-if test -z "$1"; then
-    user="$(id -un)"
-else
-    user="$1"
-fi
-
 storage="/mnt/storage"
-domain=$(hostname -d)
-for host1 in `sudo docker node ls --format "{{.Hostname}} {{.Availability}}" | grep Active | cut -f1 -d' '`; do
-    user1="$user"
-    if test "$host1" = "$(hostname)"; then
-        echo "$(id -un)@$host1.$domain:${storage}"
+hostname="$(hostname)"
+for host1 in "$@"; do
+    case "$host1" in
+    *$hostname*)
+        echo "$host1:${storage}"
         rm -rf "${storage}/*" || echo
-    else
-        echo "$user1@$host1.$domain:${storage}"
-        ssh "$user1@$host1.$domain" rm -rf "${storage}/*" || echo
-    fi
+        ;;
+    *)
+        echo "$host1:${storage}"
+        ssh "$host1" rm -rf "${storage}/*" || echo
+        ;;
+    esac
 done
