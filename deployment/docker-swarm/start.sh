@@ -1,27 +1,15 @@
 #!/bin/bash -e
 
 DIR=$(dirname $(readlink -f "$0"))
-
-if test -z "$NOFFICES"; then
-    export NOFFICES=1
-fi
-
-if test -z "$STORAGE_VOLUME"; then
-    if test "$NOFFICES" -gt "1"; then
-        export STORAGE_VOLUME="/mnt/storage"
-    else
-        export STORAGE_VOLUME=$(readlink -f "$DIR/../../volume/storage")
-    fi
-fi
+NOFFICES="$2"
+yml="$DIR/docker-compose.yml"
 
 sudo docker container prune -f
 sudo docker volume prune -f
 sudo docker network prune -f
-test -n "$(ls -A $STORAGE_VOLUME)" && rm -rf "$STORAGE_VOLUME"/* || echo
 
-yml="$DIR/docker-compose.$(hostname).yml"
-test -f "$yml" || yml="$DIR/docker-compose.yml"
-
+export USER_ID="$(id -u)"
+export GROUP_ID="$(id -g)"
 case "$1" in
 docker_compose)
     dcv="$(docker-compose --version | cut -f3 -d' ' | cut -f1 -d',')"
@@ -34,18 +22,21 @@ docker_compose)
         exit 0
     fi
 
-    export NOFFICES=1
-    . "${DIR}/build.sh"
     "$DIR/../certificate/self-sign.sh"
-    export USER_ID=$(id -u)
-    export GROUP_ID=$(id -g)
+    "$DIR/build.sh" 1
+    export STORAGE_VOLUME=$(readlink -f "$DIR/../../volume/storage")
+    test -n "$(ls -A $STORAGE_VOLUME)" && rm -rf "$STORAGE_VOLUME"/*
     sudo -E docker-compose -f "$yml" -p smtc --compatibility up
     ;;
 *)
-    . "${DIR}/build.sh"
     "$DIR/../certificate/self-sign.sh"
-    export USER_ID=$(id -u)
-    export GROUP_ID=$(id -g)
+    "$DIR/build.sh" ${NOFFICES}
+    if test "${NOFFICES}" -gt 1; then
+        export STORAGE_VOLUME="/mnt/storage"
+    else
+        export STORAGE_VOLUME=$(readlink -f "$DIR/../../volume/storage")
+        test -n "$(ls -A $STORAGE_VOLUME)" && rm -rf "$STORAGE_VOLUME"/* || echo
+    fi
     sudo -E docker stack deploy -c "$yml" smtc
     ;;
 esac
