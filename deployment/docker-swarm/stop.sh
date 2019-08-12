@@ -1,9 +1,7 @@
 #!/bin/bash -e
 
 DIR=$(dirname $(readlink -f "$0"))
-
-yml="$DIR/docker-compose.$(hostname).yml"
-test -f "$yml" || yml="$DIR/docker-compose.yml"
+yml="$DIR/docker-compose.yml"
 
 case "$1" in
 docker_compose)
