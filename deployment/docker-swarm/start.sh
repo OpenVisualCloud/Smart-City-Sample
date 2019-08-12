@@ -1,13 +1,23 @@
 #!/bin/bash -e
 
 DIR=$(dirname $(readlink -f "$0"))
-export STORAGE_VOLUME=$(readlink -f "$DIR/../../volume/storage")
+
+if test -z "$NOFFICES"; then
+    export NOFFICES=1
+fi
+
+if test -z "$STORAGE_VOLUME"; then
+    if test "$NOFFICES" -gt "1"; then
+        export STORAGE_VOLUME="/mnt/storage"
+    else
+        export STORAGE_VOLUME=$(readlink -f "$DIR/../../volume/storage")
+    fi
+fi
 
 sudo docker container prune -f
 sudo docker volume prune -f
 sudo docker network prune -f
-rm -rf "$STORAGE_VOLUME"
-mkdir -p "$STORAGE_VOLUME"
+test -n "$(ls -A $STORAGE_VOLUME)" && rm -rf "$STORAGE_VOLUME"/* || echo
 
 yml="$DIR/docker-compose.$(hostname).yml"
 test -f "$yml" || yml="$DIR/docker-compose.yml"
@@ -24,12 +34,15 @@ docker_compose)
         exit 0
     fi
 
+    export NOFFICES=1
+    . "${DIR}/build.sh"
     "$DIR/../certificate/self-sign.sh"
     export USER_ID=$(id -u)
     export GROUP_ID=$(id -g)
     sudo -E docker-compose -f "$yml" -p smtc --compatibility up
     ;;
 *)
+    . "${DIR}/build.sh"
     "$DIR/../certificate/self-sign.sh"
     export USER_ID=$(id -u)
     export GROUP_ID=$(id -g)
