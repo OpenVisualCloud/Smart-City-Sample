@@ -33,7 +33,7 @@ ifelse(eval(defn(`NOFFICES')>1),1,`dnl
             - defn(`OFFICE_NAME')_net
         deploy:
             placement:
-                constraints: ifelse(eval(defn(`NOFFICES')>1),1,`dnl
+                constraints: ifelse(eval(defn(`NOFFICES')>1),1,`
                     - node.labels.defn(`OFFICE_NAME')_zone==yes
                     - node.labels.defn(`OFFICE_NAME')_storage==yes
 ',`[node.role==manager]')dnl
@@ -55,7 +55,7 @@ ifelse(eval(defn(`NOFFICES')>1),1,`dnl
             - defn(`OFFICE_NAME')_net
         deploy:
             placement:
-                constraints: ifelse(eval(defn(`NOFFICES')>1),1,`dnl
+                constraints: ifelse(eval(defn(`NOFFICES')>1),1,`
                     - node.labels.defn(`OFFICE_NAME')_zone==yes
                     - node.labels.defn(`OFFICE_NAME')_storage==yes
 ',`[node.role==manager]')dnl
@@ -132,7 +132,7 @@ ifelse(eval(defn(`NOFFICES')>1),1,`dnl
         deploy:
             replicas: 3
             placement:
-                constraints: ifelse(eval(defn(`NOFFICES')>1),1,`dnl
+                constraints: ifelse(eval(defn(`NOFFICES')>1),1,`
                     - node.labels.defn(`OFFICE_NAME')_zone==yes
                     - node.labels.defn(`OFFICE_NAME')_storage==yes
 ',`[node.role==manager]')dnl
