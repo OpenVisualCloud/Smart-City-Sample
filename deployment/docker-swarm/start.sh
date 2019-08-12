@@ -2,6 +2,9 @@
 
 DIR=$(dirname $(readlink -f "$0"))
 NOFFICES="$2"
+NOFFICES="${NOFFICES:=1}"
+PLATFORM="$3"
+PLATFORM="${PLATFORM:=Xeon}"
 yml="$DIR/docker-compose.yml"
 
 sudo docker container prune -f
@@ -23,14 +26,14 @@ docker_compose)
     fi
 
     "$DIR/../certificate/self-sign.sh"
-    "$DIR/build.sh" 1
+    "$DIR/build.sh" 1 ${PLATFORM}
     export STORAGE_VOLUME=$(readlink -f "$DIR/../../volume/storage")
     test -n "$(ls -A $STORAGE_VOLUME)" && rm -rf "$STORAGE_VOLUME"/*
     sudo -E docker-compose -f "$yml" -p smtc --compatibility up
     ;;
 *)
     "$DIR/../certificate/self-sign.sh"
-    "$DIR/build.sh" ${NOFFICES}
+    "$DIR/build.sh" ${NOFFICES} ${PLATFORM}
     if test "${NOFFICES:=1}" -gt 1; then
         export STORAGE_VOLUME="/mnt/storage"
     else
