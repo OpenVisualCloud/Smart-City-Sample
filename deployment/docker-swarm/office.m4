@@ -18,7 +18,7 @@ ifelse(eval(defn(`NOFFICES')>1),1,`dnl
                 constraints: [node.labels.defn(`OFFICE_NAME')_zone==yes]
 ')dnl
 
-    defn(`OFFICE_NAME')_web:
+    defn(`OFFICE_NAME')_webproxy:
         image: smtc_web_local:latest
         environment:
             DBHOST: 'http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')_db,cloud_db):9200'
@@ -33,7 +33,10 @@ ifelse(eval(defn(`NOFFICES')>1),1,`dnl
             - defn(`OFFICE_NAME')_net
         deploy:
             placement:
-                constraints: [ifelse(eval(defn(`NOFFICES')>1),1,node.labels.defn(`OFFICE_NAME')_zone==yes,node.role==manager)]
+                constraints: ifelse(eval(defn(`NOFFICES')>1),1,`dnl
+                    - node.labels.defn(`OFFICE_NAME')_zone==yes
+                    - node.labels.defn(`OFFICE_NAME')_storage==yes
+',`[node.role==manager]')dnl
 
     defn(`OFFICE_NAME')_cleanup:
         image: smtc_storage_cleanup:latest
@@ -52,7 +55,10 @@ ifelse(eval(defn(`NOFFICES')>1),1,`dnl
             - defn(`OFFICE_NAME')_net
         deploy:
             placement:
-                constraints: [ifelse(eval(defn(`NOFFICES')>1),1,node.labels.defn(`OFFICE_NAME')_zone==yes,node.role==manager)]
+                constraints: ifelse(eval(defn(`NOFFICES')>1),1,`dnl
+                    - node.labels.defn(`OFFICE_NAME')_zone==yes
+                    - node.labels.defn(`OFFICE_NAME')_storage==yes
+',`[node.role==manager]')dnl
 
     defn(`OFFICE_NAME')_camera_discovery:
         image: smtc_onvif_discovery:latest
@@ -126,7 +132,10 @@ ifelse(eval(defn(`NOFFICES')>1),1,`dnl
         deploy:
             replicas: 3
             placement:
-                constraints: [ifelse(eval(defn(`NOFFICES')>1),1,node.labels.defn(`OFFICE_NAME')_zone==yes,node.role==manager)]
+                constraints: ifelse(eval(defn(`NOFFICES')>1),1,`dnl
+                    - node.labels.defn(`OFFICE_NAME')_zone==yes
+                    - node.labels.defn(`OFFICE_NAME')_storage==yes
+',`[node.role==manager]')dnl
 
     defn(`OFFICE_NAME')_mqtt:
         image: eclipse-mosquitto:1.5.8
