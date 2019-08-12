@@ -1,6 +1,6 @@
-# smtc_analytics_object_detection
+# smtc_analytics_object_detection_xeon
 
-FROM smtc_analytics_common
+FROM smtc_analytics_common_xeon
 
 RUN  apt-get update && apt-get install -y ffmpeg python3-paho-mqtt python3-ply python3-requests python3-watchdog python3-psutil
 RUN  rm -rf /home/video-analytics/models && rm -rf /home/video-analytics/pipelines
