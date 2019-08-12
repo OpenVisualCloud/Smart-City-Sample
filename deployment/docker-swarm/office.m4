@@ -115,7 +115,7 @@ ifelse(eval(defn(`NOFFICES')>1),1,`dnl
                 constraints: [ifelse(eval(defn(`NOFFICES')>1),1,node.labels.defn(`OFFICE_NAME')_zone==yes,node.role==manager)]
 
     defn(`OFFICE_NAME')_analytics:
-        image: smtc_analytics_object_detection:latest
+        image: smtc_analytics_object_detection_xeon:latest
         environment:
             OFFICE: 'defn(`OFFICE_LOCATION')'
             DBHOST: 'http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')_db,cloud_db):9200'
