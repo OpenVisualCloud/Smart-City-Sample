@@ -31,7 +31,7 @@ docker_compose)
 *)
     "$DIR/../certificate/self-sign.sh"
     "$DIR/build.sh" ${NOFFICES}
-    if test "${NOFFICES}" -gt 1; then
+    if test "${NOFFICES:=1}" -gt 1; then
         export STORAGE_VOLUME="/mnt/storage"
     else
         export STORAGE_VOLUME=$(readlink -f "$DIR/../../volume/storage")

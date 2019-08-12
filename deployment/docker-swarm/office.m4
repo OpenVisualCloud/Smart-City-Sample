@@ -36,7 +36,7 @@ ifelse(eval(defn(`NOFFICES')>1),1,`dnl
                 constraints: ifelse(eval(defn(`NOFFICES')>1),1,`
                     - node.labels.defn(`OFFICE_NAME')_zone==yes
                     - node.labels.defn(`OFFICE_NAME')_storage==yes
-',`[node.role==manager]')dnl
+',`[node.role==manager]')
 
     defn(`OFFICE_NAME')_cleanup:
         image: smtc_storage_cleanup:latest
@@ -58,7 +58,7 @@ ifelse(eval(defn(`NOFFICES')>1),1,`dnl
                 constraints: ifelse(eval(defn(`NOFFICES')>1),1,`
                     - node.labels.defn(`OFFICE_NAME')_zone==yes
                     - node.labels.defn(`OFFICE_NAME')_storage==yes
-',`[node.role==manager]')dnl
+',`[node.role==manager]')
 
     defn(`OFFICE_NAME')_camera_discovery:
         image: smtc_onvif_discovery:latest
@@ -135,7 +135,7 @@ ifelse(eval(defn(`NOFFICES')>1),1,`dnl
                 constraints: ifelse(eval(defn(`NOFFICES')>1),1,`
                     - node.labels.defn(`OFFICE_NAME')_zone==yes
                     - node.labels.defn(`OFFICE_NAME')_storage==yes
-',`[node.role==manager]')dnl
+',`[node.role==manager]')
 
     defn(`OFFICE_NAME')_mqtt:
         image: eclipse-mosquitto:1.5.8
