@@ -15,7 +15,7 @@ ifelse(eval(defn(`NOFFICES')>1),1,`dnl
             - db_net
         deploy:
             placement:
-                constraints: [node.labels.zone==defn(`OFFICE_NAME')]
+                constraints: [node.labels.defn(`OFFICE_NAME')_zone==yes]
 ')dnl
 
     defn(`OFFICE_NAME')_web:
@@ -33,7 +33,7 @@ ifelse(eval(defn(`NOFFICES')>1),1,`dnl
             - defn(`OFFICE_NAME')_net
         deploy:
             placement:
-                constraints: ifelse(eval(defn(`NOFFICES')>1),1,[node.labels.zone==defn(`OFFICE_NAME')],[node.role==manager])
+                constraints: [ifelse(eval(defn(`NOFFICES')>1),1,node.labels.defn(`OFFICE_NAME')_zone==yes,node.role==manager)]
 
     defn(`OFFICE_NAME')_cleanup:
         image: smtc_storage_cleanup:latest
@@ -52,7 +52,7 @@ ifelse(eval(defn(`NOFFICES')>1),1,`dnl
             - defn(`OFFICE_NAME')_net
         deploy:
             placement:
-                constraints: ifelse(eval(defn(`NOFFICES')>1),1,[node.labels.zone==defn(`OFFICE_NAME')],[node.role==manager])
+                constraints: [ifelse(eval(defn(`NOFFICES')>1),1,node.labels.defn(`OFFICE_NAME')_zone==yes,node.role==manager)]
 
     defn(`OFFICE_NAME')_camera_discovery:
         image: smtc_onvif_discovery:latest
@@ -70,7 +70,7 @@ ifelse(eval(defn(`NOFFICES')>1),1,`dnl
             - defn(`OFFICE_NAME')_net
         deploy:
             placement:
-                constraints: ifelse(eval(defn(`NOFFICES')>1),1,[node.labels.zone==defn(`OFFICE_NAME')],[node.role==manager])
+                constraints: [ifelse(eval(defn(`NOFFICES')>1),1,node.labels.defn(`OFFICE_NAME')_zone==yes,node.role==manager)]
 
     defn(`OFFICE_NAME')_health_check:
         image: smtc_trigger_health
@@ -87,7 +87,7 @@ ifelse(eval(defn(`NOFFICES')>1),1,`dnl
             - defn(`OFFICE_NAME')_net
         deploy:
             placement:
-                constraints: ifelse(eval(defn(`NOFFICES')>1),1,[node.labels.zone==defn(`OFFICE_NAME')],[node.role==manager])
+                constraints: [ifelse(eval(defn(`NOFFICES')>1),1,node.labels.defn(`OFFICE_NAME')_zone==yes,node.role==manager)]
 
     defn(`OFFICE_NAME')_where_indexing:
         image: smtc_where_indexing
@@ -106,7 +106,7 @@ ifelse(eval(defn(`NOFFICES')>1),1,`dnl
             - defn(`OFFICE_NAME')_net
         deploy:
             placement:
-                constraints: ifelse(eval(defn(`NOFFICES')>1),1,[node.labels.zone==defn(`OFFICE_NAME')],[node.role==manager])
+                constraints: [ifelse(eval(defn(`NOFFICES')>1),1,node.labels.defn(`OFFICE_NAME')_zone==yes,node.role==manager)]
 
     defn(`OFFICE_NAME')_analytics:
         image: smtc_analytics_object_detection:latest
@@ -126,7 +126,7 @@ ifelse(eval(defn(`NOFFICES')>1),1,`dnl
         deploy:
             replicas: 3
             placement:
-                constraints: ifelse(eval(defn(`NOFFICES')>1),1,[node.labels.zone==defn(`OFFICE_NAME')],[node.role==manager])
+                constraints: [ifelse(eval(defn(`NOFFICES')>1),1,node.labels.defn(`OFFICE_NAME')_zone==yes,node.role==manager)]
 
     defn(`OFFICE_NAME')_mqtt:
         image: eclipse-mosquitto:1.5.8
@@ -137,4 +137,4 @@ ifelse(eval(defn(`NOFFICES')>1),1,`dnl
             - defn(`OFFICE_NAME')_net
         deploy:
             placement:
-                constraints: ifelse(eval(defn(`NOFFICES')>1),1,[node.labels.zone==defn(`OFFICE_NAME')],[node.role==manager])
+                constraints: [ifelse(eval(defn(`NOFFICES')>1),1,node.labels.defn(`OFFICE_NAME')_zone==yes,node.role==manager)]

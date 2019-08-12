@@ -22,7 +22,7 @@ build_docker() {
 
 # build image(s) in order (to satisfy dependencies)
 for dep in '.4.*' '.3.*' '.2.*' '.1.*' ''; do
-    dirs=("${DIR}" "${DIR}/platforms/${PLATFORM=Xeon}")
+    dirs=("${DIR}" "${DIR}/platforms/${PLATFORM:=Xeon}")
     if test ! -d "${dirs[1]}"; then
         unset dirs[1]
     fi

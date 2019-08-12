@@ -73,7 +73,7 @@ services:
             - db_net
         deploy:
             placement:
-                constraints: [node.labels.zone==office1]
+                constraints: [node.labels.office1_zone==yes]
 '
     office1_web:
         image: smtc_web_local:latest
@@ -90,7 +90,7 @@ services:
             - office1_net
         deploy:
             placement:
-                constraints: [node.labels.zone==office1]
+                constraints: [node.labels.office1_zone==yes]
 
     office1_cleanup:
         image: smtc_storage_cleanup:latest
@@ -109,7 +109,7 @@ services:
             - office1_net
         deploy:
             placement:
-                constraints: [node.labels.zone==office1]
+                constraints: [node.labels.office1_zone==yes]
 
     office1_camera_discovery:
         image: smtc_onvif_discovery:latest
@@ -127,7 +127,7 @@ services:
             - office1_net
         deploy:
             placement:
-                constraints: [node.labels.zone==office1]
+                constraints: [node.labels.office1_zone==yes]
 
     office1_health_check:
         image: smtc_trigger_health
@@ -144,7 +144,7 @@ services:
             - office1_net
         deploy:
             placement:
-                constraints: [node.labels.zone==office1]
+                constraints: [node.labels.office1_zone==yes]
 
     office1_where_indexing:
         image: smtc_where_indexing
@@ -163,7 +163,7 @@ services:
             - office1_net
         deploy:
             placement:
-                constraints: [node.labels.zone==office1]
+                constraints: [node.labels.office1_zone==yes]
 
     office1_analytics:
         image: smtc_analytics_object_detection:latest
@@ -183,7 +183,7 @@ services:
         deploy:
             replicas: 3
             placement:
-                constraints: [node.labels.zone==office1]
+                constraints: [node.labels.office1_zone==yes]
 
     office1_mqtt:
         image: eclipse-mosquitto:1.5.8
@@ -194,7 +194,7 @@ services:
             - office1_net
         deploy:
             placement:
-                constraints: [node.labels.zone==office1]
+                constraints: [node.labels.office1_zone==yes]
 
     office1_simulated_cameras:
         image: smtc_sensor_simulation:latest
@@ -219,7 +219,7 @@ services:
         deploy:
             replicas: 3
             placement:
-                constraints: [node.labels.zone==office1]
+                constraints: [node.labels.office1_zone==yes]
 
 
     office2_db:
@@ -238,7 +238,7 @@ services:
             - db_net
         deploy:
             placement:
-                constraints: [node.labels.zone==office2]
+                constraints: [node.labels.office2_zone==yes]
 '
     office2_web:
         image: smtc_web_local:latest
@@ -255,7 +255,7 @@ services:
             - office2_net
         deploy:
             placement:
-                constraints: [node.labels.zone==office2]
+                constraints: [node.labels.office2_zone==yes]
 
     office2_cleanup:
         image: smtc_storage_cleanup:latest
@@ -274,7 +274,7 @@ services:
             - office2_net
         deploy:
             placement:
-                constraints: [node.labels.zone==office2]
+                constraints: [node.labels.office2_zone==yes]
 
     office2_camera_discovery:
         image: smtc_onvif_discovery:latest
@@ -292,7 +292,7 @@ services:
             - office2_net
         deploy:
             placement:
-                constraints: [node.labels.zone==office2]
+                constraints: [node.labels.office2_zone==yes]
 
     office2_health_check:
         image: smtc_trigger_health
@@ -309,7 +309,7 @@ services:
             - office2_net
         deploy:
             placement:
-                constraints: [node.labels.zone==office2]
+                constraints: [node.labels.office2_zone==yes]
 
     office2_where_indexing:
         image: smtc_where_indexing
@@ -328,7 +328,7 @@ services:
             - office2_net
         deploy:
             placement:
-                constraints: [node.labels.zone==office2]
+                constraints: [node.labels.office2_zone==yes]
 
     office2_analytics:
         image: smtc_analytics_object_detection:latest
@@ -348,7 +348,7 @@ services:
         deploy:
             replicas: 3
             placement:
-                constraints: [node.labels.zone==office2]
+                constraints: [node.labels.office2_zone==yes]
 
     office2_mqtt:
         image: eclipse-mosquitto:1.5.8
@@ -359,7 +359,7 @@ services:
             - office2_net
         deploy:
             placement:
-                constraints: [node.labels.zone==office2]
+                constraints: [node.labels.office2_zone==yes]
 
     office2_simulated_cameras:
         image: smtc_sensor_simulation:latest
@@ -384,7 +384,7 @@ services:
         deploy:
             replicas: 3
             placement:
-                constraints: [node.labels.zone==office2]
+                constraints: [node.labels.office2_zone==yes]
 
 
     office3_db:
@@ -403,7 +403,7 @@ services:
             - db_net
         deploy:
             placement:
-                constraints: [node.labels.zone==office3]
+                constraints: [node.labels.office3_zone==yes]
 '
     office3_web:
         image: smtc_web_local:latest
@@ -420,7 +420,7 @@ services:
             - office3_net
         deploy:
             placement:
-                constraints: [node.labels.zone==office3]
+                constraints: [node.labels.office3_zone==yes]
 
     office3_cleanup:
         image: smtc_storage_cleanup:latest
@@ -439,7 +439,7 @@ services:
             - office3_net
         deploy:
             placement:
-                constraints: [node.labels.zone==office3]
+                constraints: [node.labels.office3_zone==yes]
 
     office3_camera_discovery:
         image: smtc_onvif_discovery:latest
@@ -457,7 +457,7 @@ services:
             - office3_net
         deploy:
             placement:
-                constraints: [node.labels.zone==office3]
+                constraints: [node.labels.office3_zone==yes]
 
     office3_health_check:
         image: smtc_trigger_health
@@ -474,7 +474,7 @@ services:
             - office3_net
         deploy:
             placement:
-                constraints: [node.labels.zone==office3]
+                constraints: [node.labels.office3_zone==yes]
 
     office3_where_indexing:
         image: smtc_where_indexing
@@ -493,7 +493,7 @@ services:
             - office3_net
         deploy:
             placement:
-                constraints: [node.labels.zone==office3]
+                constraints: [node.labels.office3_zone==yes]
 
     office3_analytics:
         image: smtc_analytics_object_detection:latest
@@ -513,7 +513,7 @@ services:
         deploy:
             replicas: 3
             placement:
-                constraints: [node.labels.zone==office3]
+                constraints: [node.labels.office3_zone==yes]
 
     office3_mqtt:
         image: eclipse-mosquitto:1.5.8
@@ -524,7 +524,7 @@ services:
             - office3_net
         deploy:
             placement:
-                constraints: [node.labels.zone==office3]
+                constraints: [node.labels.office3_zone==yes]
 
     office3_simulated_cameras:
         image: smtc_sensor_simulation:latest
@@ -549,7 +549,7 @@ services:
         deploy:
             replicas: 3
             placement:
-                constraints: [node.labels.zone==office3]
+                constraints: [node.labels.office3_zone==yes]
 
 
 

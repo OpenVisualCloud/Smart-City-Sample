@@ -21,4 +21,4 @@
         deploy:
             replicas: 3
             placement:
-                constraints: ifelse(eval(defn(`NOFFICES')>1),1,[node.labels.zone==defn(`OFFICE_NAME')],[node.role==manager])
+                constraints: [ifelse(eval(defn(`NOFFICES')>1),1,node.labels.defn(`OFFICE_NAME')_zone==yes,node.role==manager)]
