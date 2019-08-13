@@ -35,15 +35,14 @@ fovv = float(os.environ["FOVV"])
 try:
     sensor_id=int(os.environ["SENSOR_ID"])
 except:
-    sensor_id=int(random.random()*147)
+    sensor_id=int(socket.gethostbyname(socket.gethostname()).split(".")[-1])
 
 if "LOCATION" in os.environ:
     location=list(map(float,os.environ["LOCATION"].split(",")))
 else:
-    nsensors=int(os.environ["SENSORS"])
-    slot=float(sensor_id%nsensors)/nsensors
+    slot=float(sensor_id)/256.0
     distance=float(os.environ["DISTANCE"])*(1.0-0.5*random.random())
-    location=geo_point(office, distance, math.pi*2.0*slot)
+    location=geo_point(office, distance, math.pi*2.0*slot*72)
     theta=theta+360*slot
 
 db=None

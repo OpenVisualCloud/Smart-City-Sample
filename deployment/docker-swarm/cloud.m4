@@ -9,9 +9,9 @@ ifelse(eval(defn(`NOFFICES')>1),1,`dnl
 ',`dnl
             - "discovery.type=single-node"
 ')dnl
-            - 'ES_JAVA_OPTS=-Xms4096m -Xmx4096m'
-            - 'NO_PROXY=*'
-            - 'no_proxy=*'
+            - "ES_JAVA_OPTS=-Xms4096m -Xmx4096m"
+            - "NO_PROXY=*"
+            - "no_proxy=*"
         networks:
             - db_net
         deploy:
@@ -45,7 +45,6 @@ ifelse(eval(defn(`NOFFICES')>1),1,`dnl
               gid: ${GROUP_ID}
               mode: 0444
         networks:
-            - cloud_net
             - db_net
 forloop(`id',1,defn(`NOFFICES'),`dnl
             - `office'defn(`id')_net
