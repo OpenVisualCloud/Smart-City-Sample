@@ -3,7 +3,6 @@
         environment:
             OFFICE: 'defn(`OFFICE_LOCATION')'
             DISTANCE: '20'
-            SENSORS: '3'
             SENSOR_ID: '{{.Task.Slot}}'
             DBHOST: 'http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')_db,cloud_db):9200'
             FILES: '.mp4$$'
@@ -16,8 +15,7 @@
             no_proxy: '*'
         networks:
             - db_net
-            - defn(`OFFICE_NAME')_net
-            - defn(`OFFICE_NAME')_camera_net
+            - patsubst(defn(`OFFICE_NAME'),`office',`camera')_net
         deploy:
             replicas: 3
             placement:

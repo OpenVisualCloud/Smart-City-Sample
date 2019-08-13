@@ -4,5 +4,5 @@ networks:
     cloud_net:
 forloop(`id',1,defn(`NOFFICES'),`dnl
     `office'defn(`id')_net:
-    `office'defn(`id')_camera_net:
+    `camera'defn(`id')_net:
 ')

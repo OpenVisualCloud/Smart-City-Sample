@@ -128,6 +128,7 @@ ifelse(eval(defn(`NOFFICES')>1),1,`dnl
             - /etc/localtime:/etc/localtime:ro
         networks:
             - db_net
+            - patsubst(defn(`OFFICE_NAME'),`office',`camera')_net
             - defn(`OFFICE_NAME')_net
         deploy:
             replicas: 3
