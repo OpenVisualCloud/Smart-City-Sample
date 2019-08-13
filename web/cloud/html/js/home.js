@@ -224,7 +224,7 @@ $("#pg-home").on(":initpage", function(e) {
                 if ("used" in v) {
                     delete v.used;
                 } else {
-                    if ("video" in ctx) ctx.video.remove();
+                    if ("video" in v) v.video.remove();
                     v.marker.remove();
                     v.line.remove();
 		            stats.close(v);
