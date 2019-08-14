@@ -11,10 +11,6 @@ if [ -n "$pid" ] && [ "$#" -le "1" ]; then
     sudo docker exec -it $pid ${*-/bin/bash}
 else
     echo "bash into new container...$IMAGE"
-    if test -z "$DOCKERFILE"; then
-        DOCKERFILE="${DIR}/Dockerfile"
-    fi
     args=("$@")
-    sudo docker run --rm ${OPTIONS[@]} $(env | grep -E '_(proxy)=' | sed 's/^/-e /') $(grep '^ARG .*=' "$DOCKERFILE" | sed 's/^ARG /-e /') --entrypoint ${1:-/bin/bash} -it "${IMAGE}" ${args[@]:1}
+    sudo docker run --rm ${OPTIONS[@]} $(env | grep -E '_(proxy)=' | sed 's/^/-e /') --entrypoint ${1:-/bin/bash} -it "${IMAGE}" ${args[@]:1}
 fi
-

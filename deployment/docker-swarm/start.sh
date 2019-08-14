@@ -1,10 +1,8 @@
 #!/bin/bash -e
 
 DIR=$(dirname $(readlink -f "$0"))
-NOFFICES="$2"
-NOFFICES="${NOFFICES:=1}"
-PLATFORM="$3"
-PLATFORM="${PLATFORM:=Xeon}"
+NOFFICES="${2:-1}"
+PLATFORM="${3:-Xeon}"
 yml="$DIR/docker-compose.yml"
 
 sudo docker container prune -f

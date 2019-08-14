@@ -1,10 +1,8 @@
 #!/bin/bash -e
 
 DIR=$(dirname $(readlink -f "$0"))
-NOFFICES="$1"
-NOFFICES="${NOFFICES:=1}"
-PLATFORM="$2"
-PLATFORM="${PLATFORM:=Xeon}"
+NOFFICES="${1:-1}"
+PLATFORM="${2:-Xeon}"
 
 if test -f "${DIR}/docker-compose.yml.m4"; then
     echo "Generating docker-compose.yml with NOFFICES=${NOFFICES} and PLATFORM=${PLATFORM}"
