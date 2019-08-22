@@ -65,7 +65,14 @@ var stats={
         });
     },
     create: function (ctx, sensor, page, map, layer) {
-	    ctx.circle=L.circleMarker(ctx.marker.getLatLng(), {radius:20,color:"green"});
+	    ctx.chart_icon=L.marker(ctx.marker.getLatLng(), {
+            icon: L.icon({
+                iconUrl: 'images/chart.png',
+                iconSize: [55,40],
+                iconAnchor: [29,15],
+            }),
+            opacity: 0.6,
+        });
 	    ctx.text=L.tooltip({permanent:true,direction:'center',className:'tooltip_text'});
         var div=$('<div style="width:350px;height:200px;padding-top:5px;padding-bottom:5px" draggable="true"><canvas style="width:100%;height:100%"></canvas></div>').on('dragstart', function (e) {
             e.originalEvent.dataTransfer.setData('application/json',JSON.stringify(sensor));
@@ -88,7 +95,7 @@ var stats={
             });
         });
         ctx.chart=stats.create_chart(div.find("canvas"));
-        ctx.circle.bindPopup(div[0],{ maxWidth:"auto",maxHeight:"auto" });
+        ctx.chart_icon.bindPopup(div[0],{ maxWidth:"auto",maxHeight:"auto" });
     },
     update_chart: function (chart, data) {
         var labels=chart.config.data.labels;
@@ -141,20 +148,20 @@ var stats={
                     }
                     return ((value<10)?value.toFixed(1):Math.floor(value))+'B';
                 };
-                ctx.circle.setLatLng([sensor._source.location.lat+0.003*Math.pow(2,14-zoom),sensor._source.location.lon]).addTo(layer);
-                ctx.text.setLatLng(ctx.circle.getLatLng()).setContent(pretty(count)).addTo(layer);
+                ctx.chart_icon.setLatLng([sensor._source.location.lat+0.003*Math.pow(2,14-zoom),sensor._source.location.lon]).addTo(layer);
+                ctx.text.setLatLng(ctx.chart_icon.getLatLng()).setContent(pretty(count)).addTo(layer);
             } else {
-                ctx.circle.remove();
+                ctx.chart_icon.remove();
                 ctx.text.remove();
             }
         }).catch(function () {
-            ctx.circle.remove();
+            ctx.chart_icon.remove();
             ctx.text.remove();
             stats.update_chart(ctx.chart, {});
         });
     },
     close: function (ctx) {
-        ctx.circle.remove();
+        ctx.chart_icon.remove();
         ctx.text.remove();
     },
 };
