@@ -192,6 +192,13 @@ $("#pg-home").on(":initpage", function(e) {
                     previews.create(page, ctx, info, map, preview_layer);
 		            stats.create(ctx, info, page, map, stats_layer);
                     heatmaps.create(ctx,info._source.location);
+
+                    /* disable tooltip while popup open */
+                    ctx.marker.on('popupopen',function () {
+                        ctx.marker.unbindTooltip();
+                    }).on('popupclose',function () {
+                        ctx.marker.bindTooltip(ctx.title);
+                    });
                 }
 
                 /* show bandwidth */
