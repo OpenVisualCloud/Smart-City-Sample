@@ -51,7 +51,7 @@ $("#pg-home").on(":initpage", function(e) {
             "Stadium Service": stadium_layer,
         },{
             "Density Estimation": heatmap_layer,
-            "Bubble Statistics": stats_layer,
+            "Statistics Histogram": stats_layer,
             "Preview Clips": preview_layer, 
         }).addTo(map);
 
