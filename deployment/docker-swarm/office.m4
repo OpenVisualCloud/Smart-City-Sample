@@ -132,7 +132,7 @@ ifelse(eval(defn(`NOFFICES')>1),1,`
             - patsubst(defn(`OFFICE_NAME'),`office',`camera')_net
             - defn(`OFFICE_NAME')_net
         deploy:
-            replicas: 3
+            replicas: "defn(`NSERVICES')"
             placement:
                 constraints: ifelse(eval(defn(`NOFFICES')>1),1,`
                     - node.labels.defn(`OFFICE_NAME')_zone==yes

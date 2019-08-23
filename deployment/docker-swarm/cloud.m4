@@ -47,7 +47,9 @@ ifelse(eval(defn(`NOFFICES')>1),1,`dnl
         networks:
             - db_net
 forloop(`id',1,defn(`NOFFICES'),`dnl
+ifdef(`location_office'defn(`id'),`dnl
             - `office'defn(`id')_net
+')dnl
 ')dnl
         deploy:
             placement:
