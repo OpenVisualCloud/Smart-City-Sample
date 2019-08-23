@@ -12,7 +12,7 @@ import time
 
 dbhost=os.environ["DBHOST"]
 office=list(map(float,os.environ["OFFICE"].split(",")))
-hostname=os.environ["HOSTNAME"] if "HOSTNAME" in os.environ else socket.gethostname()
+host=os.environ["PROXYHOST"] if "PROXYHOST" in os.environ else "http://"+socket.gethostname()+":8080"
 
 tornado1=None
 nginx1=None
@@ -27,7 +27,7 @@ def register_office():
                 "lat": office[0],
                 "lon": office[1],
                 },
-                "uri": "http://"+hostname+":8080",
+                "uri": host,
             },"$".join(map(str,office)))
             return
         except Exception as e:
