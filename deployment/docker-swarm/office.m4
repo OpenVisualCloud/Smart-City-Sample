@@ -1,4 +1,5 @@
-ifelse(eval(defn(`NOFFICES')>1),1,`dnl
+ifelse(eval(defn(`NOFFICES')>1),1,`
+
     defn(`OFFICE_NAME')_db:
         image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.8.1
         environment:
@@ -16,7 +17,7 @@ ifelse(eval(defn(`NOFFICES')>1),1,`dnl
         deploy:
             placement:
                 constraints: [node.labels.defn(`OFFICE_NAME')_zone==yes]
-')dnl
+')
 
     defn(`OFFICE_NAME')_webproxy:
         image: smtc_web_local:latest
@@ -148,3 +149,4 @@ ifelse(eval(defn(`NOFFICES')>1),1,`dnl
         deploy:
             placement:
                 constraints: [ifelse(eval(defn(`NOFFICES')>1),1,node.labels.defn(`OFFICE_NAME')_zone==yes,node.role==manager)]
+
