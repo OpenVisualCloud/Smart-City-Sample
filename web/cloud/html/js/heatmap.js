@@ -61,7 +61,7 @@ class CameraProjection {
 
 var heatmaps={
     create: function (ctx, sensor_location) {
-        ctx.heatmap=L.heatLayer(sensor_location);
+        ctx.heatmap=L.heatLayer(sensor_location, {radius: 10, blur: 5} );
     },
     update: function (layer, ctx, zoom, sensor) {
         var camera=new CameraProjection(

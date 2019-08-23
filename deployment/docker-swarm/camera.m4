@@ -7,7 +7,7 @@
             DBHOST: 'http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')_db,cloud_db):9200'
             FILES: '.mp4$$'
             THETA: 105
-            MNTH: 15.0
+            MNTH: 75.0
             ALPHA: 45
             FOVH: 90
             FOVV: 68
