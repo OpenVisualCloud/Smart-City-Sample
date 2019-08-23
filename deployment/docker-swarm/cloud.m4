@@ -23,9 +23,9 @@ ifelse(eval(defn(`NOFFICES')>1),1,`dnl
         ports:
             - "443:8080"
         environment:
-            DBHOST: 'http://cloud_db:9200'
-            NO_PROXY: '*'
-            no_proxy: '*'
+            DBHOST: "http://cloud_db:9200"
+            NO_PROXY: "*"
+            no_proxy: "*"
         volumes:
             - /etc/localtime:/etc/localtime:ro
         secrets:
