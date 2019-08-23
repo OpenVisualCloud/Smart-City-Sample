@@ -21,10 +21,10 @@ ifelse(eval(defn(`NOFFICES')>1),1,`dnl
     defn(`OFFICE_NAME')_webproxy:
         image: smtc_web_local:latest
         environment:
-            DBHOST: 'http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')_db,cloud_db):9200'
-            OFFICE: 'defn(`OFFICE_LOCATION')'
-            NO_PROXY: '*'
-            no_proxy: '*'
+            DBHOST: "http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')_db,cloud_db):9200"
+            OFFICE: "defn(`OFFICE_LOCATION')"
+            NO_PROXY: "*"
+            no_proxy: "*"
         volumes:
             - ${STORAGE_VOLUME}:/mnt/storage:ro
             - /etc/localtime:/etc/localtime:ro
@@ -43,13 +43,13 @@ ifelse(eval(defn(`NOFFICES')>1),1,`dnl
         volumes:
             - ${STORAGE_VOLUME}:/mnt/storage:rw
         environment:
-            INDEXES: 'recordings,analytics'
-            RETENTION_TIME: '14400'
-            SERVICE_INTERVAL: '14400'
-            OFFICE: 'defn(`OFFICE_LOCATION')'
-            DBHOST: 'http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')_db,cloud_db):9200'
-            NO_PROXY: '*'
-            no_proxy: '*'
+            INDEXES: "recordings,analytics"
+            RETENTION_TIME: "14400"
+            SERVICE_INTERVAL: "14400"
+            OFFICE: "defn(`OFFICE_LOCATION')"
+            DBHOST: "http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')_db,cloud_db):9200"
+            NO_PROXY: "*"
+            no_proxy: "*"
         networks:
             - db_net
             - defn(`OFFICE_NAME')_net
@@ -63,14 +63,14 @@ ifelse(eval(defn(`NOFFICES')>1),1,`dnl
     defn(`OFFICE_NAME')_camera_discovery:
         image: smtc_onvif_discovery:latest
         environment:
-            IP_SCAN_RANGE: 'defn(`CAMERA_NETWORK')'
-            PORT_SCAN_RANGE: '0-65535'
-            OFFICE: 'defn(`OFFICE_LOCATION')'
-            DISTANCE: 10
-            ANGLEOFFSET: 15
-            DBHOST: 'http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')_db,cloud_db):9200'
-            NO_PROXY: '*'
-            no_proxy: '*'
+            IP_SCAN_RANGE: "defn(`CAMERA_NETWORK')"
+            PORT_SCAN_RANGE: "0-65535"
+            OFFICE: "defn(`OFFICE_LOCATION')"
+            DISTANCE: "10"
+            ANGLEOFFSET: "15"
+            DBHOST: "http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')_db,cloud_db):9200"
+            NO_PROXY: "*"
+            no_proxy: "*"
         networks:
             - db_net
             - defn(`OFFICE_NAME')_net
@@ -83,11 +83,11 @@ ifelse(eval(defn(`NOFFICES')>1),1,`dnl
         volumes:
             - /etc/localtime:/etc/localtime:ro
         environment:
-            SERVICE_INTERVAL: '300'
-            OFFICE: 'defn(`OFFICE_LOCATION')'
-            DBHOST: 'http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')_db,cloud_db):9200'
-            NO_PROXY: '*'
-            no_proxy: '*'
+            SERVICE_INTERVAL: "300"
+            OFFICE: "defn(`OFFICE_LOCATION')"
+            DBHOST: "http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')_db,cloud_db):9200"
+            NO_PROXY: "*"
+            no_proxy: "*"
         networks:
             - db_net
             - defn(`OFFICE_NAME')_net
@@ -98,15 +98,15 @@ ifelse(eval(defn(`NOFFICES')>1),1,`dnl
     defn(`OFFICE_NAME')_where_indexing:
         image: smtc_where_indexing
         environment:
-            INDEXES: 'recordings,analytics'
-            OFFICE: 'defn(`OFFICE_LOCATION')'
-            DBHOST: 'http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')_db,cloud_db):9200'
-            SERVICE_INTERVAL: '30'
-            UPDATE_INTERVAL: '5'
-            SEARCH_BATCH: '3000'
-            UPDATE_BATCH: '500'
-            NO_PROXY: '*'
-            no_proxy: '*'
+            INDEXES: "recordings,analytics"
+            OFFICE: "defn(`OFFICE_LOCATION')"
+            DBHOST: "http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')_db,cloud_db):9200"
+            SERVICE_INTERVAL: "30"
+            UPDATE_INTERVAL: "5"
+            SEARCH_BATCH: "3000"
+            UPDATE_BATCH: "500"
+            NO_PROXY: "*"
+            no_proxy: "*"
         networks:
             - db_net
             - defn(`OFFICE_NAME')_net
@@ -117,12 +117,12 @@ ifelse(eval(defn(`NOFFICES')>1),1,`dnl
     defn(`OFFICE_NAME')_analytics:
         image: `smtc_analytics_object_detection_'translit(defn(`PLATFORM'),'A-Z','a-z'):latest
         environment:
-            OFFICE: 'defn(`OFFICE_LOCATION')'
-            DBHOST: 'http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')_db,cloud_db):9200'
-            MQTTHOST: 'defn(`OFFICE_NAME')_mqtt'
-            EVERY_NTH_FRAME: 6
-            NO_PROXY: '*'
-            no_proxy: '*'
+            OFFICE: "defn(`OFFICE_LOCATION')"
+            DBHOST: "http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')_db,cloud_db):9200"
+            MQTTHOST: "defn(`OFFICE_NAME')_mqtt"
+            EVERY_NTH_FRAME: "6"
+            NO_PROXY: "*"
+            no_proxy: "*"
         volumes:
             - ${STORAGE_VOLUME}:/home/video-analytics/app/server/recordings:rw
             - /etc/localtime:/etc/localtime:ro
@@ -141,8 +141,8 @@ ifelse(eval(defn(`NOFFICES')>1),1,`dnl
     defn(`OFFICE_NAME')_mqtt:
         image: eclipse-mosquitto:1.5.8
         environment:
-            NO_PROXY: '*'
-            no_proxy: '*'
+            NO_PROXY: "*"
+            no_proxy: "*"
         networks:
             - defn(`OFFICE_NAME')_net
         deploy:
