@@ -9,12 +9,14 @@ services:
 
 include(cloud.m4)
 
-forloop(`office_idx',1,defn(`NOFFICES'),`
-define(`OFFICE_NAME',`office'defn(`office_idx'))
+forloop(`id',1,defn(`NOFFICES'),`
+define(`OFFICE_NAME',`office'defn(`id'))
+ifdef(`location_'defn(`OFFICE_NAME'),`
 define(`OFFICE_LOCATION',defn(`location_'defn(`OFFICE_NAME')))
-define(`CAMERA_NETWORK',192.168.defn(`office_idx').0/24)
+define(`CAMERA_NETWORK',192.168.defn(`id').0/24)
 include(office.m4)
 include(camera.m4)
+')
 ')
 
 include(network.m4)
