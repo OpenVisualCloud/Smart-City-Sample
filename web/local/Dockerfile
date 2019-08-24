@@ -1,8 +1,7 @@
 
-FROM openvisualcloud/xeon-centos76-media-ffmpeg
+FROM centos:7.6.1810
 
 RUN yum -y install epel-release && yum -y install nginx python36-tornado python36-requests python36-ply python36-psutil && rm -rf /var/cache/yum/*
-
 COPY    *.conf /etc/nginx/
 COPY    *.py /home/
 CMD     ["/home/main.py"]
