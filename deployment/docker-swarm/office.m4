@@ -9,6 +9,7 @@ ifelse(eval(defn(`NOFFICES')>1),1,`
             - "node.data=true"
             - "discovery.zen.minimum_master_nodes=1"
             - "discovery.zen.ping.unicast.hosts=cloud_db"
+            - "action.auto_create_index=0"
             - "ES_JAVA_OPTS=-Xms4096m -Xmx4096m"
             - "NO_PROXY=*"
             - "no_proxy=*"
@@ -18,6 +19,19 @@ ifelse(eval(defn(`NOFFICES')>1),1,`
             placement:
                 constraints: [node.labels.defn(`OFFICE_NAME')_zone==yes]
 ')
+
+    defn(`OFFICE_NAME')_db_init:
+        image: smtc_db_init:latest
+        environment:
+            DBHOST: "http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')_db,cloud_db):9200"
+            OFFICE: "defn(`OFFICE_LOCATION')"
+            NO_PROXY: "*"
+            no_proxy: "*"
+        networks:
+            - db_net
+        deploy:
+            restart_policy:
+                condition: none
 
     defn(`OFFICE_NAME')_webproxy:
         image: smtc_web_local:latest

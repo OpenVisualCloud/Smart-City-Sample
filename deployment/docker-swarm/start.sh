@@ -24,7 +24,7 @@ docker_compose)
     fi
 
     "$DIR/../certificate/self-sign.sh"
-    "$DIR/build.sh" 1 ${PLATFORM}
+    "$DIR/build.sh" ${NOFFICES} ${PLATFORM}
     export STORAGE_VOLUME=$(readlink -f "$DIR/../../volume/storage")
     test -n "$(ls -A $STORAGE_VOLUME)" && rm -rf "$STORAGE_VOLUME"/*
     sudo -E docker-compose -f "$yml" -p smtc --compatibility up
