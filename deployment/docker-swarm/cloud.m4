@@ -9,6 +9,7 @@ ifelse(eval(defn(`NOFFICES')>1),1,`dnl
 ',`dnl
             - "discovery.type=single-node"
 ')dnl
+            - "action.auto_create_index=0"
             - "ES_JAVA_OPTS=-Xms4096m -Xmx4096m"
             - "NO_PROXY=*"
             - "no_proxy=*"
