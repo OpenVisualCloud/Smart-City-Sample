@@ -32,6 +32,8 @@ ifelse(eval(defn(`NOFFICES')>1),1,`
         deploy:
             restart_policy:
                 condition: none
+            placement:
+                constraints: [ifelse(eval(defn(`NOFFICES')>1),1,node.labels.defn(`OFFICE_NAME')_zone==yes,node.role==manager)]
 
     defn(`OFFICE_NAME')_webproxy:
         image: smtc_web_local:latest
