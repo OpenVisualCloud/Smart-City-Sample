@@ -26,7 +26,7 @@ docker_compose)
     "$DIR/../certificate/self-sign.sh"
     "$DIR/build.sh" ${NOFFICES} ${PLATFORM}
     export STORAGE_VOLUME=$(readlink -f "$DIR/../../volume/storage")
-    test -n "$(ls -A $STORAGE_VOLUME)" && rm -rf "$STORAGE_VOLUME"/*
+    find "$STORAGE_VOLUME" -maxdepth 1 -mindepth 1 -type d -exec rm -rf "{}" \;
     sudo -E docker-compose -f "$yml" -p smtc --compatibility up
     ;;
 *)
@@ -36,7 +36,7 @@ docker_compose)
         export STORAGE_VOLUME="/mnt/storage"
     else
         export STORAGE_VOLUME=$(readlink -f "$DIR/../../volume/storage")
-        test -n "$(ls -A $STORAGE_VOLUME)" && rm -rf "$STORAGE_VOLUME"/* || echo
+        find "$STORAGE_VOLUME" -maxdepth 1 -mindepth 1 -type d -exec rm -rf "{}" \;
     fi
     sudo -E docker stack deploy -c "$yml" smtc
     ;;
