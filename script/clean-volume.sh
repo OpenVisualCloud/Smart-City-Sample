@@ -11,11 +11,11 @@ for host1 in "$@"; do
     case "$host1" in
     *$hostname*)
         echo "$host1:${storage}"
-        rm -rf "${storage}/*" || echo
+        find "${storage}" -maxdepth 1 -mindepth 1 -type d -exec rm -rf "{}" \;
         ;;
     *)
         echo "$host1:${storage}"
-        ssh "$host1" rm -rf "${storage}/*" || echo
+        ssh "$host1" find "${storage}" -maxdepth 1 -mindepth 1 -type d -exec rm -rf "{}" \;
         ;;
     esac
 done
