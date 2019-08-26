@@ -61,6 +61,11 @@ var stats={
                         stacked: true,
                     }],
                 },
+                plugins: {
+                    colorschemes: {
+                        scheme: 'tableau.Tableau20'
+                    },
+                },
             },
         });
     },
