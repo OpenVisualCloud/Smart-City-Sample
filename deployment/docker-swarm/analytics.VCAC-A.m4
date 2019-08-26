@@ -8,9 +8,8 @@
             - patsubst(defn(`OFFICE_NAME'),`office',`camera')_net
             - defn(`OFFICE_NAME')_net
         deploy:
-            replicas: 3
+            replicas: defn(`NSERVICES')
             placement:
                 constraints:
                     - node.labels.defn(`OFFICE_NAME')_vcac_zone==yes
                     - node.labels.defn(`OFFICE_NAME')_vcac_storage==yes
-
