@@ -29,7 +29,7 @@ Follow the [instructions](https://docs.docker.com/engine/swarm/swarm-tutorial/cr
   - Upload the service images. This can be done by [setting up](https://docs.docker.com/registry/deploying) a local docker registry and pushing the built images to the local registry. Alternatively, run the [backup.sh](../../script/backup.sh) script on the manager node to archive the images and then use the [restore.sh](../../script/restore.sh) script to restore the images to all other swarm nodes: ```./restore.sh <node1> <node2> ...```     
 - Label each swarm node as follows:    
   - For each office, label the nodes where office services must run, for example, ```office1_zone=yes```, ```office2_zone=yes```, ```office3_zone=yes```, etc. You can label multiple machines under the same office zone so that the workloads can be distributed.     
-  - For each office, designate a single node for the recording storage with label ```office1_storage=yes```, ```office2_storage=yes```, ```office3_storage=yes```, etc. Create the ```/mnt/storage``` directory for the recording storage and set the read/write permission.               
+  - For each office, designate a single node for the recording storage with label ```office1_storage=yes```, ```office2_storage=yes```, ```office3_storage=yes```, etc. Create the ```/mnt/storage``` directory for the recording storage and set the read/write permission. Alternatively, you could also designate the storage to be on multiple machines shared via NFS.     
 
 Finally, start/stop services as follows:   
 
