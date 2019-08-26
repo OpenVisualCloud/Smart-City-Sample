@@ -63,7 +63,7 @@ var stats={
                 },
                 plugins: {
                     colorschemes: {
-                        scheme: 'tableau.Tableau20'
+                        scheme: 'tableau.Tableau10'
                     },
                 },
             },
