@@ -22,6 +22,7 @@ ifdef(defn(`CAMERA_LOCATION_NAME'),`
             no_proxy: "*"
         networks:
             - db_net
+            - defn(`OFFICE_NAME')_net
             - patsubst(defn(`OFFICE_NAME'),`office',`camera')_net
         deploy:
             placement:

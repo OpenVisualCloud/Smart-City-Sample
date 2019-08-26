@@ -3,7 +3,7 @@ include(../common/location.m4)
 define(`NCAMERAS',`5')
 define(`NSERVICES',`3')
 
-version: "3.1"
+version: "3.7"
 
 services:
 
@@ -15,6 +15,7 @@ ifdef(`location_'defn(`OFFICE_NAME'),`
 define(`OFFICE_LOCATION',defn(`location_'defn(`OFFICE_NAME')))
 define(`CAMERA_NETWORK',192.168.defn(`id').0/24)
 include(office.m4)
+include(analytics.defn(`PLATFORM').m4)
 include(camera.m4)
 ')
 ')

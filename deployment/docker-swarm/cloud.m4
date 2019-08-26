@@ -15,6 +15,9 @@ ifelse(eval(defn(`NOFFICES')>1),1,`dnl
             - "no_proxy=*"
         networks:
             - db_net
+forloop(`id',1,defn(`NOFFICES'),`dnl
+            - `office'defn(`id')_net
+')dnl
         deploy:
             placement:
                 constraints: [node.role==manager]
