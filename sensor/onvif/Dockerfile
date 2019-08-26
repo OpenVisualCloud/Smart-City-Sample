@@ -26,7 +26,7 @@ RUN  wget ${ZEEP_REPO} && \
      rm v${ONVIF_ZEEP_VER}.tar.gz
 
 COPY    *.py /home/
-CMD     ["/home/main.py"]
+CMD     ["/home/discover.py"]
 WORKDIR /home
 
 ####

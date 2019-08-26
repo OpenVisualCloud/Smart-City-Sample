@@ -1,10 +1,9 @@
 
 FROM centos:7.6.1810
 
-RUN yum -y install epel-release && yum -y install python36-requests python36-ply && rm -rf /var/cache/yum/*
-
-COPY    *.py /home/
-CMD     ["/home/main.py"]
+RUN yum install -y epel-release && yum install -y python36-requests python36-ply && rm -rf /var/cache/yum/*
+COPY *.py /home/
+CMD  ["/home/check.py"]
 
 ####
 ARG  USER
@@ -15,3 +14,4 @@ ARG  GID
 RUN  groupadd -f -g ${GID} ${GROUP};useradd -d /home/${USER} -g ${GROUP} -K UID_MAX=${UID} -K UID_MIN=${UID} ${USER};echo
 USER ${USER}
 ####
+
