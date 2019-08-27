@@ -93,5 +93,5 @@ while True:
 
 print("Created sensor "+r["_id"], flush=True)
 while True:
-    subprocess.call(["/usr/bin/cvlc","-vvv",file1,"--loop",":sout=#gather:rtp{sdp=rtsp://"+hostname+":8554/live.sdp}",":network-caching:1500",":sout-all",":sout-keep"])
+    subprocess.call(["/usr/bin/cvlc","-vvv",file1,"--loop",":sout=#gather:rtp{sdp=rtsp://"+hostname+":8554/live.sdp,proto=dccp}",":network-caching:1500",":sout-all",":sout-keep"])
     time.sleep(10)
