@@ -13,11 +13,6 @@ ifelse(eval(defn(`NOFFICES')>1),1,`dnl
             - "ES_JAVA_OPTS=-Xms4096m -Xmx4096m"
             - "NO_PROXY=*"
             - "no_proxy=*"
-        networks:
-            - db_net
-forloop(`id',1,defn(`NOFFICES'),`dnl
-            - `office'defn(`id')_net
-')dnl
         deploy:
             placement:
                 constraints: [node.role==manager]
@@ -48,13 +43,6 @@ forloop(`id',1,defn(`NOFFICES'),`dnl
               uid: ${USER_ID}
               gid: ${GROUP_ID}
               mode: 0444
-        networks:
-            - db_net
-forloop(`id',1,defn(`NOFFICES'),`dnl
-ifdef(`location_office'defn(`id'),`dnl
-            - `office'defn(`id')_net
-')dnl
-')dnl
         deploy:
             placement:
                 constraints: [node.role==manager]

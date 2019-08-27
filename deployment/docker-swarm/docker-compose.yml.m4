@@ -20,5 +20,4 @@ include(camera.m4)
 ')
 ')
 
-include(network.m4)
 include(secret.m4)
