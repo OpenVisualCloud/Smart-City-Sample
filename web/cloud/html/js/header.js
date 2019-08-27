@@ -33,7 +33,7 @@ var settings={
         return $("#statsHistogram").val();
     },
     street_center: function () {
-        return [45.538798,-122.961681];
+        return [45.536664,-122.960823];
     },
     parking_center: function () {
         return [33.310955,-111.932443];
