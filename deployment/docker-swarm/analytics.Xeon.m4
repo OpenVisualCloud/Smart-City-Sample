@@ -10,10 +10,6 @@
         volumes:
             - ${STORAGE_VOLUME}:/home/video-analytics/app/server/recordings:rw
             - /etc/localtime:/etc/localtime:ro
-        networks:
-            - db_net
-            - patsubst(defn(`OFFICE_NAME'),`office',`camera')_net
-            - defn(`OFFICE_NAME')_net
         deploy:
             replicas: defn(`NSERVICES')
             placement:

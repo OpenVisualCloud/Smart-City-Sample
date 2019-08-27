@@ -20,10 +20,6 @@ ifdef(defn(`CAMERA_LOCATION_NAME'),`
             FOVV: "68"
             NO_PROXY: "*"
             no_proxy: "*"
-        networks:
-            - db_net
-            - defn(`OFFICE_NAME')_net
-            - patsubst(defn(`OFFICE_NAME'),`office',`camera')_net
         deploy:
             placement:
                 constraints: [ifelse(eval(defn(`NOFFICES')>1),1,node.labels.defn(`OFFICE_NAME')_zone==yes,node.role==manager)]
