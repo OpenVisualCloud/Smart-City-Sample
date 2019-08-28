@@ -35,7 +35,7 @@ fovv = float(os.environ["FOVV"])
 try:
     sensor_id=int(os.environ["SENSOR_ID"])
 except:
-    sensor_id=int(socket.gethostbyname(socket.gethostname()).split(".")[-1])
+    sensor_id=int(socket.gethostbyname(hostname).split(".")[-1])
 
 if "LOCATION" in os.environ:
     location=list(map(float,os.environ["LOCATION"].split(",")))
@@ -45,6 +45,8 @@ else:
     location=geo_point(office, distance, math.pi*2.0*slot*72)
     theta=theta+360*slot
 
+rtsphost=os.environ["RTSPHOST"] if "RTSPHOST" in os.environ else "rtsp://"+hostname+":8554/live.sdp"
+    
 db=None
 r=None
 
@@ -77,7 +79,7 @@ while True:
             "model": "simulation",
             "resolution": { "width": width, "height": height },
             "location": { "lat": location[0], "lon": location[1] },
-            "url": "rtsp://"+hostname+":8554/live.sdp",
+            "url": rtsphost,
             "mac": "0098c00"+str(6963+sensor_id),
             'theta': theta,
             'mnth': mnth,
@@ -93,5 +95,5 @@ while True:
 
 print("Created sensor "+r["_id"], flush=True)
 while True:
-    subprocess.call(["/usr/bin/cvlc","-vvv",file1,"--loop",":sout=#gather:rtp{sdp=rtsp://"+hostname+":8554/live.sdp,proto=dccp}",":network-caching:1500",":sout-all",":sout-keep"])
+    subprocess.call(["/usr/bin/cvlc","-vvv",file1,"--loop",":sout=#gather:rtp{sdp="+rtsphost+",proto=dccp}",":network-caching:1500",":sout-all",":sout-keep"])
     time.sleep(10)
