@@ -74,8 +74,9 @@ ifelse(eval(defn(`NOFFICES')>1),1,`
             IP_SCAN_RANGE: "forloop(`cid',1,defn(`NCAMERAS'),`defn(`OFFICE_NAME')`_simulated_camera'defn(`cid') ')"
             PORT_SCAN_RANGE: "554-8554"
             OFFICE: "defn(`OFFICE_LOCATION')"
-            LOCATION: "forloop(`cid',1,defn(`NCAMERAS'),`defn(`location_'defn(`OFFICE_NAME')`_camera'defn(`cid')),')"
+            LOCATION: "forloop(`cid',1,defn(`NCAMERAS'),`defn(`location_'defn(`OFFICE_NAME')`_camera'defn(`cid')) ')"
             DBHOST: "http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')_db,cloud_db):9200"
+            SERVICE_INTERVAL: "30"
             NO_PROXY: "*"
             no_proxy: "*"
         deploy:
