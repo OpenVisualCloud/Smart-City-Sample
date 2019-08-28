@@ -219,8 +219,8 @@ def quit_service(signum, sigframe):
 signal(SIGTERM, quit_service)
 ip_range = os.environ['IP_SCAN_RANGE']
 port_range = os.environ['PORT_SCAN_RANGE']
-locations = os.environ['LOCATION'].split(",")
-
+locations = [list(map(float,loc.split(","))) for loc in os.environ['LOCATION'].strip().split(" ")]
+service_interval = float(os.environ["SERVICE_INTERVAL"])
 office = list(map(float,os.environ["OFFICE"].split(",")))
 dbhost= os.environ["DBHOST"]
 
@@ -270,12 +270,7 @@ while True:
         if mac not in cameras:
             cameras[mac]=camera_count
             camera_count=camera_count+1
-        # geo_location
-        location_id = int(cameras[mac] % (len(locations)/2))
-        location = {
-            "lat": float(locations[location_id*2]),
-            "lon": float(locations[location_id*2+1]),
-        }
+        location = locations[int(cameras[mac] % (len(locations)))]
 
         try:
             found=list(dbs.search("sensor:'camera' and model:'ip_camera' and mac='"+mac+"'", size=1))
@@ -286,7 +281,7 @@ while True:
                     'office': { 'lat': office[0], 'lon': office[1] },
                     'model': 'ip_camera',
                     'resolution': { 'width': width, 'height': height },
-                    'location': location,
+                    'location': { "lat": location[0], "lon": location[1] },
                     'url': rtspuri,
                     'mac': mac,
                     'theta': 105.0,
@@ -299,4 +294,4 @@ while True:
         except Exception as e:
             print("Exception: "+str(e), flush=True)
 
-    time.sleep(60)
+    time.sleep(service_interval)
