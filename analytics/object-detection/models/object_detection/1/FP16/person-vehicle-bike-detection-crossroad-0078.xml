@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<net batch="1" name="RMNet_SSD" version="6">
+<net batch="1" name="RMNet_SSD" version="5">
 	<layers>
 		<layer id="0" name="data" precision="FP16" type="Input">
 			<output>
@@ -33,7 +33,7 @@
 				<biases offset="6" size="6"/>
 			</blobs>
 		</layer>
-		<layer id="2" name="Mul_12524/Fused_Mul_/FusedScaleShift_" precision="FP16" type="ScaleShift">
+		<layer id="2" name="Mul_10540/Fused_Mul_/FusedScaleShift_" precision="FP16" type="ScaleShift">
 			<input>
 				<port id="0">
 					<dim>1</dim>
@@ -79,6 +79,7 @@
 			</blobs>
 		</layer>
 		<layer id="4" name="conv0_relu" precision="FP16" type="ReLU">
+			<data negative_slope="0.0"/>
 			<input>
 				<port id="0">
 					<dim>1</dim>
@@ -120,6 +121,7 @@
 			</blobs>
 		</layer>
 		<layer id="6" name="init_block1/dim_inc/fn" precision="FP16" type="ReLU">
+			<data negative_slope="0.0"/>
 			<input>
 				<port id="0">
 					<dim>1</dim>
@@ -245,7 +247,7 @@
 			</blobs>
 		</layer>
 		<layer id="12" name="bottleneck1_1/add" precision="FP16" type="Eltwise">
-			<data operation="sum"/>
+			<data coeff="" operation="sum"/>
 			<input>
 				<port id="0">
 					<dim>1</dim>
@@ -396,7 +398,7 @@
 			</blobs>
 		</layer>
 		<layer id="19" name="bottleneck1_2/add" precision="FP16" type="Eltwise">
-			<data operation="sum"/>
+			<data coeff="" operation="sum"/>
 			<input>
 				<port id="0">
 					<dim>1</dim>
@@ -547,7 +549,7 @@
 			</blobs>
 		</layer>
 		<layer id="26" name="bottleneck1_3/add" precision="FP16" type="Eltwise">
-			<data operation="sum"/>
+			<data coeff="" operation="sum"/>
 			<input>
 				<port id="0">
 					<dim>1</dim>
@@ -698,7 +700,7 @@
 			</blobs>
 		</layer>
 		<layer id="33" name="bottleneck1_4/add" precision="FP16" type="Eltwise">
-			<data operation="sum"/>
+			<data coeff="" operation="sum"/>
 			<input>
 				<port id="0">
 					<dim>1</dim>
@@ -891,7 +893,7 @@
 			</blobs>
 		</layer>
 		<layer id="42" name="bottleneck2_0/add" precision="FP16" type="Eltwise">
-			<data operation="sum"/>
+			<data coeff="" operation="sum"/>
 			<input>
 				<port id="0">
 					<dim>1</dim>
@@ -1042,7 +1044,7 @@
 			</blobs>
 		</layer>
 		<layer id="49" name="bottleneck2_1/add" precision="FP16" type="Eltwise">
-			<data operation="sum"/>
+			<data coeff="" operation="sum"/>
 			<input>
 				<port id="0">
 					<dim>1</dim>
@@ -1193,7 +1195,7 @@
 			</blobs>
 		</layer>
 		<layer id="56" name="bottleneck2_2/add" precision="FP16" type="Eltwise">
-			<data operation="sum"/>
+			<data coeff="" operation="sum"/>
 			<input>
 				<port id="0">
 					<dim>1</dim>
@@ -1344,7 +1346,7 @@
 			</blobs>
 		</layer>
 		<layer id="63" name="bottleneck2_3/add" precision="FP16" type="Eltwise">
-			<data operation="sum"/>
+			<data coeff="" operation="sum"/>
 			<input>
 				<port id="0">
 					<dim>1</dim>
@@ -1495,7 +1497,7 @@
 			</blobs>
 		</layer>
 		<layer id="70" name="bottleneck2_4/add" precision="FP16" type="Eltwise">
-			<data operation="sum"/>
+			<data coeff="" operation="sum"/>
 			<input>
 				<port id="0">
 					<dim>1</dim>
@@ -1646,7 +1648,7 @@
 			</blobs>
 		</layer>
 		<layer id="77" name="bottleneck2_5/add" precision="FP16" type="Eltwise">
-			<data operation="sum"/>
+			<data coeff="" operation="sum"/>
 			<input>
 				<port id="0">
 					<dim>1</dim>
@@ -1797,7 +1799,7 @@
 			</blobs>
 		</layer>
 		<layer id="84" name="bottleneck2_6/add" precision="FP16" type="Eltwise">
-			<data operation="sum"/>
+			<data coeff="" operation="sum"/>
 			<input>
 				<port id="0">
 					<dim>1</dim>
@@ -1948,7 +1950,7 @@
 			</blobs>
 		</layer>
 		<layer id="91" name="bottleneck2_7/add" precision="FP16" type="Eltwise">
-			<data operation="sum"/>
+			<data coeff="" operation="sum"/>
 			<input>
 				<port id="0">
 					<dim>1</dim>
@@ -2099,7 +2101,7 @@
 			</blobs>
 		</layer>
 		<layer id="98" name="bottleneck2_8/add" precision="FP16" type="Eltwise">
-			<data operation="sum"/>
+			<data coeff="" operation="sum"/>
 			<input>
 				<port id="0">
 					<dim>1</dim>
@@ -2292,7 +2294,7 @@
 			</blobs>
 		</layer>
 		<layer id="107" name="bottleneck3_0/add" precision="FP16" type="Eltwise">
-			<data operation="sum"/>
+			<data coeff="" operation="sum"/>
 			<input>
 				<port id="0">
 					<dim>1</dim>
@@ -2443,7 +2445,7 @@
 			</blobs>
 		</layer>
 		<layer id="114" name="bottleneck3_1/add" precision="FP16" type="Eltwise">
-			<data operation="sum"/>
+			<data coeff="" operation="sum"/>
 			<input>
 				<port id="0">
 					<dim>1</dim>
@@ -2594,7 +2596,7 @@
 			</blobs>
 		</layer>
 		<layer id="121" name="bottleneck3_2/add" precision="FP16" type="Eltwise">
-			<data operation="sum"/>
+			<data coeff="" operation="sum"/>
 			<input>
 				<port id="0">
 					<dim>1</dim>
@@ -2745,7 +2747,7 @@
 			</blobs>
 		</layer>
 		<layer id="128" name="bottleneck3_3/add" precision="FP16" type="Eltwise">
-			<data operation="sum"/>
+			<data coeff="" operation="sum"/>
 			<input>
 				<port id="0">
 					<dim>1</dim>
@@ -2896,7 +2898,7 @@
 			</blobs>
 		</layer>
 		<layer id="135" name="bottleneck3_4/add" precision="FP16" type="Eltwise">
-			<data operation="sum"/>
+			<data coeff="" operation="sum"/>
 			<input>
 				<port id="0">
 					<dim>1</dim>
@@ -3047,7 +3049,7 @@
 			</blobs>
 		</layer>
 		<layer id="142" name="bottleneck3_5/add" precision="FP16" type="Eltwise">
-			<data operation="sum"/>
+			<data coeff="" operation="sum"/>
 			<input>
 				<port id="0">
 					<dim>1</dim>
@@ -3198,7 +3200,7 @@
 			</blobs>
 		</layer>
 		<layer id="149" name="bottleneck3_6/add" precision="FP16" type="Eltwise">
-			<data operation="sum"/>
+			<data coeff="" operation="sum"/>
 			<input>
 				<port id="0">
 					<dim>1</dim>
@@ -3349,7 +3351,7 @@
 			</blobs>
 		</layer>
 		<layer id="156" name="bottleneck3_7/add" precision="FP16" type="Eltwise">
-			<data operation="sum"/>
+			<data coeff="" operation="sum"/>
 			<input>
 				<port id="0">
 					<dim>1</dim>
@@ -3500,7 +3502,7 @@
 			</blobs>
 		</layer>
 		<layer id="163" name="bottleneck3_8/add" precision="FP16" type="Eltwise">
-			<data operation="sum"/>
+			<data coeff="" operation="sum"/>
 			<input>
 				<port id="0">
 					<dim>1</dim>
@@ -3651,7 +3653,7 @@
 			</blobs>
 		</layer>
 		<layer id="170" name="bottleneck3_9/add" precision="FP16" type="Eltwise">
-			<data operation="sum"/>
+			<data coeff="" operation="sum"/>
 			<input>
 				<port id="0">
 					<dim>1</dim>
@@ -3802,7 +3804,7 @@
 			</blobs>
 		</layer>
 		<layer id="177" name="bottleneck3_10/add" precision="FP16" type="Eltwise">
-			<data operation="sum"/>
+			<data coeff="" operation="sum"/>
 			<input>
 				<port id="0">
 					<dim>1</dim>
@@ -4077,7 +4079,7 @@
 			</blobs>
 		</layer>
 		<layer id="190" name="bottleneck4_0/add" precision="FP16" type="Eltwise">
-			<data operation="sum"/>
+			<data coeff="" operation="sum"/>
 			<input>
 				<port id="0">
 					<dim>1</dim>
@@ -4228,7 +4230,7 @@
 			</blobs>
 		</layer>
 		<layer id="197" name="bottleneck4_1/add" precision="FP16" type="Eltwise">
-			<data operation="sum"/>
+			<data coeff="" operation="sum"/>
 			<input>
 				<port id="0">
 					<dim>1</dim>
@@ -4398,7 +4400,7 @@
 			</blobs>
 		</layer>
 		<layer id="205" name="bottleneck4_2/add" precision="FP16" type="Eltwise">
-			<data operation="sum"/>
+			<data coeff="" operation="sum"/>
 			<input>
 				<port id="0">
 					<dim>1</dim>
@@ -4549,7 +4551,7 @@
 			</blobs>
 		</layer>
 		<layer id="212" name="bottleneck4_3/add" precision="FP16" type="Eltwise">
-			<data operation="sum"/>
+			<data coeff="" operation="sum"/>
 			<input>
 				<port id="0">
 					<dim>1</dim>
@@ -4700,7 +4702,7 @@
 			</blobs>
 		</layer>
 		<layer id="219" name="bottleneck4_4/add" precision="FP16" type="Eltwise">
-			<data operation="sum"/>
+			<data coeff="" operation="sum"/>
 			<input>
 				<port id="0">
 					<dim>1</dim>
@@ -4851,7 +4853,7 @@
 			</blobs>
 		</layer>
 		<layer id="226" name="bottleneck4_5/add" precision="FP16" type="Eltwise">
-			<data operation="sum"/>
+			<data coeff="" operation="sum"/>
 			<input>
 				<port id="0">
 					<dim>1</dim>
@@ -5002,7 +5004,7 @@
 			</blobs>
 		</layer>
 		<layer id="233" name="bottleneck4_6/add" precision="FP16" type="Eltwise">
-			<data operation="sum"/>
+			<data coeff="" operation="sum"/>
 			<input>
 				<port id="0">
 					<dim>1</dim>
@@ -5153,7 +5155,7 @@
 			</blobs>
 		</layer>
 		<layer id="240" name="bottleneck4_7/add" precision="FP16" type="Eltwise">
-			<data operation="sum"/>
+			<data coeff="" operation="sum"/>
 			<input>
 				<port id="0">
 					<dim>1</dim>
@@ -5304,7 +5306,7 @@
 			</blobs>
 		</layer>
 		<layer id="247" name="bottleneck4_8/add" precision="FP16" type="Eltwise">
-			<data operation="sum"/>
+			<data coeff="" operation="sum"/>
 			<input>
 				<port id="0">
 					<dim>1</dim>
@@ -5455,7 +5457,7 @@
 			</blobs>
 		</layer>
 		<layer id="254" name="bottleneck4_9/add" precision="FP16" type="Eltwise">
-			<data operation="sum"/>
+			<data coeff="" operation="sum"/>
 			<input>
 				<port id="0">
 					<dim>1</dim>
@@ -5606,7 +5608,7 @@
 			</blobs>
 		</layer>
 		<layer id="261" name="bottleneck4_10/add" precision="FP16" type="Eltwise">
-			<data operation="sum"/>
+			<data coeff="" operation="sum"/>
 			<input>
 				<port id="0">
 					<dim>1</dim>
@@ -5757,7 +5759,7 @@
 			</blobs>
 		</layer>
 		<layer id="268" name="bottleneck4_11/add" precision="FP16" type="Eltwise">
-			<data operation="sum"/>
+			<data coeff="" operation="sum"/>
 			<input>
 				<port id="0">
 					<dim>1</dim>
@@ -5906,6 +5908,7 @@
 			</blobs>
 		</layer>
 		<layer id="275" name="x32_out_relu" precision="FP16" type="ReLU">
+			<data negative_slope="0.0"/>
 			<input>
 				<port id="0">
 					<dim>1</dim>
@@ -6205,14 +6208,14 @@
 				</port>
 			</output>
 		</layer>
-		<layer id="290" name="564/Output_0/Data__const" precision="I32" type="Const">
+		<layer id="290" name="mbox_conf_reshape/DimData_const" precision="FP16" type="Const">
 			<output>
 				<port id="1">
 					<dim>3</dim>
 				</port>
 			</output>
 			<blobs>
-				<custom offset="2356944" size="12"/>
+				<custom offset="2356944" size="6"/>
 			</blobs>
 		</layer>
 		<layer id="291" name="mbox_conf_reshape" precision="FP16" type="Reshape">
@@ -6741,28 +6744,25 @@
 		<edge from-layer="297" from-port="3" to-layer="298" to-port="2"/>
 	</edges>
 	<meta_data>
-		<MO_version value="2019.2.0-402-g82c4801"/>
+		<MO_version value="2019.1.0-341-gc9b66a2"/>
 		<cli_parameters>
-			<blobs_as_inputs value="False"/>
-			<caffe_parser_path value="DIR"/>
 			<data_type value="FP16"/>
+			<disable_fusing value="False"/>
+			<disable_gfusing value="False"/>
 			<disable_nhwc_to_nchw value="False"/>
 			<disable_omitting_optional value="False"/>
 			<disable_resnet_optimization value="False"/>
 			<enable_concat_optimization value="False"/>
 			<enable_flattening_nested_params value="False"/>
-			<enable_ssd_gluoncv value="False"/>
 			<extensions value="DIR"/>
 			<framework value="caffe"/>
-			<freeze_placeholder_with_value value="{}"/>
-			<generate_experimental_IR_V10 value="False"/>
+			<generate_deprecated_IR_V2 value="False"/>
 			<input value="data"/>
 			<input_model value="DIR/_iter_200000.caffemodel"/>
 			<input_model_is_text value="False"/>
 			<input_proto value="DIR/deploy.prototxt"/>
 			<input_shape value="[1,3,1024,1024]"/>
 			<k value="DIR/CustomLayersMapping.xml"/>
-			<keep_quantize_ops_in_IR value="False"/>
 			<keep_shape_ops value="False"/>
 			<legacy_mxnet_model value="False"/>
 			<log_level value="ERROR"/>
@@ -6779,7 +6779,7 @@
 			<scale_values value="()"/>
 			<silent value="False"/>
 			<version value="False"/>
-			<unset unset_cli_parameters="batch, counts, disable_fusing, disable_gfusing, finegrain_fusing, generate_deprecated_IR_V2, input_checkpoint, input_meta_graph, input_symbol, mean_file, mean_file_offsets, nd_prefix_name, pretrained_model_name, saved_model_dir, saved_model_tags, scale, tensorboard_logdir, tensorflow_custom_layer_libraries, tensorflow_custom_operations_config_update, tensorflow_object_detection_api_pipeline_config, tensorflow_operation_patterns, tensorflow_subgraph_patterns, tensorflow_use_custom_operations_config"/>
+			<unset unset_cli_parameters="batch, counts, finegrain_fusing, freeze_placeholder_with_value, input_checkpoint, input_meta_graph, input_symbol, mean_file, mean_file_offsets, nd_prefix_name, pretrained_model_name, saved_model_dir, saved_model_tags, scale, tensorboard_logdir, tensorflow_custom_layer_libraries, tensorflow_custom_operations_config_update, tensorflow_object_detection_api_pipeline_config, tensorflow_operation_patterns, tensorflow_subgraph_patterns, tensorflow_use_custom_operations_config"/>
 		</cli_parameters>
 	</meta_data>
 </net>
