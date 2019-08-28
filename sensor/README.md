@@ -13,11 +13,6 @@ The sample implements the ONVIF protocol to discover IP cameras on the specified
         image: smtc_onvif_discovery:latest
         environment:
             IP_SCAN_RANGE: '192.168.1.0/24'
-            PORT_SCAN_RANGE: '0-65535'
-            OFFICE: '45.543797,-122.962038'
-            DISTANCE: 2
-            ANGLEOFFSET: 15
-        deploy:
-            replicas: 1
-        restart: always
-```
+            PORT_SCAN_RANGE: '554-8554'
+            OFFICE: '45.539626,-122.929569'
+            LOCATION: '45.544223,-122.926128,45.546249,-122.932145,45.538971,-122.939726'

@@ -1,6 +1,6 @@
 FROM ubuntu:18.04
 
-RUN  DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y -q python3-ply nmap wget python3-setuptools
+RUN  DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y -q python3-ply nmap wget python3-setuptools ffmpeg
 
 ARG ZEEP_VER=3.3.1
 ARG ZEEP_REPO=https://github.com/mvantellingen/python-zeep/archive/${ZEEP_VER}.tar.gz
