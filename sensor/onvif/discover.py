@@ -2,9 +2,6 @@
 import os
 import sys
 import time
-import json
-import math
-import urllib.parse
 import subprocess
 from onvif import ONVIFCamera, ONVIFError
 import xml.etree.ElementTree as ET
@@ -12,6 +9,7 @@ from signal import SIGTERM, signal
 
 from db_query import DBQuery
 from db_ingest import DBIngest
+from probe import probe
 
 # A fix for 'NotImplementedError: AnySimpleType.pytonvalue() not implemented'
 # https://github.com/FalkTannhaeuser/python-onvif-zeep/issues/4
@@ -19,15 +17,6 @@ import zeep
 def zeep_pythonvalue(self, xmlvalue):
     return xmlvalue
 zeep.xsd.simple.AnySimpleType.pythonvalue = zeep_pythonvalue
-
-def geo_point(origin, distance, tc):
-    lat1=math.radians(origin[0])
-    lon1=math.radians(origin[1])
-    d=distance/111300.0
-    lat = math.asin(math.sin(lat1)*math.cos(d)+math.cos(lat1)*math.sin(d)*math.cos(tc))
-    dlon = math.atan2(math.sin(tc)*math.sin(d)*math.cos(lat1),math.cos(d)-math.sin(lat1)*math.sin(lat))
-    lon=math.fmod(lon1-dlon+math.pi,2*math.pi)-math.pi
-    return { "lat": math.degrees(lat), "lon": math.degrees(lon) }
 
 def discover_onvif_camera(ip, port):
     user = 'admin'
@@ -44,7 +33,7 @@ def discover_onvif_camera(ip, port):
         cam = ONVIFCamera(ip, port, user, passwd, '/home/wsdl')
     except ONVIFError as e:
         print("Failed to ceate Onvif Camera {}".format(e))
-        return
+        return onvif_device_desc
 
     # Get Device Information
     # Scopes
@@ -197,64 +186,53 @@ def test_onvif_cam(ip, port):
         return True
     return False         
 
-def parse_nmap_xml(nmapxml, isfile):
-    if(isfile):
-        tree = ET.parse(nmapxml)
-        root = tree.getroot()
-    else:
-        root = ET.fromstring(nmapxml)
-    
+def parse_nmap_xml(nmapxml):
     onvifcams = []
-    for host in root.findall('host'):
-        ip = host.find("address").attrib['addr']
-        ports = host.find('ports')
-        for port in ports.findall('port'):
-            if(port.attrib['protocol'] == 'tcp'):
-                    port = port.attrib['portid']
-                    print("To test " + ip + ":" + port)
-                    if(test_onvif_cam(ip, port) == True):                        
-                        print("Found onvif device service")    
-                        cam = {}
-                        cam['ip'] = ip
-                        cam['port'] = port
-                        onvifcams.append(cam)
-                    else:
-                        print("Not onvif device service")    
-    return onvifcams			           
+    root = ET.fromstring(nmapxml)
+    for host1 in root.findall('host'):
+        ip = host1.find("address").attrib['addr']
+        ports = host1.find('ports')
+        for port1 in ports.findall('port'):
+            if(port1.attrib['protocol'] == 'tcp'):
+                port = port1.attrib['portid']
 
-def scan_onvif_camera(ip_range, port_range):
-    onvifcams = []
-    try:
-        nmapxml = subprocess.check_output('nmap -p' + port_range + ' ' + ip_range + ' -oX -', stderr = subprocess.STDOUT, shell = True, timeout = 100)
-        onvifcams = parse_nmap_xml(nmapxml, False)
-    except:
-        print('Failed to scan network')
+                print("To test " + ip + ":" + port, flush=True)
+                if(test_onvif_cam(ip, port) == True):                        
+                    print("Found onvif device service", flush=True)    
+                    onvifcams.append((ip,port))
+                    continue
+
+                for service1 in port1.findall('service'):
+                    if service1.attrib['name'] == "rtsp-alt":
+                        print("Found simulated camera", flush=True)
+                        onvifcams.append((ip,port))
+                        break
     return onvifcams
 
-def discover_all_onvif_cameras():
-    ip_range = os.environ['IP_SCAN_RANGE']
-    port_range = os.environ['PORT_SCAN_RANGE']
+def scan_onvif_camera(ip_range, port_range):
+    nmapxml = subprocess.check_output('nmap -p' + port_range + ' ' + ip_range + ' -oX -', stderr = subprocess.STDOUT, shell = True, timeout = 100)
+    return parse_nmap_xml(nmapxml)
 
-    office = list(map(float,os.environ["OFFICE"].split(",")))
-    distance = float(os.environ["DISTANCE"])
-    angleoffset = float(os.environ["ANGLEOFFSET"])
-    dbhost= os.environ["DBHOST"]
+def quit_service(signum, sigframe):
+    exit(143)
 
-    sensor_index = 0
-    mac_sensor_id = {}
+signal(SIGTERM, quit_service)
+ip_range = os.environ['IP_SCAN_RANGE']
+port_range = os.environ['PORT_SCAN_RANGE']
+locations = os.environ['LOCATION'].split(",")
 
-    while True:
-        desclist = []
-        onvifcams = scan_onvif_camera(ip_range, port_range)
-        nsensors = len(onvifcams)
+office = list(map(float,os.environ["OFFICE"].split(",")))
+dbhost= os.environ["DBHOST"]
 
-        db = DBIngest(index="sensors",office=office,host=dbhost)
-        dbs = DBQuery(index="sensors",office=office,host=dbhost)
-        for cam in onvifcams:
-            ip = cam['ip']
-            port = int(cam['port'])
-            desc = discover_onvif_camera(ip, port)
+db = DBIngest(index="sensors",office=office,host=dbhost)
+dbs = DBQuery(index="sensors",office=office,host=dbhost)
+camera_count=0
+cameras={}
+while True:
+    for ip,port in scan_onvif_camera(ip_range, port_range):
+        desc = discover_onvif_camera(ip, port)
 
+        try:
             if (desc['MAC'] == None):
                 if('NetworkInterfaces' in desc):
                     if(len(desc['NetworkInterfaces']) >= 1):
@@ -263,49 +241,62 @@ def discover_all_onvif_cameras():
                 # let's use camera serial number as id
                 else:
                     desc['MAC'] = desc['DeviceInformation']['SerialNumber']
+            mac=desc['MAC']
+        except:
+            mac="567890"+('7'.join(ip.split(".")))+"9"+str(port)
 
-            if(desc['MAC'] not in mac_sensor_id):
-                sensor_index += 1
-                mac_sensor_id[desc['MAC']] = sensor_index
-            sensor_id = mac_sensor_id[desc['MAC']]
-
-            # Add credential to rtsp uri
+        # Add credential to rtsp uri
+        try:
             rtspuri = desc["MediaStreamUri"]["Uri"]
             rtspuri = rtspuri.replace('rtsp://', 'rtsp://admin:admin@')
-            camdesc = {
-                "sensor": "camera",
-                "icon": "camera.gif",
-                "office": { "lat": office[0], "lon": office[1] },
-                "model": "ip_camera",
-                "resolution": { "width": desc["MediaVideoSources"][0]['Resolution']['Width'], "height": desc["MediaVideoSources"][0]['Resolution']["Height"] },
-                "location": geo_point(office, distance, math.pi * 2 / nsensors * sensor_id + math.pi * angleoffset / 180.0),
-                "url": rtspuri,
-                "mac": desc["MAC"],
-                'theta': 15.0,
-                'mnth': 15.0,
-                'alpha': 45.0,
-                'fovh': 90.0,
-                'fovv': 68.0,
-                "status": "idle",
-            }
+        except:
+            rtspuri = "rtsp://"+ip+":"+str(port)+"/live.sdp"
 
-            try:
-                found=list(dbs.search("sensor:'camera' and model:'ip_camera' and mac='"+desc['MAC']+"'", size=1))
-                if not found:
-                    desclist.append(camdesc)
-            except Exception as e:
-                print(e)
+        # width & height
+        try:
+            width = int(desc["MediaVideoSources"][0]['Resolution']['Width'])
+            height = int(desc["MediaVideoSources"][0]['Resolution']["Height"])
+        except:
+            # probe from the stream
+            width = 0
+            height = 0
+            sinfo=probe(rtspuri)
+            for stream in sinfo["streams"]:
+                if "coded_width" in stream: width=int(stream["coded_width"])
+                if "coded_height" in stream: height=int(stream["coded_height"])
+            if width==0 or height==0: continue
 
-        if desclist:
-            try:
-                db.ingest_bulk(desclist)
-            except Exception as e:
-                print("Exception: "+str(e), flush=True)
-        
-        time.sleep(60)
+        # retrieve unique location
+        if mac not in cameras:
+            cameras[mac]=camera_count
+            camera_count=camera_count+1
+        # geo_location
+        location_id = int(cameras[mac] % (len(locations)/2))
+        location = {
+            "lat": float(locations[location_id*2]),
+            "lon": float(locations[location_id*2+1]),
+        }
 
-def quit_service(signum, sigframe):
-    exit(143)
+        try:
+            found=list(dbs.search("sensor:'camera' and model:'ip_camera' and mac='"+mac+"'", size=1))
+            if not found:
+                db.ingest({
+                    'sensor': 'camera',
+                    'icon': 'camera.gif',
+                    'office': { 'lat': office[0], 'lon': office[1] },
+                    'model': 'ip_camera',
+                    'resolution': { 'width': width, 'height': height },
+                    'location': location,
+                    'url': rtspuri,
+                    'mac': mac,
+                    'theta': 105.0,
+                    'mnth': 75.0,
+                    'alpha': 45.0,
+                    'fovh': 90.0,
+                    'fovv': 68.0,
+                    'status': 'idle',
+                })
+        except Exception as e:
+            print("Exception: "+str(e), flush=True)
 
-signal(SIGTERM, quit_service)
-discover_all_onvif_cameras()
+    time.sleep(60)
