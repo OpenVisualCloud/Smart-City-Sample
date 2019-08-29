@@ -156,7 +156,7 @@ def test_onvif_cam(ip, port):
     interval = 0.5
     is_timeout = False
     try:
-        proc = subprocess.Popen(['python3', cmd, ip, port, user, passwd])
+        proc = subprocess.Popen(['python3', cmd, ip, str(port), user, passwd])
     except Exception as e:
         print(e, flush=True)    
     while proc.poll() is None:
@@ -174,7 +174,7 @@ def test_onvif_cam(ip, port):
         return True
     return False         
 
-def parse_nmap_xml(nmapxml):
+def parse_nmap_xml(nmapxml, simulated):
     onvifcams = []
     root = ET.fromstring(nmapxml)
     for host1 in root.findall('host'):
@@ -182,24 +182,21 @@ def parse_nmap_xml(nmapxml):
         ports = host1.find('ports')
         for port1 in ports.findall('port'):
             if(port1.attrib['protocol'] == 'tcp'):
-                port = port1.attrib['portid']
+                port = int(port1.attrib['portid'])
 
-                print("To test " + ip + ":" + port, flush=True)
+                print("To test " + ip + ":" + str(port), flush=True)
                 if(test_onvif_cam(ip, port) == True):                        
                     print("Found onvif device service", flush=True)    
                     onvifcams.append((ip,port))
                     continue
 
-                for service1 in port1.findall('service'):
-                    if service1.attrib['name'] == "rtsp-alt":
-                        print("Found simulated camera", flush=True)
-                        onvifcams.append((ip,port))
-                        break
+                print("Trying simulated camera", flush=True)
+                if port in simulated:
+                    for state1 in port1.findall('state'):
+                        if state1.attrib['state'] == "open":
+                            print("Found simulated camera", flush=True)
+                            onvifcams.append((ip,port))
     return onvifcams
-
-def scan_onvif_camera(ip_range, port_range):
-    nmapxml = subprocess.check_output('nmap -p' + port_range + ' ' + ip_range + ' -oX -', stderr = subprocess.STDOUT, shell = True, timeout = 100)
-    return parse_nmap_xml(nmapxml)
 
 def quit_service(signum, sigframe):
     exit(143)
@@ -211,13 +208,17 @@ locations = [list(map(float,loc.split(","))) for loc in os.environ['LOCATION'].s
 service_interval = float(os.environ["SERVICE_INTERVAL"])
 office = list(map(float,os.environ["OFFICE"].split(",")))
 dbhost= os.environ["DBHOST"]
+simulated=list(map(int,os.environ["SIMULATED_CAMERA"].strip(",").split(",")))
 
 db = DBIngest(index="sensors",office=office,host=dbhost)
 dbs = DBQuery(index="sensors",office=office,host=dbhost)
 camera_count=0
 cameras={}
 while True:
-    for ip,port in scan_onvif_camera(ip_range, port_range):
+    xml=subprocess.check_output('/usr/bin/nmap -p'+port_range+' '+ip_range+' -oX -',stderr=subprocess.STDOUT,shell=True,timeout=100)
+
+    for ip,port in parse_nmap_xml(xml, simulated):
+        print("Start discovery "+ip+":"+str(port), flush=True)
         desc = discover_onvif_camera(ip, port)
 
         try:
