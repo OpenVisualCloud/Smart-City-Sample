@@ -16,7 +16,7 @@ rtp_port=int(os.environ["RTP_PORT"])
 ncameras=int(os.environ["NCAMERAS"])
 
 def serve_stream(file1, rtsp_port1, rtp_port1):
-    rtsp="rtsp://"+socket.gethostname()+":"+str(rtsp_port1)+"/live.sdp"
+    rtsp="rtsp://@:"+str(rtsp_port1)+"/live.sdp"
     while True:
         subprocess.call(["/usr/bin/cvlc","-vvv",file1,"--loop",":sout=#gather:rtp{sdp="+rtsp+",port="+str(rtp_port1)+"}",":network-caching:1500",":sout-all",":sout-keep"])
         time.sleep(10)
