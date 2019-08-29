@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 from signal import signal, SIGTERM
+from concurrent.futures import ThreadPoolExecutor
 import subprocess
 import socket
 import random
@@ -10,14 +11,21 @@ import re
 
 simulated_root="/mnt/simulated"
 files=[f for f in os.listdir(simulated_root) if re.search(os.environ["FILES"],f)]
-sensor_id=int(os.environ["SENSOR_ID"]) if "SENSOR_ID" in os.environ else int(random.random()*len(files))
-rtsphost=os.environ["RTSPHOST"] if "RTSPHOST" in os.environ else "rtsp://"+socket.gethostname()+":8554/live.sdp"
+rtsp_port=int(os.environ["RTSP_PORT"])
+rtp_port=int(os.environ["RTP_PORT"])
+ncameras=int(os.environ["NCAMERAS"])
+
+def serve_stream(file1, rtsp_port1, rtp_port1):
+    rtsp="rtsp://"+socket.gethostname()+":"+str(rtsp_port1)+"/live.sdp"
+    while True:
+        subprocess.call(["/usr/bin/cvlc","-vvv",file1,"--loop",":sout=#gather:rtp{sdp="+rtsp+",port="+str(rtp_port1)+"}",":network-caching:1500",":sout-all",":sout-keep"])
+        time.sleep(10)
 
 def quit_service(signum, sigframe):
     exit(143)
 
 signal(SIGTERM, quit_service)
-file1=simulated_root+"/"+files[sensor_id%len(files)]
-while True:
-    subprocess.call(["/usr/bin/cvlc","-vvv",file1,"--loop",":sout=#gather:rtp{sdp="+rtsphost+",proto=dccp}",":network-caching:1500",":sout-all",":sout-keep"])
-    time.sleep(10)
+with ThreadPoolExecutor(ncameras) as e:
+    for i in range(ncameras):
+        e.submit(serve_stream, simulated_root+"/"+files[i%len(files)],rtsp_port+i*100,rtp_port+i*100)
+

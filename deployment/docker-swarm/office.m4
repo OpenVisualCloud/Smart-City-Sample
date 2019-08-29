@@ -71,8 +71,9 @@ ifelse(eval(defn(`NOFFICES')>1),1,`
     defn(`OFFICE_NAME')_camera_discovery:
         image: smtc_onvif_discovery:latest
         environment:
-            IP_SCAN_RANGE: "forloop(`cid',1,defn(`NCAMERAS'),`defn(`OFFICE_NAME')`_simulated_camera'defn(`cid') ')"
-            PORT_SCAN_RANGE: "554-8554"
+            IP_SCAN_RANGE: "defn(`OFFICE_NAME')_simulated_cameras"
+            PORT_SCAN_RANGE: "11000-eval(11000+defn(`NCAMERAS')*100)"
+            SIMULATED_CAMERA: "forloop(`cid',1,defn(`NCAMERAS'),`eval(11000+defn(`cid')*100-100),')"
             OFFICE: "defn(`OFFICE_LOCATION')"
             LOCATION: "forloop(`cid',1,defn(`NCAMERAS'),`defn(`location_'defn(`OFFICE_NAME')`_camera'defn(`cid')) ')"
             DBHOST: "http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')_db,cloud_db):9200"
