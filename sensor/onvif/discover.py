@@ -258,9 +258,14 @@ while True:
             height = int(desc["MediaVideoSources"][0]['Resolution']["Height"])
         except:
             # probe from the stream
+            try:
+                sinfo=probe(rtspuri)
+            except Exception as e:
+                print("Exception: "+str(e), flush=True)
+                sinfo={"streams":[]}
+
             width = 0
             height = 0
-            sinfo=probe(rtspuri)
             for stream in sinfo["streams"]:
                 if "coded_width" in stream: width=int(stream["coded_width"])
                 if "coded_height" in stream: height=int(stream["coded_height"])
