@@ -3,7 +3,7 @@ import os
 import sys
 import time
 import subprocess
-from onvif import ONVIFCamera, ONVIFError
+from onvif import ONVIFCamera
 import xml.etree.ElementTree as ET
 from signal import SIGTERM, signal
 
@@ -23,111 +23,101 @@ def discover_onvif_camera(ip, port):
     passwd = 'admin'
     onvif_device_desc = {}
 
-    print('=========================== {}:{} ============================='.format(ip, port))
+    print('=========================== {}:{} ============================='.format(ip, port), flush=True)
 
     onvif_device_desc['MAC'] = None
 
-    print("\n-------------- Mac Address ------------------ ")
+    print("\n-------------- Mac Address ------------------ ", flush=True)
 
     try:
         cam = ONVIFCamera(ip, port, user, passwd, '/home/wsdl')
-    except ONVIFError as e:
-        print("Failed to ceate Onvif Camera {}".format(e))
+    except Exception as e:
+        print("Failed to ceate Onvif Camera: "+str(e), flush=True)
         return onvif_device_desc
 
     # Get Device Information
     # Scopes
     try:
         scopes = cam.devicemgmt.GetScopes()
-        print("\n-------------- Scopes ------------------ ")
-        print(scopes)
+        print("\n-------------- Scopes ------------------ ", flush=True)
+        print(scopes, flush=True)
         scopelist = []
         for scope in scopes:
             scopelist.append(str(scope))
         onvif_device_desc['Scopes'] = scopelist
-    except ONVIFError as e:
-        print("Failed to get scopes {}".format(e))
-        pass
+    except Exception as e:
+        print("Failed to get scopes: "+str(e), flush=True)
 
     try:
         devInfo = cam.devicemgmt.GetDeviceInformation()
-        print("\n---------- DeviceInformation ----------- ")
-        print(devInfo)
+        print("\n---------- DeviceInformation ----------- ", flush=True)
+        print(devInfo, flush=True)
         #onvif_device_desc['DeviceInformation'] = cam.devicemgmt.to_dict(devInfo)
         onvif_device_desc['DeviceInformation'] = devInfo
-    except ONVIFError as e:
-        print("Failed to get device information {}".format(e))
-        pass
+    except Exception as e:
+        print("Failed to get device information: "+str(e), flush=True)
 
     # Get Services
     try:
         servList = cam.devicemgmt.GetServices(False)
-        print("\n----------- Services -------------- ")
-        print(servList)
+        print("\n----------- Services -------------- ", flush=True)
+        print(servList, flush=True)
         #onvif_device_desc['Services'] = cam.devicemgmt.to_dict(servList)
         onvif_device_desc['Services'] = servList
-    except ONVIFError as e:
-        print("Failed to get services {}".format(e))
-        pass
+    except Exception as e:
+        print("Failed to get services: "+str(e), flush=True)
 
     # Get Network Interfaces
     try:
         netIntfs = cam.devicemgmt.GetNetworkInterfaces()
-        print("\n----------- NetworkInterfaces -------------- ")
-        print(netIntfs)
+        print("\n----------- NetworkInterfaces -------------- ", flush=True)
+        print(netIntfs, flush=True)
         #onvif_device_desc['NetworkInterfaces'] = cam.devicemgmt.to_dict(netIntfs)
         onvif_device_desc['NetworkInterfaces'] = netIntfs
-    except ONVIFError as e:
-        print("Failed to get network interfaces {}".format(e))
-        pass
+    except Exception as e:
+        print("Failed to get network interfaces: "+str(e), flush=True)
 
     # Find all network protocols
     try:
         protocols = cam.devicemgmt.GetNetworkProtocols()
-        print("\n-----------Protocols-------------- ")
-        print(protocols)
+        print("\n-----------Protocols-------------- ", flush=True)
+        print(protocols, flush=True)
         #onvif_device_desc['Protocols'] = cam.devicemgmt.to_dict(protocols)
         onvif_device_desc['Protocols'] = protocols
-    except ONVIFError as e:
-        print("Failed to get network protocols {}".format(e))
-        pass
-
+    except Exception as e:
+        print("Failed to get network protocols: "+str(e), flush=True)
 
     # Create MediaService
     try:
         media_service = cam.create_media_service()
-    except ONVIFError as e:
-        print("Failed to create media service {}".format(e))
-        pass
+    except Exception as e:
+        print("Failed to create media service: "+str(e), flush=True)
 
     # Find video source
     try:
         videoSources = media_service.GetVideoSources()
-        print("\n-----------Video Sources-------------- ")
-        print(videoSources)
+        print("\n-----------Video Sources-------------- ", flush=True)
+        print(videoSources, flush=True)
         #onvif_device_desc['MediaVideoSources'] = media_service.to_dict(videoSources)
         onvif_device_desc['MediaVideoSources'] = videoSources
-    except ONVIFError as e:
-        print("Failed to get video sources {}".format(e))
-        pass
-
+    except Exception as e:
+        print("Failed to get video sources: "+str(e), flush=True)
 
     # Video Source Configuration
     try:
         videoSourceCfgs = media_service.GetVideoSourceConfigurations()
-        print("\n-----------Video Sources Cfg-------------- ")
-        print(videoSourceCfgs)
+        print("\n-----------Video Sources Cfg-------------- ", flush=True)
+        print(videoSourceCfgs, flush=True)
         #onvif_device_desc['MediaVideoSourceConfiguration'] = media_service.to_dict(videoSourceCfgs)
         onvif_device_desc['MediaVideoSourceConfiguration'] = videoSourceCfgs
-    except ONVIFError as e:
-        print("Failed to get video sources configurations {}".format(e))
-        pass
+    except Exception as e:
+        print("Failed to get video sources configurations: "+str(e), flush=True)
 
     # Find profiles
     profile_token = ''
     try:
         profiles = media_service.GetProfiles()
-        print("\n-----------Media profiles-------------- ")
+        print("\n-----------Media profiles-------------- ", flush=True)
         #print(profiles)
 
         #for profile in profiles:
@@ -137,9 +127,8 @@ def discover_onvif_camera(ip, port):
         profile_token = profiles[0].token
         #onvif_device_desc['MediaProfiles'] = media_service.to_dict(profiles)
         onvif_device_desc['MediaProfiles'] = profiles
-    except ONVIFError as e:
-        print("Failed to get media profiles {}".format(e))
-        pass
+    except Exception as e:
+        print("Failed to get media profiles: "+str(e), flush=True)
 
     # Get Video Stream URI
     try:
@@ -147,14 +136,13 @@ def discover_onvif_camera(ip, port):
         param.ProfileToken = profile_token
         param.StreamSetup = {'Stream': 'RTP-Unicast', 'Transport': {'Protocol': 'UDP'}}
         videoStrmUri = media_service.GetStreamUri(param)
-        print("\n-----------Video Stream Uri-------------- ")
-        print(videoStrmUri)
+        print("\n-----------Video Stream Uri-------------- ", flush=True)
+        print(videoStrmUri, flush=True)
         videoStrmUri['Timeout'] = str(videoStrmUri['Timeout'])
         #onvif_device_desc['MediaStreamUri'] = media_service.to_dict(videoStrmUri)
         onvif_device_desc['MediaStreamUri'] = videoStrmUri
-    except ONVIFError as e:
-        print("Failed to get media stream Uri {}".format(e))
-        pass
+    except Exception as e:
+        print("Failed to get media stream Uri: "+str(e), flush=True)
 
     return onvif_device_desc
 
@@ -170,7 +158,7 @@ def test_onvif_cam(ip, port):
     try:
         proc = subprocess.Popen(['python3', cmd, ip, port, user, passwd])
     except Exception as e:
-        print(e)    
+        print(e, flush=True)    
     while proc.poll() is None:
         if(cnt * interval > timeout ):
             is_timeout = True
@@ -244,6 +232,7 @@ while True:
             mac=desc['MAC']
         except:
             mac="567890"+('7'.join(ip.split(".")))+"9"+str(port)
+        print("mac: "+mac, flush=True)
 
         # Add credential to rtsp uri
         try:
@@ -251,6 +240,7 @@ while True:
             rtspuri = rtspuri.replace('rtsp://', 'rtsp://admin:admin@')
         except:
             rtspuri = "rtsp://"+ip+":"+str(port)+"/live.sdp"
+        print("rtspuri: "+rtspuri, flush=True)
 
         # width & height
         try:
@@ -259,6 +249,7 @@ while True:
         except:
             # probe from the stream
             try:
+                print("Probing for width & height", flush=True)
                 sinfo=probe(rtspuri)
             except Exception as e:
                 print("Exception: "+str(e), flush=True)
@@ -269,17 +260,22 @@ while True:
             for stream in sinfo["streams"]:
                 if "coded_width" in stream: width=int(stream["coded_width"])
                 if "coded_height" in stream: height=int(stream["coded_height"])
-            if width==0 or height==0: continue
+            if width==0 or height==0: 
+                print("Unknown width & height, skipping", flush=True)
+                continue
 
         # retrieve unique location
         if mac not in cameras:
             cameras[mac]=camera_count
             camera_count=camera_count+1
         location = locations[int(cameras[mac] % (len(locations)))]
+        print("location: ["+str(location[0])+","+str(location[1])+"]",flush=True)
 
         try:
+            print("Checking for preexistance", flush=True)
             found=list(dbs.search("sensor:'camera' and model:'ip_camera' and mac='"+mac+"'", size=1))
             if not found:
+                print("Ingesting", flush=True)
                 db.ingest({
                     'sensor': 'camera',
                     'icon': 'camera.gif',
