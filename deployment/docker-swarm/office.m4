@@ -13,6 +13,8 @@ ifelse(eval(defn(`NOFFICES')>1),1,`
             - "ES_JAVA_OPTS=-Xms4096m -Xmx4096m"
             - "NO_PROXY=*"
             - "no_proxy=*"
+        volumes:
+            - /etc/localtime:/etc/localtime:ro
         deploy:
             placement:
                 constraints: [node.labels.defn(`OFFICE_NAME')_zone==yes]
@@ -26,6 +28,8 @@ ifelse(eval(defn(`NOFFICES')>1),1,`
             OFFICE: "defn(`OFFICE_LOCATION')"
             NO_PROXY: "*"
             no_proxy: "*"
+        volumes:
+            - /etc/localtime:/etc/localtime:ro
         deploy:
             restart_policy:
                 condition: none
@@ -53,6 +57,7 @@ ifelse(eval(defn(`NOFFICES')>1),1,`
         image: smtc_storage_cleanup:latest
         volumes:
             - ${STORAGE_VOLUME}:/mnt/storage:rw
+            - /etc/localtime:/etc/localtime:ro
         environment:
             INDEXES: "recordings,analytics"
             RETENTION_TIME: "14400"
@@ -80,6 +85,8 @@ ifelse(eval(defn(`NOFFICES')>1),1,`
             SERVICE_INTERVAL: "30"
             NO_PROXY: "*"
             no_proxy: "*"
+        volumes:
+            - /etc/localtime:/etc/localtime:ro
         deploy:
             placement:
                 constraints: [ifelse(eval(defn(`NOFFICES')>1),1,node.labels.defn(`OFFICE_NAME')_zone==yes,node.role==manager)]
@@ -110,6 +117,8 @@ ifelse(eval(defn(`NOFFICES')>1),1,`
             UPDATE_BATCH: "500"
             NO_PROXY: "*"
             no_proxy: "*"
+        volumes:
+            - /etc/localtime:/etc/localtime:ro
         deploy:
             placement:
                 constraints: [ifelse(eval(defn(`NOFFICES')>1),1,node.labels.defn(`OFFICE_NAME')_zone==yes,node.role==manager)]
@@ -119,6 +128,8 @@ ifelse(eval(defn(`NOFFICES')>1),1,`
         environment:
             NO_PROXY: "*"
             no_proxy: "*"
+        volumes:
+            - /etc/localtime:/etc/localtime:ro
         deploy:
             placement:
                 constraints: [ifelse(eval(defn(`NOFFICES')>1),1,node.labels.defn(`OFFICE_NAME')_zone==yes,node.role==manager)]
