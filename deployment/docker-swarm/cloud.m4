@@ -13,6 +13,8 @@ ifelse(eval(defn(`NOFFICES')>1),1,`dnl
             - "ES_JAVA_OPTS=-Xms4096m -Xmx4096m"
             - "NO_PROXY=*"
             - "no_proxy=*"
+        volumes:
+            - /etc/localtime:/etc/localtime:ro
         deploy:
             placement:
                 constraints: [node.role==manager]
