@@ -1,8 +1,7 @@
 #!/bin/bash -e
 
 DIR=$(dirname $(readlink -f "$0"))
-NOFFICES="${2:-1}"
-PLATFORM="${3:-Xeon}"
+NOFFICES="${3:-1}"
 yml="$DIR/docker-compose.yml"
 
 sudo docker container prune -f
@@ -24,14 +23,16 @@ docker_compose)
     fi
 
     "$DIR/../certificate/self-sign.sh"
-    "$DIR/build.sh" ${NOFFICES} ${PLATFORM}
+    shift
+    . "$DIR/build.sh"
     export STORAGE_VOLUME=$(readlink -f "$DIR/../../volume/storage")
     find -L "$STORAGE_VOLUME" -maxdepth 1 -mindepth 1 -type d -exec rm -rf "{}" \;
     sudo -E docker-compose -f "$yml" -p smtc --compatibility up
     ;;
 *)
     "$DIR/../certificate/self-sign.sh"
-    "$DIR/build.sh" ${NOFFICES} ${PLATFORM}
+    shift
+    . "$DIR/build.sh"
     if test "${NOFFICES}" -gt 1; then
         export STORAGE_VOLUME="/mnt/storage"
     else

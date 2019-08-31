@@ -1,7 +1,5 @@
 include(../common/forloop.m4)
 include(../common/location.m4)
-define(`NCAMERAS',`5')
-define(`NSERVICES',`3')
 
 version: "3.7"
 
