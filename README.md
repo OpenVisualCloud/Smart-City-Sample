@@ -3,12 +3,12 @@ The E2E sample implements aspects of smart city sensing, analytics and managemen
 <IMG src="doc/scope.png" height="250px">
 
 - **Camera Provisioning**: Tag and calibrate cameras for installation locations, calibration parameters and other usage pattern information.   
-- **Camera Discovery**: Discover and registr IP cameras on specified IP blocks. Registered cameras automatically participate into the analytics activities. See [Sensor README](sensor/README.md) for additional details.    
+- **Camera Discovery**: Discover and register IP cameras on specified IP blocks. Registered cameras automatically participate into the analytics activities. See [Sensor README](sensor/README.md) for additional details.    
 - **Recording**: Record and manage segmented camera footage for preview or review (at a later time) purpose.     
 - **Analytics**: Perform analytics on the live/recorded camera streams. Latency-sensitive analytics are performed on Edge while others are on cloud.     
 - **Triggers and Alerts**: Manage triggers on analytics data. Respond with actions on triggered alerts.   
 - **Smart Upload and Archive**: Transcode and upload only critical data to cloud for archival or further offline analysis.    
-- **Stats**: Calculate satistics for planning/monitoring purpose on analytical data.    
+- **Stats**: Calculate statistics for planning/monitoring purpose on analytical data.    
 - **UI**: Present above data to users/administrators/city planners.     
 
 The sample showcases the following pipeline operations using the Open Visual Cloud software stacks:      
