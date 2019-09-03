@@ -252,6 +252,7 @@ $("#pg-home").on(":initpage", function(e) {
             page.data('timer',setTimeout(update,settings.sensor_update(),queries));
         }).catch(function (e) {
             $("[hint-panel]").trigger(":error", [e.statusText]);
+            page.data('timer',setTimeout(update,settings.sensor_update(),queries));
         });
     };
 
