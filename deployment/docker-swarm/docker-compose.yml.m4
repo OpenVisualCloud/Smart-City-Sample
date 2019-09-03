@@ -19,3 +19,4 @@ include(camera.m4)
 ')
 
 include(secret.m4)
+ifelse(defn(`PLATFORM'),`VCAC-A',include(network.m4))

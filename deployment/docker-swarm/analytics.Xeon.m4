@@ -10,6 +10,9 @@
         volumes:
             - ${STORAGE_VOLUME}:/home/video-analytics/app/server/recordings:rw
             - /etc/localtime:/etc/localtime:ro
+        ifelse(defn(`PLATFORM'),`VCAC-A',`
+        networks:
+            - default_net')
         deploy:
             replicas: defn(`NSERVICES')
             placement:
