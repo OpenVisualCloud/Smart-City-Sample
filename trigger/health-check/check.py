@@ -24,12 +24,13 @@ def quit_service(signum, sigframe):
 signal(SIGTERM, quit_service)
 
 # register trigger
-dbt=DBIngest(index="triggers",office=office,host=dbhost)
+dbt=DBIngest(index="services",office=office,host=dbhost)
 while True:
     try:
         rt=dbt.ingest({
             "name": "health_check",
-            "status": "processing",
+            "service": "trigger",
+            "status": "active",
         })
         break
     except Exception as e:

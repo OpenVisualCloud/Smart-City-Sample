@@ -21,9 +21,10 @@
   </div>
 
   <div style="overflow:auto;height:200px;max-height:200px;position:relative;bottom:0px;border-top:1px solid">
-    <table trigger-table>
+    <table service-table>
       <thead>
-        <th>Trigger</th>
+        <th>Name</th>
+        <th>Service</th>
         <th>Instance</th>
         <th>Status</th>
       </thead>

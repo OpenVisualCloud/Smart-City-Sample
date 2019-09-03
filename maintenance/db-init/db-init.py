@@ -104,7 +104,7 @@ settings={
             },
         },
     },
-    "triggers"+office: {
+    "services"+office: {
         "settings": {
             "index": {
                 "number_of_shards": 1,

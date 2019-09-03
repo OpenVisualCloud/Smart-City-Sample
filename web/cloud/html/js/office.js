@@ -40,26 +40,26 @@ $("#pg-office").on(":initpage", function(e, queries, office) {
 
     };
 
-    /* setup the trigger table */
-    var updateTrigger=function () {
+    /* setup the service table */
+    var updateService=function () {
         if (!page.is(":visible")) return;
 
-        /* fill the trigger table */
-        apiHost.search("triggers","name:*",office).then(function (data) {
-            var tbody=page.find("[trigger-table] tbody");
+        /* fill the service table */
+        apiHost.search("services","name:*",office).then(function (data) {
+            var tbody=page.find("[service-table] tbody");
             tbody.empty();
             $.each(data.response,function (i,v) {
-                var line=$("<tr><td>"+v._source.name+"</td><td>"+v._id+"</td><td>"+v._source.status+"</td></tr>");
+                var line=$("<tr><td>"+v._source.name+"</td><td>"+v._source.service+"</td><td>"+v._id+"</td><td>"+v._source.status+"</td></tr>");
                 tbody.append(line);
             });
 
             if (page.data('timer2')) clearTimeout(page.data('timer2'));
-            page.data('timer2',setTimeout(updateTrigger,settings.trigger_update()));
+            page.data('timer2',setTimeout(updateService,settings.service_update()));
         }).catch(function (e) {
             $("[hint-panel]").trigger(":error", [e.statusText]);
         });
     }; 
-    updateTrigger();
+    updateService();
 
     /* enable recording queries */
     search.data('index',index).data('office',office).data('invoke',updateAlgos).val(queries).focus().trigger($.Event("keydown",{keyCode:13}));
