@@ -15,6 +15,9 @@ ifelse(eval(defn(`NOFFICES')>1),1,`dnl
             - "no_proxy=*"
         volumes:
             - /etc/localtime:/etc/localtime:ro
+        ifelse(defn(`PLATFORM'),`VCAC-A',`
+        networks:
+            - default_net')
         deploy:
             placement:
                 constraints: [node.role==manager]
@@ -45,6 +48,9 @@ ifelse(eval(defn(`NOFFICES')>1),1,`dnl
               uid: ${USER_ID}
               gid: ${GROUP_ID}
               mode: 0444
+        ifelse(defn(`PLATFORM'),`VCAC-A',`
+        networks:
+            - default_net')
         deploy:
             placement:
                 constraints: [node.role==manager]

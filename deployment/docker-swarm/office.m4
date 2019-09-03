@@ -15,6 +15,9 @@ ifelse(eval(defn(`NOFFICES')>1),1,`
             - "no_proxy=*"
         volumes:
             - /etc/localtime:/etc/localtime:ro
+        ifelse(defn(`PLATFORM'),`VCAC-A',`
+        networks:
+            - default_net')
         deploy:
             placement:
                 constraints: [node.labels.defn(`OFFICE_NAME')_zone==yes]
@@ -30,6 +33,9 @@ ifelse(eval(defn(`NOFFICES')>1),1,`
             no_proxy: "*"
         volumes:
             - /etc/localtime:/etc/localtime:ro
+        ifelse(defn(`PLATFORM'),`VCAC-A',`
+        networks:
+            - default_net')
         deploy:
             restart_policy:
                 condition: none
@@ -46,6 +52,9 @@ ifelse(eval(defn(`NOFFICES')>1),1,`
         volumes:
             - ${STORAGE_VOLUME}:/mnt/storage:ro
             - /etc/localtime:/etc/localtime:ro
+        ifelse(defn(`PLATFORM'),`VCAC-A',`
+        networks:
+            - default_net')
         deploy:
             placement:
                 constraints: ifelse(eval(defn(`NOFFICES')>1),1,`
@@ -66,6 +75,9 @@ ifelse(eval(defn(`NOFFICES')>1),1,`
             DBHOST: "http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')_db,cloud_db):9200"
             NO_PROXY: "*"
             no_proxy: "*"
+        ifelse(defn(`PLATFORM'),`VCAC-A',`
+        networks:
+            - default_net')
         deploy:
             placement:
                 constraints: ifelse(eval(defn(`NOFFICES')>1),1,`
@@ -87,6 +99,9 @@ ifelse(eval(defn(`NOFFICES')>1),1,`
             no_proxy: "*"
         volumes:
             - /etc/localtime:/etc/localtime:ro
+        ifelse(defn(`PLATFORM'),`VCAC-A',`
+        networks:
+            - default_net')
         deploy:
             placement:
                 constraints: [ifelse(eval(defn(`NOFFICES')>1),1,node.labels.defn(`OFFICE_NAME')_zone==yes,node.role==manager)]
@@ -101,6 +116,9 @@ ifelse(eval(defn(`NOFFICES')>1),1,`
             DBHOST: "http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')_db,cloud_db):9200"
             NO_PROXY: "*"
             no_proxy: "*"
+        ifelse(defn(`PLATFORM'),`VCAC-A',`
+        networks:
+            - default_net')
         deploy:
             placement:
                 constraints: [ifelse(eval(defn(`NOFFICES')>1),1,node.labels.defn(`OFFICE_NAME')_zone==yes,node.role==manager)]
@@ -119,6 +137,9 @@ ifelse(eval(defn(`NOFFICES')>1),1,`
             no_proxy: "*"
         volumes:
             - /etc/localtime:/etc/localtime:ro
+        ifelse(defn(`PLATFORM'),`VCAC-A',`
+        networks:
+            - default_net')
         deploy:
             placement:
                 constraints: [ifelse(eval(defn(`NOFFICES')>1),1,node.labels.defn(`OFFICE_NAME')_zone==yes,node.role==manager)]
@@ -130,6 +151,9 @@ ifelse(eval(defn(`NOFFICES')>1),1,`
             no_proxy: "*"
         volumes:
             - /etc/localtime:/etc/localtime:ro
+        ifelse(defn(`PLATFORM'),`VCAC-A',`
+        networks:
+            - default_net')
         deploy:
             placement:
                 constraints: [ifelse(eval(defn(`NOFFICES')>1),1,node.labels.defn(`OFFICE_NAME')_zone==yes,node.role==manager)]
