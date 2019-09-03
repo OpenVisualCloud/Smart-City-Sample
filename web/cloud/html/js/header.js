@@ -12,9 +12,9 @@ var settings={
         if (typeof(val)!="undefined") $("#analyticsUpdate").val(val);
         return parseFloat($("#analyticsUpdate").val());
     },
-    trigger_update: function (val) {
-        if (typeof(val)!="undefined") $("#triggerUpdate").val(val);
-        return parseFloat($("#triggerUpdate").val());
+    service_update: function (val) {
+        if (typeof(val)!="undefined") $("#serviceUpdate").val(val);
+        return parseFloat($("#serviceUpdate").val());
     },
     frame_duration: function (val) {
         if (typeof(val)!="undefined") $("#frameDuration").val(val);
