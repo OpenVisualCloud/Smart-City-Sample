@@ -6,13 +6,16 @@ The sample will simulate camera feeds if there is any MP4 files under the [../vo
 
 ### ONVIF Camera Discovery
 
-The sample implements the ONVIF protocol to discover IP cameras on the specified IP range and port range. To activate the ONVIF camera discovery, modify the following service block in the [docker-compose.yml](../deployment/docker-swarm/docker-compose.yml) file, and restart the sample services:     
+The sample implements the ONVIF protocol to discover IP cameras on the specified IP range and port range. To activate the ONVIF camera discovery, modify the camera discovery service block as follows in [office.m4](../deployment/docker-swarm/office.m4), and restart the sample:     
 
 ```
-    onvif-discovery:
+    defn(`OFFICE_NAME')_camera_discovery:
         image: smtc_onvif_discovery:latest
         environment:
-            IP_SCAN_RANGE: '192.168.1.0/24'
-            PORT_SCAN_RANGE: '554-8554'
-            OFFICE: '45.539626,-122.929569'
-            LOCATION: '45.544223,-122.926128,45.546249,-122.932145,45.538971,-122.939726'
+            IP_SCAN_RANGE: "192.168.1.0/24"
+            PORT_SCAN_RANGE: "554-8554"
+            ...
+```
+
+where ```192.168.1.0/24``` is the IP camera subnet, and ```554-8554``` is the IP camera RTSP port range.    
+
