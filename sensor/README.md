@@ -19,3 +19,14 @@ The sample implements the ONVIF protocol to discover IP cameras on the specified
 
 where ```192.168.1.0/24``` is the IP camera subnet, and ```554-8554``` is the IP camera RTSP port range.    
 
+To activate IP camera scanning as well as using simulated cameras, use the following service block declaration:   
+
+```
+    defn(`OFFICE_NAME')_camera_discovery:
+        image: smtc_onvif_discovery:latest
+        environment:
+            IP_SCAN_RANGE: "defn(`OFFICE_NAME')_simulated_cameras 192.168.1.0/24"
+            PORT_SCAN_RANGE: "11000-eval(11000+defn(`NCAMERAS')*100),554-8554"
+            ...
+```
+
