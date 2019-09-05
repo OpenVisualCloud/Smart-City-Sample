@@ -14,7 +14,7 @@
         networks:
             - default_net')
         deploy:
-            replicas: defn(`NSERVICES')
+            replicas: defn(`NANALYTICS')
             placement:
                 constraints:
                     - node.labels.defn(`OFFICE_NAME')_vcac_zone==yes

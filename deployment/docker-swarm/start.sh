@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 DIR=$(dirname $(readlink -f "$0"))
-NOFFICES="${3:-1}"
+NOFFICES="${4:-1}"
 yml="$DIR/docker-compose.yml"
 
 sudo docker container prune -f

@@ -17,24 +17,39 @@ $("#pg-home").on(":initpage", function(e) {
         page.data('map',map);
 
         /* add tiles */
-        var street_layer=L.tileLayer("images/street/{z}/{x}/{y}.png",{
-             attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
-             id: 'base'
-        }).on('add', function () {
-            page.data('center', settings.street_center());
-            map.setView(page.data('center'),page.data('zoom'));
-        }).addTo(map).fire('add');
-        var parking_layer=L.tileLayer('images/parking/{z}/{x}/{y}.png',{
-            tms:true
-        }).on('add',function(){
-            page.data('center', settings.parking_center());
-            map.setView(page.data('center'),page.data('zoom'));
-        });
-        var stadium_layer=L.tileLayer('images/stadium/{z}/{x}/{y}.png',{
-            tms:true
-        }).on('add',function(){
-            page.data('center', settings.stadium_center());
-            map.setView(page.data('center'),page.data('zoom'));
+        var tiles={};
+        $.each(settings.scenarios, function (i,sc) {
+            if (sc=="traffic") {
+                var layer1=L.tileLayer("images/street/{z}/{x}/{y}.png",{
+                    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
+                    id: 'base'
+                }).on('add', function () {
+                    page.data('center', settings.street_center());
+                    map.setView(page.data('center'),page.data('zoom'));
+                });
+                if (!Object.keys(tiles).length) layer1.addTo(map).fire('add');
+                tiles["Traffic Planning"]=layer1;
+            }
+            if (sc=="parking") {
+                var layer1=L.tileLayer('images/parking/{z}/{x}/{y}.png',{
+                    tms:true
+                }).on('add',function(){
+                    page.data('center', settings.parking_center());
+                    map.setView(page.data('center'),page.data('zoom'));
+                });
+                if (!Object.keys(tiles).length) layer1.addTo(map).fire('add');
+                tiles["Parking Management"]=layer1;
+            }
+            if (sc=="stadium") {
+                var layer1=L.tileLayer('images/stadium/{z}/{x}/{y}.png',{
+                    tms:true
+                }).on('add',function(){
+                    page.data('center', settings.stadium_center());
+                    map.setView(page.data('center'),page.data('zoom'));
+                });
+                if (!Object.keys(tiles).length) layer1.addTo(map).fire('add');
+                tiles["Stadium Services"]=layer1;
+            }
         });
 
         /* add layers switching widget */
@@ -45,11 +60,7 @@ $("#pg-home").on(":initpage", function(e) {
         var preview_layer=L.layerGroup().addTo(map);
         page.data('previews',preview_layer);
 
-        L.control.layers({
-            "City Planning": street_layer,
-            "Parking Management": parking_layer,
-            "Stadium Service": stadium_layer,
-        },{
+        L.control.layers(tiles,{
             "Density Estimation": heatmap_layer,
             "Statistics Histogram": stats_layer,
             "Preview Clips": preview_layer, 
