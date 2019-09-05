@@ -9,12 +9,12 @@ from stats import StatsHandler
 from subprocess import Popen
 from signal import signal, SIGTERM, SIGQUIT
 
-tornado1=None
-nginx1=None
+tornadoc=None
+nginxc=None
 
 def quit_service(signum, frame):
-    if tornado1: tornado1.add_callback(tornado1.stop)
-    if nginx1: nginx1.send_signal(SIGQUIT)
+    if tornadoc: tornadoc.add_callback(tornadoc.stop)
+    if nginxc: nginxc.send_signal(SIGQUIT)
         
 app = web.Application([
     (r'/api/search',SearchHandler),
@@ -33,7 +33,7 @@ if __name__ == "__main__":
     print("Listening to " + options.ip + ":" + str(options.port))
     app.listen(options.port, address=options.ip)
 
-    tornado1=ioloop.IOLoop.instance();
-    nginx1=Popen(["/usr/sbin/nginx"])
-    tornado1.start()
-    nginx1.wait()
+    tornadoc=ioloop.IOLoop.instance();
+    nginxc=Popen(["/usr/sbin/nginx"])
+    tornadoc.start()
+    nginxc.wait()
