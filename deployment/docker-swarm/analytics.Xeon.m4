@@ -14,7 +14,7 @@
         networks:
             - default_net')
         deploy:
-            replicas: defn(`NSERVICES')
+            replicas: defn(`NANALYTICS')
             placement:
                 constraints: ifelse(eval(defn(`NOFFICES')>1),1,`
                     - node.labels.defn(`OFFICE_NAME')_zone==yes

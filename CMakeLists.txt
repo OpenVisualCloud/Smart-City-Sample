@@ -15,8 +15,8 @@ endif()
 if (NOT DEFINED NCAMERAS)
     set(NCAMERAS "5")
 endif()
-if (NOT DEFINED NSERVICES)
-    set(NSERVICES "3")
+if (NOT DEFINED NANALYTICS)
+    set(NANALYTICS "3")
 endif()
 
 file(GLOB dirs "deployment" "*")
@@ -28,5 +28,7 @@ foreach (dir ${dirs})
 endforeach()
 
 # legal message
-execute_process(COMMAND printf "\nThis script will build third party components licensed under various open source licenses into your container images. The terms under which those components may be used and distributed can be found with the license document that is provided with those components. Please familiarize yourself with those terms to ensure your distribution of those components complies with the terms of those licenses.\n\n")
+execute_process(COMMAND printf "\n\nThis script will build third party components licensed under various open source licenses into your container images. The terms under which those components may be used and distributed can be found with the license document that is provided with those components. Please familiarize yourself with those terms to ensure your distribution of those components complies with the terms of those licenses.\n\n")
 
+
+execute_process(COMMAND printf "\n-- Setting: PLATFORM=${PLATFORM}, SCENARIO=${SCENARIO}, NOFFICES=${NOFFICES}, NCAMERAS=${NCAMERAS}, NANALYTICS=${NANALYTICS}\n")
