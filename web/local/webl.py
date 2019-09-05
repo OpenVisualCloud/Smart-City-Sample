@@ -14,8 +14,8 @@ dbhost=os.environ["DBHOST"]
 office=list(map(float,os.environ["OFFICE"].split(",")))
 host=os.environ["PROXYHOST"] if "PROXYHOST" in os.environ else "http://"+socket.gethostname()+":8080"
 
-tornado1=None
-nginx1=None
+tornadol=None
+nginxl=None
 
 def register_office():
     global db,r
@@ -38,8 +38,8 @@ def unregister_office():
     db.delete(r["_id"])
 
 def quit_service(signum, frame):
-    if tornado1: tornado1.add_callback(tornado1.stop)
-    if nginx1: nginx1.send_signal(SIGQUIT)
+    if tornadol: tornadol.add_callback(tornadol.stop)
+    if nginxl: nginxl.send_signal(SIGQUIT)
 
 app = web.Application([
     (r'/api/workload',WorkloadHandler),
@@ -55,10 +55,10 @@ if __name__ == "__main__":
     print("Listening to " + options.ip + ":" + str(options.port))
     app.listen(options.port, address=options.ip)
 
-    tornado1=ioloop.IOLoop.instance();
-    nginx1=Popen(["/usr/sbin/nginx"])
+    tornadol=ioloop.IOLoop.instance();
+    nginxl=Popen(["/usr/sbin/nginx"])
     
-    tornado1.start()
-    nginx1.wait()
+    tornadol.start()
+    nginxl.wait()
 
     unregister_office()

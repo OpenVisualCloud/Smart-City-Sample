@@ -9,8 +9,8 @@ from stats import StatsHandler
 from subprocess import Popen
 from signal import signal, SIGTERM, SIGQUIT
 
-tornado1=None
-nginx1=None
+tornadoc=None
+nginxc=None
 
 def quit_service(signum, frame):
     if tornadoc: tornadoc.add_callback(tornadoc.stop)
