@@ -13,7 +13,6 @@ function transfer_image {
         root@*)
             sig2=$(ssh $worker "docker image inspect -f {{.ID}} $image 2> /dev/null || echo");;
         *)
-            echo $passwd | cat - $tarfile | ssh $host1 cat \| sudo --prompt="" -S -- "docker load"
             sig2=$(echo $passwd | ssh $worker cat \| sudo --prompt="" -S -- "docker image inspect -f {{.ID}} $image 2> /dev/null || echo");;
     esac
     echo "remote: $sig2"
@@ -23,7 +22,9 @@ function transfer_image {
             root@*)
                 sudo docker save $image | ssh $worker "docker image rm -f $image 2>/dev/null; docker load";;
             *)
-                (echo $passwd && sudo docker save $image) | ssh $worker "docker image rm -f $image 2>/dev/null; docker load";;
+                echo "enter"
+                ( echo $passwd ; sudo docker save $image ) | ssh $worker cat \| sudo --prompt="" -S -- "docker load"
+                echo "exit";;
         esac
     fi
 }
