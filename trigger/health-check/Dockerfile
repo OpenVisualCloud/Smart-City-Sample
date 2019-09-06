@@ -1,7 +1,7 @@
 
 FROM centos:7.6.1810
 
-RUN yum install -y epel-release && yum install -y python36-requests python36-ply && rm -rf /var/cache/yum/*
+RUN yum install -y epel-release && yum install -y python36-requests python36-ply curl && rm -rf /var/cache/yum/*
 COPY *.py /home/
 CMD  ["/home/check.py"]
 
