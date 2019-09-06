@@ -49,10 +49,14 @@ class MQTT2DB(object):
         self._mqtt.disconnect()
 
     def on_message(self, client, userdata, message):
-        r=json.loads(str(message.payload.decode("utf-8", "ignore")))
-        r.update(r["tags"])
-        del r["tags"]
-        r["time"]=int((r["real_base"]+r["timestamp"])/1000000)
+        try:
+            r=json.loads(str(message.payload.decode("utf-8", "ignore")))
+            r.update(r["tags"])
+            del r["tags"]
+            if "real_base" not in r.keys(): r["real_base"]=0
+            r["time"]=int((r["real_base"]+r["timestamp"])/1000000)
+        except Exception as e:
+            print("Exception: "+str(e), flush=True)
         self._lock.acquire()
         self._cache.append(r)
         self._lock.release()
