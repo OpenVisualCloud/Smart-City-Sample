@@ -21,3 +21,8 @@ The script assumes there is password-less access between the swarm manager and t
 ssh-keygen
 ssh-copy-id <worker>
 ```
+
+### [clean-storage.sh](../script/clean-storage.sh)
+
+The script cleans the ```/mnt/storage``` directory on each swarm node. There is no command-line argument.    
+
