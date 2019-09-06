@@ -13,6 +13,7 @@ simulated_root="/mnt/simulated"
 files=[f for f in os.listdir(simulated_root) if re.search(os.environ["FILES"],f)]
 rtsp_port=int(os.environ["RTSP_PORT"])
 rtp_port=int(os.environ["RTP_PORT"])
+port_step=int(os.environ["PORT_STEP"]) if "PORT_STEP" in os.environ else 100
 ncameras=int(os.environ["NCAMERAS"])
 
 def serve_stream(file1, rtsp_port1, rtp_port1):
@@ -27,5 +28,5 @@ def quit_service(signum, sigframe):
 signal(SIGTERM, quit_service)
 with ThreadPoolExecutor(ncameras) as e:
     for i in range(ncameras):
-        e.submit(serve_stream, simulated_root+"/"+files[i%len(files)],rtsp_port+i*100,rtp_port+i*100)
+        e.submit(serve_stream, simulated_root+"/"+files[i%len(files)],rtsp_port+i*port_step,rtp_port+i*port_step)
 
