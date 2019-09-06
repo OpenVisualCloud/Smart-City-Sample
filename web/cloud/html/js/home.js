@@ -158,13 +158,12 @@ $("#pg-home").on(":initpage", function(e) {
                     };
 
                     /* setup office tooltip */
-                    var office_loc="["+info._source.office.lat+","+info._source.office.lon+"]";
-                    ctx.marker.bindTooltip(office_loc);
+                    ctx.marker.bindTooltip("["+info._source.office.lat+","+info._source.office.lon+"]");
 
                     /* setup marker actions */
                     var chartdiv=$('<div style="width:300px;height:200px"><canvas style="width:100%;height:100%"></canvas></div>');
                     ctx.marker.on('dblclick', function () {
-                        selectPage('office', ["office:"+office_loc,info._source.office]);
+                        selectPage('office', ["name=*",info._source.office]);
                     }).bindPopup(chartdiv[0],{
                         maxWidth:"auto",
                         maxHeight:"auto"

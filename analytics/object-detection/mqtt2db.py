@@ -53,7 +53,7 @@ class MQTT2DB(object):
             r=json.loads(str(message.payload.decode("utf-8", "ignore")))
             r.update(r["tags"])
             del r["tags"]
-            if "real_base" not in r.keys(): r["real_base"]=0
+            if "real_base" not in r: r["real_base"]=0
             r["time"]=int((r["real_base"]+r["timestamp"])/1000000)
         except Exception as e:
             print("Exception: "+str(e), flush=True)

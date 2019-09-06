@@ -5,7 +5,7 @@
       <thead>
         <th>Algorithm</th>
         <th>Instance</th>
-        <th>Source</th>
+        <th>Sensor</th>
         <th>Status</th>
         <th>Latency</th>
         <th>Performance</th>
