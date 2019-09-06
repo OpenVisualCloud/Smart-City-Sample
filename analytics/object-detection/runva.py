@@ -75,6 +75,7 @@ class RunVA(object):
             if state == "RUNNING" or state == "COMPLETED":
                 if "avg_pipeline_latency" not in pinfo: pinfo["avg_pipeline_latency"]=0
                 self._db.update(algorithm, {
+                    "sensor": sensor,
                     "performance": pinfo["avg_fps"], 
                     "latency": pinfo["avg_pipeline_latency"]*1000,
                 })
