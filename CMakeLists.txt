@@ -1,7 +1,9 @@
 cmake_minimum_required (VERSION 2.8)
 
 Project(smart_city NONE)
-add_custom_target(update)
+add_custom_target(backup  ${CMAKE_HOME_DIRECTORY}/script/backup-image.sh)
+add_custom_target(restore ${CMAKE_HOME_DIRECTORY}/script/restore-image.sh)
+add_custom_target(update  ${CMAKE_HOME_DIRECTORY}/script/update-image.sh)
 
 if (NOT DEFINED PLATFORM)
     set(PLATFORM "Xeon")
