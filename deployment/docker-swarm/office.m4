@@ -15,9 +15,10 @@ ifelse(eval(defn(`NOFFICES')>1),1,`
             - "no_proxy=*"
         volumes:
             - /etc/localtime:/etc/localtime:ro
-        ifelse(defn(`PLATFORM'),`VCAC-A',`
+ifelse(defn(`PLATFORM'),`VCAC-A',`dnl
         networks:
-            - default_net')
+            - default_net
+')dnl
         deploy:
             placement:
                 constraints:
@@ -34,9 +35,10 @@ ifelse(eval(defn(`NOFFICES')>1),1,`
             no_proxy: "*"
         volumes:
             - /etc/localtime:/etc/localtime:ro
-        ifelse(defn(`PLATFORM'),`VCAC-A',`
+ifelse(defn(`PLATFORM'),`VCAC-A',`dnl
         networks:
-            - default_net')
+            - default_net
+')dnl
         deploy:
             restart_policy:
                 condition: none
@@ -119,7 +121,7 @@ ifelse(defn(`PLATFORM'),`VCAC-A',`dnl
                     - ifelse(eval(defn(`NOFFICES')>1),1,node.labels.defn(`OFFICE_NAME')_zone==yes,node.role==manager)
 
     defn(`OFFICE_NAME')_health_check:
-        image: smtc_trigger_health
+        image: smtc_trigger_health:latest
         volumes:
             - /etc/localtime:/etc/localtime:ro
         environment:
@@ -138,7 +140,7 @@ ifelse(defn(`PLATFORM'),`VCAC-A',`dnl
                     - ifelse(eval(defn(`NOFFICES')>1),1,node.labels.defn(`OFFICE_NAME')_zone==yes,node.role==manager)
 
     defn(`OFFICE_NAME')_where_indexing:
-        image: smtc_where_indexing
+        image: smtc_where_indexing:latest
         environment:
             INDEXES: "recordings,analytics"
             OFFICE: "defn(`OFFICE_LOCATION')"
