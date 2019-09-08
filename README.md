@@ -85,4 +85,5 @@ ffmpeg -i <source>.mp4 -c:v libx264 -profile:v baseline -x264-params keyint=30:b
 - [CMake Options](doc/cmake.md)          
 - [Search Capabilities](doc/search.md)       
 - [Utility Scripts](doc/script.md)       
+- [Docker Swarm Setup](deployment/docker-swarm/README.md)       
 
