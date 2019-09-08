@@ -17,7 +17,7 @@ BEGIN {
     gsub(/\"/,"",im);
 }
 
-/- node\..*==.*/ {
+/node\..*==.*/ {
     if (index(labels" "role,$2)==0) im="";
 }
 
