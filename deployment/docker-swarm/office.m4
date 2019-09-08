@@ -15,12 +15,14 @@ ifelse(eval(defn(`NOFFICES')>1),1,`
             - "no_proxy=*"
         volumes:
             - /etc/localtime:/etc/localtime:ro
-        ifelse(defn(`PLATFORM'),`VCAC-A',`
+ifelse(defn(`PLATFORM'),`VCAC-A',`dnl
         networks:
-            - default_net')
+            - default_net
+')dnl
         deploy:
             placement:
-                constraints: [node.labels.defn(`OFFICE_NAME')_zone==yes]
+                constraints:
+                    - node.labels.defn(`OFFICE_NAME')_zone==yes
 
 ')
 
@@ -33,14 +35,16 @@ ifelse(eval(defn(`NOFFICES')>1),1,`
             no_proxy: "*"
         volumes:
             - /etc/localtime:/etc/localtime:ro
-        ifelse(defn(`PLATFORM'),`VCAC-A',`
+ifelse(defn(`PLATFORM'),`VCAC-A',`dnl
         networks:
-            - default_net')
+            - default_net
+')dnl
         deploy:
             restart_policy:
                 condition: none
             placement:
-                constraints: [ifelse(eval(defn(`NOFFICES')>1),1,node.labels.defn(`OFFICE_NAME')_zone==yes,node.role==manager)]
+                constraints:
+                    - ifelse(eval(defn(`NOFFICES')>1),1,node.labels.defn(`OFFICE_NAME')_zone==yes,node.role==manager)
 
     defn(`OFFICE_NAME')_webproxy:
         image: smtc_web_local:latest
@@ -52,15 +56,19 @@ ifelse(eval(defn(`NOFFICES')>1),1,`
         volumes:
             - ${STORAGE_VOLUME}:/mnt/storage:ro
             - /etc/localtime:/etc/localtime:ro
-        ifelse(defn(`PLATFORM'),`VCAC-A',`
+ifelse(defn(`PLATFORM'),`VCAC-A',`dnl
         networks:
-            - default_net')
+            - default_net
+')dnl
         deploy:
             placement:
-                constraints: ifelse(eval(defn(`NOFFICES')>1),1,`
+                constraints:
+ifelse(eval(defn(`NOFFICES')>1),1,`dnl
                     - node.labels.defn(`OFFICE_NAME')_zone==yes
                     - node.labels.defn(`OFFICE_NAME')_storage==yes
-',`[node.role==manager]')
+',`dnl
+                    - node.role==manager
+')
 
     defn(`OFFICE_NAME')_cleanup:
         image: smtc_storage_cleanup:latest
@@ -75,15 +83,19 @@ ifelse(eval(defn(`NOFFICES')>1),1,`
             DBHOST: "http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')_db,cloud_db):9200"
             NO_PROXY: "*"
             no_proxy: "*"
-        ifelse(defn(`PLATFORM'),`VCAC-A',`
+ifelse(defn(`PLATFORM'),`VCAC-A',`dnl
         networks:
-            - default_net')
+            - default_net
+')dnl
         deploy:
             placement:
-                constraints: ifelse(eval(defn(`NOFFICES')>1),1,`
+                constraints:
+ifelse(eval(defn(`NOFFICES')>1),1,`dnl
                     - node.labels.defn(`OFFICE_NAME')_zone==yes
                     - node.labels.defn(`OFFICE_NAME')_storage==yes
-',`[node.role==manager]')
+',`dnl
+                    - node.role==manager
+')dnl
 
     defn(`OFFICE_NAME')_camera_discovery:
         image: smtc_onvif_discovery:latest
@@ -99,15 +111,17 @@ ifelse(eval(defn(`NOFFICES')>1),1,`
             no_proxy: "*"
         volumes:
             - /etc/localtime:/etc/localtime:ro
-        ifelse(defn(`PLATFORM'),`VCAC-A',`
+ifelse(defn(`PLATFORM'),`VCAC-A',`dnl
         networks:
-            - default_net')
+            - default_net
+')dnl
         deploy:
             placement:
-                constraints: [ifelse(eval(defn(`NOFFICES')>1),1,node.labels.defn(`OFFICE_NAME')_zone==yes,node.role==manager)]
+                constraints:
+                    - ifelse(eval(defn(`NOFFICES')>1),1,node.labels.defn(`OFFICE_NAME')_zone==yes,node.role==manager)
 
     defn(`OFFICE_NAME')_health_check:
-        image: smtc_trigger_health
+        image: smtc_trigger_health:latest
         volumes:
             - /etc/localtime:/etc/localtime:ro
         environment:
@@ -116,15 +130,17 @@ ifelse(eval(defn(`NOFFICES')>1),1,`
             DBHOST: "http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')_db,cloud_db):9200"
             NO_PROXY: "*"
             no_proxy: "*"
-        ifelse(defn(`PLATFORM'),`VCAC-A',`
+ifelse(defn(`PLATFORM'),`VCAC-A',`dnl
         networks:
-            - default_net')
+            - default_net
+')dnl
         deploy:
             placement:
-                constraints: [ifelse(eval(defn(`NOFFICES')>1),1,node.labels.defn(`OFFICE_NAME')_zone==yes,node.role==manager)]
+                constraints:
+                    - ifelse(eval(defn(`NOFFICES')>1),1,node.labels.defn(`OFFICE_NAME')_zone==yes,node.role==manager)
 
     defn(`OFFICE_NAME')_where_indexing:
-        image: smtc_where_indexing
+        image: smtc_where_indexing:latest
         environment:
             INDEXES: "recordings,analytics"
             OFFICE: "defn(`OFFICE_LOCATION')"
@@ -137,12 +153,14 @@ ifelse(eval(defn(`NOFFICES')>1),1,`
             no_proxy: "*"
         volumes:
             - /etc/localtime:/etc/localtime:ro
-        ifelse(defn(`PLATFORM'),`VCAC-A',`
+ifelse(defn(`PLATFORM'),`VCAC-A',`dnl
         networks:
-            - default_net')
+            - default_net
+')dnl
         deploy:
             placement:
-                constraints: [ifelse(eval(defn(`NOFFICES')>1),1,node.labels.defn(`OFFICE_NAME')_zone==yes,node.role==manager)]
+                constraints:
+                    - ifelse(eval(defn(`NOFFICES')>1),1,node.labels.defn(`OFFICE_NAME')_zone==yes,node.role==manager)
 
     defn(`OFFICE_NAME')_mqtt:
         image: eclipse-mosquitto:1.5.8
@@ -151,10 +169,12 @@ ifelse(eval(defn(`NOFFICES')>1),1,`
             no_proxy: "*"
         volumes:
             - /etc/localtime:/etc/localtime:ro
-        ifelse(defn(`PLATFORM'),`VCAC-A',`
+ifelse(defn(`PLATFORM'),`VCAC-A',`dnl
         networks:
-            - default_net')
+            - default_net
+')dnl
         deploy:
             placement:
-                constraints: [ifelse(eval(defn(`NOFFICES')>1),1,node.labels.defn(`OFFICE_NAME')_zone==yes,node.role==manager)]
+                constraints:
+                    - ifelse(eval(defn(`NOFFICES')>1),1,node.labels.defn(`OFFICE_NAME')_zone==yes,node.role==manager)
 

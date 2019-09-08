@@ -10,12 +10,12 @@
             EVERY_NTH_FRAME: 6
             NO_PROXY: '*'
             no_proxy: '*'
-        ifelse(defn(`PLATFORM'),`VCAC-A',`
         networks:
-            - default_net')
+            - default_net
         deploy:
             replicas: defn(`NANALYTICS')
             placement:
                 constraints:
                     - node.labels.defn(`OFFICE_NAME')_vcac_zone==yes
                     - node.labels.defn(`OFFICE_NAME')_vcac_storage==yes
+

@@ -12,10 +12,12 @@ define(`CAMERA_PORT_STEP',100)
             PORT_STEP: "defn(`CAMERA_PORT_STEP')"
         volumes:
             - /etc/localtime:/etc/localtime:ro
-        ifelse(defn(`PLATFORM'),`VCAC-A',`
+ifelse(defn(`PLATFORM'),`VCAC-A',`dnl
         networks:
-            - default_net')
+            - default_net
+')dnl
         deploy:
             placement:
-                constraints: [ifelse(eval(defn(`NOFFICES')>1),1,node.labels.defn(`OFFICE_NAME')_zone==yes,node.role==manager)]
+                constraints:
+                    - ifelse(eval(defn(`NOFFICES')>1),1,node.labels.defn(`OFFICE_NAME')_zone==yes,node.role==manager)
 
