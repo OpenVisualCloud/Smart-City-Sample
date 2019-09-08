@@ -30,15 +30,11 @@ Follow the [instructions](https://docs.docker.com/engine/swarm/swarm-tutorial/cr
   - Each office must designate a single node for recording storage. On the designated nodes, create a ```/mnt/storage``` direcotry to store recordings.    
 
 - On the swarm manager, label each swarm node as follows:    
-  - Label the nodes where office services must run, for example, ```office1_zone=yes```, ```office2_zone=yes```, ```office3_zone=yes```, etc. You can label multiple machines under the same office zone so that the workloads can be distributed.     
-
-```
-sudo docker node update --label-add office1_zone=yes <swarm-node>
-```
-
+  - Label the nodes where office services must run, for example, ```office1_zone=yes```, ```office2_zone=yes```, ```office3_zone=yes```, etc. You can label multiple machines under the same office zone so that the workloads can be distributed.  
   - Label the nodes designated as recording storage as ```office1_storage=yes```, ```office2_storage=yes```, ```office3_storage=yes```, etc. Each office must designate only one node for recording storage.   
 
 ```
+sudo docker node update --label-add office1_zone=yes <swarm-node>
 sudo docker node update --label-add office1_storage=yes <swarm-node>
 ```
 
