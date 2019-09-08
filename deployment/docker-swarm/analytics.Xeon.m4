@@ -10,14 +10,14 @@
         volumes:
             - ${STORAGE_VOLUME}:/home/video-analytics/app/server/recordings:rw
             - /etc/localtime:/etc/localtime:ro
-        ifelse(defn(`PLATFORM'),`VCAC-A',`
-        networks:
-            - default_net')
         deploy:
             replicas: defn(`NANALYTICS')
             placement:
-                constraints: ifelse(eval(defn(`NOFFICES')>1),1,`
+                constraints:
+ifelse(eval(defn(`NOFFICES')>1),1,`dnl
                     - node.labels.defn(`OFFICE_NAME')_zone==yes
                     - node.labels.defn(`OFFICE_NAME')_storage==yes
-',`[node.role==manager]')
+',`dnl
+                    - node.role==manager
+')dnl
 

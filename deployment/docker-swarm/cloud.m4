@@ -15,12 +15,14 @@ ifelse(eval(defn(`NOFFICES')>1),1,`dnl
             - "no_proxy=*"
         volumes:
             - /etc/localtime:/etc/localtime:ro
-        ifelse(defn(`PLATFORM'),`VCAC-A',`
+ifelse(defn(`PLATFORM'),`VCAC-A',`dnl
         networks:
-            - default_net')
+            - default_net
+')dnl
         deploy:
             placement:
-                constraints: [node.role==manager]
+                constraints:
+                    - node.role==manager
 
     cloud_web:
         image: smtc_web_cloud:latest
@@ -48,9 +50,12 @@ ifelse(eval(defn(`NOFFICES')>1),1,`dnl
               uid: ${USER_ID}
               gid: ${GROUP_ID}
               mode: 0444
-        ifelse(defn(`PLATFORM'),`VCAC-A',`
+ifelse(defn(`PLATFORM'),`VCAC-A',`dnl
         networks:
-            - default_net')
+            - default_net
+')dnl
         deploy:
             placement:
-                constraints: [node.role==manager]
+                constraints:
+                    - node.role==manager
+
