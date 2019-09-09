@@ -68,9 +68,7 @@ Use the following commands to start/stop services via docker-compose:
 
 Launch your browser and point to `https://localhost`. Note that if you see a browser warning of self-signed certificate, please accept it to proceed to the sample UI.    
 
-***
 <IMG src="doc/screenshot.gif" height="270px"></IMG>    
-***
   
 ### Camera Simulation:
 
