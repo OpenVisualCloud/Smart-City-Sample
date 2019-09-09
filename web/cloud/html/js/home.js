@@ -201,7 +201,7 @@ $("#pg-home").on(":initpage", function(e) {
                     };
                     previews.create(page, ctx, info, map, preview_layer);
 		            stats.create(ctx, info, page, map, stats_layer);
-                    heatmaps.create(ctx,info._source.location);
+                    heatmaps.create(ctx,info._source.location, heatmap_layer);
 
                     /* disable tooltip while popup open */
                     ctx.marker.on('popupopen',function () {

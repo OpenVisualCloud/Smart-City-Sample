@@ -60,8 +60,8 @@ class CameraProjection {
 }
 
 var heatmaps={
-    create: function (ctx, sensor_location) {
-        ctx.heatmap=L.heatLayer(sensor_location, {radius: 10, blur: 5} );
+    create: function (ctx, sensor_location, layer) {
+        ctx.heatmap=L.heatLayer(sensor_location, {radius: 10, blur: 5}).addTo(layer);
     },
     update: function (layer, ctx, zoom, sensor) {
         var camera=new CameraProjection(
@@ -95,7 +95,6 @@ var heatmaps={
             if (latlngs.length==0) {
                 ctx.heatmap.remove(); 
             } else {
-                ctx.heatmap.addTo(layer);
                 ctx.heatmap.setLatLngs(latlngs);
             }
         }).catch(function () {

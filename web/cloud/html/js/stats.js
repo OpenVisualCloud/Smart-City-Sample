@@ -154,7 +154,7 @@ var stats={
                     return ((value<10)?value.toFixed(1):Math.floor(value))+'B';
                 };
                 ctx.chart_icon.setLatLng([sensor._source.location.lat+0.003*Math.pow(2,14-zoom),sensor._source.location.lon]).addTo(layer);
-                ctx.text.setLatLng(ctx.chart_icon.getLatLng()).setContent(pretty(count)).addTo(layer);
+                ctx.text.setLatLng(ctx.chart_icon.getLatLng()).setContent(pretty(count));
             } else {
                 ctx.chart_icon.remove();
                 ctx.text.remove();
