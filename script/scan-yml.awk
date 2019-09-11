@@ -14,7 +14,7 @@ BEGIN {
     im=$2;
 }
 
-/\/usr\/local\/bin\/docker/ {
+/"docker","run"/ {
     if (im!="") images[im]=1;
     n=split($NF,args,",");
     im=args[n];
