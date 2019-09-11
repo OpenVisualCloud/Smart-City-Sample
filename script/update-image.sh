@@ -45,7 +45,7 @@ for id in $(sudo docker node ls -q); do
         if test "$active" = "active"; then
             if test -z "$(hostname -I | grep --fixed-strings $nodeip)"; then
 
-                for image in $(awk -v role="node.role==${role}" -v labels="$labels" -f "$DIR/update-image.awk" "$YML" | grep -v docker); do
+                for image in $(awk -v constraints=1 -v role="node.role==${role}" -v labels="$labels" -f "$DIR/scan-yml.awk" "$YML" | grep -v docker); do
 
                     # trasnfer VCAC-A images to VCAC-A nodes only
                     if test -n "$(echo $nodeip | grep --fixed-strings 172.32.1.1)"; then
