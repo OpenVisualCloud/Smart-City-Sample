@@ -25,7 +25,7 @@ function saveim() {
     im=$2;
 }
 
-/"docker","run"/ {
+/command:\s+\["-/ {
     im2=im;
     n=split($NF,args,",");
     im=args[n];
