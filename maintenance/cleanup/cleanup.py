@@ -11,6 +11,7 @@ service_interval=float(os.environ["SERVICE_INTERVAL"])  # in seconds
 indexes=os.environ["INDEXES"].split(",")
 office=list(map(float, os.environ["OFFICE"].split(",")))
 dbhost=os.environ["DBHOST"]
+storage_path="/mnt/storage"
 
 dbs=None
 rs=None
@@ -47,8 +48,9 @@ while True:
                 # delete the path file
                 if "path" in r["_source"]:
                     try:
-                        os.remove(r["_source"]["path"])
-                        os.remove(r["_source"]["path"]+".png")
+                        mp4file=storage_path+"/"+r["_source"]["path"]
+                        os.remove(mp4file)
+                        os.remove(mp4file+".png")
                     except Exception as e:
                         pass
         except Exception as e:
