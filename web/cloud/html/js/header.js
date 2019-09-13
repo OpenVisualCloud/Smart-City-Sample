@@ -20,6 +20,10 @@ var settings={
         if (typeof(val)!="undefined") $("#frameDuration").val(val);
         return parseFloat($("#frameDuration").val());
     },
+    preview_query: function (val) {
+        if (typeof(val)!="undefined") $("#previewQueries").val(val);
+        return $("#previewQueries").val();
+    },
     heatmap_query: function (val) {
         if (typeof(val)!="undefined") $("#heatmapQueries").val(val);
         return $("#heatmapQueries").val();

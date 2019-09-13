@@ -3,7 +3,7 @@
     "version": 2,
     "type": "GStreamer",
 
-    "template":"urisourcebin uri=\"{source[uri]}\" name=source ! tee name=t ! queue ! decodebin ! video/x-raw ! videoconvert name=\"videoconvert\" ! queue leaky=upstream ! gvadetect model=\"{models[object_detection][1][network]}\" model-proc=\"{models[object_detection][1][proc]}\" name=\"detection\" ! gvametaconvert converter=json method=detection source=\"{source[uri]}\" name=\"jsonmetaconvert\" ! gvametapublish name=metapublish ! queue ! appsink name=appsink t. ! queue ! parsebin ! video/x-h264 ! splitmuxsink location={parameters[recording_prefix]} max-size-time=60500000000 name=\"splitmuxsink\"",
+    "template":"urisourcebin uri=\"{source[uri]}\" name=source ! tee name=t ! queue leaky=upstream ! decodebin ! video/x-raw ! videoconvert name=\"videoconvert\" ! queue leaky=upstream ! gvadetect model=\"{models[object_detection][1][network]}\" model-proc=\"{models[object_detection][1][proc]}\" name=\"detection\" ! gvametaconvert converter=json method=detection source=\"{source[uri]}\" name=\"jsonmetaconvert\" ! gvametapublish name=metapublish ! queue ! appsink name=appsink t. ! queue ! parsebin ! video/x-h264 ! splitmuxsink location={parameters[recording_prefix]} max-size-time=60500000000 name=\"splitmuxsink\"",
     "description": "Object Detection Pipeline",
     "parameters": {
 		"type" : "object",

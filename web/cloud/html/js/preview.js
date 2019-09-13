@@ -39,7 +39,7 @@ var previews={
     play: function (div, sensor) {
         var update=function () {
             var error='<div style="line-height:200px;text-align:center">Recording Unavailable</div>';
-            apiHost.search("recordings","time>=now-200000 and sensor='"+sensor._id+"'",sensor._source.office,1).then(function (r) {
+            apiHost.search("recordings",settings.preview_query()+" and sensor='"+sensor._id+"'",sensor._source.office,1).then(function (r) {
                 div.find("div,video").remove();
                 r=r.response;
                 if (r.length==0) {
