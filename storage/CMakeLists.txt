@@ -1,2 +1,2 @@
-set(service "smtc_web_local")
+set(service "smtc_storage_manager")
 include("${CMAKE_SOURCE_DIR}/script/service.cmake")
