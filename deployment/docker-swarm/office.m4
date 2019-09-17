@@ -15,6 +15,7 @@ ifelse(eval(defn(`NOFFICES')>1),1,`
             - "no_proxy=*"
         volumes:
             - /etc/localtime:/etc/localtime:ro
+            - defn(`OFFICE_NAME')_esdata:/usr/share/elasticsearch/data:rw
 ifelse(defn(`PLATFORM'),`VCAC-A',`dnl
         networks:
             - default_net
@@ -45,57 +46,6 @@ ifelse(defn(`PLATFORM'),`VCAC-A',`dnl
             placement:
                 constraints:
                     - ifelse(eval(defn(`NOFFICES')>1),1,node.labels.defn(`OFFICE_NAME')_zone==yes,node.role==manager)
-
-    defn(`OFFICE_NAME')_webproxy:
-        image: smtc_web_local:latest
-        environment:
-            DBHOST: "http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')_db,cloud_db):9200"
-            OFFICE: "defn(`OFFICE_LOCATION')"
-            NO_PROXY: "*"
-            no_proxy: "*"
-        volumes:
-            - ${STORAGE_VOLUME}:/mnt/storage:ro
-            - /etc/localtime:/etc/localtime:ro
-ifelse(defn(`PLATFORM'),`VCAC-A',`dnl
-        networks:
-            - default_net
-')dnl
-        deploy:
-            placement:
-                constraints:
-ifelse(eval(defn(`NOFFICES')>1),1,`dnl
-                    - node.labels.defn(`OFFICE_NAME')_zone==yes
-                    - node.labels.defn(`OFFICE_NAME')_storage==yes
-',`dnl
-                    - node.role==manager
-')
-
-    defn(`OFFICE_NAME')_cleanup:
-        image: smtc_storage_cleanup:latest
-        volumes:
-            - ${STORAGE_VOLUME}:/mnt/storage:rw
-            - /etc/localtime:/etc/localtime:ro
-        environment:
-            INDEXES: "recordings,analytics"
-            RETENTION_TIME: "14400"
-            SERVICE_INTERVAL: "14400"
-            OFFICE: "defn(`OFFICE_LOCATION')"
-            DBHOST: "http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')_db,cloud_db):9200"
-            NO_PROXY: "*"
-            no_proxy: "*"
-ifelse(defn(`PLATFORM'),`VCAC-A',`dnl
-        networks:
-            - default_net
-')dnl
-        deploy:
-            placement:
-                constraints:
-ifelse(eval(defn(`NOFFICES')>1),1,`dnl
-                    - node.labels.defn(`OFFICE_NAME')_zone==yes
-                    - node.labels.defn(`OFFICE_NAME')_storage==yes
-',`dnl
-                    - node.role==manager
-')dnl
 
     defn(`OFFICE_NAME')_camera_discovery:
         image: smtc_onvif_discovery:latest
@@ -161,6 +111,33 @@ ifelse(defn(`PLATFORM'),`VCAC-A',`dnl
             placement:
                 constraints:
                     - ifelse(eval(defn(`NOFFICES')>1),1,node.labels.defn(`OFFICE_NAME')_zone==yes,node.role==manager)
+
+    defn(`OFFICE_NAME')_storage:
+        image: smtc_storage_manager:latest
+        environment:
+            OFFICE: "defn(`OFFICE_LOCATION')"
+            DBHOST: "http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')_db,cloud_db):9200"
+            INDEXES: "recordings,analytics"
+            RETENTION_TIME: "14400"
+            SERVICE_INTERVAL: "14400"
+            NO_PROXY: "*"
+            no_proxy: "*"
+        volumes:
+            - /etc/localtime:/etc/localtime:ro
+            - defn(`OFFICE_NAME')_stdata:/var/www:rw
+ifelse(defn(`PLATFORM'),`VCAC-A',`dnl
+        networks:
+            - default_net
+')dnl
+        deploy:
+            placement:
+                constraints:
+ifelse(eval(defn(`NOFFICES')>1),1,`dnl
+                    - node.labels.defn(`OFFICE_NAME')_zone==yes
+                    - node.labels.defn(`OFFICE_NAME')_storage==yes
+',`dnl
+                    - node.role==manager
+')dnl
 
     defn(`OFFICE_NAME')_mqtt:
         image: eclipse-mosquitto:1.5.8

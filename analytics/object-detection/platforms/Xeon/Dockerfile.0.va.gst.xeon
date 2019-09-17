@@ -2,7 +2,7 @@
 
 FROM smtc_analytics_common_xeon
 
-RUN  apt-get update && apt-get install -y ffmpeg python3-paho-mqtt python3-ply python3-requests python3-watchdog python3-psutil
+RUN  apt-get update && apt-get install -y python3-paho-mqtt python3-ply python3-requests python3-watchdog python3-psutil
 RUN  rm -rf /home/video-analytics/models && rm -rf /home/video-analytics/pipelines
 RUN  sed -i 's/DEBUG/WARNING/' /home/video-analytics/app/common/settings.py
 
@@ -17,6 +17,9 @@ ARG  GROUP
 ARG  UID
 ARG  GID
 ## must use ; here to ignore user exist status code
-RUN  groupadd -f -g ${GID} ${GROUP};useradd -d /home/${USER} -g ${GROUP} -K UID_MAX=${UID} -K UID_MIN=${UID} ${USER};echo
+RUN  groupadd -f -g ${GID} ${GROUP};useradd -d /home/${USER} -g ${GROUP} -K UID_MAX=${UID} -K UID_MIN=${UID} ${USER}; \
+     mkdir -p /home/video-analytics/app/server/recordings && \
+     chown -R ${USER}.${GROUP} /home/video-analytics/app/server/recordings
+VOLUME ["/home/video-analytics/app/server/recordings"]
 USER ${USER}
 ####

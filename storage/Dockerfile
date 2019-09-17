@@ -1,0 +1,22 @@
+
+FROM xeon-centos76-media-nginx
+
+RUN yum -y install epel-release && yum -y install python36-tornado python36-requests python36-ply python36-psutil && rm -rf /var/cache/yum/*
+
+COPY    *.py /home/
+COPY    *.conf /etc/nginx/
+CMD     ["/home/manage.py"]
+
+####
+ARG  USER
+ARG  GROUP
+ARG  UID
+ARG  GID
+## must use ; here to ignore user exist status code
+RUN  groupadd -f -g ${GID} ${GROUP};useradd -d /home/${USER} -g ${GROUP} -K UID_MAX=${UID} -K UID_MIN=${UID} ${USER}; \
+     touch /var/run/nginx.pid && \
+     mkdir -p /var/log/nginx /var/lib/nginx /var/www/cache /var/www/upload /var/www/mp4 && \
+     chown -R ${USER}.${GROUP} /var/run/nginx.pid /var/log/nginx /var/lib/nginx /var/www /etc/nginx/nginx.conf
+VOLUME ["/var/www"]
+USER ${USER}
+####

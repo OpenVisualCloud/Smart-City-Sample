@@ -4,9 +4,8 @@ DIR=$(dirname $(readlink -f "$0"))
 NOFFICES="${4:-1}"
 yml="$DIR/docker-compose.yml"
 
-sudo docker container prune -f
-sudo docker volume prune -f
-sudo docker network prune -f
+echo "Cleanup..."
+$DIR/../../script/cleanup.sh; echo
 
 export USER_ID="$(id -u)"
 export GROUP_ID="$(id -g)"
@@ -25,20 +24,12 @@ docker_compose)
     "$DIR/../certificate/self-sign.sh"
     shift
     . "$DIR/build.sh"
-    export STORAGE_VOLUME=$(readlink -f "$DIR/../../volume/storage")
-    find -L "$STORAGE_VOLUME" -maxdepth 1 -mindepth 1 -type d -exec rm -rf "{}" \;
     sudo -E docker-compose -f "$yml" -p smtc --compatibility up
     ;;
 *)
     "$DIR/../certificate/self-sign.sh"
     shift
     . "$DIR/build.sh"
-    if test "${NOFFICES}" -gt 1; then
-        export STORAGE_VOLUME="/mnt/storage"
-    else
-        export STORAGE_VOLUME=$(readlink -f "$DIR/../../volume/storage")
-        find -L "$STORAGE_VOLUME" -maxdepth 1 -mindepth 1 -type d -exec rm -rf "{}" \;
-    fi
     sudo -E docker stack deploy -c "$yml" smtc
     ;;
 esac

@@ -4,12 +4,13 @@
             OFFICE: 'defn(`OFFICE_LOCATION')'
             DBHOST: 'http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')_db,cloud_db):9200'
             MQTTHOST: 'defn(`OFFICE_NAME')_mqtt'
+            STHOST: 'http://defn(`OFFICE_NAME')_storage:8080/api/upload'
             EVERY_NTH_FRAME: 6
             NO_PROXY: '*'
             no_proxy: '*'
         volumes:
-            - ${STORAGE_VOLUME}:/home/video-analytics/app/server/recordings:rw
             - /etc/localtime:/etc/localtime:ro
+            - defn(`OFFICE_NAME')_andata:/home/video-analytics/app/server/recordings:rw
         deploy:
             replicas: defn(`NANALYTICS')
             placement:

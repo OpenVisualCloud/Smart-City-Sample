@@ -22,9 +22,7 @@ function transfer_image {
             root@*)
                 sudo docker save $image | ssh $worker "docker image rm -f $image 2>/dev/null; docker load";;
             *)
-                echo "enter"
                 ( echo $passwd ; sudo docker save $image ) | ssh $worker cat \| sudo --prompt="" -S -- "docker load"
-                echo "exit";;
         esac
     fi
     echo ""

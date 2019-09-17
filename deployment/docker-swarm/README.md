@@ -27,11 +27,10 @@ Follow the [instructions](https://docs.docker.com/engine/swarm/swarm-tutorial/cr
 - On each swarm node, 
   - Create a user of the same user id (uid) and group id (gid) as the current user of the manager node.      
   - Follow the [instructions](https://www.elastic.co/guide/en/elasticsearch/reference/6.8/vm-max-map-count.html) to increase the VM mapping threshold.    
-  - Each office must designate a single node for recording storage. On the designated nodes, create a ```/mnt/storage``` direcotry to store recordings.    
 
 - On the swarm manager, label each swarm node as follows:    
   - Label the nodes where office services must run, for example, ```office1_zone=yes```, ```office2_zone=yes```, ```office3_zone=yes```, etc. You can label multiple machines under the same office zone so that the workloads can be distributed.  
-  - Label the nodes designated as recording storage as ```office1_storage=yes```, ```office2_storage=yes```, ```office3_storage=yes```, etc. Each office must designate only one node for recording storage.   
+  - Each office must designate a node that handles the recording storage (storage space needed). Label the nodes as ```office1_storage=yes```, ```office2_storage=yes```, ```office3_storage=yes```, etc.
 
 ```
 sudo docker node update --label-add office1_zone=yes <swarm-node>
@@ -51,7 +50,6 @@ Finally, start/stop services as follows:
 make update      # distribute images to swarm nodes
 make start_docker_swarm
 make stop_docker_swarm
-make cleanup     # cleanup recording storage
 ```
 
 ### See Also 
