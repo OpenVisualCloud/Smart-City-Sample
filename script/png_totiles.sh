@@ -55,5 +55,5 @@ sudo rm -f "$cwd/${image}.tmp.tif"
 sudo rm -rf "$cwd/${scheme}"
 mkdir -p "$cwd/${scheme}"
 sudo docker run -v "$cwd:/home" --rm -it $GDAL2 gdal2tiles.py -p mercator -z 13-18 -s EPSG:4326 -d -n -w none -r cubic /home/${image}.modified.tif /home/${scheme}
-sudo chown -R "$(id -un):$(id -gn)" "$cwd/${scheme}" "$cwd/${image}.modified.tif"
+sudo chown -R "$(id -u):$(id -g)" "$cwd/${scheme}" "$cwd/${image}.modified.tif"
 find "$cwd/${scheme}" -name "*.xml" -exec rm -f {} \;

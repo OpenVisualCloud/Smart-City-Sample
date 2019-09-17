@@ -46,14 +46,14 @@ for id in $(sudo docker node ls -q); do
                 for image in $(awk -v constraints=1 -v role="node.role==${role}" -v labels="$labels" -f "$DIR/scan-yml.awk" "$YML"); do
 
                     # trasnfer VCAC-A images to VCAC-A nodes only
-                    if test -n "$(echo $nodeip | grep --fixed-strings 172.32.1.1)"; then
+                    if [[ -n "$(echo $nodeip | grep --fixed-strings 172.32.1.1)" ]] || [[ "$(id -u)" -eq "0" ]]; then
                         transfer_image $image "root@$nodeip"
                     else
                         if test -z "$passwd"; then
                             read -p "Sudo password for workers: " -s passwd
                             echo
                         fi
-                        transfer_image $image "$(id -un)@$nodeip" $passwd
+                        transfer_image $image "$nodeip" $passwd
                     fi
 
                 done
