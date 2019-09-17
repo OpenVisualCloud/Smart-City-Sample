@@ -9,7 +9,7 @@
             VCAC_DBHOST: 'http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')_db,cloud_db):9200'
             VCAC_MQTTHOST: 'defn(`OFFICE_NAME')_mqtt'
             VCAC_EVERY_NTH_FRAME: 6
-            VCAC_STHOST: 'http://defn(`OFFICE_NAME')_storage/api/upload'
+            VCAC_STHOST: 'http://defn(`OFFICE_NAME')_storage:8080/api/upload'
             VCAC_NO_PROXY: '*'
             VCAC_no_proxy: '*'
         networks:

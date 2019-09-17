@@ -30,9 +30,9 @@ class Handler(FileSystemEventHandler):
     def _process_file(self, filename):
         with open(filename,"rb") as fd:
             r=requests.post(sthost,data={
+                "time":str(int(int(os.path.basename(filename).split('_')[-2])/1000000)),
                 "office":str(office[0])+","+str(office[1]),
-                "sensor":str(sensor),
-                "timestamp":str(int(int(filename.split('_')[-2])/1000000)),
+                "sensor":self._sensor,
             },files={
                 "file": fd,
             },verify=False)

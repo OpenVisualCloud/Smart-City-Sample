@@ -36,10 +36,10 @@ if __name__ == "__main__":
 
     tornado1=ioloop.IOLoop.instance();
     nginx1=Popen(["/usr/sbin/nginx"])
-    #office1=Popen(["/home/office.py"])
-    #cleanup1=Popen(["/home/cleanup.py"])
+    office1=Popen(["/home/office.py"])
+    cleanup1=Popen(["/home/cleanup.py"])
     
     tornado1.start()
-    #cleanup1.wait()
-    #office1.wait()
+    cleanup1.wait()
+    office1.wait()
     nginx1.wait()
