@@ -9,7 +9,6 @@
             NO_PROXY: '*'
             no_proxy: '*'
         volumes:
-            - ${STORAGE_VOLUME}:/home/video-analytics/app/server/recordings:rw
             - /etc/localtime:/etc/localtime:ro
         deploy:
             replicas: defn(`NANALYTICS')

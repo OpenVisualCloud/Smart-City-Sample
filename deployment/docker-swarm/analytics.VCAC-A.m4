@@ -1,6 +1,6 @@
     defn(`OFFICE_NAME')_analytics:
         image: vcac-container-launcher:latest
-        command: ["-v","/mnt/storage:/home/video-analytics/app/server/recordings:rw","--network","smtc_default_net","smtc_analytics_object_detection_vcac-a:latest"]
+        command: ["--network","smtc_default_net","smtc_analytics_object_detection_vcac-a:latest"]
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
             - /etc/localtime:/etc/localtime:ro
@@ -19,4 +19,3 @@
             placement:
                 constraints:
                     - node.labels.defn(`OFFICE_NAME')_vcac_zone==yes
-                    - node.labels.defn(`OFFICE_NAME')_vcac_storage==yes
