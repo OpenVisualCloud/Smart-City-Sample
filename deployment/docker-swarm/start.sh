@@ -4,9 +4,8 @@ DIR=$(dirname $(readlink -f "$0"))
 NOFFICES="${4:-1}"
 yml="$DIR/docker-compose.yml"
 
-sudo docker container prune -f
-sudo docker volume prune -f
-sudo docker network prune -f
+echo "Cleanup..."
+$DIR/../../script/cleanup.sh; echo
 
 export USER_ID="$(id -u)"
 export GROUP_ID="$(id -g)"

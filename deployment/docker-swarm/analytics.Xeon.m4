@@ -10,6 +10,7 @@
             no_proxy: '*'
         volumes:
             - /etc/localtime:/etc/localtime:ro
+            - defn(`OFFICE_NAME')_andata:/home/video-analytics/app/server/recordings:rw
         deploy:
             replicas: defn(`NANALYTICS')
             placement:

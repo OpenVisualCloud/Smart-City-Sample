@@ -1,8 +1,9 @@
     defn(`OFFICE_NAME')_analytics:
         image: vcac-container-launcher:latest
-        command: ["--network","smtc_default_net","smtc_analytics_object_detection_vcac-a:latest"]
+        command: ["--volume","defn(`OFFICE_NAME')_andata:/home/video-analytics/app/server/recordings:rw","--network","smtc_default_net","smtc_analytics_object_detection_vcac-a:latest"]
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
+            - defn(`OFFICE_NAME')_andata:/home/video-analytics/app/server/recordings:rw
             - /etc/localtime:/etc/localtime:ro
         environment:
             VCAC_OFFICE: 'defn(`OFFICE_LOCATION')'

@@ -20,3 +20,4 @@ include(analytics.defn(`PLATFORM').m4)
 
 include(secret.m4)
 ifelse(defn(`PLATFORM'),`VCAC-A',include(network.m4))
+include(volume.m4)
