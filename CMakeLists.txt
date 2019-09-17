@@ -4,7 +4,6 @@ Project(smart_city NONE)
 add_custom_target(backup  ${CMAKE_HOME_DIRECTORY}/script/backup-image.sh)
 add_custom_target(restore ${CMAKE_HOME_DIRECTORY}/script/restore-image.sh)
 add_custom_target(update  ${CMAKE_HOME_DIRECTORY}/script/update-image.sh)
-add_custom_target(cleanup ${CMAKE_HOME_DIRECTORY}/script/clean-storage.sh)
 
 if (NOT DEFINED PLATFORM)
     set(PLATFORM "Xeon")
