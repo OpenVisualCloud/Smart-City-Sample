@@ -16,6 +16,6 @@ ARG  GID
 RUN  groupadd -f -g ${GID} ${GROUP};useradd -d /home/${USER} -g ${GROUP} -K UID_MAX=${UID} -K UID_MIN=${UID} ${USER}; \
      touch /var/run/nginx.pid && \
      mkdir -p /var/log/nginx /var/lib/nginx /var/www/cache /var/www/upload /var/www/mp4 && \
-     chown -R ${USER}.${GROUP} /var/run/nginx.pid /var/log/nginx /var/lib/nginx /var/www
+     chown -R ${USER}.${GROUP} /var/run/nginx.pid /var/log/nginx /var/lib/nginx /var/www /etc/nginx/nginx.conf
 USER ${USER}
 ####

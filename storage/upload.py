@@ -27,27 +27,23 @@ class UploadHandler(web.RequestHandler):
         return True
 
     @run_on_executor
-    def _rec2db(self, recorder, path):
-        basename=path.split("/")[-1][0:-4].split("-")
-        sensor,lat,lon,timestamp=base64.b16decode(basename[0].encode()).decode().split(" ")
-
-        dt=datetime.datetime.fromtimestamp(int(timestamp)/1000)
+    def _rec2db(self, office, sensor, timestamp, path):
+        dt=datetime.datetime.fromtimestamp(timestamp/1000)
         mp4path=self._storage+"/"+sensor+"/"+str(dt.year)+"/"+str(dt.month)+"/"+str(dt.day)
         os.makedirs(mp4path,exist_ok=True)
-        mp4file=mp4path+"/"+timestamp+"-"+str(basename[1])+".mp4"
+        mp4file=mp4path+"/"+str(timestamp)+".mp4"
 
-        list(run(["/usr/bin/ffmpeg","-i",path,"-c","copy",mp4file]))
-        os.remove(path)
+        list(run(["/usr/bin/ffmpeg","-f","mp4","-i",path,"-c","copy",mp4file]))
         list(run(["/usr/bin/ffmpeg","-i",mp4file,"-vf","scale=640:360","-frames:v","1",mp4file+".png"]))
-
         sinfo=probe(mp4file)
+
         sinfo.update({
             "sensor": sensor,
             "office": {
-                "lat": float(lat),
-                "lon": float(lon),
+                "lat": office[0],
+                "lon": office[1],
             },
-            "time": int(timestamp),
+            "time": timestamp,
             "path": mp4file[len(self._storage)+1:],
         })
 
@@ -62,7 +58,9 @@ class UploadHandler(web.RequestHandler):
 
     @gen.coroutine
     def post(self):
-        recorder=self.get_body_argument('recorder')
-        path=self.get_body_argument('path')
-        yield self._rec2db(recorder, path)
-        self.set_status(200,'OK')
+        office=list(map(float,self.get_body_argument('office').split(",")))
+        sensor=self.get_body_argument('sensor')
+        timestamp=int(self.get_body_argument('timestamp'))
+        path=self.get_body_argument('file.path')
+        yield self._rec2db(office, sensor, timestamp, path)
+        self.set_status(400, "Return 400 to remove this file")
