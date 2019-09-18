@@ -3,7 +3,7 @@
 DIR=$(dirname $(readlink -f "$0"))
 YML="${DIR}/../deployment/docker-swarm/docker-compose.yml"
 passwd=""
-for id in $(sudo docker node ls -q); do
+for id in $(sudo docker node ls -q 2> /dev/null); do
     ready="$(sudo docker node inspect -f {{.Status.State}} $id)"
     active="$(sudo docker node inspect -f {{.Spec.Availability}} $id)"
     nodeip="$(sudo docker node inspect -f {{.Status.Addr}} $id)"
@@ -29,20 +29,19 @@ for id in $(sudo docker node ls -q); do
                             echo
                         fi
 
-                        echo $passwd | ssh "$(id -un)@$nodeip" sudo --prompt="" -S -- "docker container prune -f"
-                        echo $passwd | ssh "$(id -un)@$nodeip" sudo --prompt="" -S -- "docker volume prune -f"
-                        echo $passwd | ssh "$(id -un)@$nodeip" sudo --prompt="" -S -- "docker network prune -f"
+                        echo $passwd | ssh "$nodeip" sudo --prompt="" -S -- "docker container prune -f"
+                        echo $passwd | ssh "$nodeip" sudo --prompt="" -S -- "docker volume prune -f"
+                        echo $passwd | ssh "$nodeip" sudo --prompt="" -S -- "docker network prune -f"
 
                     fi
 
                 fi
-            else
-
-                sudo docker container prune -f
-                sudo docker volume prune -f
-                sudo docker network prune -f
-
             fi
         fi
     fi
 done
+
+sudo docker container prune -f
+sudo docker volume prune -f
+sudo docker network prune -f
+

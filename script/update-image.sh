@@ -31,7 +31,7 @@ function transfer_image {
 DIR=$(dirname $(readlink -f "$0"))
 YML="${DIR}/../deployment/docker-swarm/docker-compose.yml"
 passwd=""
-for id in $(sudo docker node ls -q); do
+for id in $(sudo docker node ls -q 2> /dev/null); do
     ready="$(sudo docker node inspect -f {{.Status.State}} $id)"
     active="$(sudo docker node inspect -f {{.Spec.Availability}} $id)"
     nodeip="$(sudo docker node inspect -f {{.Status.Addr}} $id)"
@@ -46,14 +46,14 @@ for id in $(sudo docker node ls -q); do
                 for image in $(awk -v constraints=1 -v role="node.role==${role}" -v labels="$labels" -f "$DIR/scan-yml.awk" "$YML"); do
 
                     # trasnfer VCAC-A images to VCAC-A nodes only
-                    if test -n "$(echo $nodeip | grep --fixed-strings 172.32.1.1)"; then
+                    if [[ -n "$(echo $nodeip | grep --fixed-strings 172.32.1.1)" ]] || [[ "$(id -u)" -eq "0" ]]; then
                         transfer_image $image "root@$nodeip"
                     else
                         if test -z "$passwd"; then
                             read -p "Sudo password for workers: " -s passwd
                             echo
                         fi
-                        transfer_image $image "$(id -un)@$nodeip" $passwd
+                        transfer_image $image "$nodeip" $passwd
                     fi
 
                 done

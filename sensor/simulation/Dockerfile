@@ -10,7 +10,10 @@ ARG  USER
 ARG  GROUP
 ARG  UID
 ARG  GID
+## VLC must run as nonroot
 ## must use ; here to ignore user exist status code
-RUN  groupadd -f -g ${GID} ${GROUP};useradd -d /home/${USER} -g ${GROUP} -K UID_MAX=${UID} -K UID_MIN=${UID} ${USER};chown -R ${USER}.${GROUP} /home
+RUN  groupadd ${GROUP}; \
+     useradd -d /home/${USER} -g ${GROUP} ${USER}; \
+     chown -R ${USER}.${GROUP} /home
 USER ${USER}
 ####
