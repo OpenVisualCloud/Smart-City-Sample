@@ -16,7 +16,11 @@ office = list(map(float, os.environ["OFFICE"].split(",")))
 class RunVA(object):
     def __init__(self):
         super(RunVA,self).__init__()
-        self._va=Popen(["/usr/bin/python3","-m","openapi_server"],cwd="/home/video-analytics/app/server")
+        # remove HTTP_PROXY
+        env=os.environ.copy()
+        env.pop("http_proxy",None)
+        env.pop("HTTP_PROXY",None)
+        self._va=Popen(["/usr/bin/python3","-m","openapi_server"],cwd="/home/video-analytics/app/server",env=env)
         self._db=DBIngest(host=dbhost, index="algorithms", office=office)
         self._stop=None
 
