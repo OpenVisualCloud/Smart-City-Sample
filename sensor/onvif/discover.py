@@ -32,7 +32,7 @@ def discover_onvif_camera(ip, port):
     try:
         cam = ONVIFCamera(ip, port, user, passwd, '/home/wsdl')
     except Exception as e:
-        print("Failed to ceate Onvif Camera: "+str(e), flush=True)
+        print("Failed to create an ONVIF camera: "+str(e), flush=True)
         return onvif_device_desc
 
     # Get Device Information
