@@ -29,9 +29,9 @@ for id in $(sudo docker node ls -q 2> /dev/null); do
                             echo
                         fi
 
-                        echo $passwd | ssh "$(id -un)@$nodeip" sudo --prompt="" -S -- "docker container prune -f"
-                        echo $passwd | ssh "$(id -un)@$nodeip" sudo --prompt="" -S -- "docker volume prune -f"
-                        echo $passwd | ssh "$(id -un)@$nodeip" sudo --prompt="" -S -- "docker network prune -f"
+                        echo $passwd | ssh "$nodeip" sudo --prompt="" -S -- "docker container prune -f"
+                        echo $passwd | ssh "$nodeip" sudo --prompt="" -S -- "docker volume prune -f"
+                        echo $passwd | ssh "$nodeip" sudo --prompt="" -S -- "docker network prune -f"
 
                     fi
 
