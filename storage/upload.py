@@ -12,15 +12,14 @@ import datetime
 import base64
 import os
 
-office=list(map(float,os.environ["OFFICE"].split(",")))
 dbhost=os.environ["DBHOST"]
+recording_index=os.environ["RECORDING_INDEX"]
+sensor_index=os.environ["SENSOR_INDEX"] if "SENSOR_INDEX" in os.environ else None
 
 class UploadHandler(web.RequestHandler):
     def __init__(self, app, request, **kwargs):
         super(UploadHandler, self).__init__(app, request, **kwargs)
         self.executor= ThreadPoolExecutor(8)
-        self._db_rec = DBIngest(host=dbhost, index="recordings", office=office)
-        self._db_cam = DBQuery(host=dbhost, index="sensors", office=office)
         self._storage = "/var/www/mp4"
 
     def check_origin(self, origin):
@@ -29,7 +28,8 @@ class UploadHandler(web.RequestHandler):
     @run_on_executor
     def _rec2db(self, office, sensor, timestamp, path):
         dt=datetime.datetime.fromtimestamp(timestamp/1000)
-        mp4path=self._storage+"/"+sensor+"/"+str(dt.year)+"/"+str(dt.month)+"/"+str(dt.day)
+        officestr=(str(office[0])+"c"+str(office[1])).replace("-","n").replace(".","d")
+        mp4path=self._storage+"/"+officestr+"/"+sensor+"/"+str(dt.year)+"/"+str(dt.month)+"/"+str(dt.day)
         os.makedirs(mp4path,exist_ok=True)
         mp4file=mp4path+"/"+str(timestamp)+".mp4"
 
@@ -48,17 +48,21 @@ class UploadHandler(web.RequestHandler):
         })
 
         # calculate total bandwidth
-        bandwidth=0
-        for stream1 in sinfo["streams"]:
-            if "bit_rate" in stream1:
-                bandwidth=bandwidth+stream1["bit_rate"]
+        if sensor_index:
+            bandwidth=0
+            for stream1 in sinfo["streams"]:
+                if "bit_rate" in stream1:
+                    bandwidth=bandwidth+stream1["bit_rate"]
+            if bandwidth: 
+                db_cam=DBQuery(host=dbhost, index=sensor_index, office=office)
+                db_cam.update(sensor, {"bandwidth": bandwidth})
 
-        if bandwidth: self._db_cam.update(sensor, {"bandwidth": bandwidth})
-        self._db_rec.ingest(sinfo)
+        # ingest recording
+        db_rec=DBIngest(host=dbhost, index=recording_index, office=office)
+        db_rec.ingest(sinfo)
 
     @gen.coroutine
     def post(self):
-        print(self.request.arguments.keys(),flush=True)
         office=list(map(float,self.get_body_argument('office').split(",")))
         sensor=self.get_body_argument('sensor')
         timestamp=int(self.get_body_argument('time'))

@@ -143,8 +143,10 @@ ifelse(defn(`PLATFORM'),`VCAC-A',`dnl
             OFFICE: "defn(`OFFICE_LOCATION')"
             DBHOST: "http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')_db,cloud_db):9200"
             INDEXES: "recordings,analytics"
-            RETENTION_TIME: "14400"
-            SERVICE_INTERVAL: "14400"
+            RECORDING_INDEX: "recordings"
+            SENSOR_INDEX: "sensors"
+            RETENTION_TIME: "7200"
+            SERVICE_INTERVAL: "7200"
             NO_PROXY: "*"
             no_proxy: "*"
         volumes:

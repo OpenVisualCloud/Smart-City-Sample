@@ -9,7 +9,7 @@ import os
 retention_time=float(os.environ["RETENTION_TIME"])  # in seconds
 service_interval=float(os.environ["SERVICE_INTERVAL"])  # in seconds
 indexes=os.environ["INDEXES"].split(",")
-office=list(map(float, os.environ["OFFICE"].split(",")))
+office=list(map(float, os.environ["OFFICE"].split(","))) if "OFFICE" in os.environ else "*"
 dbhost=os.environ["DBHOST"]
 storage="/var/www/mp4"
 
@@ -22,7 +22,7 @@ def quit_service(signum, sigframe):
 
 signal(SIGTERM, quit_service)
 dbs=DBIngest(index="services",office=office,host=dbhost)
-while True:
+while isinstance(office,list):
     try:
         rs=dbs.ingest({
             "name": "cleanup",

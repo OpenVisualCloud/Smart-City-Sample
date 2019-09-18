@@ -18,6 +18,7 @@ function transfer_image {
     echo "remote: $sig2"
 
     if test "$sig1" != "$sig2"; then
+        echo "Transfering image..."
         case "$worker" in
             root@*)
                 sudo docker save $image | ssh $worker "docker image rm -f $image 2>/dev/null; docker load";;
