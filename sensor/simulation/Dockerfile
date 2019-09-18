@@ -10,10 +10,10 @@ ARG  USER
 ARG  GROUP
 ARG  UID
 ARG  GID
-## VLC must run as a non-root user.
+## VLC must run as nonroot
 ## must use ; here to ignore user exist status code
-RUN  groupadd -f -g 9999 ${GROUP}; \
-     useradd -d /home/${USER} -g 9999 -K UID_MAX=9999 -K UID_MIN=9999 ${USER}; \
-     echo
-USER 9999
+RUN  groupadd ${GROUP}; \
+     useradd -d /home/${USER} -g ${GROUP} ${USER}; \
+     chown -R ${USER}.${GROUP} /home
+USER ${USER}
 ####
