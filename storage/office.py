@@ -7,7 +7,7 @@ import time
 import os
 
 dbhost=os.environ["DBHOST"]
-office=list(map(float,os.environ["OFFICE"].split(",")))
+office=list(map(float,os.environ["OFFICE"].split(","))) if "OFFICE" in os.environ else None
 host=os.environ["PROXYHOST"] if "PROXYHOST" in os.environ else "http://"+socket.gethostname()+":8080"
 
 db=DBIngest(index="offices",office="",host=dbhost)
@@ -18,7 +18,7 @@ def quit_service(signum, sigframe):
     exit(143)
 
 signal(SIGTERM, quit_service)
-while True:
+while office:
     try:
         r=db.ingest({
             "office": {
@@ -32,6 +32,6 @@ while True:
         print("Exception: "+str(e), flush=True)
         time.sleep(10)
 
-while True:
+while office:
     time.sleep(1000)
     
