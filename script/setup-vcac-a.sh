@@ -18,3 +18,12 @@ echo
 
 # setup node to join the host docker swarm 
 ssh $NODEUSER@$NODEIP "docker swarm leave --force 2> /dev/null;$JOINCMD"
+
+# setup node labels for office1
+for id in $(sudo docker node ls -q 2> /dev/null); do
+    nodeip="$(sudo docker node inspect -f {{.Status.Addr}} $id)"
+    if [[ -n "$(echo $nodeip | grep --fixed-strings $NODEIP)" ]]; then
+        echo "label $id: office1_vcac_zone=yes"
+        sudo docker node update --label-add office1_vcac_zone=yes $id
+    fi
+done
