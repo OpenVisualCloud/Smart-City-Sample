@@ -6,8 +6,7 @@ from signal import signal, SIGTERM
 import os
 import time
 
-record_time=os.environ["RECORD_TIME"]
-width_interval=os.environ["WIDTH_INTERVAL"]
+query=os.environ["QUERY"]
 indexes=os.environ["INDEXES"]
 service_interval=float(os.environ["SERVICE_INTERVAL"])  # in seconds
 update_interval=float(os.environ["UPDATE_INTERVAL"])  # in seconds
@@ -16,6 +15,24 @@ update_batch=int(os.environ["UPDATE_BATCH"])
 office=list(map(float, os.environ["OFFICE"].split(",")))
 dbhost=os.environ["DBHOST"]
 
+def quit_service(signum, sigframe):
+    if dbs and rs: dbs.delete(rs["_id"])
+    exit(143)
+
+signal(SIGTERM, quit_service)
+dbs=DBIngest(index="services",office=office,host=dbhost)
+while True:
+    try:
+        dbs.ingest({
+            "name": "smart-upload",
+            "service": "maintanence",
+            "status": "active",
+        })
+        break
+    except Exception as e:
+        print("Exception: "+str(e), flush=True)
+        time.sleep(10)
+
 dbq=DBQuery(index=indexes,office=office,host=dbhost)
 
 while True:
@@ -23,12 +40,11 @@ while True:
     time.sleep(service_interval)
 
     print("Searching...",flush=True)
-    criteria = 'time>='+record_time+' where objects.detection.bounding_box.x_max-objects.detection.bounding_box.x_min>'+width_interval
-    print("criteria = ", criteria)
+    print("query = ", query)
 
     try:
         updates=[]
-        for q in dbq.search(criteria):
+        for q in dbq.search(query):
             updates.append({"recording":q["_source"]["path"]})
             print(q["_source"]["path"])
         if updates:
