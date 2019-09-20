@@ -1,0 +1,1675 @@
+
+
+
+version: "3.7"
+
+services:
+
+
+
+    office1_simulated_cameras:
+        image: smtc_sensor_simulation:latest
+        ports:
+            - target: 11000
+              published: 11000
+              protocol: tcp
+              mode: host
+            - target: 21000
+              published: 21000
+              protocol: tcp
+              mode: host
+            - target: 21000
+              published: 21000
+              protocol: udp
+              mode: host
+            - target: 21001
+              published: 21001
+              protocol: tcp
+              mode: host
+            - target: 21001
+              published: 21001
+              protocol: udp
+              mode: host
+            - target: 21002
+              published: 21002
+              protocol: tcp
+              mode: host
+            - target: 21002
+              published: 21002
+              protocol: udp
+              mode: host
+            - target: 21003
+              published: 21003
+              protocol: tcp
+              mode: host
+            - target: 21003
+              published: 21003
+              protocol: udp
+              mode: host
+            - target: 21004
+              published: 21004
+              protocol: tcp
+              mode: host
+            - target: 21004
+              published: 21004
+              protocol: udp
+              mode: host
+            - target: 21005
+              published: 21005
+              protocol: tcp
+              mode: host
+            - target: 21005
+              published: 21005
+              protocol: udp
+              mode: host
+            - target: 21006
+              published: 21006
+              protocol: tcp
+              mode: host
+            - target: 21006
+              published: 21006
+              protocol: udp
+              mode: host
+            - target: 21007
+              published: 21007
+              protocol: tcp
+              mode: host
+            - target: 21007
+              published: 21007
+              protocol: udp
+              mode: host
+            - target: 21008
+              published: 21008
+              protocol: tcp
+              mode: host
+            - target: 21008
+              published: 21008
+              protocol: udp
+              mode: host
+            - target: 21009
+              published: 21009
+              protocol: tcp
+              mode: host
+            - target: 21009
+              published: 21009
+              protocol: udp
+              mode: host
+            - target: 21010
+              published: 21010
+              protocol: tcp
+              mode: host
+            - target: 21010
+              published: 21010
+              protocol: udp
+              mode: host
+            - target: 21011
+              published: 21011
+              protocol: tcp
+              mode: host
+            - target: 21011
+              published: 21011
+              protocol: udp
+              mode: host
+            - target: 21012
+              published: 21012
+              protocol: tcp
+              mode: host
+            - target: 21012
+              published: 21012
+              protocol: udp
+              mode: host
+            - target: 21013
+              published: 21013
+              protocol: tcp
+              mode: host
+            - target: 21013
+              published: 21013
+              protocol: udp
+              mode: host
+            - target: 21014
+              published: 21014
+              protocol: tcp
+              mode: host
+            - target: 21014
+              published: 21014
+              protocol: udp
+              mode: host
+            - target: 21015
+              published: 21015
+              protocol: tcp
+              mode: host
+            - target: 21015
+              published: 21015
+              protocol: udp
+              mode: host
+            - target: 21016
+              published: 21016
+              protocol: tcp
+              mode: host
+            - target: 21016
+              published: 21016
+              protocol: udp
+              mode: host
+            - target: 21017
+              published: 21017
+              protocol: tcp
+              mode: host
+            - target: 21017
+              published: 21017
+              protocol: udp
+              mode: host
+            - target: 21018
+              published: 21018
+              protocol: tcp
+              mode: host
+            - target: 21018
+              published: 21018
+              protocol: udp
+              mode: host
+            - target: 21019
+              published: 21019
+              protocol: tcp
+              mode: host
+            - target: 21019
+              published: 21019
+              protocol: udp
+              mode: host
+            - target: 11100
+              published: 11100
+              protocol: tcp
+              mode: host
+            - target: 21100
+              published: 21100
+              protocol: tcp
+              mode: host
+            - target: 21100
+              published: 21100
+              protocol: udp
+              mode: host
+            - target: 21101
+              published: 21101
+              protocol: tcp
+              mode: host
+            - target: 21101
+              published: 21101
+              protocol: udp
+              mode: host
+            - target: 21102
+              published: 21102
+              protocol: tcp
+              mode: host
+            - target: 21102
+              published: 21102
+              protocol: udp
+              mode: host
+            - target: 21103
+              published: 21103
+              protocol: tcp
+              mode: host
+            - target: 21103
+              published: 21103
+              protocol: udp
+              mode: host
+            - target: 21104
+              published: 21104
+              protocol: tcp
+              mode: host
+            - target: 21104
+              published: 21104
+              protocol: udp
+              mode: host
+            - target: 21105
+              published: 21105
+              protocol: tcp
+              mode: host
+            - target: 21105
+              published: 21105
+              protocol: udp
+              mode: host
+            - target: 21106
+              published: 21106
+              protocol: tcp
+              mode: host
+            - target: 21106
+              published: 21106
+              protocol: udp
+              mode: host
+            - target: 21107
+              published: 21107
+              protocol: tcp
+              mode: host
+            - target: 21107
+              published: 21107
+              protocol: udp
+              mode: host
+            - target: 21108
+              published: 21108
+              protocol: tcp
+              mode: host
+            - target: 21108
+              published: 21108
+              protocol: udp
+              mode: host
+            - target: 21109
+              published: 21109
+              protocol: tcp
+              mode: host
+            - target: 21109
+              published: 21109
+              protocol: udp
+              mode: host
+            - target: 21110
+              published: 21110
+              protocol: tcp
+              mode: host
+            - target: 21110
+              published: 21110
+              protocol: udp
+              mode: host
+            - target: 21111
+              published: 21111
+              protocol: tcp
+              mode: host
+            - target: 21111
+              published: 21111
+              protocol: udp
+              mode: host
+            - target: 21112
+              published: 21112
+              protocol: tcp
+              mode: host
+            - target: 21112
+              published: 21112
+              protocol: udp
+              mode: host
+            - target: 21113
+              published: 21113
+              protocol: tcp
+              mode: host
+            - target: 21113
+              published: 21113
+              protocol: udp
+              mode: host
+            - target: 21114
+              published: 21114
+              protocol: tcp
+              mode: host
+            - target: 21114
+              published: 21114
+              protocol: udp
+              mode: host
+            - target: 21115
+              published: 21115
+              protocol: tcp
+              mode: host
+            - target: 21115
+              published: 21115
+              protocol: udp
+              mode: host
+            - target: 21116
+              published: 21116
+              protocol: tcp
+              mode: host
+            - target: 21116
+              published: 21116
+              protocol: udp
+              mode: host
+            - target: 21117
+              published: 21117
+              protocol: tcp
+              mode: host
+            - target: 21117
+              published: 21117
+              protocol: udp
+              mode: host
+            - target: 21118
+              published: 21118
+              protocol: tcp
+              mode: host
+            - target: 21118
+              published: 21118
+              protocol: udp
+              mode: host
+            - target: 21119
+              published: 21119
+              protocol: tcp
+              mode: host
+            - target: 21119
+              published: 21119
+              protocol: udp
+              mode: host
+            - target: 11200
+              published: 11200
+              protocol: tcp
+              mode: host
+            - target: 21200
+              published: 21200
+              protocol: tcp
+              mode: host
+            - target: 21200
+              published: 21200
+              protocol: udp
+              mode: host
+            - target: 21201
+              published: 21201
+              protocol: tcp
+              mode: host
+            - target: 21201
+              published: 21201
+              protocol: udp
+              mode: host
+            - target: 21202
+              published: 21202
+              protocol: tcp
+              mode: host
+            - target: 21202
+              published: 21202
+              protocol: udp
+              mode: host
+            - target: 21203
+              published: 21203
+              protocol: tcp
+              mode: host
+            - target: 21203
+              published: 21203
+              protocol: udp
+              mode: host
+            - target: 21204
+              published: 21204
+              protocol: tcp
+              mode: host
+            - target: 21204
+              published: 21204
+              protocol: udp
+              mode: host
+            - target: 21205
+              published: 21205
+              protocol: tcp
+              mode: host
+            - target: 21205
+              published: 21205
+              protocol: udp
+              mode: host
+            - target: 21206
+              published: 21206
+              protocol: tcp
+              mode: host
+            - target: 21206
+              published: 21206
+              protocol: udp
+              mode: host
+            - target: 21207
+              published: 21207
+              protocol: tcp
+              mode: host
+            - target: 21207
+              published: 21207
+              protocol: udp
+              mode: host
+            - target: 21208
+              published: 21208
+              protocol: tcp
+              mode: host
+            - target: 21208
+              published: 21208
+              protocol: udp
+              mode: host
+            - target: 21209
+              published: 21209
+              protocol: tcp
+              mode: host
+            - target: 21209
+              published: 21209
+              protocol: udp
+              mode: host
+            - target: 21210
+              published: 21210
+              protocol: tcp
+              mode: host
+            - target: 21210
+              published: 21210
+              protocol: udp
+              mode: host
+            - target: 21211
+              published: 21211
+              protocol: tcp
+              mode: host
+            - target: 21211
+              published: 21211
+              protocol: udp
+              mode: host
+            - target: 21212
+              published: 21212
+              protocol: tcp
+              mode: host
+            - target: 21212
+              published: 21212
+              protocol: udp
+              mode: host
+            - target: 21213
+              published: 21213
+              protocol: tcp
+              mode: host
+            - target: 21213
+              published: 21213
+              protocol: udp
+              mode: host
+            - target: 21214
+              published: 21214
+              protocol: tcp
+              mode: host
+            - target: 21214
+              published: 21214
+              protocol: udp
+              mode: host
+            - target: 21215
+              published: 21215
+              protocol: tcp
+              mode: host
+            - target: 21215
+              published: 21215
+              protocol: udp
+              mode: host
+            - target: 21216
+              published: 21216
+              protocol: tcp
+              mode: host
+            - target: 21216
+              published: 21216
+              protocol: udp
+              mode: host
+            - target: 21217
+              published: 21217
+              protocol: tcp
+              mode: host
+            - target: 21217
+              published: 21217
+              protocol: udp
+              mode: host
+            - target: 21218
+              published: 21218
+              protocol: tcp
+              mode: host
+            - target: 21218
+              published: 21218
+              protocol: udp
+              mode: host
+            - target: 21219
+              published: 21219
+              protocol: tcp
+              mode: host
+            - target: 21219
+              published: 21219
+              protocol: udp
+              mode: host
+            - target: 11300
+              published: 11300
+              protocol: tcp
+              mode: host
+            - target: 21300
+              published: 21300
+              protocol: tcp
+              mode: host
+            - target: 21300
+              published: 21300
+              protocol: udp
+              mode: host
+            - target: 21301
+              published: 21301
+              protocol: tcp
+              mode: host
+            - target: 21301
+              published: 21301
+              protocol: udp
+              mode: host
+            - target: 21302
+              published: 21302
+              protocol: tcp
+              mode: host
+            - target: 21302
+              published: 21302
+              protocol: udp
+              mode: host
+            - target: 21303
+              published: 21303
+              protocol: tcp
+              mode: host
+            - target: 21303
+              published: 21303
+              protocol: udp
+              mode: host
+            - target: 21304
+              published: 21304
+              protocol: tcp
+              mode: host
+            - target: 21304
+              published: 21304
+              protocol: udp
+              mode: host
+            - target: 21305
+              published: 21305
+              protocol: tcp
+              mode: host
+            - target: 21305
+              published: 21305
+              protocol: udp
+              mode: host
+            - target: 21306
+              published: 21306
+              protocol: tcp
+              mode: host
+            - target: 21306
+              published: 21306
+              protocol: udp
+              mode: host
+            - target: 21307
+              published: 21307
+              protocol: tcp
+              mode: host
+            - target: 21307
+              published: 21307
+              protocol: udp
+              mode: host
+            - target: 21308
+              published: 21308
+              protocol: tcp
+              mode: host
+            - target: 21308
+              published: 21308
+              protocol: udp
+              mode: host
+            - target: 21309
+              published: 21309
+              protocol: tcp
+              mode: host
+            - target: 21309
+              published: 21309
+              protocol: udp
+              mode: host
+            - target: 21310
+              published: 21310
+              protocol: tcp
+              mode: host
+            - target: 21310
+              published: 21310
+              protocol: udp
+              mode: host
+            - target: 21311
+              published: 21311
+              protocol: tcp
+              mode: host
+            - target: 21311
+              published: 21311
+              protocol: udp
+              mode: host
+            - target: 21312
+              published: 21312
+              protocol: tcp
+              mode: host
+            - target: 21312
+              published: 21312
+              protocol: udp
+              mode: host
+            - target: 21313
+              published: 21313
+              protocol: tcp
+              mode: host
+            - target: 21313
+              published: 21313
+              protocol: udp
+              mode: host
+            - target: 21314
+              published: 21314
+              protocol: tcp
+              mode: host
+            - target: 21314
+              published: 21314
+              protocol: udp
+              mode: host
+            - target: 21315
+              published: 21315
+              protocol: tcp
+              mode: host
+            - target: 21315
+              published: 21315
+              protocol: udp
+              mode: host
+            - target: 21316
+              published: 21316
+              protocol: tcp
+              mode: host
+            - target: 21316
+              published: 21316
+              protocol: udp
+              mode: host
+            - target: 21317
+              published: 21317
+              protocol: tcp
+              mode: host
+            - target: 21317
+              published: 21317
+              protocol: udp
+              mode: host
+            - target: 21318
+              published: 21318
+              protocol: tcp
+              mode: host
+            - target: 21318
+              published: 21318
+              protocol: udp
+              mode: host
+            - target: 21319
+              published: 21319
+              protocol: tcp
+              mode: host
+            - target: 21319
+              published: 21319
+              protocol: udp
+              mode: host
+            - target: 11400
+              published: 11400
+              protocol: tcp
+              mode: host
+            - target: 21400
+              published: 21400
+              protocol: tcp
+              mode: host
+            - target: 21400
+              published: 21400
+              protocol: udp
+              mode: host
+            - target: 21401
+              published: 21401
+              protocol: tcp
+              mode: host
+            - target: 21401
+              published: 21401
+              protocol: udp
+              mode: host
+            - target: 21402
+              published: 21402
+              protocol: tcp
+              mode: host
+            - target: 21402
+              published: 21402
+              protocol: udp
+              mode: host
+            - target: 21403
+              published: 21403
+              protocol: tcp
+              mode: host
+            - target: 21403
+              published: 21403
+              protocol: udp
+              mode: host
+            - target: 21404
+              published: 21404
+              protocol: tcp
+              mode: host
+            - target: 21404
+              published: 21404
+              protocol: udp
+              mode: host
+            - target: 21405
+              published: 21405
+              protocol: tcp
+              mode: host
+            - target: 21405
+              published: 21405
+              protocol: udp
+              mode: host
+            - target: 21406
+              published: 21406
+              protocol: tcp
+              mode: host
+            - target: 21406
+              published: 21406
+              protocol: udp
+              mode: host
+            - target: 21407
+              published: 21407
+              protocol: tcp
+              mode: host
+            - target: 21407
+              published: 21407
+              protocol: udp
+              mode: host
+            - target: 21408
+              published: 21408
+              protocol: tcp
+              mode: host
+            - target: 21408
+              published: 21408
+              protocol: udp
+              mode: host
+            - target: 21409
+              published: 21409
+              protocol: tcp
+              mode: host
+            - target: 21409
+              published: 21409
+              protocol: udp
+              mode: host
+            - target: 21410
+              published: 21410
+              protocol: tcp
+              mode: host
+            - target: 21410
+              published: 21410
+              protocol: udp
+              mode: host
+            - target: 21411
+              published: 21411
+              protocol: tcp
+              mode: host
+            - target: 21411
+              published: 21411
+              protocol: udp
+              mode: host
+            - target: 21412
+              published: 21412
+              protocol: tcp
+              mode: host
+            - target: 21412
+              published: 21412
+              protocol: udp
+              mode: host
+            - target: 21413
+              published: 21413
+              protocol: tcp
+              mode: host
+            - target: 21413
+              published: 21413
+              protocol: udp
+              mode: host
+            - target: 21414
+              published: 21414
+              protocol: tcp
+              mode: host
+            - target: 21414
+              published: 21414
+              protocol: udp
+              mode: host
+            - target: 21415
+              published: 21415
+              protocol: tcp
+              mode: host
+            - target: 21415
+              published: 21415
+              protocol: udp
+              mode: host
+            - target: 21416
+              published: 21416
+              protocol: tcp
+              mode: host
+            - target: 21416
+              published: 21416
+              protocol: udp
+              mode: host
+            - target: 21417
+              published: 21417
+              protocol: tcp
+              mode: host
+            - target: 21417
+              published: 21417
+              protocol: udp
+              mode: host
+            - target: 21418
+              published: 21418
+              protocol: tcp
+              mode: host
+            - target: 21418
+              published: 21418
+              protocol: udp
+              mode: host
+            - target: 21419
+              published: 21419
+              protocol: tcp
+              mode: host
+            - target: 21419
+              published: 21419
+              protocol: udp
+              mode: host
+        environment:
+            FILES: ".mp4$$"
+            NCAMERAS: "5"
+            RTSP_PORT: "11000"
+            RTP_PORT: "11000"
+            PORT_STEP: "100"
+        volumes:
+            - /etc/localtime:/etc/localtime:ro
+
+
+    office2_simulated_cameras:
+        image: smtc_sensor_simulation:latest
+        ports:
+            - target: 12000
+              published: 12000
+              protocol: tcp
+              mode: host
+            - target: 22000
+              published: 22000
+              protocol: tcp
+              mode: host
+            - target: 22000
+              published: 22000
+              protocol: udp
+              mode: host
+            - target: 22001
+              published: 22001
+              protocol: tcp
+              mode: host
+            - target: 22001
+              published: 22001
+              protocol: udp
+              mode: host
+            - target: 22002
+              published: 22002
+              protocol: tcp
+              mode: host
+            - target: 22002
+              published: 22002
+              protocol: udp
+              mode: host
+            - target: 22003
+              published: 22003
+              protocol: tcp
+              mode: host
+            - target: 22003
+              published: 22003
+              protocol: udp
+              mode: host
+            - target: 22004
+              published: 22004
+              protocol: tcp
+              mode: host
+            - target: 22004
+              published: 22004
+              protocol: udp
+              mode: host
+            - target: 22005
+              published: 22005
+              protocol: tcp
+              mode: host
+            - target: 22005
+              published: 22005
+              protocol: udp
+              mode: host
+            - target: 22006
+              published: 22006
+              protocol: tcp
+              mode: host
+            - target: 22006
+              published: 22006
+              protocol: udp
+              mode: host
+            - target: 22007
+              published: 22007
+              protocol: tcp
+              mode: host
+            - target: 22007
+              published: 22007
+              protocol: udp
+              mode: host
+            - target: 22008
+              published: 22008
+              protocol: tcp
+              mode: host
+            - target: 22008
+              published: 22008
+              protocol: udp
+              mode: host
+            - target: 22009
+              published: 22009
+              protocol: tcp
+              mode: host
+            - target: 22009
+              published: 22009
+              protocol: udp
+              mode: host
+            - target: 22010
+              published: 22010
+              protocol: tcp
+              mode: host
+            - target: 22010
+              published: 22010
+              protocol: udp
+              mode: host
+            - target: 22011
+              published: 22011
+              protocol: tcp
+              mode: host
+            - target: 22011
+              published: 22011
+              protocol: udp
+              mode: host
+            - target: 22012
+              published: 22012
+              protocol: tcp
+              mode: host
+            - target: 22012
+              published: 22012
+              protocol: udp
+              mode: host
+            - target: 22013
+              published: 22013
+              protocol: tcp
+              mode: host
+            - target: 22013
+              published: 22013
+              protocol: udp
+              mode: host
+            - target: 22014
+              published: 22014
+              protocol: tcp
+              mode: host
+            - target: 22014
+              published: 22014
+              protocol: udp
+              mode: host
+            - target: 22015
+              published: 22015
+              protocol: tcp
+              mode: host
+            - target: 22015
+              published: 22015
+              protocol: udp
+              mode: host
+            - target: 22016
+              published: 22016
+              protocol: tcp
+              mode: host
+            - target: 22016
+              published: 22016
+              protocol: udp
+              mode: host
+            - target: 22017
+              published: 22017
+              protocol: tcp
+              mode: host
+            - target: 22017
+              published: 22017
+              protocol: udp
+              mode: host
+            - target: 22018
+              published: 22018
+              protocol: tcp
+              mode: host
+            - target: 22018
+              published: 22018
+              protocol: udp
+              mode: host
+            - target: 22019
+              published: 22019
+              protocol: tcp
+              mode: host
+            - target: 22019
+              published: 22019
+              protocol: udp
+              mode: host
+            - target: 12100
+              published: 12100
+              protocol: tcp
+              mode: host
+            - target: 22100
+              published: 22100
+              protocol: tcp
+              mode: host
+            - target: 22100
+              published: 22100
+              protocol: udp
+              mode: host
+            - target: 22101
+              published: 22101
+              protocol: tcp
+              mode: host
+            - target: 22101
+              published: 22101
+              protocol: udp
+              mode: host
+            - target: 22102
+              published: 22102
+              protocol: tcp
+              mode: host
+            - target: 22102
+              published: 22102
+              protocol: udp
+              mode: host
+            - target: 22103
+              published: 22103
+              protocol: tcp
+              mode: host
+            - target: 22103
+              published: 22103
+              protocol: udp
+              mode: host
+            - target: 22104
+              published: 22104
+              protocol: tcp
+              mode: host
+            - target: 22104
+              published: 22104
+              protocol: udp
+              mode: host
+            - target: 22105
+              published: 22105
+              protocol: tcp
+              mode: host
+            - target: 22105
+              published: 22105
+              protocol: udp
+              mode: host
+            - target: 22106
+              published: 22106
+              protocol: tcp
+              mode: host
+            - target: 22106
+              published: 22106
+              protocol: udp
+              mode: host
+            - target: 22107
+              published: 22107
+              protocol: tcp
+              mode: host
+            - target: 22107
+              published: 22107
+              protocol: udp
+              mode: host
+            - target: 22108
+              published: 22108
+              protocol: tcp
+              mode: host
+            - target: 22108
+              published: 22108
+              protocol: udp
+              mode: host
+            - target: 22109
+              published: 22109
+              protocol: tcp
+              mode: host
+            - target: 22109
+              published: 22109
+              protocol: udp
+              mode: host
+            - target: 22110
+              published: 22110
+              protocol: tcp
+              mode: host
+            - target: 22110
+              published: 22110
+              protocol: udp
+              mode: host
+            - target: 22111
+              published: 22111
+              protocol: tcp
+              mode: host
+            - target: 22111
+              published: 22111
+              protocol: udp
+              mode: host
+            - target: 22112
+              published: 22112
+              protocol: tcp
+              mode: host
+            - target: 22112
+              published: 22112
+              protocol: udp
+              mode: host
+            - target: 22113
+              published: 22113
+              protocol: tcp
+              mode: host
+            - target: 22113
+              published: 22113
+              protocol: udp
+              mode: host
+            - target: 22114
+              published: 22114
+              protocol: tcp
+              mode: host
+            - target: 22114
+              published: 22114
+              protocol: udp
+              mode: host
+            - target: 22115
+              published: 22115
+              protocol: tcp
+              mode: host
+            - target: 22115
+              published: 22115
+              protocol: udp
+              mode: host
+            - target: 22116
+              published: 22116
+              protocol: tcp
+              mode: host
+            - target: 22116
+              published: 22116
+              protocol: udp
+              mode: host
+            - target: 22117
+              published: 22117
+              protocol: tcp
+              mode: host
+            - target: 22117
+              published: 22117
+              protocol: udp
+              mode: host
+            - target: 22118
+              published: 22118
+              protocol: tcp
+              mode: host
+            - target: 22118
+              published: 22118
+              protocol: udp
+              mode: host
+            - target: 22119
+              published: 22119
+              protocol: tcp
+              mode: host
+            - target: 22119
+              published: 22119
+              protocol: udp
+              mode: host
+            - target: 12200
+              published: 12200
+              protocol: tcp
+              mode: host
+            - target: 22200
+              published: 22200
+              protocol: tcp
+              mode: host
+            - target: 22200
+              published: 22200
+              protocol: udp
+              mode: host
+            - target: 22201
+              published: 22201
+              protocol: tcp
+              mode: host
+            - target: 22201
+              published: 22201
+              protocol: udp
+              mode: host
+            - target: 22202
+              published: 22202
+              protocol: tcp
+              mode: host
+            - target: 22202
+              published: 22202
+              protocol: udp
+              mode: host
+            - target: 22203
+              published: 22203
+              protocol: tcp
+              mode: host
+            - target: 22203
+              published: 22203
+              protocol: udp
+              mode: host
+            - target: 22204
+              published: 22204
+              protocol: tcp
+              mode: host
+            - target: 22204
+              published: 22204
+              protocol: udp
+              mode: host
+            - target: 22205
+              published: 22205
+              protocol: tcp
+              mode: host
+            - target: 22205
+              published: 22205
+              protocol: udp
+              mode: host
+            - target: 22206
+              published: 22206
+              protocol: tcp
+              mode: host
+            - target: 22206
+              published: 22206
+              protocol: udp
+              mode: host
+            - target: 22207
+              published: 22207
+              protocol: tcp
+              mode: host
+            - target: 22207
+              published: 22207
+              protocol: udp
+              mode: host
+            - target: 22208
+              published: 22208
+              protocol: tcp
+              mode: host
+            - target: 22208
+              published: 22208
+              protocol: udp
+              mode: host
+            - target: 22209
+              published: 22209
+              protocol: tcp
+              mode: host
+            - target: 22209
+              published: 22209
+              protocol: udp
+              mode: host
+            - target: 22210
+              published: 22210
+              protocol: tcp
+              mode: host
+            - target: 22210
+              published: 22210
+              protocol: udp
+              mode: host
+            - target: 22211
+              published: 22211
+              protocol: tcp
+              mode: host
+            - target: 22211
+              published: 22211
+              protocol: udp
+              mode: host
+            - target: 22212
+              published: 22212
+              protocol: tcp
+              mode: host
+            - target: 22212
+              published: 22212
+              protocol: udp
+              mode: host
+            - target: 22213
+              published: 22213
+              protocol: tcp
+              mode: host
+            - target: 22213
+              published: 22213
+              protocol: udp
+              mode: host
+            - target: 22214
+              published: 22214
+              protocol: tcp
+              mode: host
+            - target: 22214
+              published: 22214
+              protocol: udp
+              mode: host
+            - target: 22215
+              published: 22215
+              protocol: tcp
+              mode: host
+            - target: 22215
+              published: 22215
+              protocol: udp
+              mode: host
+            - target: 22216
+              published: 22216
+              protocol: tcp
+              mode: host
+            - target: 22216
+              published: 22216
+              protocol: udp
+              mode: host
+            - target: 22217
+              published: 22217
+              protocol: tcp
+              mode: host
+            - target: 22217
+              published: 22217
+              protocol: udp
+              mode: host
+            - target: 22218
+              published: 22218
+              protocol: tcp
+              mode: host
+            - target: 22218
+              published: 22218
+              protocol: udp
+              mode: host
+            - target: 22219
+              published: 22219
+              protocol: tcp
+              mode: host
+            - target: 22219
+              published: 22219
+              protocol: udp
+              mode: host
+            - target: 12300
+              published: 12300
+              protocol: tcp
+              mode: host
+            - target: 22300
+              published: 22300
+              protocol: tcp
+              mode: host
+            - target: 22300
+              published: 22300
+              protocol: udp
+              mode: host
+            - target: 22301
+              published: 22301
+              protocol: tcp
+              mode: host
+            - target: 22301
+              published: 22301
+              protocol: udp
+              mode: host
+            - target: 22302
+              published: 22302
+              protocol: tcp
+              mode: host
+            - target: 22302
+              published: 22302
+              protocol: udp
+              mode: host
+            - target: 22303
+              published: 22303
+              protocol: tcp
+              mode: host
+            - target: 22303
+              published: 22303
+              protocol: udp
+              mode: host
+            - target: 22304
+              published: 22304
+              protocol: tcp
+              mode: host
+            - target: 22304
+              published: 22304
+              protocol: udp
+              mode: host
+            - target: 22305
+              published: 22305
+              protocol: tcp
+              mode: host
+            - target: 22305
+              published: 22305
+              protocol: udp
+              mode: host
+            - target: 22306
+              published: 22306
+              protocol: tcp
+              mode: host
+            - target: 22306
+              published: 22306
+              protocol: udp
+              mode: host
+            - target: 22307
+              published: 22307
+              protocol: tcp
+              mode: host
+            - target: 22307
+              published: 22307
+              protocol: udp
+              mode: host
+            - target: 22308
+              published: 22308
+              protocol: tcp
+              mode: host
+            - target: 22308
+              published: 22308
+              protocol: udp
+              mode: host
+            - target: 22309
+              published: 22309
+              protocol: tcp
+              mode: host
+            - target: 22309
+              published: 22309
+              protocol: udp
+              mode: host
+            - target: 22310
+              published: 22310
+              protocol: tcp
+              mode: host
+            - target: 22310
+              published: 22310
+              protocol: udp
+              mode: host
+            - target: 22311
+              published: 22311
+              protocol: tcp
+              mode: host
+            - target: 22311
+              published: 22311
+              protocol: udp
+              mode: host
+            - target: 22312
+              published: 22312
+              protocol: tcp
+              mode: host
+            - target: 22312
+              published: 22312
+              protocol: udp
+              mode: host
+            - target: 22313
+              published: 22313
+              protocol: tcp
+              mode: host
+            - target: 22313
+              published: 22313
+              protocol: udp
+              mode: host
+            - target: 22314
+              published: 22314
+              protocol: tcp
+              mode: host
+            - target: 22314
+              published: 22314
+              protocol: udp
+              mode: host
+            - target: 22315
+              published: 22315
+              protocol: tcp
+              mode: host
+            - target: 22315
+              published: 22315
+              protocol: udp
+              mode: host
+            - target: 22316
+              published: 22316
+              protocol: tcp
+              mode: host
+            - target: 22316
+              published: 22316
+              protocol: udp
+              mode: host
+            - target: 22317
+              published: 22317
+              protocol: tcp
+              mode: host
+            - target: 22317
+              published: 22317
+              protocol: udp
+              mode: host
+            - target: 22318
+              published: 22318
+              protocol: tcp
+              mode: host
+            - target: 22318
+              published: 22318
+              protocol: udp
+              mode: host
+            - target: 22319
+              published: 22319
+              protocol: tcp
+              mode: host
+            - target: 22319
+              published: 22319
+              protocol: udp
+              mode: host
+            - target: 12400
+              published: 12400
+              protocol: tcp
+              mode: host
+            - target: 22400
+              published: 22400
+              protocol: tcp
+              mode: host
+            - target: 22400
+              published: 22400
+              protocol: udp
+              mode: host
+            - target: 22401
+              published: 22401
+              protocol: tcp
+              mode: host
+            - target: 22401
+              published: 22401
+              protocol: udp
+              mode: host
+            - target: 22402
+              published: 22402
+              protocol: tcp
+              mode: host
+            - target: 22402
+              published: 22402
+              protocol: udp
+              mode: host
+            - target: 22403
+              published: 22403
+              protocol: tcp
+              mode: host
+            - target: 22403
+              published: 22403
+              protocol: udp
+              mode: host
+            - target: 22404
+              published: 22404
+              protocol: tcp
+              mode: host
+            - target: 22404
+              published: 22404
+              protocol: udp
+              mode: host
+            - target: 22405
+              published: 22405
+              protocol: tcp
+              mode: host
+            - target: 22405
+              published: 22405
+              protocol: udp
+              mode: host
+            - target: 22406
+              published: 22406
+              protocol: tcp
+              mode: host
+            - target: 22406
+              published: 22406
+              protocol: udp
+              mode: host
+            - target: 22407
+              published: 22407
+              protocol: tcp
+              mode: host
+            - target: 22407
+              published: 22407
+              protocol: udp
+              mode: host
+            - target: 22408
+              published: 22408
+              protocol: tcp
+              mode: host
+            - target: 22408
+              published: 22408
+              protocol: udp
+              mode: host
+            - target: 22409
+              published: 22409
+              protocol: tcp
+              mode: host
+            - target: 22409
+              published: 22409
+              protocol: udp
+              mode: host
+            - target: 22410
+              published: 22410
+              protocol: tcp
+              mode: host
+            - target: 22410
+              published: 22410
+              protocol: udp
+              mode: host
+            - target: 22411
+              published: 22411
+              protocol: tcp
+              mode: host
+            - target: 22411
+              published: 22411
+              protocol: udp
+              mode: host
+            - target: 22412
+              published: 22412
+              protocol: tcp
+              mode: host
+            - target: 22412
+              published: 22412
+              protocol: udp
+              mode: host
+            - target: 22413
+              published: 22413
+              protocol: tcp
+              mode: host
+            - target: 22413
+              published: 22413
+              protocol: udp
+              mode: host
+            - target: 22414
+              published: 22414
+              protocol: tcp
+              mode: host
+            - target: 22414
+              published: 22414
+              protocol: udp
+              mode: host
+            - target: 22415
+              published: 22415
+              protocol: tcp
+              mode: host
+            - target: 22415
+              published: 22415
+              protocol: udp
+              mode: host
+            - target: 22416
+              published: 22416
+              protocol: tcp
+              mode: host
+            - target: 22416
+              published: 22416
+              protocol: udp
+              mode: host
+            - target: 22417
+              published: 22417
+              protocol: tcp
+              mode: host
+            - target: 22417
+              published: 22417
+              protocol: udp
+              mode: host
+            - target: 22418
+              published: 22418
+              protocol: tcp
+              mode: host
+            - target: 22418
+              published: 22418
+              protocol: udp
+              mode: host
+            - target: 22419
+              published: 22419
+              protocol: tcp
+              mode: host
+            - target: 22419
+              published: 22419
+              protocol: udp
+              mode: host
+        environment:
+            FILES: ".mp4$$"
+            NCAMERAS: "5"
+            RTSP_PORT: "12000"
+            RTP_PORT: "12000"
+            PORT_STEP: "100"
+        volumes:
+            - /etc/localtime:/etc/localtime:ro
+
+
