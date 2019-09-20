@@ -1,22 +1,12 @@
 #!/bin/bash -e
 
 DIR=$(dirname $(readlink -f "$0"))
-OFFICE=$(echo ${1-eee1} | cut -f4 -d'e')
-yml="$DIR/docker-compose.yml"
+NOFFICES="${4:-1}"
+NCAMERAS="${5:-5}"
 
-sudo docker container prune -f
-sudo docker volume prune -f
-sudo docker network prune -f
-
-export USER_ID="$(id -u)"
-export GROUP_ID="$(id -g)"
-
-. "$DIR/build-yml.sh"
-
-if test -z "$CLOUDHOST"; then
-    export CLOUDHOST="$(hostname -i)"
-fi
-if test -z "$CAMERAHOST"; then
-    export CAMERAHOST="$(hostname -i)"
-fi
-sudo -E docker stack deploy -c "$yml" opncam
+for ((OFFICE=1;OFFICE<=${NOFFICES};OFFICE++)); do
+    RTSP_PORT=$((10000+${OFFICE}*1000))
+    RTP_PORT=$((10000+${OFFICE}*1000))
+    echo sudo -E docker run -e 'FILES=.mp4$$' -e "NCAMERAS=${NCAMERAS}" -e "RTSP_PORT=$RTSP_PORT" -e "RTP_PORT=$RTP_PORT" -e "PORT_STEP=100" --network=host --name=opncam_office${OFFICE} --rm -i smtc_sensor_simulation:latest
+    sudo -E docker run -e 'FILES=.mp4$$' -e "NCAMERAS=${NCAMERAS}" -e "RTSP_PORT=$RTSP_PORT" -e "RTP_PORT=$RTP_PORT" -e "PORT_STEP=100" --network=host --name=opncam_office${OFFICE} --rm -i smtc_sensor_simulation:latest 2> /dev/null &
+done

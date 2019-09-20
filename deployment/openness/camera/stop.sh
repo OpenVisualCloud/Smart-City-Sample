@@ -1,4 +1,10 @@
 #!/bin/bash -e
 
-OFFICE=$(echo ${1-eee1} | cut -f4 -d'e')
-sudo docker stack rm opncam
+DIR=$(dirname $(readlink -f "$0"))
+#yml="$DIR/docker-compose.yml"
+#sudo docker-compose -f "$yml" -p opncam --compatibility down
+
+for id in $(sudo docker ps | grep smtc_sensor_simulation | cut -f1 -d" "); do
+    echo $id
+    sudo -E docker kill $id
+done

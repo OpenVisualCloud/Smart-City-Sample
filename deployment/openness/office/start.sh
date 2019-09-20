@@ -4,9 +4,9 @@ DIR=$(dirname $(readlink -f "$0"))
 OFFICE=$(echo ${1-eee1} | cut -f4 -d'e')
 yml="$DIR/docker-compose.yml"
 
-sudo docker container prune -f
-sudo docker volume prune -f
-sudo docker network prune -f
+sudo docker volume rm opn${OFFICE}_office${OFFICE}_esdata -f; echo
+sudo docker volume rm opn${OFFICE}_office${OFFICE}_andata -f; echo
+sudo docker volume rm opn${OFFICE}_office${OFFICE}_stdata -f; echo
 
 export USER_ID="$(id -u)"
 export GROUP_ID="$(id -g)"

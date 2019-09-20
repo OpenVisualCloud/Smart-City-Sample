@@ -82,6 +82,7 @@
             OFFICE: "defn(`OFFICE_LOCATION')"
             DBHOST: "http://defn(`OFFICE_NAME')_db:9200"
             MQTTHOST: "defn(`OFFICE_NAME')_mqtt"
+            STHOST: "http://defn(`OFFICE_NAME')_storage:8080/api/upload"
             EVERY_NTH_FRAME: "6"
             NO_PROXY: "*"
             no_proxy: "*"
