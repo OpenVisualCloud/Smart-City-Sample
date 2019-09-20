@@ -102,6 +102,11 @@
 
     defn(`OFFICE_NAME')_storage:
         image: smtc_storage_manager:latest
+        ports:
+            - target: 8080
+              published: defn(`WEBPROXY_PORT')
+              protocol: tcp
+              mode: host
         environment:
             OFFICE: "defn(`OFFICE_LOCATION')"
             DBHOST: "http://defn(`OFFICE_NAME')_db:9200"
@@ -110,6 +115,7 @@
             SENSOR_INDEX: "sensors"
             RETENTION_TIME: "7200"
             SERVICE_INTERVAL: "7200"
+            PROXYHOST: "http://${CLOUDHOST}:defn(`WEBPROXY_PORT')"
             NO_PROXY: "*"
             no_proxy: "*"
         volumes:
