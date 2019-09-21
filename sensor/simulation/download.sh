@@ -16,7 +16,7 @@ for clip in "${CLIPS[@]}"; do
             echo "Downloading..."
             tmp="tmp_$clip_name"
             wget -q -O "$DIR/$tmp" "$url"
-            sudo docker run --rm -u $(id -u):$(id -g) -v "$DIR:/mnt:rw" -it openvisualcloud/xeon-centos76-media-ffmpeg ffmpeg -i /mnt/$tmp -c:v libx264 -profile:v baseline -x264-params keyint=30:bframes=0 -c:a aac -ss 0 /mnt/$clip_mp4
+            docker run --rm -u $(id -u):$(id -g) -v "$DIR:/mnt:rw" -it openvisualcloud/xeon-centos76-media-ffmpeg ffmpeg -i /mnt/$tmp -c:v libx264 -profile:v baseline -x264-params keyint=30:bframes=0 -c:a aac -ss 0 /mnt/$clip_mp4
             rm -f "$DIR/$tmp"
         else
             echo "Skipping..."

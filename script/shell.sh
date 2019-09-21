@@ -5,12 +5,12 @@ if test -z "${DIR}"; then
     exit -1
 fi
 
-pid="$(sudo docker ps -f ancestor=$IMAGE --format='{{.ID}}' | head -n 1)"
+pid="$(docker ps -f ancestor=$IMAGE --format='{{.ID}}' | head -n 1)"
 if [ -n "$pid" ] && [ "$#" -le "1" ]; then
     echo "bash into running container...$IMAGE"
-    sudo docker exec -it $pid ${*-/bin/bash}
+    docker exec -it $pid ${*-/bin/bash}
 else
     echo "bash into new container...$IMAGE"
     args=("$@")
-    sudo docker run --rm ${OPTIONS[@]} $(env | grep -E '_(proxy)=' | sed 's/^/-e /') --entrypoint ${1:-/bin/bash} -it "${IMAGE}" ${args[@]:1}
+    docker run --rm ${OPTIONS[@]} $(env | grep -E '_(proxy)=' | sed 's/^/-e /') --entrypoint ${1:-/bin/bash} -it "${IMAGE}" ${args[@]:1}
 fi

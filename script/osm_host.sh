@@ -6,8 +6,8 @@ if test -z "$pbf"; then
     exit 3
 fi
 
-sudo docker volume rm openstreetmap-data
-sudo docker volume create openstreetmap-data
+docker volume rm openstreetmap-data
+docker volume create openstreetmap-data
 IMAGE="overv/openstreetmap-tile-server:1.1"
-sudo docker run -v $(readlink -f "$pbf"):/data.osm.pbf -v openstreetmap-data:/var/lib/postgresql/10/main ${IMAGE} import
-sudo docker run -p 8080:80 -v openstreetmap-data:/var/lib/postgresql/10/main -d ${IMAGE} run
+docker run -v $(readlink -f "$pbf"):/data.osm.pbf -v openstreetmap-data:/var/lib/postgresql/10/main ${IMAGE} import
+docker run -p 8080:80 -v openstreetmap-data:/var/lib/postgresql/10/main -d ${IMAGE} run

@@ -1,9 +1,9 @@
 #!/bin/bash -e
 
 # setup host docker swarm if not already
-sudo docker swarm leave --force 2> /dev/null
-sudo docker swarm init --advertise-addr=172.32.1.254 2> /dev/null || echo
-JOINCMD=$(sudo docker swarm join-token worker | grep token)
+docker swarm leave --force 2> /dev/null
+docker swarm init --advertise-addr=172.32.1.254 2> /dev/null || echo
+JOINCMD=$(docker swarm join-token worker | grep token)
 
 # setup VCAC-A passwordless access
 echo "Login to VACA-A once to establish passwordless access"
@@ -20,10 +20,10 @@ echo
 ssh $NODEUSER@$NODEIP "docker swarm leave --force 2> /dev/null;$JOINCMD"
 
 # setup node labels for office1
-for id in $(sudo docker node ls -q 2> /dev/null); do
-    nodeip="$(sudo docker node inspect -f {{.Status.Addr}} $id)"
+for id in $(docker node ls -q 2> /dev/null); do
+    nodeip="$(docker node inspect -f {{.Status.Addr}} $id)"
     if [[ -n "$(echo $nodeip | grep --fixed-strings $NODEIP)" ]]; then
         echo "label $id: office1_vcac_zone=yes"
-        sudo docker node update --label-add office1_vcac_zone=yes $id
+        docker node update --label-add office1_vcac_zone=yes $id
     fi
 done

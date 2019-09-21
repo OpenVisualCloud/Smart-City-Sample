@@ -3,12 +3,12 @@
 DIR=$(dirname $(readlink -f "$0"))
 YML="${DIR}/../deployment/docker-swarm/docker-compose.yml"
 passwd=""
-for id in $(sudo docker node ls -q 2> /dev/null); do
-    ready="$(sudo docker node inspect -f {{.Status.State}} $id)"
-    active="$(sudo docker node inspect -f {{.Spec.Availability}} $id)"
-    nodeip="$(sudo docker node inspect -f {{.Status.Addr}} $id)"
-    labels="$(sudo docker node inspect -f {{.Spec.Labels}} $id)"
-    role="$(sudo docker node inspect -f {{.Spec.Role}} $id)"
+for id in $(docker node ls -q 2> /dev/null); do
+    ready="$(docker node inspect -f {{.Status.State}} $id)"
+    active="$(docker node inspect -f {{.Spec.Availability}} $id)"
+    nodeip="$(docker node inspect -f {{.Status.Addr}} $id)"
+    labels="$(docker node inspect -f {{.Spec.Labels}} $id)"
+    role="$(docker node inspect -f {{.Spec.Role}} $id)"
 
     # skip unavailable or manager node
     if test "$ready" = "ready"; then
@@ -17,31 +17,21 @@ for id in $(sudo docker node ls -q 2> /dev/null); do
                 if [[ -n $(awk -v constraints=1 -v role="node.role==${role}" -v labels="$labels" -f "$DIR/scan-yml.awk" "$YML") ]]; then
 
                     if test -n "$(echo $nodeip | grep --fixed-strings 172.32.1.1)"; then
-                    
-                        ssh root@$nodeip "docker container prune -f"
-                        ssh root@$nodeip "docker volume prune -f"
-                        ssh root@$nodeip "docker network prune -f"
-
+                        worker="root@$nodeip"
                     else
-
-                        if test -z "$passwd"; then
-                            read -p "Sudo password for workers: " -s passwd
-                            echo
-                        fi
-
-                        echo $passwd | ssh "$nodeip" sudo --prompt="" -S -- "docker container prune -f"
-                        echo $passwd | ssh "$nodeip" sudo --prompt="" -S -- "docker volume prune -f"
-                        echo $passwd | ssh "$nodeip" sudo --prompt="" -S -- "docker network prune -f"
-
+                        worker="$nodeip"
                     fi
 
+                    #ssh "$worker" "docker container prune -f"
+                    ssh "$worker" "docker volume prune -f"
+                    #ssh "$worker" "docker network prune -f"
                 fi
             fi
         fi
     fi
 done
 
-sudo docker container prune -f
-sudo docker volume prune -f
-sudo docker network prune -f
+#docker container prune -f
+docker volume prune -f
+#docker network prune -f
 

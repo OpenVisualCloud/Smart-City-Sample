@@ -14,9 +14,9 @@ docker_compose)
         echo ""
         exit 0
     fi
-    sudo docker-compose -f "$yml" -p smtc --compatibility down
+    docker-compose -f "$yml" -p smtc --compatibility down
     ;;
 *)
-    sudo docker stack rm smtc
+    docker stack rm smtc
     ;;
 esac
