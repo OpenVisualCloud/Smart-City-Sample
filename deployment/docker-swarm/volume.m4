@@ -1,6 +1,6 @@
 
 volumes:
-    cloud_esdata:
+    ifelse(eval(defn(`NOFFICES')>1),1,cloud_esdata,esdata):
         driver: local
 forloop(`office_idx',1,defn(`NOFFICES'),`dnl
     `office'defn(`office_idx')_esdata:
