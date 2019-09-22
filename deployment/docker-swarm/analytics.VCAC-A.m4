@@ -7,7 +7,7 @@
             - /etc/localtime:/etc/localtime:ro
         environment:
             VCAC_OFFICE: 'defn(`OFFICE_LOCATION')'
-            VCAC_DBHOST: 'http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')_db,cloud_db):9200'
+            VCAC_DBHOST: 'http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')_db,db):9200'
             VCAC_MQTTHOST: 'defn(`OFFICE_NAME')_mqtt'
             VCAC_EVERY_NTH_FRAME: 6
             VCAC_STHOST: 'http://defn(`OFFICE_NAME')_storage:8080/api/upload'

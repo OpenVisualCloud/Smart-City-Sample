@@ -1,36 +1,9 @@
-    cloud_db:
-        image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.8.1
-        environment:
-ifelse(eval(defn(`NOFFICES')>1),1,`dnl
-            - "cluster.name=db-cluster"
-            - "node.name=cloud_db"
-            - "node.master=true"
-            - "node.data=false"
-',`dnl
-            - "discovery.type=single-node"
-')dnl
-            - "action.auto_create_index=0"
-            - "ES_JAVA_OPTS=-Xms4096m -Xmx4096m"
-            - "NO_PROXY=*"
-            - "no_proxy=*"
-        volumes:
-            - /etc/localtime:/etc/localtime:ro
-            - cloud_esdata:/usr/share/elasticsearch/data:rw
-ifelse(defn(`PLATFORM'),`VCAC-A',`dnl
-        networks:
-            - default_net
-')dnl
-        deploy:
-            placement:
-                constraints:
-                    - node.role==manager
-
     cloud_web:
         image: smtc_web_cloud:latest
         ports:
             - "443:8080"
         environment:
-            DBHOST: "http://cloud_db:9200"
+            DBHOST: "http://ifelse(eval(defn(`NOFFICES')>1),1,cloud_db,db):9200"
             NO_PROXY: "*"
             no_proxy: "*"
         volumes:
@@ -59,4 +32,3 @@ ifelse(defn(`PLATFORM'),`VCAC-A',`dnl
             placement:
                 constraints:
                     - node.role==manager
-
