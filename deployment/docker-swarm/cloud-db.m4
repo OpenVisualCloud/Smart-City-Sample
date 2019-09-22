@@ -15,7 +15,7 @@ ifelse(eval(defn(`NOFFICES')>1),1,`dnl
             - "no_proxy=*"
         volumes:
             - /etc/localtime:/etc/localtime:ro
-            - cloud_esdata:/usr/share/elasticsearch/data:rw
+            - ifelse(eval(defn(`NOFFICES')>1),1,cloud_esdata,esdata):/usr/share/elasticsearch/data:rw
 ifelse(defn(`PLATFORM'),`VCAC-A',`dnl
         networks:
             - default_net
