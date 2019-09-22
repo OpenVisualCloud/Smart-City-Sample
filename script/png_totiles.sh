@@ -27,6 +27,11 @@ stadium)
 esac
 
 image="$2"
+if test "$image" != "${image/ /_}"; then
+    echo "image name cannot contain whitespace"
+    exit 3
+fi
+
 echo "Image: $image"
 image_dir=$(dirname $(readlink -f "$image"))
 image=$(basename $(readlink -f "$image"))
@@ -38,21 +43,21 @@ if test -z "$cwd"; then
 fi
 echo "working dir: $cwd"
 
-docker run -v "$image_dir:/home:ro" -v "$cwd:/mnt" --rm -u $(id -n):$(id -g) -it $GDAL2 sh -c "gdalinfo /home/${image} > /mnt/${image}.info"
-height=$(grep "Size is" "$cwd/${image}.info" | cut -f4 -d' ')
-width=$(grep "Size is" "$cwd/${image}.info" | cut -f3 -d' ' | cut -f1 -d',')
-rm -f "$cwd/${image}.info"
-echo "Image size: ${width}x${height}"
-if test $width -ne $height; then
+user="$(id -u):$(id -g)"
+info=$(docker run -v "$image_dir:/home:ro" -v "$cwd:/mnt" --rm -u $user -it $GDAL2 sh -c "gdalinfo /home/${image}" | grep "Size is")
+width=$(echo "$info" | sed -E 's/^[^0-9]*([0-9]+).*$/\1/')
+height=$(echo "$info" | sed -E 's/^.*, ([0-9]+).*$/\1/')
+echo "Image size: :${width}x${height}:"
+if test "$width" -ne "$height"; then
     echo "Not a square image."
     exit 3
 fi
 
-docker run -u $(id -n):$(id -g) -v "$image_dir:/home:ro" -v "$cwd:/mnt" --rm -it $GDAL2 gdal_translate -of GTiff -gcp 0 0 $x0 $y0 -gcp 0 $height $x0 $y1 -gcp $width $height $x1 $y1 -gcp $width 0 $x1 $y0 "/home/${image}" "/mnt/${image}.tmp.tif"
+docker run -u $user -v "$image_dir:/home:ro" -v "$cwd:/mnt" --rm -it $GDAL2 gdal_translate -of GTiff -gcp 0 0 $x0 $y0 -gcp 0 $height $x0 $y1 -gcp $width $height $x1 $y1 -gcp $width 0 $x1 $y0 "/home/${image}" "/mnt/${image}.tmp.tif"
 rm -f "$cwd/${image}.modified.tif"
-docker run -u $(id -n):$(id -g) -v "$cwd:/home" --rm -it $GDAL2 gdalwarp -r cubic -tps -co COMPRESS=LZW  "/home/${image}.tmp.tif" "/home/${image}.modified.tif"
+docker run -u $user -v "$cwd:/home" --rm -it $GDAL2 gdalwarp -r cubic -tps -co COMPRESS=LZW  "/home/${image}.tmp.tif" "/home/${image}.modified.tif"
 rm -f "$cwd/${image}.tmp.tif"
 rm -rf "$cwd/${scheme}"
 mkdir -p "$cwd/${scheme}"
-docker run -u $(id -n):$(id -g) -v "$cwd:/home" --rm -it $GDAL2 gdal2tiles.py -p mercator -z 13-18 -s EPSG:4326 -d -n -w none -r cubic /home/${image}.modified.tif /home/${scheme}
+docker run -u $user -v "$cwd:/home" --rm -it $GDAL2 gdal2tiles.py -p mercator -z 13-18 -s EPSG:4326 -d -n -w none -r cubic /home/${image}.modified.tif /home/${scheme}
 find "$cwd/${scheme}" -name "*.xml" -exec rm -f {} \;
