@@ -9,7 +9,7 @@ spec:
   type: NodePort
   ports:
   - port: 8080
-    nodePort: 443
+    nodePort: 30443
   selector:
     app: cloud-web
 

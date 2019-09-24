@@ -1,4 +1,4 @@
-define(`DB_NAME',`ifelse(eval(defn(`NOFFICES')>1),1,cloud-db,db')dnl
+define(`DB_NAME',ifelse(eval(defn(`NOFFICES')>1),1,cloud-db,db))dnl
 
 apiVersion: v1
 kind: Service
