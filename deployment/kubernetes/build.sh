@@ -7,7 +7,17 @@ NOFFICES="${3:-1}"
 NCAMERAS="${4:-5}"
 NANALYTICS="${5:-3}"
 
-for template in "${DIR}/*.m4"; do
-    echo "Generating ${template/.mp4/} with PLATFORM=${PLATFORM}, SCENARIO=${SCENARIO}, NOFFICES=${NOFFICES}"
-    m4 -DNOFFICES=${NOFFICES} -DSCENARIO=${SCENARIO} -DPLATFORM=${PLATFORM} -DNCAMERAS=${NCAMERAS} -DNANALYTICS=${NANALYTICS} -I "${DIR}" "${DIR}/${template}" > "${DIR}/${template/.mp4/}"
+echo "Generating templates with PLATFORM=${PLATFORM}, SCENARIO=${SCENARIO}, NOFFICES=${NOFFICES}"
+find "${DIR}" -maxdepth 1 -name "*.yaml" -exec rm -rf "{}" \;
+for template in $(find "${DIR}" -maxdepth 1 -name "*.yaml.m4" -print); do
+    case $(head -n 1 "$template") in
+    *OFFICEIDX*)
+        for ((OFFICEIDX=1;OFFICEIDX<=${NOFFICES};OFFICEIDX++)); do
+            yaml=${template/.yaml.m4/-office${OFFICEIDX}.yaml}
+            m4 -DNOFFICES=${NOFFICES} -DSCENARIO=${SCENARIO} -DPLATFORM=${PLATFORM} -DNCAMERAS=${NCAMERAS} -DNANALYTICS=${NANALYTICS} -DOFFICEIDX=${OFFICEIDX} -I "${DIR}" "${template}" > "${yaml}"
+        done;;
+    *)
+        yaml=${template/.m4/}
+        m4 -DNOFFICES=${NOFFICES} -DSCENARIO=${SCENARIO} -DPLATFORM=${PLATFORM} -DNCAMERAS=${NCAMERAS} -DNANALYTICS=${NANALYTICS} -I "${DIR}" "${template}" > "${yaml}";;
+    esac
 done

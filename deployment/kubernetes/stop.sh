@@ -1,6 +1,7 @@
 #!/bin/bash -e
 
 DIR=$(dirname $(readlink -f "$0"))
-yml="$DIR/docker-compose.yml"
 
-    docker stack rm smtc
+for yaml in $(find "${DIR}" -maxdepth 1 -name "*.yaml" -print); do
+    kubectl delete -f "$yaml"
+done
