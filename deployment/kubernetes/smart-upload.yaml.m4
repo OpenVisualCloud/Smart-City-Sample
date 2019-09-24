@@ -4,24 +4,26 @@ include(office.m4)
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: defn(`OFFICE_NAME')-where-indexing
+  name: defn(`OFFICE_NAME')-smart-upload
   labels:
-     app: defn(`OFFICE_NAME')-where-indexing
+     app: defn(`OFFICE_NAME')-smart-upload
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: defn(`OFFICE_NAME')-where-indexing
+      app: defn(`OFFICE_NAME')-smart-upload
   template:
     metadata:
       labels:
-        app: defn(`OFFICE_NAME')-where-indexing
+        app: defn(`OFFICE_NAME')-smart-upload
     spec:
       containers:
-        - name: defn(`OFFICE_NAME')-where-indexing
-          image: smtc_where_indexing:latest
+        - name: defn(`OFFICE_NAME')-smart-upload
+          image: smtc_smart_upload:latest
           imagePullPolicy: IfNotPresent
           env:
+            - name: QUERY
+              value: "time>=1568912400000 where objects.detection.bounding_box.x_max-objects.detection.bounding_box.x_min>0.01"
             - name: INDEXES
               value: "recordings,analytics"
             - name: OFFICE
@@ -29,7 +31,7 @@ spec:
             - name: DBHOST
               value: "http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')-db,db)-service:9200"
             - name: SERVICE_INTERVAL
-              value: "30"
+              value: "60"
             - name: UPDATE_INTERVAL
               value: "5"
             - name: SEARCH_BATCH
