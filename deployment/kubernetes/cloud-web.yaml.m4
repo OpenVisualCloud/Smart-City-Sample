@@ -51,10 +51,12 @@ spec:
             - mountPath: /var/run/secrets
               name: self-signed-certificate
       volumes:
-          - name: timezone
-            hostPath:
-                path: /etc/localtime
-                type: File
-          - name: self-signed-certificate
-            secret:
-               secretName: self-signed-certificate
+        - name: timezone
+          hostPath:
+            path: /etc/localtime
+              type: File
+        - name: self-signed-certificate
+          secret:
+            secretName: self-signed-certificate
+      nodeSelector:
+        "kubernetes.io/hostname": "defn(`HOSTNAME')"

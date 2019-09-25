@@ -64,9 +64,14 @@ spec:
             - mountPath: /var/www
               name: defn(`OFFICE_NAME')-stdata
       volumes:
-          - name: timezone
-            hostPath:
-                path: /etc/localtime
-                type: File
-          - name: defn(`OFFICE_NAME')-stdata
-            emptyDir: {}
+        - name: timezone
+          hostPath:
+            path: /etc/localtime
+            type: File
+        - name: defn(`OFFICE_NAME')-stdata
+          emptyDir: {}
+ifelse(eval(defn(`NOFFICES')>1),1,`dnl
+      nodeSelector:
+        defn(`OFFICE_NAME')-storage: yes  
+        defn(`OFFICE_NAME')-zone: yes
+')dnl

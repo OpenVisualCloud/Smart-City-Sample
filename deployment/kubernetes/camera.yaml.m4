@@ -72,3 +72,7 @@ forloop(`STREAMIDX',1,defn(`CAMERA_PORT_STEP'),`dnl
             hostPath:
                 path: /etc/localtime
                 type: File
+ifelse(eval(defn(`NOFFICES')>1),1,`dnl
+      nodeSelector:
+        defn(`OFFICE_NAME')-zone: yes
+')dnl

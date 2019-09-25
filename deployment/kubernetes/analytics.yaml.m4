@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
         - name: defn(`OFFICE_NAME')-analytics
-          image: `smtc_analytics_object_detection_'translit(defn(`PLATFORM'),'A-Z','a-z'):latest:latest
+          image: `smtc_analytics_object_detection_'translit(defn(`PLATFORM'),'A-Z','a-z'):latest
           imagePullPolicy: IfNotPresent
           env:
             - name: OFFICE
@@ -49,3 +49,7 @@ spec:
                 type: File
           - name: defn(`OFFICE_NAME')-andata
             emptyDir: {}
+ifelse(eval(defn(`NOFFICES')>1),1,`dnl
+      nodeSelector:
+        defn(`OFFICE_NAME')-zone: yes
+')dnl
