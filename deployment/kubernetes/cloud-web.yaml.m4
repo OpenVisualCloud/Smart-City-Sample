@@ -33,7 +33,7 @@ spec:
     spec:
       containers:
         - name: cloud-web
-          image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.8.1
+          image: smtc_web_cloud:latest
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
@@ -50,6 +50,7 @@ spec:
               readOnly: true
             - mountPath: /var/run/secrets
               name: self-signed-certificate
+              readOnly: true
       volumes:
         - name: timezone
           hostPath:
@@ -58,5 +59,5 @@ spec:
         - name: self-signed-certificate
           secret:
             secretName: self-signed-certificate
-      nodeSelector:
-        "kubernetes.io/hostname": "defn(`HOSTNAME')"
+#      nodeSelector:
+#        "kubernetes.io/hostname": "defn(`HOSTNAME')"

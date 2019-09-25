@@ -1,5 +1,6 @@
 # OFFICEIDX
 include(office.m4)
+include(../common/forloop.m4)
 
 apiVersion: apps/v1
 kind: Deployment
