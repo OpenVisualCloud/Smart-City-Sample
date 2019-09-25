@@ -8,8 +8,8 @@ metadata:
 spec:
   type: NodePort
   ports:
-  - port: 8080
-    nodePort: 30443
+    - port: 8080
+      nodePort: 30443
   selector:
     app: cloud-web
 
@@ -38,7 +38,7 @@ spec:
           ports:
             - containerPort: 8080
           env:
-            - name: "DBHOST"
+            - name: DBHOST
               value: "http://ifelse(eval(defn(`NOFFICES')>1),1,cloud-db,db)-service:9200"
             - name: NO_PROXY
               value: "*"
@@ -54,7 +54,7 @@ spec:
         - name: timezone
           hostPath:
             path: /etc/localtime
-              type: File
+            type: File
         - name: self-signed-certificate
           secret:
             secretName: self-signed-certificate

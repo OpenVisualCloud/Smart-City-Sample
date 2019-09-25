@@ -53,7 +53,7 @@ if test -x /usr/bin/kubectl; then
 
         # skip unavailable or manager node
         if test -z "$(hostname -I | grep --fixed-strings $nodeip)"; then
-            for image in $(awk -v constraints=1 -v kubernetes=1 -v labels="$labels" -f "$DIR/scan-yml.awk" "${DIR}"/*.yaml); do
+            for image in $(awk -v constraints=1 -v kubernetes=1 -v labels="$labels" -f "$DIR/scan-yml.awk" "${DIR}/../deployment/kubernetes"/*.yaml); do
                 transfer_image $image "$nodeip"
             done
         fi

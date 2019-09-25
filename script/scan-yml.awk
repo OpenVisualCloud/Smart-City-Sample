@@ -52,7 +52,6 @@ function saveim() {
         if (constraints==1) {
             gsub(/[\": ]/,"",$1);
             gsub(/[\": ]/,"",$2);
-            print("checking "$1":"$2);
             if (index(labels,$1":"$2)==0)
                 im=im2="";
         }

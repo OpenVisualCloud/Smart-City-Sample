@@ -6,7 +6,7 @@ NOFFICES="${4:-1}"
 export USER_ID="$(id -u)"
 export GROUP_ID="$(id -g)"
 
-if test -n "$1"; then shift; fi
+shift
 . "$DIR/build.sh"
 
 function create_secret {
