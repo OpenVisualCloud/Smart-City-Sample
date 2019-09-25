@@ -1,21 +1,4 @@
 
-apiVersion: networking.k8s.io/v1beta1
-kind: Ingress
-metadata:
-  name: cloud-web-service-ingress
-  annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
-spec:
-  rules:
-  - http:
-      paths:
-      - path: /
-        backend:
-          serviceName: cloud-web-service
-          servicePort: 8080
-
----
-
 apiVersion: v1
 kind: Service
 metadata:
@@ -24,7 +7,7 @@ metadata:
     app: cloud-web
 spec:
   ports:
-    - port: 8080
+    - port: 8443
   selector:
     app: cloud-web
 
@@ -51,7 +34,7 @@ spec:
           image: smtc_web_cloud:latest
           imagePullPolicy: IfNotPresent
           ports:
-            - containerPort: 8080
+            - containerPort: 8443
           env:
             - name: DBHOST
               value: "http://ifelse(eval(defn(`NOFFICES')>1),1,cloud-db,db)-service:9200"
