@@ -5,7 +5,7 @@
             OFFICE: "defn(`OFFICE_LOCATION')"
             DBHOST: "http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')_db,db):9200"
             INDEXES: "recordings,analytics"
-            RECORDING_INDEX: "recordings_defn(`OFFICE_NAME')"
+            RECORDING_INDEX: "recordings"
             SENSOR_INDEX: "sensors"
             RETENTION_TIME: "7200"
             SERVICE_INTERVAL: "7200"

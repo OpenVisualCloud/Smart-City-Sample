@@ -1,11 +1,10 @@
 
-    defn(cloud_storage:
+    cloud_storage:
         image: smtc_storage_manager:latest
         environment:
             DBHOST: "http://cloud_db:9200"
-            INDEXES: "recordings,analytics"
-            RECORDING_INDEX: "recordings_c"
-            SENSOR_INDEX: "sensors"
+            INDEXES: "recordings_c,analytics"
+            RECORDING_INDEX: "recordings"
             RETENTION_TIME: "7200"
             SERVICE_INTERVAL: "7200"
             NO_PROXY: "*"
@@ -21,5 +20,4 @@ ifelse(defn(`PLATFORM'),`VCAC-A',`dnl
             placement:
                 constraints:
                     - node.role==manager
-')dnl
 
