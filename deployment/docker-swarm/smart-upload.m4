@@ -1,3 +1,4 @@
+define(`SERVICE_INTERVAL_SMART_UPLOAD',`60')dnl
 
     defn(`OFFICE_NAME')_smart_upload:
         image: smtc_smart_upload:latest
