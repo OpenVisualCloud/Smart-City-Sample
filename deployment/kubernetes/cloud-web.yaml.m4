@@ -1,4 +1,21 @@
 
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: cloud-web-service-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /
+        backend:
+          serviceName: cloud-web-service
+          servicePort: 8080
+
+---
+
 apiVersion: v1
 kind: Service
 metadata:
@@ -6,10 +23,8 @@ metadata:
   labels:
     app: cloud-web
 spec:
-  type: NodePort
   ports:
     - port: 8080
-      nodePort: 30443
   selector:
     app: cloud-web
 

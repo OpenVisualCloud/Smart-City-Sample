@@ -1,7 +1,7 @@
     cloud_web:
         image: smtc_web_cloud:latest
         ports:
-            - "443:8080"
+            - "443:8443"
         environment:
             DBHOST: "http://ifelse(eval(defn(`NOFFICES')>1),1,cloud_db,db):9200"
             NO_PROXY: "*"
