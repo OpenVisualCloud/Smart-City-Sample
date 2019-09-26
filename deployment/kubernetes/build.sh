@@ -15,10 +15,10 @@ for template in $(find "${DIR}" -maxdepth 1 -name "*.yaml.m4" -print); do
     *OFFICEIDX*)
         for ((OFFICEIDX=1;OFFICEIDX<=${NOFFICES};OFFICEIDX++)); do
             yaml=${template/.yaml.m4/-office${OFFICEIDX}.yaml}
-            m4 -DNOFFICES=${NOFFICES} -DSCENARIO=${SCENARIO} -DPLATFORM=${PLATFORM} -DNCAMERAS=${NCAMERAS} -DNANALYTICS=${NANALYTICS} -DOFFICEIDX=${OFFICEIDX} -DHOSTNAME=${master} -I "${DIR}" "${template}" > "${yaml}"
+            m4 -DNOFFICES=${NOFFICES} -DSCENARIO=${SCENARIO} -DPLATFORM=${PLATFORM} -DNCAMERAS=${NCAMERAS} -DNANALYTICS=${NANALYTICS} -DOFFICEIDX=${OFFICEIDX} -DHOSTNAME=${master} -DUSERID=$(id -u) -DGROUPID=$(id -g) -I "${DIR}" "${template}" > "${yaml}"
         done;;
     *)
         yaml=${template/.m4/}
-        m4 -DNOFFICES=${NOFFICES} -DSCENARIO=${SCENARIO} -DPLATFORM=${PLATFORM} -DNCAMERAS=${NCAMERAS} -DNANALYTICS=${NANALYTICS} -DHOSTNAME=${master} -I "${DIR}" "${template}" > "${yaml}";;
+        m4 -DNOFFICES=${NOFFICES} -DSCENARIO=${SCENARIO} -DPLATFORM=${PLATFORM} -DNCAMERAS=${NCAMERAS} -DNANALYTICS=${NANALYTICS} -DHOSTNAME=${master} -DUSERID=$(id -u) -DGROUPID=$(id -g) -I "${DIR}" "${template}" > "${yaml}";;
     esac
 done

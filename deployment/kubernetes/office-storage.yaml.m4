@@ -43,6 +43,8 @@ spec:
               value: "defn(`OFFICE_LOCATION')"
             - name: DBHOST
               value: "http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')-db,db)-service:9200"
+            - name: PROXYHOST
+              value: "http://defn(`OFFICE_NAME')-storage-service:8080"
             - name: INDEXES
               value: "recordings,analytics"
             - name: RECORDING_INDEX
@@ -57,6 +59,16 @@ spec:
               value: "*"
             - name: no_proxy
               value: "*"
+          volumeMounts:
+            - mountPath: /etc/localtime
+              name: timezone
+              readOnly: true
+            - mountPath: /var/www
+              name: defn(`OFFICE_NAME')-stdata
+      initContainers:
+        - name: storage-init
+          image: centos:7.6.1810
+          command: ["sh","-c","mkdir -p /var/www/log /var/www/tmp /var/www/cache /var/www/upload /var/www/mp4 && chown -R defn(`USERID').defn(`GROUPID') /var/www"]
           volumeMounts:
             - mountPath: /etc/localtime
               name: timezone

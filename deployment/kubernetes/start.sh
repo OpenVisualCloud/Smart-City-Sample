@@ -3,9 +3,6 @@
 DIR=$(dirname $(readlink -f "$0"))
 NOFFICES="${4:-1}"
 
-export USER_ID="$(id -u)"
-export GROUP_ID="$(id -g)"
-
 shift
 . "$DIR/build.sh"
 
