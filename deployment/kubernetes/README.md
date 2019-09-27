@@ -33,7 +33,7 @@ make stop_kubernetes
 ```
 
 The command ```make update``` can be skipped if you have a private docker registry to host the sample images.  
-The command ```make expose_service``` can be skipped if you have a load balancer or an ingress setup. In such case, add the [LoadBalancer](https://kubernetes.io/docs/concepts/services-networking/service/#loadbalancer) or the [Ingress](https://kubernetes.io/docs/concepts/services-networking/ingress) block in [cloud-web.yaml.m4](cloud-web.yaml.m4). As a temporily solution for debugging purpose, ```make expose_service``` patches the ```cloud-web-service``` external IP. As a result, you can access to the sample UI via ```https://$(hostname):8443```.
+The command ```make expose_service``` can be skipped if you have a load balancer or an ingress setup. In such case, add the [LoadBalancer](https://kubernetes.io/docs/concepts/services-networking/service/#loadbalancer) or the [Ingress](https://kubernetes.io/docs/concepts/services-networking/ingress) block in [cloud-web.yaml.m4](cloud-web.yaml.m4). As a temporily solution for debugging purpose, ```make expose_service``` patches the ```cloud-web-service``` external IP. As a result, you can access to the sample UI via ```https://<host-ip>:8443```.
 
 ### See Also 
 
