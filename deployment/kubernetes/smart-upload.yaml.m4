@@ -1,5 +1,6 @@
 # OFFICEIDX
 include(office.m4)
+define(`SERVICE_INTERVAL_SMART_UPLOAD',60)dnl
 
 apiVersion: apps/v1
 kind: Deployment
@@ -23,7 +24,7 @@ spec:
           imagePullPolicy: IfNotPresent
           env:
             - name: QUERY
-              value: "time>=1568912400000 where objects.detection.bounding_box.x_max-objects.detection.bounding_box.x_min>0.01"
+              value: "time>=eval(defn(`SERVICE_INTERVAL_SMART_UPLOAD')*1000) where objects.detection.bounding_box.x_max-objects.detection.bounding_box.x_min>0.01"
             - name: INDEXES
               value: "recordings,analytics"
             - name: OFFICE
@@ -31,7 +32,7 @@ spec:
             - name: DBHOST
               value: "http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')-db,db)-service:9200"
             - name: SERVICE_INTERVAL
-              value: "60"
+              value: "defn(`SERVICE_INTERVAL_SMART_UPLOAD')"
             - name: UPDATE_INTERVAL
               value: "5"
             - name: SEARCH_BATCH
