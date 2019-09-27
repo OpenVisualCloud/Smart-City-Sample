@@ -8,7 +8,7 @@ import os
 
 dbhost=os.environ["DBHOST"]
 office=list(map(float,os.environ["OFFICE"].split(","))) if "OFFICE" in os.environ else None
-host=os.environ["PROXYHOST"] if "PROXYHOST" in os.environ else "http://"+socket.gethostname()+":8080"
+proxyhost=os.environ["PROXYHOST"]
 
 db=DBIngest(index="offices",office="",host=dbhost)
 r=None
@@ -25,7 +25,7 @@ while office:
                 "lat": office[0],
                 "lon": office[1],
             },
-            "uri": host,
+            "uri": proxyhost,
         },"$".join(map(str,office)))
         break
     except Exception as e:
