@@ -15,6 +15,7 @@ import os
 dbhost=os.environ["DBHOST"]
 recording_index=os.environ["RECORDING_INDEX"]
 sensor_index=os.environ["SENSOR_INDEX"] if "SENSOR_INDEX" in os.environ else None
+cloudf=False if "OFFICE" in os.environ else True
 
 class UploadHandler(web.RequestHandler):
     def __init__(self, app, request, **kwargs):
@@ -58,7 +59,8 @@ class UploadHandler(web.RequestHandler):
                 db_cam.update(sensor, {"bandwidth": bandwidth})
 
         # ingest recording
-        db_rec=DBIngest(host=dbhost, index=recording_index, office=office)
+        office1="" if cloudf else office
+        db_rec=DBIngest(host=dbhost, index=recording_index, office=office1)
         db_rec.ingest(sinfo)
 
     @gen.coroutine
