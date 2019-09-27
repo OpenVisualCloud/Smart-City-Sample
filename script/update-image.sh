@@ -31,14 +31,14 @@ for id in $(docker node ls -q 2> /dev/null); do
     ready="$(docker node inspect -f {{.Status.State}} $id)"
     active="$(docker node inspect -f {{.Spec.Availability}} $id)"
     nodeip="$(docker node inspect -f {{.Status.Addr}} $id)"
-    labels="$(docker node inspect -f {{.Spec.Labels}} $id)"
+    labels="$(docker node inspect -f {{.Spec.Labels}} $id | sed 's/map\[/node.labels./' | sed 's/\]$//' | sed 's/ / node.labels./g' | sed 's/:/=/g')"
     role="$(docker node inspect -f {{.Spec.Role}} $id)"
 
     if test "$ready" = "ready"; then
         if test "$active" = "active"; then
             # skip unavailable or manager node
             if test -z "$(hostname -I | grep --fixed-strings $nodeip)"; then
-                for image in $(awk -v constraints=1 -v dockercompose=1 -v role="node.role==${role}" -v labels="$labels" -f "$DIR/scan-yml.awk" "$YML"); do
+                for image in $(awk -v labels="$labels node.role=${role}" -f "$DIR/scan-yaml.awk" "$YML"); do
                     transfer_image $image "$nodeip"
                 done
             fi
@@ -53,7 +53,7 @@ if test -x /usr/bin/kubectl; then
 
         # skip unavailable or manager node
         if test -z "$(hostname -I | grep --fixed-strings $nodeip)"; then
-            for image in $(awk -v constraints=1 -v kubernetes=1 -v labels="$labels" -f "$DIR/scan-yml.awk" "${DIR}/../deployment/kubernetes"/*.yaml); do
+            for image in $(awk -v labels="$labels" -f "$DIR/scan-yaml.awk" "${DIR}/../deployment/kubernetes"/*.yaml); do
                 transfer_image $image "$nodeip"
             done
         fi
