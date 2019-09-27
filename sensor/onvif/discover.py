@@ -215,7 +215,7 @@ dbs = DBQuery(index="sensors",office=office,host=dbhost)
 camera_count=0
 cameras={}
 while True:
-    xml=subprocess.check_output('/usr/bin/nmap -p'+port_range+' '+ip_range+' -oX -',stderr=subprocess.STDOUT,shell=True,timeout=100)
+    xml=subprocess.check_output('/usr/bin/nmap -p'+port_range+' '+ip_range+' -Pn -oX -',stderr=subprocess.STDOUT,shell=True,timeout=100)
 
     for ip,port in parse_nmap_xml(xml, simulated):
         print("Start discovery "+ip+":"+str(port), flush=True)

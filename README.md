@@ -28,7 +28,8 @@ The following diagram illustrates how the sample is constructed: a set of servic
 
 (1) Install [docker engine](https://docs.docker.com/install).     
 (2) Install [docker compose](https://docs.docker.com/compose/install), if you plan to deploy through docker compose. Version 1.20+ is required.    
-(3) Setup [docker swarm](https://docs.docker.com/engine/swarm), if you plan to deploy through docker swarm. See [docker swarm setup](deployment/docker-swarm/README.md) for additional setup details.    
+(3) Setup [docker swarm](https://docs.docker.com/engine/swarm), if you plan to deploy through docker swarm. See [docker swarm setup](deployment/docker-swarm/README.md) for additional setup details.  
+(4) Setup [Kubernetes](https://kubernetes.io/docs/setup), if you plan to deploy through Kubernetes. Skip to [Kubernetes setup](deployment/kubernetes/README.md) for setup details.     
 
 ### Setup docker proxy:
 
@@ -64,9 +65,17 @@ Use the following commands to start/stop services via docker-compose:
 (2) make stop_docker_compose      
 ```
 
+Use the following commands to start/stop Kubernetes services:
+```
+(1) make update
+(2) make start_kubernetes
+(3) make expose_service
+(4) make stop_kubernetes
+```
+
 ### Launch browser:
 
-Launch your browser and point to `https://localhost`. Note that if you see a browser warning of self-signed certificate, please accept it to proceed to the sample UI.    
+Launch your browser and point to `https://<host-ip>:8443`. Note that if you see a browser warning of self-signed certificate, please accept it to proceed to the sample UI.    
 
 <IMG src="doc/screenshot.gif" height="270px"></IMG>    
   
@@ -87,5 +96,5 @@ ffmpeg -i <source>.mp4 -c:v libx264 -profile:v baseline -x264-params keyint=30:b
 - [CMake Options](doc/cmake.md)          
 - [Search Capabilities](doc/search.md)       
 - [Utility Scripts](doc/script.md)       
-- [Docker Swarm Setup](deployment/docker-swarm/README.md)       
-
+- [Docker Swarm Setup](deployment/docker-swarm/README.md)      
+- [Kubernetes Setup](deployment/kubernetes/README.md)

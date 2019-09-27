@@ -12,6 +12,14 @@ from signal import signal, SIGTERM, SIGQUIT
 tornadoc=None
 nginxc=None
 
+def setup_nginx_resolver():
+    with open("/etc/resolv.conf","rt") as fd:
+        for line in fd:
+            if not line.startswith("nameserver"): continue
+            with open("/etc/nginx/resolver.conf","wt") as fdr:
+                fdr.write("resolver "+line.strip().split(" ")[1]+";")
+            return
+
 def quit_service(signum, frame):
     if tornadoc: tornadoc.add_callback(tornadoc.stop)
     if nginxc: nginxc.send_signal(SIGQUIT)
@@ -34,6 +42,7 @@ if __name__ == "__main__":
     app.listen(options.port, address=options.ip)
 
     tornadoc=ioloop.IOLoop.instance();
+    setup_nginx_resolver()
     nginxc=Popen(["/usr/sbin/nginx"])
     tornadoc.start()
     nginxc.wait()

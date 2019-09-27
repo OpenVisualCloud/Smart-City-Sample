@@ -4,6 +4,7 @@
         environment:
             OFFICE: "defn(`OFFICE_LOCATION')"
             DBHOST: "http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')_db,db):9200"
+            PROXYHOST: "http://defn(`OFFICE_NAME')_storage:8080"
             INDEXES: "recordings,analytics"
             RECORDING_INDEX: "recordings"
             SENSOR_INDEX: "sensors"
