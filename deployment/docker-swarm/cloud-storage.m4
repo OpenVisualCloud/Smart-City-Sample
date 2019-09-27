@@ -12,7 +12,7 @@
             no_proxy: "*"
         volumes:
             - /etc/localtime:/etc/localtime:ro
-            - defn(`OFFICE_NAME')_stdata:/var/www:rw
+            - cloud_stdata:/var/www:rw
 ifelse(defn(`PLATFORM'),`VCAC-A',`dnl
         networks:
             - default_net
