@@ -2,9 +2,10 @@
     cloud_storage:
         image: smtc_storage_manager:latest
         environment:
-            DBHOST: "http://cloud_db:9200"
-            INDEXES: "recordings_c,analytics"
-            RECORDING_INDEX: "recordings"
+            DBHOST: "http://ifelse(eval(defn(`NOFFICES')>1),1,cloud_db,db):9200"
+            INDEXES: "recordings_c"
+            PROXYHOST: "http://cloud_storage:8080"
+            RECORDING_INDEX: "recordings_c"
             RETENTION_TIME: "7200"
             SERVICE_INTERVAL: "7200"
             NO_PROXY: "*"
@@ -20,4 +21,3 @@ ifelse(defn(`PLATFORM'),`VCAC-A',`dnl
             placement:
                 constraints:
                     - node.role==manager
-
