@@ -67,10 +67,10 @@ Use the following commands to start/stop services via docker-compose:
 
 Use the following commands to start/stop Kubernetes services:
 ```
-1. make update
-2. make start_kubernetes
-3. make expose_service
-4. make stop_kubernetes
+(1) make update
+(2) make start_kubernetes
+(3) make expose_service
+(4) make stop_kubernetes
 ```
 
 ### Launch browser:
