@@ -7,7 +7,7 @@ shift
 . "$DIR/build.sh"
 
 function create_secret {
-    kubectl create secret generic self-signed-certificate "--from-file=${DIR}/../certificate/dhparam.pem" "--from-file=${DIR}/../certificate/self.crt" "--from-file=${DIR}/../certificate/self.key"
+    kubectl create secret generic self-signed-certificate "--from-file=${DIR}/../certificate/self.crt" "--from-file=${DIR}/../certificate/self.key"
 }
 
 "$DIR/../certificate/self-sign.sh"
