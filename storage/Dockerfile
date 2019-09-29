@@ -3,6 +3,7 @@ FROM xeon-centos76-media-nginx
 
 RUN yum -y install epel-release && yum -y install python36-tornado python36-requests python36-ply python36-psutil && rm -rf /var/cache/yum/*
 
+COPY --from=smtc_common /*.py /home/
 COPY    *.py /home/
 COPY    *.conf /etc/nginx/
 CMD     ["/home/manage.py"]
