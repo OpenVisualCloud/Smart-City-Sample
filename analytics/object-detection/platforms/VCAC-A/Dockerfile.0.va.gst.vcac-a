@@ -7,6 +7,7 @@ RUN  pip3 install paho-mqtt
 RUN  rm -rf /home/video-analytics/models && rm -rf /home/video-analytics/pipelines
 RUN  sed -i 's/DEBUG/WARNING/' /home/video-analytics/app/common/settings.py
 
+COPY --from=smtc_common /*.py /home/
 COPY *.py /home/
 COPY models /home/video-analytics/models
 COPY platforms/VCAC-A/pipelines/gstreamer /home/video-analytics/pipelines

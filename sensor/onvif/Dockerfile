@@ -25,6 +25,7 @@ RUN  wget ${ZEEP_REPO} && \
      rm -rf python-onvif-zeep-${ONVIF_ZEEP_VER} && \
      rm v${ONVIF_ZEEP_VER}.tar.gz
 
+COPY --from=smtc_common /*.py /home/
 COPY    *.py /home/
 CMD     ["/home/discover.py"]
 WORKDIR /home
