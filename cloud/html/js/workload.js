@@ -70,8 +70,6 @@ var workloads={
         ctx.workload_update=new Date();
 
         apiHost.workload(office).then(function (data) {
-            if (data.cpu>75) $("#pg-office").trigger(":alert",["System Busy"]);
-
             var labels=ctx.workload.config.data.labels;
             var time=new Date(data.time);
             labels.push(time);

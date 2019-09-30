@@ -20,6 +20,10 @@ var settings={
         if (typeof(val)!="undefined") $("#frameDuration").val(val);
         return parseFloat($("#frameDuration").val());
     },
+    alert_window: function (val) {
+        if (typeof(val)!="undefined") $("#alertWindow").val(val);
+        return parseFloat($("#alertWindow").val());
+    },
     preview_query: function (val) {
         if (typeof(val)!="undefined") $("#previewQueries").val(val);
         return $("#previewQueries").val();

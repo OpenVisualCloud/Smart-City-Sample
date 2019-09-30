@@ -55,15 +55,23 @@ while True:
         alerts={}
         if nsensors["total"]>nsensors["streaming"]+nsensors["idle"]:
             alerts["maintenance_required"]=nsensors
+            alerts["maintenance_required"]["text"]="Camera servicing required."
+            alerts["maintenance_required"]["level"]="warning"
 
         if nalgorithms["total"]!=nsensors["streaming"]+nsensors["idle"]:
             alerts["balancing_required"]={
                 "nalgorithms": nalgorithms["total"],
                 "nsensors": nsensors["streaming"]+nsensors["idle"],
+                "text": "Analytics balancing required.",
+                "level": "warning",
             }
 
         # ingest alerts
         if alerts:
+            alerts["office"]={
+                "lat": office[0],
+                "lon": office[1],
+            }
             alerts["time"]=int(time.mktime(datetime.datetime.now().timetuple())*1000)
             alerts["trigger"]=rt["_id"]
             dbat.ingest(alerts)
