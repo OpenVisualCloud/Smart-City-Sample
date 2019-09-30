@@ -59,7 +59,7 @@ $("#pg-home").on(":initpage", function(e) {
         page.data('stats',stats_layer);
         var preview_layer=L.layerGroup().addTo(map);
         page.data('previews',preview_layer);
-        var alert_layer=L.layerGroup().addTo(map);
+        var alert_layer=L.layerGroup();
         page.data('alerts',alert_layer);
         alerts.setup(page, alert_layer);
 
