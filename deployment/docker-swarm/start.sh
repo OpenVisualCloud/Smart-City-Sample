@@ -20,7 +20,9 @@ docker_compose)
     fi
 
     echo "Cleanup..."
+    docker container prune -f; echo
     docker volume prune -f; echo
+    docker network prune -f; echo
 
     "$DIR/../certificate/self-sign.sh"
     shift

@@ -22,11 +22,6 @@
               uid: ${USER_ID}
               gid: ${GROUP_ID}
               mode: 0440
-            - source: dhparam_pem
-              target: dhparam.pem
-              uid: ${USER_ID}
-              gid: ${GROUP_ID}
-              mode: 0444
 ifelse(defn(`PLATFORM'),`VCAC-A',`dnl
         networks:
             - default_net

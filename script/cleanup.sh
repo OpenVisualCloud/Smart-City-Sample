@@ -22,16 +22,16 @@ for id in $(docker node ls -q 2> /dev/null); do
                         worker="$nodeip"
                     fi
 
-                    #ssh "$worker" "docker container prune -f"
+                    ssh "$worker" "docker container prune -f"
                     ssh "$worker" "docker volume prune -f"
-                    #ssh "$worker" "docker network prune -f"
+                    ssh "$worker" "docker network prune -f"
                 fi
             fi
         fi
     fi
 done
 
-#docker container prune -f
+docker container prune -f
 docker volume prune -f
-#docker network prune -f
+docker network prune -f
 
