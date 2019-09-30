@@ -27,7 +27,7 @@ spec:
             - name: DBHOST
               value: "http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')-db,db)-service:9200"
             - name: SERVICE_INTERVAL
-              value: "300"
+              value: "30"
             - name: NO_PROXY
               value: "*"
             - name: no_proxy

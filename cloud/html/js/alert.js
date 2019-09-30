@@ -1,4 +1,3 @@
-
 var alerts={
     setup: function (page, layer) {
         layer.on('add', function () {
@@ -23,22 +22,25 @@ var alerts={
         });
     },
     append: function (time,office,text,level) {
-        var screen=$("[alert-screen]");
+        var screen=$("[alert-screen] ul");
         var timestamp=time.toLocaleDateString(undefined,{
             dateStyle:'short',timeStyle:'short', hour12:false,
         });
         var colors={info:"#4AFC0B",warning:"#F7FA0C",fatal:"#FF0013"};
-        var p=$('<p style="color:'+colors[level]+'">'+timestamp+' @['+office.lat+','+office.lon+']: '+text+'</p>');
-        p.data('time',time);
+        var li=$('<li style="color:'+colors[level]+';font-size:0">'+timestamp+' @['+office.lat+','+office.lon+']: '+text+'</li>');
+        li.data('time',time);
 
         var exist=false;
-        $.each(screen.find("p"),function (x,p1) {
-            if (p.text()==$(p1).text()) exist=true;
+        $.each(screen.find("li"),function (x,l1) {
+            if (li.text()==$(l1).text()) exist=true;
         });
-        if (!exist) screen.append(p);
+        if (!exist) {
+            screen.prepend(li);
+            screen.find("li:first").animate({'font-size':'1em'});
+        }
 
-        while (screen.find("p").length>9)
-            screen.find("p:first").remove();
+        if (screen.find("li").length>50)
+            screen.find("li:last").remove();
     },
     update: function () {
         var screen=$("[alert-screen]");
@@ -47,6 +49,7 @@ var alerts={
                 $.each(r.response, function (x,r1) {
                     var time=new Date(r1._source.time);
                     $.each(["info","warning","fatal"], function (x, level) {
+                        if (!(level in r1._source)) return;
                         $.each(r1._source[level], function (x,v) {
                             alerts.append(time,r1._source.office,v.message,level);
                         });
