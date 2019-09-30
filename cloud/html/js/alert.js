@@ -1,19 +1,33 @@
 
 var alerts={
-    setup: function (layer) {
+    setup: function (page, layer) {
         layer.on('add', function () {
             $("[alert-screen]").show();
         }).on('remove', function () {
             $("[alert-screen]").hide();
         });
         setTimeout(alerts.update,5000);
+
+        $("[alert-screen]").bind('dragstart',function (e) {
+            var screen=$(this);
+            var rect=screen[0].getBoundingClientRect();
+            var offsetX=e.clientX-rect.left;
+            var offsetY=e.clientY-rect.top;
+
+            page.find("#mapCanvas").unbind('dragover').on('dragover', function (e) {
+                e.preventDefault();
+            }).unbind('drop').on('drop', function (e) {
+                e.preventDefault();
+                screen.css({left:e.clientX-offsetX+'px',top:e.clientY-offsetY+'px'});
+            });
+        });
     },
     append: function (time,office,text,level) {
         var screen=$("[alert-screen]");
         var timestamp=time.toLocaleDateString(undefined,{
             dateStyle:'short',timeStyle:'short', hour12:false,
         });
-        var colors={info:"#145A32",warning:"#7D6608",fatal:"#641E16"};
+        var colors={info:"#4AFC0B",warning:"#F7FA0C",fatal:"#FF0013"};
         var p=$('<p style="color:'+colors[level]+'">'+timestamp+' @['+office.lat+','+office.lon+']: '+text+'</p>');
         p.data('time',time);
 
@@ -27,14 +41,15 @@ var alerts={
             screen.find("p:first").remove();
     },
     update: function () {
-        var page=$("[alert-screen]");
-        if (page.is(":visible")) {
+        var screen=$("[alert-screen]");
+        if (screen.is(":visible")) {
             apiHost.search("alerts","time>=now-"+settings.alert_window(),null).then(function (r) {
                 $.each(r.response, function (x,r1) {
                     var time=new Date(r1._source.time);
-                    $.each(r1._source, function (k,v) {
-                        if (k.endsWith("_required") && "text" in v)
-                            alerts.append(time,r1._source.office,v.text,v.level);
+                    $.each(["info","warning","fatal"], function (x, level) {
+                        $.each(r1._source[level], function (x,v) {
+                            alerts.append(time,r1._source.office,v.message,level);
+                        });
                     });
                 });
             }).catch(function () {

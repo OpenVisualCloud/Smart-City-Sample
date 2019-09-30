@@ -52,29 +52,33 @@ while True:
             "total": dba.count("name:*"),
         }
    
-        alerts={}
+        warnings=[]
         if nsensors["total"]>nsensors["streaming"]+nsensors["idle"]:
-            alerts["maintenance_required"]=nsensors
-            alerts["maintenance_required"]["text"]="Camera servicing required."
-            alerts["maintenance_required"]["level"]="warning"
+            warnings.append({ 
+                "message": "Camera servicing required.",
+                "args": nsensors,
+            })
 
         if nalgorithms["total"]!=nsensors["streaming"]+nsensors["idle"]:
-            alerts["balancing_required"]={
-                "nalgorithms": nalgorithms["total"],
-                "nsensors": nsensors["streaming"]+nsensors["idle"],
-                "text": "Analytics balancing required.",
-                "level": "warning",
-            }
+            warnings.append({
+                "message": "Analytics balancing required.",
+                "args": {
+                    "nalgorithms": nalgorithms["total"],
+                    "nsensors": nsensors["streaming"]+nsensors["idle"],
+                },
+            })
 
         # ingest alerts
-        if alerts:
-            alerts["office"]={
-                "lat": office[0],
-                "lon": office[1],
-            }
-            alerts["time"]=int(time.mktime(datetime.datetime.now().timetuple())*1000)
-            alerts["trigger"]=rt["_id"]
-            dbat.ingest(alerts)
+        if warnings:
+            dbat.ingest({
+                "office": {
+                    "lat": office[0],
+                    "lon": office[1],
+                },
+                "time": int(time.mktime(datetime.datetime.now().timetuple())*1000),
+                "trigger": rt["_id"],
+                "warning": warnings,
+            })
 
     except Exception as e:
         print("Exception "+str(e),flush=True)

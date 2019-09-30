@@ -61,7 +61,7 @@ $("#pg-home").on(":initpage", function(e) {
         page.data('previews',preview_layer);
         var alert_layer=L.layerGroup().addTo(map);
         page.data('alerts',alert_layer);
-        alerts.setup(alert_layer);
+        alerts.setup(page, alert_layer);
 
         L.control.layers(tiles,{
             "Density Estimation": heatmap_layer,
