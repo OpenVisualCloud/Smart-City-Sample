@@ -55,6 +55,11 @@
   </div>
 
   <div class="input-group">
+    <span class="input-group-label" style="width:40%"><b>Alert Window (ms):</b></span>
+    <input class="input-group-field" id="alertWindow" type="number" value=300000>
+  </div>
+
+  <div class="input-group">
     <span class="input-group-label" style="width:40%"><b>Preview Queries:</b></span>
     <input class="input-group-field" id="previewQueries" type="text" value="time>=now-200000">
   </div>

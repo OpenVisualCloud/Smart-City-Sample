@@ -4,7 +4,7 @@
         volumes:
             - /etc/localtime:/etc/localtime:ro
         environment:
-            SERVICE_INTERVAL: "300"
+            SERVICE_INTERVAL: "30"
             OFFICE: "defn(`OFFICE_LOCATION')"
             DBHOST: "http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')_db,db):9200"
             NO_PROXY: "*"
