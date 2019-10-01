@@ -4,6 +4,7 @@ from db_ingest import DBIngest
 from db_query import DBQuery
 from signal import SIGTERM, signal
 import datetime
+import psutil
 import time
 import os
 
@@ -52,21 +53,48 @@ while True:
             "total": dba.count("name:*"),
         }
    
-        alerts={}
+        warnings=[]
         if nsensors["total"]>nsensors["streaming"]+nsensors["idle"]:
-            alerts["maintenance_required"]=nsensors
+            warnings.append({ 
+                "message": "Camera servicing required",
+                "args": nsensors,
+            })
 
         if nalgorithms["total"]!=nsensors["streaming"]+nsensors["idle"]:
-            alerts["balancing_required"]={
-                "nalgorithms": nalgorithms["total"],
-                "nsensors": nsensors["streaming"]+nsensors["idle"],
-            }
+            warnings.append({
+                "message": "Analytics balancing required",
+                "args": {
+                    "nalgorithms": nalgorithms["total"],
+                    "nsensors": nsensors["streaming"]+nsensors["idle"],
+                },
+            })
+
+        fatals=[]
+        # check CPU utilization
+        workload={
+            "args": {
+                "cpu": psutil.cpu_percent(),
+            },
+        }
+        if workload["args"]["cpu"]>90:
+            workload["message"]="Server overload: "+str(workload["args"]["cpu"])+"%"
+            fatals.append(workload)
+        elif workload["args"]["cpu"]>80:
+            workload["message"]="Server busy: "+str(workload["args"]["cpu"])+"%"
+            warnings.append(workload)
 
         # ingest alerts
-        if alerts:
-            alerts["time"]=int(time.mktime(datetime.datetime.now().timetuple())*1000)
-            alerts["trigger"]=rt["_id"]
-            dbat.ingest(alerts)
+        if warnings or fatals:
+            dbat.ingest({
+                "office": {
+                    "lat": office[0],
+                    "lon": office[1],
+                },
+                "time": int(time.mktime(datetime.datetime.now().timetuple())*1000),
+                "trigger": rt["_id"],
+                "warning": warnings,
+                "fatal": fatals,
+            })
 
     except Exception as e:
         print("Exception "+str(e),flush=True)

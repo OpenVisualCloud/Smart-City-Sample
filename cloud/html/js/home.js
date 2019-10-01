@@ -59,17 +59,17 @@ $("#pg-home").on(":initpage", function(e) {
         page.data('stats',stats_layer);
         var preview_layer=L.layerGroup().addTo(map);
         page.data('previews',preview_layer);
+        var alert_layer=L.layerGroup().addTo(map);
+        page.data('alerts',alert_layer);
+        alerts.setup(page, alert_layer);
 
         L.control.layers(tiles,{
             "Density Estimation": heatmap_layer,
             "Statistics Histogram": stats_layer,
             "Preview Clips": preview_layer, 
+            "Scrolling Alerts": alert_layer,
         }).addTo(map);
 
-        //var circle = new L.Circle([33.310955,-111.932443],2000).addTo(map);
-        //console.log(circle.getBounds());
-        //var circle = new L.Circle([37.388085,-121.963472],2000).addTo(map);
-        //console.log(circle.getBounds());
         map.on('zoomend', function () {
             var update_layer=function (layer) {
                 var z=layer._zoomargs;
