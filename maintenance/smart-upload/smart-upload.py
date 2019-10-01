@@ -48,8 +48,9 @@ while True:
     try:
         for q in dbq.search(query):
             filename=smhost+'/'+q["_source"]["path"]
+            print("filename: ", filename)
 
-            r=requests.get(filename, timeout=1)
+            r=requests.head(filename, timeout=10)
             if r.status_code!=200: 
                 print("pipeline status: "+str(r.status_code), flush=True)
                 print(r.text, flush=True)
