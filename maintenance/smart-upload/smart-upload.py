@@ -17,17 +17,15 @@ office=list(map(float, os.environ["OFFICE"].split(",")))
 dbhost=os.environ["DBHOST"]
 smhost=os.environ["SMHOST"]
 
-def download_file(url):
-    local_filename = url.split('/')[-1]
-    print("local_filename: ", local_filename)
-    # NOTE the stream=True parameter below
-    with requests.get(url, stream=True) as r:
-        r.raise_for_status()
-        with open(local_filename, 'wb') as f:
-            for chunk in r.iter_content(chunk_size=8192):
-                if chunk: # filter out keep-alive new chunks
-                    f.write(chunk)
-                    # f.flush()
+def download_file(r):
+    local_filename = r.url.split('/')[-1]
+    # # NOTE the stream=True parameter below
+    # r.raise_for_status()
+    # with open(local_filename, "wb") as f:
+        # for chunk in r.iter_content(chunk_size=8192):
+            # if chunk: # filter out keep-alive new chunks
+                # f.write(chunk)
+                # # f.flush()
     return local_filename
 
 def quit_service(signum, sigframe):
@@ -59,7 +57,7 @@ while True:
 
     try:
         for q in dbq.search(query):
-            filename=smhost+q["_source"]["path"]
+            filename=smhost+'/'+q["_source"]["path"]
             #print("update: ", filename)
             #print("time: ", (os.path.basename(filename).split('.')[0]) )
             #print("office: ", str(office[0])+","+str(office[1]))
@@ -71,7 +69,8 @@ while True:
                 break
 
             print("get url: ", r.url)
-            local_filename = download_file(r.url)
+            local_filename = download_file(r)
+            print("download to: ", local_filename)
 
             # #add updates to request
             # with open(filename,"rb") as fd:
