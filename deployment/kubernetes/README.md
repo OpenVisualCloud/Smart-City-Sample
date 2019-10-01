@@ -28,12 +28,10 @@ kubectl label node <worker-node> office1_storage=yes
 ```
 make update
 make start_kubernetes
-make expose_service
 make stop_kubernetes
 ```
 
-The command ```make update``` can be skipped if you have a private docker registry to host the sample images.  
-The command ```make expose_service``` can be skipped if you have a load balancer or ingress setup. In such case, add the [LoadBalancer](https://kubernetes.io/docs/concepts/services-networking/service/#loadbalancer) or the [Ingress](https://kubernetes.io/docs/concepts/services-networking/ingress) block in [cloud-web.yaml.m4](cloud-web.yaml.m4). Otherwise, ```make expose_service``` provides a simple (non-production) solution to expose the sample UI to your host ```https://<host-ip>:8443```.
+Note: The command ```make update``` can be skipped if you have a private docker registry to host the sample images.  
 
 ### See Also 
 

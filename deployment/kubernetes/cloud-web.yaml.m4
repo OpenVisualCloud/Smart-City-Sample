@@ -7,7 +7,9 @@ metadata:
     app: cloud-web
 spec:
   ports:
-    - port: 8443
+    - port: 443
+      targetPort: 8443
+      name: https
   selector:
     app: cloud-web
 
