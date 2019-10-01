@@ -8,6 +8,7 @@ define(`SERVICE_INTERVAL_SMART_UPLOAD',`60')dnl
             OFFICE: "defn(`OFFICE_LOCATION')"
             DBHOST: "http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')_db,db):9200"
             SMHOST: "http://defn(`OFFICE_NAME')_storage:8080/recording"
+            CLOUDHOST: "http://cloud_storage:8080/recording"
             SERVICE_INTERVAL: defn(`SERVICE_INTERVAL_SMART_UPLOAD')
             UPDATE_INTERVAL: "5"
             SEARCH_BATCH: "3000"

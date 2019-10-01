@@ -32,7 +32,9 @@ spec:
             - name: DBHOST
               value: "http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')-db,db)-service:9200"
             - name: SMHOST
-              value: "http://defn(`OFFICE_NAME')_storage:8080/recording"
+              value: "http://defn(`OFFICE_NAME')-storage-service:8080/recording"
+            - name: CLOUDHOST
+              value: "http://cloud-storage-service:8080/recording"
             - name: SERVICE_INTERVAL
               value: "defn(`SERVICE_INTERVAL_SMART_UPLOAD')"
             - name: UPDATE_INTERVAL
