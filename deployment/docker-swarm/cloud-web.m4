@@ -2,7 +2,7 @@
         image: smtc_web_cloud:latest
         ports:
             - target: 8443
-              published: 8443
+              published: 443
               protocol: tcp
               mode: host
         environment:
