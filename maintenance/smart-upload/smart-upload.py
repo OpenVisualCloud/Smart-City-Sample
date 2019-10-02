@@ -19,15 +19,15 @@ dbhost=os.environ["DBHOST"]
 smhost=os.environ["SMHOST"]
 cloudhost=os.environ["CLOUDHOST"]
 
-def upload(cloudhost, filename, office, timestamp):
+def upload(cloudhost, filename, office, sensor, timestamp):
     print("time: "+timestamp)
     print("office: "+str(office[0])+","+str(office[1]))
-    #print("sensor: "+sensor)
+    print("sensor: "+sensor)
     with open(filename,"rb") as fd:
         r=requests.post(cloudhost,data={
             "time":timestamp,
             "office":str(office[0])+","+str(office[1]),
-            #"sensor":#sensor,
+            "sensor":sensor,
         },files={
             "file": fd,
         },verify=False)
@@ -66,7 +66,6 @@ while True:
             print("url: ", url)
 
             mp4file="/tmp/"+str(os.path.basename(url))
-            timestamp=(mp4file).split('.')[0]
             print("mp4file: ", mp4file)
 
             print("start ffmpeg transcoding")
@@ -74,7 +73,9 @@ while True:
             print("done ffmpeg transcoding")
 
             print("send to cloud storage: ", cloudhost)
-            upload(cloudhost, mp4file, office, timestamp)
+            sensor=q["_source"]["sensor"]
+            timestamp=(str(os.path.basename(url))).split('.')[0]
+            upload(cloudhost, mp4file, office, sensor, timestamp)
             print("done upload")
 
 
