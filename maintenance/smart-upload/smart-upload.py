@@ -2,6 +2,7 @@
 
 from db_ingest import DBIngest
 from db_query import DBQuery
+from probe import probe, run
 from signal import signal, SIGTERM
 import requests
 import os
@@ -18,6 +19,20 @@ dbhost=os.environ["DBHOST"]
 smhost=os.environ["SMHOST"]
 cloudhost=os.environ["CLOUDHOST"]
 
+def upload(cloudhost, filename, office, timestamp):
+    print("time: "+timestamp)
+    print("office: "+str(office[0])+","+str(office[1]))
+    #print("sensor: "+sensor)
+    with open(filename,"rb") as fd:
+        r=requests.post(cloudhost,data={
+            "time":timestamp,
+            "office":str(office[0])+","+str(office[1]),
+            #"sensor":#sensor,
+        },files={
+            "file": fd,
+        },verify=False)
+    os.remove(filename)
+        
 def quit_service(signum, sigframe):
     if dbs and rs: dbs.delete(rs["_id"])
     exit(143)
@@ -47,32 +62,22 @@ while True:
 
     try:
         for q in dbq.search(query):
-            filename=smhost+'/'+q["_source"]["path"]
-            print("filename: ", filename)
+            url=smhost+'/'+q["_source"]["path"]
+            print("url: ", url)
 
-            r=requests.head(filename, timeout=10)
-            if r.status_code!=200: 
-                print("pipeline status: "+str(r.status_code), flush=True)
-                print(r.text, flush=True)
-                break
+            mp4file=str(os.path.basename(url))
+            timestamp=(mp4file).split('.')[0]
+            print("mp4file: ", mp4file)
 
-            #add updates to request
-            print("get url: ", r.url)
+            print("start ffmpeg transcoding")
+            list(run(["/usr/bin/ffmpeg","-f","mp4","-i",url,"-c:v","libsvt-hevc",mp4file]))
+            list(run(["/usr/bin/ffmpeg","-i",mp4file,"-vf","scale=640:360","-frames:v","1",str(timestamp)+".png"]))
+            print("done ffmpeg transcoding")
+
             print("send to cloud storage: ", cloudhost)
-            print("office: ", str(office[0])+","+str(office[1]))
-            #print("sensor: ", sensor)
-            #print("year: ", year)
-            #print("month: ", month)
-            #print("day: ", day)
-            #print("time: ", str((os.path.basename(filename).split('.')[0]))
-            # r=requests.post(cloudhost,data={
-                # "office":str(office[0])+","+str(office[1]),
-                # "sensor":***,
-                # "year":***, 
-                # "month":***,
-                # "day":***,
-                # "time":str((os.path.basename(filename).split('.')[0])),
-                # })
+            upload(cloudhost, mp4file, office, timestamp)
+            print("done upload")
+
 
     except Exception as e:
         print("Exception: "+str(e), flush=True)
