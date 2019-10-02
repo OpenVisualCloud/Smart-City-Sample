@@ -1,3 +1,4 @@
+
 secrets:
     self_key:
         file: ../certificate/self.key

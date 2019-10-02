@@ -1,4 +1,4 @@
-include(../common/location.m4)dnl
+include(../../script/location.m4)dnl
 define(`OFFICE_NAME',`office'defn(`OFFICEIDX'))dnl
 define(`OFFICE_LOCATION',defn(`location_'defn(`OFFICE_NAME')))dnl
 define(`CAMERA_NETWORK',192.168.defn(`id').0/24)dnl

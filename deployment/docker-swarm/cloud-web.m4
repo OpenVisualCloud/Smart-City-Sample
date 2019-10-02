@@ -1,3 +1,4 @@
+
     cloud_web:
         image: smtc_web_cloud:latest
         ports:

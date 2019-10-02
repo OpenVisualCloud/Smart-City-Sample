@@ -1,3 +1,4 @@
+
     ifelse(eval(defn(`NOFFICES')>1),1,cloud_db,db):
         image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.8.1
         environment:
