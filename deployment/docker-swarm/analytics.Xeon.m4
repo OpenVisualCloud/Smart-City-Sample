@@ -1,3 +1,4 @@
+
     defn(`OFFICE_NAME')_analytics:
         image: `smtc_analytics_object_detection_'translit(defn(`PLATFORM'),'A-Z','a-z'):latest
         environment:
@@ -15,10 +16,4 @@
             replicas: defn(`NANALYTICS')
             placement:
                 constraints:
-ifelse(eval(defn(`NOFFICES')>1),1,`dnl
-                    - node.labels.defn(`OFFICE_NAME')_zone==yes
-                    - node.labels.defn(`OFFICE_NAME')_storage==yes
-',`dnl
-                    - node.role==manager
-')dnl
-
+                    - defn(`OFFICE_ZONE')

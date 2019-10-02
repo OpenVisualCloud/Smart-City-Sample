@@ -1,3 +1,4 @@
+
     cloud_web:
         image: smtc_web_cloud:latest
         ports:
@@ -7,6 +8,7 @@
               mode: host
         environment:
             DBHOST: "http://ifelse(eval(defn(`NOFFICES')>1),1,cloud_db,db):9200"
+            `SCENARIO': "defn(`SCENARIO')"
             NO_PROXY: "*"
             no_proxy: "*"
         volumes:

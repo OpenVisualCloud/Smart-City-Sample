@@ -1,3 +1,4 @@
+
 define(`SERVICE_INTERVAL_SMART_UPLOAD',`60')dnl
 
     defn(`OFFICE_NAME')_smart_upload:
@@ -26,5 +27,5 @@ ifelse(defn(`PLATFORM'),`VCAC-A',`dnl
                 condition: none
             placement:
                 constraints:
-                    - ifelse(eval(defn(`NOFFICES')>1),1,node.labels.defn(`OFFICE_NAME')_zone==yes,node.role==manager)
+                    - defn(`OFFICE_ZONE')
 
