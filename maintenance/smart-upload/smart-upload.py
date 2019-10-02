@@ -65,13 +65,12 @@ while True:
             url=smhost+'/'+q["_source"]["path"]
             print("url: ", url)
 
-            mp4file=str(os.path.basename(url))
+            mp4file="/tmp/"+str(os.path.basename(url))
             timestamp=(mp4file).split('.')[0]
             print("mp4file: ", mp4file)
 
             print("start ffmpeg transcoding")
-            list(run(["/usr/bin/ffmpeg","-f","mp4","-i",url,"-c:v","libsvt-hevc",mp4file]))
-            list(run(["/usr/bin/ffmpeg","-i",mp4file,"-vf","scale=640:360","-frames:v","1",str(timestamp)+".png"]))
+            list(run(["/usr/bin/ffmpeg","-f","mp4","-i",url,"-c:v","libsvt_hevc",mp4file]))
             print("done ffmpeg transcoding")
 
             print("send to cloud storage: ", cloudhost)
