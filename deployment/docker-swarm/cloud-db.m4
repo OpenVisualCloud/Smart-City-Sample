@@ -6,12 +6,12 @@ ifelse(eval(defn(`NOFFICES')>1),1,`dnl
             - "cluster.name=db-cluster"
             - "node.name=cloud_db"
             - "node.master=true"
-            - "node.data=false"
+            - "node.data=true"
 ',`dnl
             - "discovery.type=single-node"
 ')dnl
             - "action.auto_create_index=0"
-            - "ES_JAVA_OPTS=-Xms2048m -Xmx4096m"
+            - "ES_JAVA_OPTS=-Xms2048m -Xmx2048m"
             - "NO_PROXY=*"
             - "no_proxy=*"
         volumes:

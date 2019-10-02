@@ -46,10 +46,6 @@ spec:
               value: "http://defn(`OFFICE_NAME')-storage-service.default.svc.cluster.local:8080"
             - name: INDEXES
               value: "recordings,analytics"
-            - name: RECORDING_INDEX
-              value: "recordings"
-            - name: SENSOR_INDEX
-              value: "sensors"
             - name: RETENTION_TIME
               value: "7200"
             - name: SERVICE_INTERVAL

@@ -43,8 +43,6 @@ spec:
               value: "http://cloud-storage-service.default.svc.cluster.local:8080"
             - name: INDEXES
               value: "recordings_c"
-            - name: RECORDING_INDEX
-              value: "recordings_c"
             - name: RETENTION_TIME
               value: "7200"
             - name: SERVICE_INTERVAL
