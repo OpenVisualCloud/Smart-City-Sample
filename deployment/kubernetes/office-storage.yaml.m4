@@ -1,4 +1,3 @@
-# OFFICEIDX
 include(office.m4)
 
 apiVersion: v1
@@ -84,6 +83,6 @@ spec:
           emptyDir: {}
 ifelse(eval(defn(`NOFFICES')>1),1,`dnl
       nodeSelector:
-        defn(`OFFICE_NAME')-storage: yes  
-        defn(`OFFICE_NAME')-zone: yes
+        defn(`STORAGE_ZONE'): yes  
+        defn(`OFFICE_ZONE'): yes
 ')dnl

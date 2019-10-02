@@ -1,7 +1,11 @@
 include(../../script/location.m4)dnl
-define(`OFFICE_NAME',`office'defn(`OFFICEIDX'))dnl
-define(`OFFICE_LOCATION',defn(`location_'defn(`OFFICE_NAME')))dnl
-define(`CAMERA_NETWORK',192.168.defn(`id').0/24)dnl
+include(../../script/scenario.m4)dnl
+define(`SCENARIO_NAME',defn(`scenario'defn(`SCENARIOIDX')))dnl
+define(`OFFICE_NAME',defn(`SCENARIO_NAME')`-office'defn(`OFFICEIDX'))dnl
+define(`OFFICE_LOCATION',ifelse(index(defn(`SCENARIO'),defn(`SCENARIO_NAME')),-1,,`defn(`location_'defn(`SCENARIO_NAME')`_office'defn(`OFFICEIDX'))'))dnl
+define(`CAMERA_NETWORK',192.168.eval(defn(`SCENARIOIDX')*defn(`NOFFICES')+defn(`id')-1).0/24)dnl
 define(`CAMERA_RTSP_PORT',17000)dnl
 define(`CAMERA_RTP_PORT',27000)dnl
 define(`CAMERA_PORT_STEP',100)dnl
+define(`OFFICE_ZONE',`office'defn(OFFICEIDX)-zone)dnl
+define(`STORAGE_ZONE',`office'defn(OFFICEIDX)-storage)dnl

@@ -1,4 +1,3 @@
-# OFFICEIDX
 include(office.m4)
 include(../../script/forloop.m4)
 
@@ -32,7 +31,7 @@ spec:
             - name: OFFICE
               value: "defn(`OFFICE_LOCATION')"
             - name: LOCATION
-              value: "forloop(`cid',1,defn(`NCAMERAS'),`defn(`location_'defn(`OFFICE_NAME')`_camera'defn(`cid')) ')"
+              value: "forloop(`CAMERAIDX',1,defn(`NCAMERAS'),`defn(`location_'defn(`SCENARIO_NAME')`_office'defn(`OFFICEIDX')`_camera'defn(`CAMERAIDX')) ')"
             - name: DBHOST
               value: "http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')-db,db)-service:9200"
             - name: SERVICE_INTERVAL
@@ -52,5 +51,5 @@ spec:
                 type: File
 ifelse(eval(defn(`NOFFICES')>1),1,`dnl
       nodeSelector:
-        defn(`OFFICE_NAME')-zone: yes
+        defn(`OFFICE_ZONE'): yes
 ')dnl

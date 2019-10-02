@@ -1,4 +1,3 @@
-# OFFICEIDX
 include(office.m4)
 define(`SERVICE_INTERVAL_SMART_UPLOAD',60)dnl
 
@@ -58,6 +57,6 @@ spec:
                 type: File
 ifelse(eval(defn(`NOFFICES')>1),1,`dnl
       nodeSelector:
-        defn(`OFFICE_NAME')-zone: yes
+        defn(`OFFICE_ZONE'): yes
 ')dnl
 

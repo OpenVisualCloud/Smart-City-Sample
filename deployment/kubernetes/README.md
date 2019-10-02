@@ -31,7 +31,7 @@ make start_kubernetes
 make stop_kubernetes
 ```
 
-Note: The command ```make update``` can be skipped if you have a private docker registry to host the sample images.  
+Note: The command ```make update``` can be skipped if you have a private docker registry to host the sample images. In such case, please upload images before starting Kubernetes.   
 
 ### See Also 
 
