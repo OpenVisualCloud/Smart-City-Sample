@@ -58,7 +58,7 @@ spec:
             - name: "action.auto_create_index"
               value: "0"
             - name: "ES_JAVA_OPTS"
-              value: "-Xms4096m -Xmx4096m"
+              value: "-Xms2048m -Xmx4096m"
             - name: NO_PROXY
               value: "*"
             - name: no_proxy

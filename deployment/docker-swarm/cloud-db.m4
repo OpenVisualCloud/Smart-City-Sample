@@ -11,7 +11,7 @@ ifelse(eval(defn(`NOFFICES')>1),1,`dnl
             - "discovery.type=single-node"
 ')dnl
             - "action.auto_create_index=0"
-            - "ES_JAVA_OPTS=-Xms4096m -Xmx4096m"
+            - "ES_JAVA_OPTS=-Xms2048m -Xmx4096m"
             - "NO_PROXY=*"
             - "no_proxy=*"
         volumes:
