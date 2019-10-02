@@ -1,5 +1,5 @@
 include(office.m4)
-define(`SERVICE_INTERVAL_SMART_UPLOAD',60)dnl
+define(`SERVICE_INTERVAL_SMART_UPLOAD',120)dnl
 
 apiVersion: apps/v1
 kind: Deployment
