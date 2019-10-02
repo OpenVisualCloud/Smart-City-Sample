@@ -1,6 +1,5 @@
-# OFFICEIDX
 include(office.m4)
-include(../common/forloop.m4)
+include(../../script/forloop.m4)
 
 apiVersion: v1
 kind: Service
@@ -74,5 +73,5 @@ forloop(`STREAMIDX',1,defn(`CAMERA_PORT_STEP'),`dnl
                 type: File
 ifelse(eval(defn(`NOFFICES')>1),1,`dnl
       nodeSelector:
-        defn(`OFFICE_NAME')-zone: yes
+        defn(`OFFICE_ZONE'): yes
 ')dnl

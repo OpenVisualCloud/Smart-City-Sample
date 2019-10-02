@@ -40,6 +40,8 @@ spec:
           env:
             - name: DBHOST
               value: "http://ifelse(eval(defn(`NOFFICES')>1),1,cloud-db,db)-service:9200"
+            - name: `SCENARIO'
+              value: "defn(`SCENARIO')"
             - name: NO_PROXY
               value: "*"
             - name: no_proxy

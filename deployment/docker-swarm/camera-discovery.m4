@@ -20,5 +20,4 @@ ifelse(defn(`PLATFORM'),`VCAC-A',`dnl
         deploy:
             placement:
                 constraints:
-                    - ifelse(eval(defn(`NOFFICES')>1),1,node.labels.defn(`OFFICE_NAME')_zone==yes,node.role==manager)
-
+                    - defn(`OFFICE_ZONE')

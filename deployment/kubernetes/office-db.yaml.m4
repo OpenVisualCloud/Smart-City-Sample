@@ -1,5 +1,6 @@
-# OFFICEIDX
 include(office.m4)
+
+ifelse(eval(defn(`NOFFICES')>1),1,`dnl
 
 apiVersion: v1
 kind: Service
@@ -59,7 +60,7 @@ spec:
             - name: "action.auto_create_index"
               value: "0"
             - name: "ES_JAVA_OPTS"
-              value: "-Xms4096m -Xmx4096m"
+              value: "-Xms2048m -Xmx4096m"
             - name: NO_PROXY
               value: "*"
             - name: no_proxy
@@ -79,6 +80,8 @@ spec:
             emptyDir: {}
 
 ---
+
+')dnl
 
 apiVersion: batch/v1
 kind: Job
@@ -112,5 +115,5 @@ spec:
                 type: File
 ifelse(eval(defn(`NOFFICES')>1),1,`dnl
       nodeSelector:
-        defn(`OFFICE_NAME')-zone: yes
+        defn(`OFFICE_ZONE'): yes
 ')dnl

@@ -1,3 +1,4 @@
+
 ifelse(eval(defn(`NOFFICES')>1),1,`
 
     defn(`OFFICE_NAME')_db:
@@ -10,7 +11,7 @@ ifelse(eval(defn(`NOFFICES')>1),1,`
             - "discovery.zen.minimum_master_nodes=1"
             - "discovery.zen.ping.unicast.hosts=cloud_db"
             - "action.auto_create_index=0"
-            - "ES_JAVA_OPTS=-Xms4096m -Xmx4096m"
+            - "ES_JAVA_OPTS=-Xms2048m -Xmx4096m"
             - "NO_PROXY=*"
             - "no_proxy=*"
         volumes:
@@ -23,7 +24,7 @@ ifelse(defn(`PLATFORM'),`VCAC-A',`dnl
         deploy:
             placement:
                 constraints:
-                    - node.labels.defn(`OFFICE_NAME')_zone==yes
+                    - defn(`OFFICE_ZONE')
 
 ')
 
@@ -45,5 +46,5 @@ ifelse(defn(`PLATFORM'),`VCAC-A',`dnl
                 condition: none
             placement:
                 constraints:
-                    - ifelse(eval(defn(`NOFFICES')>1),1,node.labels.defn(`OFFICE_NAME')_zone==yes,node.role==manager)
+                    - defn(`OFFICE_ZONE')
 

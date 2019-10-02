@@ -1,6 +1,3 @@
-define(`CAMERA_RTSP_PORT',17000)
-define(`CAMERA_RTP_PORT',27000)
-define(`CAMERA_PORT_STEP',100)
 
     defn(`OFFICE_NAME')_simulated_cameras:
         image: smtc_sensor_simulation:latest
@@ -19,5 +16,4 @@ ifelse(defn(`PLATFORM'),`VCAC-A',`dnl
         deploy:
             placement:
                 constraints:
-                    - ifelse(eval(defn(`NOFFICES')>1),1,node.labels.defn(`OFFICE_NAME')_zone==yes,node.role==manager)
-
+                    - defn(`OFFICE_ZONE')
