@@ -20,11 +20,11 @@ $("#pg-home").on(":initpage", function(e) {
         var tiles={};
         $.each(settings.scenarios, function (i,sc) {
             if (sc=="traffic") {
-                var layer1=L.tileLayer("images/street/{z}/{x}/{y}.png",{
+                var layer1=L.tileLayer("images/traffic/{z}/{x}/{y}.png",{
                     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
                     id: 'base'
                 }).on('add', function () {
-                    page.data('center', settings.street_center());
+                    page.data('center', settings.traffic_center());
                     map.setView(page.data('center'),page.data('zoom'));
                 });
                 if (!Object.keys(tiles).length) layer1.addTo(map).fire('add');

@@ -40,7 +40,7 @@ var settings={
         if (typeof(val)!="undefined") $("#statsHistogram").val(val);
         return $("#statsHistogram").val();
     },
-    street_center: function () {
+    traffic_center: function () {
         return [45.536664,-122.960823];
     },
     parking_center: function () {
