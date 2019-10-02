@@ -1,9 +1,4 @@
-<<<<<<< HEAD
 define(`SERVICE_INTERVAL_SMART_UPLOAD',`120')dnl
-=======
-
-define(`SERVICE_INTERVAL_SMART_UPLOAD',`60')dnl
->>>>>>> upstream/master
 
     defn(`OFFICE_NAME')_smart_upload:
         image: smtc_smart_upload:latest
