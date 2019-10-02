@@ -59,7 +59,7 @@ ifelse(eval(defn(`NOFFICES')>1),1,`dnl
             - name: "action.auto_create_index"
               value: "0"
             - name: "ES_JAVA_OPTS"
-              value: "-Xms2048m -Xmx2048m"
+              value: "-Xms2048m -Xmx4096m"
             - name: NO_PROXY
               value: "*"
             - name: no_proxy
