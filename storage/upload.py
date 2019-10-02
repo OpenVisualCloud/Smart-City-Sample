@@ -9,13 +9,13 @@ from db_query import DBQuery
 from db_ingest import DBIngest
 from probe import probe, run
 import datetime
+import time
 import base64
+import psutil
 import os
 
 dbhost=os.environ["DBHOST"]
-recording_index=os.environ["RECORDING_INDEX"]
-sensor_index=os.environ["SENSOR_INDEX"] if "SENSOR_INDEX" in os.environ else None
-cloudf=False if "OFFICE" in os.environ else True
+local_office=True if "OFFICE" in os.environ else False
 
 class UploadHandler(web.RequestHandler):
     def __init__(self, app, request, **kwargs):
@@ -48,20 +48,42 @@ class UploadHandler(web.RequestHandler):
             "path": mp4file[len(self._storage)+1:],
         })
 
-        # calculate total bandwidth
-        if sensor_index:
+        if local_office:
+            # calculate total bandwidth
             bandwidth=0
             for stream1 in sinfo["streams"]:
                 if "bit_rate" in stream1:
                     bandwidth=bandwidth+stream1["bit_rate"]
             if bandwidth: 
-                db_cam=DBQuery(host=dbhost, index=sensor_index, office=office)
+                db_cam=DBQuery(host=dbhost, index="sensors", office=office)
                 db_cam.update(sensor, {"bandwidth": bandwidth})
 
-        # ingest recording
-        office1="" if cloudf else office
-        db_rec=DBIngest(host=dbhost, index=recording_index, office=office1)
-        db_rec.ingest(sinfo)
+            # check disk usage and send alert
+            disk_usage=psutil.disk_usage(self._storage)[3]
+            if disk_usage>75 and sensor_index:
+                level="fatal" if disk_uage>85 else "warning"
+                db_alt=DBIngest(host=dbhost, index="alerts", office=office)
+                db_alt.ingest({
+                    time: int(time.mktime(datetime.datetime.now().timetuple())*1000),
+                    office: {
+                        "lat": office[0],
+                        "lon": office[1],
+                    },
+                    level: [{
+                        "message": "Disk usage: "+str(disk_usage)+"%",
+                        "args": {
+                            "disk": disk_usage,
+                        }
+                    }]
+                })
+
+            # ingest recording local
+            db_rec=DBIngest(host=dbhost, index="recordings", office=office)
+            db_rec.ingest(sinfo)
+        else:
+            # ingest recording cloud
+            db_rec=DBIngest(host=dbhost, index="recordings_c", office="")
+            db_rec.ingest(sinfo)
 
     @gen.coroutine
     def post(self):
@@ -71,3 +93,4 @@ class UploadHandler(web.RequestHandler):
         path=self.get_body_argument('file.path')
         yield self._rec2db(office, sensor, timestamp, path)
         self.set_status(400, "Return 400 to remove this file")
+

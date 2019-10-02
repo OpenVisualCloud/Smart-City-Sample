@@ -91,7 +91,6 @@ while True:
                     "lon": office[1],
                 },
                 "time": int(time.mktime(datetime.datetime.now().timetuple())*1000),
-                "trigger": rt["_id"],
                 "warning": warnings,
                 "fatal": fatals,
             })
