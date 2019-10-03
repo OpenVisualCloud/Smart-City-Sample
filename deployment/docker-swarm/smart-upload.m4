@@ -27,4 +27,9 @@ ifelse(defn(`PLATFORM'),`VCAC-A',`dnl
             placement:
                 constraints:
                     - defn(`OFFICE_ZONE')
+            resources:
+                limits:
+                    cpus: '0.20'
+                reservations:
+                    cpus: '0.10'
 
