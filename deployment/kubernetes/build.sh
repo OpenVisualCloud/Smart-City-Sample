@@ -11,7 +11,7 @@ echo "Generating templates with PLATFORM=${PLATFORM}, SCENARIO=${SCENARIO}, NOFF
 find "${DIR}" -maxdepth 1 -name "*.yaml" -exec rm -rf "{}" \;
 for template in $(find "${DIR}" -maxdepth 1 -name "*.yaml.m4" -print); do
     if [[ -n $(grep OFFICE_NAME "$template") ]]; then
-        NSCENARIOS=$(echo "include(../../script/scenario.m4)NSCENARIOS" | m4 -I "$DIR")
+        NSCENARIOS=$(echo "include(../../script/sensor-info.m4)NSCENARIOS" | m4 -I "$DIR")
         for ((SCENARIOIDX=1;SCENARIOIDX<=${NSCENARIOS};SCENARIOIDX++)); do
             for ((OFFICEIDX=1;OFFICEIDX<=${NOFFICES};OFFICEIDX++)); do
                 if [[ -n $(echo 'include(office.m4)OFFICE_LOCATION' | m4 -I "$DIR" -DSCENARIO=${SCENARIO} -DSCENARIOIDX=${SCENARIOIDX} -DOFFICEIDX=${OFFICEIDX}) ]]; then

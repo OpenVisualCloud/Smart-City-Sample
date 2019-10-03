@@ -64,8 +64,12 @@ class UploadHandler(web.RequestHandler):
                 level="fatal" if disk_uage>85 else "warning"
                 db_alt=DBIngest(host=dbhost, index="alerts", office=office)
                 db_alt.ingest({
-                    time: int(time.mktime(datetime.datetime.now().timetuple())*1000),
-                    office: {
+                    "time": int(time.mktime(datetime.datetime.now().timetuple())*1000),
+                    "office": {
+                        "lat": office[0],
+                        "lon": office[1],
+                    },
+                    "location": {
                         "lat": office[0],
                         "lon": office[1],
                     },

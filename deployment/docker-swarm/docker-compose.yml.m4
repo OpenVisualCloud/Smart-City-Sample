@@ -1,6 +1,5 @@
 include(../../script/forloop.m4)
-include(../../script/location.m4)
-include(../../script/scenario.m4)
+include(../../script/sensor-info.m4)
 
 version: "3.7"
 

@@ -86,6 +86,10 @@ while True:
         # ingest alerts
         if warnings or fatals:
             dbat.ingest({
+                "location": {
+                    "lat": office[0],
+                    "lon": office[1],
+                },
                 "office": {
                     "lat": office[0],
                     "lon": office[1],

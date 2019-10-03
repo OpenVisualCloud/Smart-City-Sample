@@ -9,7 +9,6 @@ $("#pg-home").on(":initpage", function(e) {
         page.data('zoom', 15);
         page.data('sensors',{});
         page.data('offices',{});
-        page.data('icons',{});
         page.data('queries',"sensor=*");
 
         /* create map */
@@ -18,38 +17,8 @@ $("#pg-home").on(":initpage", function(e) {
 
         /* add tiles */
         var tiles={};
-        $.each(settings.scenarios, function (i,sc) {
-            if (sc=="traffic") {
-                var layer1=L.tileLayer("images/traffic/{z}/{x}/{y}.png",{
-                    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
-                    id: 'base'
-                }).on('add', function () {
-                    page.data('center', settings.traffic_center());
-                    map.setView(page.data('center'),page.data('zoom'));
-                });
-                if (!Object.keys(tiles).length) layer1.addTo(map).fire('add');
-                tiles["Traffic Planning"]=layer1;
-            }
-            if (sc=="parking") {
-                var layer1=L.tileLayer('images/parking/{z}/{x}/{y}.png',{
-                    tms:true
-                }).on('add',function(){
-                    page.data('center', settings.parking_center());
-                    map.setView(page.data('center'),page.data('zoom'));
-                });
-                if (!Object.keys(tiles).length) layer1.addTo(map).fire('add');
-                tiles["Parking Management"]=layer1;
-            }
-            if (sc=="stadium") {
-                var layer1=L.tileLayer('images/stadium/{z}/{x}/{y}.png',{
-                    tms:true
-                }).on('add',function(){
-                    page.data('center', settings.stadium_center());
-                    map.setView(page.data('center'),page.data('zoom'));
-                });
-                if (!Object.keys(tiles).length) layer1.addTo(map).fire('add');
-                tiles["Stadium Services"]=layer1;
-            }
+        $.each(scenarios.setting, function (i,sc) {
+            scenarios[sc].setup(i,tiles,page,map);
         });
 
         /* add layers switching widget */
@@ -87,7 +56,7 @@ $("#pg-home").on(":initpage", function(e) {
     /* enable the office button */
     var search=$("#homeSearch");
     $("#homeButton").unbind('click').click(function () {
-        map.setView(page.data('center'), page.data('zoom'));
+        map.setView(page.data('scenario').center, page.data('zoom'));
     });
 
     /* update map with the sensor info */
@@ -108,13 +77,14 @@ $("#pg-home").on(":initpage", function(e) {
             var stats_layer=page.data('stats');
             var heatmap_layer=page.data('heatmaps');
             var preview_layer=page.data('previews');
-            var icons=page.data('icons');
+            var scenario=page.data('scenario');
 
             $.each(data.response, function (x,info) {
                 var tmp=[];
                 $.each([
                     ["Type",info._source.sensor],
                     ["Model",info._source.model],
+                    ["Address", info._source.address],
                     ["Location","["+info._source.location.lat.toFixed(3)+","+info._source.location.lon.toFixed(3)+"]"],
                     ["Office","["+info._source.office.lat.toFixed(3)+","+info._source.office.lon.toFixed(3)+"]"],
                     ["MAC",info._source.mac],
@@ -140,65 +110,59 @@ $("#pg-home").on(":initpage", function(e) {
                 if (officeid in offices) {
                     offices[officeid].used=true;
                 } else {
-                    var icon="images/office.gif";
-                    if (!(icon in icons)) {
-                        icons[icon]=L.icon({
-                            iconUrl: icon,
-                            iconSize: [64,64],
-                            iconAnchor: [32,32],
-                        });
-                    }
-                    
-                    var ctx=offices[officeid]={
+                    offices[officeid]={
+                        address: "["+officeid+"]",
                         marker: L.marker(info._source.office, { 
-                            icon: icons[icon],
+                            icon: scenario.icon.office,
                             riseOnHover: true,
-                        }),
+                        }).on('dblclick', function () {
+                            selectPage('office', ["name=*",info._source.office]);
+                        }).addTo(map),
                         used: true,
                     };
 
                     /* setup office tooltip */
-                    ctx.marker.bindTooltip("["+info._source.office.lat+","+info._source.office.lon+"]");
+                    apiHost.search('offices','location:['+officeid+']',null,1).then(function (data) {
+                        var ctx=offices[officeid];
+                        if (data.response.length==0) {
+                            ctx.marker.bindTooltip(ctx.address);
+                        } else {
+                            ctx.marker.bindTooltip(data.response[0]._source.address+' @'+ctx.address);
+                            ctx.address=data.response[0]._source.address;
+                        }
 
-                    /* setup marker actions */
-                    var chartdiv=$('<div style="width:300px;height:200px"><canvas style="width:100%;height:100%"></canvas></div>');
-                    ctx.marker.on('dblclick', function () {
-                        selectPage('office', ["name=*",info._source.office]);
-                    }).bindPopup(chartdiv[0],{
-                        maxWidth:"auto",
-                        maxHeight:"auto"
-                    }).addTo(map);
+                        /* setup marker actions */
+                        var chartdiv=$('<div style="width:300px;height:200px"><canvas style="width:100%;height:100%"></canvas></div>');
+                        ctx.marker.bindPopup(chartdiv[0],{
+                            maxWidth:"auto",
+                            maxHeight:"auto"
+                        });
 
-                    /* setup workload chart */
-                    workloads.create(ctx,chartdiv.find("canvas"),'Office ['+officeid+']');
-                }
-
-                if (!(info._source.icon in icons)) {
-                    icons[info._source.icon]=L.icon({
-                        iconUrl: 'images/'+info._source.icon,
-                        iconSize: [32,32],
-                        iconAnchor: [16,16],
+                        /* setup workload chart */
+                        workloads.create(ctx,chartdiv.find("canvas"),ctx.address);
                     });
                 }
 
-                if (info._id in sensors) {
-                    sensors[info._id].used=true;
-                    sensors[info._id].line.setStyle(options).redraw();
+                var sensorid=info._source.location.lat+","+info._source.location.lon;
+                if (sensorid in sensors) {
+                    sensors[sensorid].used=true;
+                    sensors[sensorid].line.setStyle(options).redraw();
                 } else {
-                    var marker=L.marker(info._source.location,{
-                        icon: icons[info._source.icon],
-                        riseOnHover:true,
-                        rotationAngle:"theta" in info._source?360-info._source.theta:0,
-                        rotationOrigin:"center",
-                    }).addTo(map).on('dblclick',function() {
-                        selectPage("recording",['sensor="'+info._id+'"',info._source.office]);
-                    });
-
-                    var ctx=sensors[info._id]={ 
-                        marker: marker,
+                    sensors[sensorid]={ 
+                        address: info._source.address,
+                        marker: L.marker(info._source.location,{
+                            icon: scenario.icon[info._source.model],
+                            riseOnHover:true,
+                            rotationAngle:"theta" in info._source?360+90-info._source.theta:0,
+                            rotationOrigin:"center",
+                        }).on('dblclick',function() {
+                            selectPage("recording",['sensor="'+info._id+'"',info._source.office]);
+                        }).addTo(map),
                         line: L.polyline([info._source.location,info._source.office],options).addTo(map).bindTooltip("",{ permanent:true, direction:'center', opacity:0.7, className:'tooltip_text' }),
                         used: true 
                     };
+
+                    var ctx=sensors[sensorid];
                     previews.create(page, ctx, info, map, preview_layer);
 		            stats.create(ctx, info, page, map, stats_layer);
                     heatmaps.create(ctx,info._source.location);
@@ -216,23 +180,24 @@ $("#pg-home").on(":initpage", function(e) {
                 if (bandwidth>1024) { bandwidth=bandwidth/1024; unit="Kb/s"; }
                 if (bandwidth>1024) { bandwidth=bandwidth/1024; unit="Mb/s"; }
                 if (bandwidth>1024) { bandwidth=bandwidth/1024; unit="Gb/s"; }
-                sensors[info._id].line.setTooltipContent(bandwidth>0?bandwidth.toFixed(1)+unit:"");
+                sensors[sensorid].line.setTooltipContent(bandwidth>0?bandwidth.toFixed(1)+unit:"");
 
                 /* show bubble stats */
                 if (map.hasLayer(stats_layer)) 
-                    stats.update(stats_layer, sensors[info._id], map.getZoom(), info);
+                    stats.update(stats_layer, sensors[sensorid], map.getZoom(), info);
 
                 /* show heatmaps */
                 if (map.hasLayer(heatmap_layer)) 
-                    heatmaps.update(heatmap_layer, sensors[info._id], map.getZoom(), info);
+                    heatmaps.update(heatmap_layer, sensors[sensorid], map.getZoom(), info);
 
                 /* show workload */
-                if (offices[officeid].marker.getPopup().isOpen())
+                var popup=offices[officeid].marker.getPopup();
+                if (popup && popup.isOpen())
                     workloads.update(offices[officeid],info._source.office);
 
-                if (sensors[info._id].title!=title) {
-                    sensors[info._id].marker.unbindTooltip().bindTooltip(title);
-                    sensors[info._id].title=title;
+                if (sensors[sensorid].title!=title) {
+                    sensors[sensorid].marker.unbindTooltip().bindTooltip(title);
+                    sensors[sensorid].title=title;
                 }
             });
 

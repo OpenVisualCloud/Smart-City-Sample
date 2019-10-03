@@ -18,7 +18,7 @@ settings={
         "mappings": {
             _type: {
                 "properties": {
-                    "office": { "type": "geo_point", },
+                    "location": { "type": "geo_point", },
                 },
             },
         },
@@ -115,6 +115,7 @@ settings={
                 "properties": {
                     "time": { "type": "date" },
                     "office": { "type": "geo_point" },
+                    "location": { "type": "geo_point" },
                 },
             },
         },
@@ -124,6 +125,13 @@ settings={
             "index": {
                 "number_of_shards": 1,
                 "number_of_replicas": 1,
+            },
+        },
+        "mappings": {
+            _type: {
+                "properties": {
+                    "office": { "type": "geo_point" },
+                },
             },
         },
     },

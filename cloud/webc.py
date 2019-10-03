@@ -24,8 +24,8 @@ def setup_nginx_resolver():
             return
 
 def setup_scenarios():
-    with open("/var/www/html/js/scenario.js","wt") as fd:
-        fd.write("settings.scenarios="+json.dumps(scenario.split(","))+";")
+    with open("/var/www/html/js/scenario.js","at") as fd:
+        fd.write("scenarios.setting="+json.dumps(scenario.split(","))+";")
 
 def quit_service(signum, frame):
     if tornadoc: tornadoc.add_callback(tornadoc.stop)

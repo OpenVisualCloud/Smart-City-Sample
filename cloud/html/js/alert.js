@@ -5,7 +5,7 @@ var alerts={
         }).on('remove', function () {
             $("[alert-screen]").hide();
         });
-        setTimeout(alerts.update,5000);
+        setTimeout(alerts.update,5000,page.data('offices'),page.data('sensors'));
 
         $("[alert-screen]").bind('dragstart',function (e) {
             var screen=$(this);
@@ -21,13 +21,13 @@ var alerts={
             });
         });
     },
-    append: function (time,office,text,level) {
+    append: function (time,address,text,level) {
         var screen=$("[alert-screen] ul");
         var timestamp=time.toLocaleDateString(undefined,{
             dateStyle:'short',timeStyle:'short', hour12:false,
         });
         var colors={info:"#4AFC0B",warning:"#F7FA0C",fatal:"#FF0013"};
-        var li=$('<li style="color:'+colors[level]+';font-size:0">'+timestamp+' @['+office.lat+','+office.lon+']: '+text+'</li>');
+        var li=$('<li style="color:'+colors[level]+';font-size:0">'+timestamp+' @'+address+': '+text+'</li>');
         li.data('time',time);
 
         var exist=false;
@@ -42,7 +42,7 @@ var alerts={
         if (screen.find("li").length>50)
             screen.find("li:last").remove();
     },
-    update: function () {
+    update: function (offices,sensors) {
         var screen=$("[alert-screen]");
         if (screen.is(":visible")) {
             apiHost.search("alerts","time>=now-"+settings.alert_window(),null).then(function (r) {
@@ -51,14 +51,18 @@ var alerts={
                     $.each(["info","warning","fatal"], function (x, level) {
                         if (!(level in r1._source)) return;
                         $.each(r1._source[level], function (x,v) {
-                            alerts.append(time,r1._source.office,v.message,level);
+                            var id=r1._source.location.lat+","+r1._source.location.lon;
+                            var address='['+id+']';
+                            if (id in offices) address=offices[id].address;
+                            if (id in sensors) address=sensors[id].address;
+                            alerts.append(time,address,v.message,level);
                         });
                     });
                 });
             }).catch(function () {
             });
         }
-        setTimeout(alerts.update,5000);
+        setTimeout(alerts.update,5000,offices,sensors);
     },
 };
 

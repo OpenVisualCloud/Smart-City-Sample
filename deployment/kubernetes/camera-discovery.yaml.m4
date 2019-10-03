@@ -27,11 +27,15 @@ spec:
             - name: PORT_SCAN_RANGE
               value: "defn(`CAMERA_RTSP_PORT')-eval(defn(`CAMERA_RTSP_PORT')+defn(`NCAMERAS')*defn(`CAMERA_PORT_STEP'))"
             - name: SIMULATED_CAMERA
-              value: "forloop(`cid',1,defn(`NCAMERAS'),`eval(defn(`CAMERA_RTSP_PORT')+defn(`cid')*defn(`CAMERA_PORT_STEP')-defn(`CAMERA_PORT_STEP')),')"
+              value: "forloop(`cid',1,defn(`NCAMERAS'),`eval(defn(`CAMERA_RTSP_PORT')+defn(`cid')*defn(`CAMERA_PORT_STEP')-defn(`CAMERA_PORT_STEP'))/')"
             - name: OFFICE
               value: "defn(`OFFICE_LOCATION')"
             - name: LOCATION
-              value: "forloop(`CAMERAIDX',1,defn(`NCAMERAS'),`defn(`location_'defn(`SCENARIO_NAME')`_office'defn(`OFFICEIDX')`_camera'defn(`CAMERAIDX')) ')"
+              value: "forloop(`CAMERAIDX',1,defn(`NCAMERAS'),`defn(defn(`SCENARIO_NAME')`_office'defn(`OFFICEIDX')`_camera'defn(`CAMERAIDX')_location)/')"
+            - name: ADDRESS
+              value: "forloop(`CAMERAIDX',1,defn(`NCAMERAS'),`defn(defn(`SCENARIO_NAME')`_office'defn(`OFFICEIDX')`_camera'defn(`CAMERAIDX')_address)/')"
+            - name: THETA
+              value: "forloop(`CAMERAIDX',1,defn(`NCAMERAS'),`defn(defn(`SCENARIO_NAME')`_office'defn(`OFFICEIDX')`_camera'defn(`CAMERAIDX')_theta)/')"
             - name: DBHOST
               value: "http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')-db,db)-service:9200"
             - name: SERVICE_INTERVAL

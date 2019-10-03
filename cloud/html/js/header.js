@@ -40,15 +40,6 @@ var settings={
         if (typeof(val)!="undefined") $("#statsHistogram").val(val);
         return $("#statsHistogram").val();
     },
-    traffic_center: function () {
-        return [45.536664,-122.960823];
-    },
-    parking_center: function () {
-        return [33.310955,-111.932443];
-    },
-    stadium_center: function () {
-        return [37.388085,-121.963472];
-    },
 }
 
 $("#settingPanel button").click(function() {
