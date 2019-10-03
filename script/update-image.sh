@@ -31,7 +31,7 @@ for id in $(docker node ls -q 2> /dev/null); do
     ready="$(docker node inspect -f {{.Status.State}} $id)"
     active="$(docker node inspect -f {{.Spec.Availability}} $id)"
     nodeip="$(docker node inspect -f {{.Status.Addr}} $id)"
-    labels="$(docker node inspect -f {{.Spec.Labels}} $id | sed 's/map\[/node.labels./' | sed 's/\]$//' | sed 's/ / node.labels./g' | sed 's/:/=/g')"
+    labels="$(docker node inspect -f {{.Spec.Labels}} $id | sed 's/map\[/node.labels./' | sed 's/\]$//' | sed 's/ / node.labels./g' | sed 's/:/==/g')"
     role="$(docker node inspect -f {{.Spec.Role}} $id)"
 
     if test "$ready" = "ready"; then

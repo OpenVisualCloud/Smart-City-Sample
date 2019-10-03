@@ -214,7 +214,6 @@ dbhost= os.environ["DBHOST"]
 
 db = DBIngest(index="sensors",office=office,host=dbhost)
 dbs = DBQuery(index="sensors",office=office,host=dbhost)
-camera_count=0
 cameras={}
 while True:
     xml=subprocess.check_output('/usr/bin/nmap -p'+port_range+' '+ip_range+' -Pn -oX -',stderr=subprocess.STDOUT,shell=True,timeout=100)
@@ -268,29 +267,23 @@ while True:
                 continue
 
         # retrieve unique location
-        if mac not in cameras:
-            cameras[mac]=camera_count
-            camera_count=camera_count+1
-        location = locations[int(cameras[mac] % (len(locations)))]
-        address = addresses[int(cameras[mac] % (len(locations)))]
-        theta = thetas[int(cameras[mac] % (len(locations)))]
-        print("location: ["+str(location[0])+","+str(location[1])+"]",flush=True)
-
+        if mac not in cameras: cameras[mac]=len(cameras.keys())
         try:
             print("Checking for preexistance", flush=True)
             found=list(dbs.search("sensor:'camera' and model:'ip_camera' and mac='"+mac+"'", size=1))
             if not found:
                 print("Ingesting", flush=True)
+                location = locations[int(cameras[mac]%len(locations))]
                 db.ingest({
                     'sensor': 'camera',
                     'office': { 'lat': office[0], 'lon': office[1] },
                     'model': 'ip_camera',
                     'resolution': { 'width': width, 'height': height },
                     'location': { "lat": location[0], "lon": location[1] },
-                    'address': address,
+                    'address': addresses[int(cameras[mac]%len(addresses))],
                     'url': rtspuri,
                     'mac': mac,
-                    'theta': theta,
+                    'theta': thetas[int(cameras[mac]%len(thetas))],
                     'mnth': 75.0,
                     'alpha': 45.0,
                     'fovh': 90.0,

@@ -1,4 +1,4 @@
-$("#pg-office").on(":initpage", function(e, queries, office) {
+$("#pg-office").on(":initpage", function(e, queries, office, address) {
     var page=$(this);
     $("#layoutButton").hide();
     $("#cloudButton").hide();
@@ -66,7 +66,7 @@ $("#pg-office").on(":initpage", function(e, queries, office) {
 
     /* enable workload charts */
     var ctx={};
-    workloads.create(ctx,page.find('canvas'),"Server Workload");
+    workloads.create(ctx,page.find('canvas'),address+" Workload");
     ctx.timer=setInterval(workloads.update,2000,ctx,office);
     page.data('workload',ctx);
 }).on(":closepage",function() {

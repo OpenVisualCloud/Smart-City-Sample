@@ -111,35 +111,32 @@ $("#pg-home").on(":initpage", function(e) {
                     offices[officeid].used=true;
                 } else {
                     offices[officeid]={
-                        address: "["+officeid+"]",
                         marker: L.marker(info._source.office, { 
                             icon: scenario.icon.office,
                             riseOnHover: true,
-                        }).on('dblclick', function () {
-                            selectPage('office', ["name=*",info._source.office]);
                         }).addTo(map),
                         used: true,
                     };
+                }
 
-                    /* setup office tooltip */
+                /* setup office address & tooltip */
+                if (!("address" in offices[officeid])) {
                     apiHost.search('offices','location:['+officeid+']',null,1).then(function (data) {
+                        if (data.response.length==0) return;
                         var ctx=offices[officeid];
-                        if (data.response.length==0) {
-                            ctx.marker.bindTooltip(ctx.address);
-                        } else {
-                            ctx.marker.bindTooltip(data.response[0]._source.address+' @'+ctx.address);
-                            ctx.address=data.response[0]._source.address;
-                        }
+                        ctx.address=data.response[0]._source.address;
 
                         /* setup marker actions */
                         var chartdiv=$('<div style="width:300px;height:200px"><canvas style="width:100%;height:100%"></canvas></div>');
-                        ctx.marker.bindPopup(chartdiv[0],{
+                        ctx.marker.bindTooltip(ctx.address+' @['+officeid+']').on('dblclick', function () {
+                            selectPage('office', ["name=*",info._source.office,ctx.address]);
+                        }).bindPopup(chartdiv[0], {
                             maxWidth:"auto",
                             maxHeight:"auto"
                         });
-
                         /* setup workload chart */
-                        workloads.create(ctx,chartdiv.find("canvas"),ctx.address);
+                        workloads.create(ctx, chartdiv.find("canvas"), ctx.address);
+                    }).catch(function () {
                     });
                 }
 
