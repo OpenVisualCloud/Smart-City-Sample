@@ -66,7 +66,8 @@ while True:
             mp4file="/tmp/"+str(os.path.basename(url))
 
             print("Transcoding...")
-            list(run(["/usr/bin/ffmpeg","-f","mp4","-i",url,"-c:v","libsvt_hevc","-c:a","aac",mp4file]))
+            os.remove(mp4file)
+            list(run(["/usr/bin/ffmpeg","-f","mp4","-i",url,"-c:v","libsvt_hevc","-c:a","aac","-y",mp4file]))
 
             print("Uploading: ", cloudhost)
             sensor=q["_source"]["sensor"]
