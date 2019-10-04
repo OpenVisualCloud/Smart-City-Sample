@@ -1,10 +1,9 @@
-
-define(`SERVICE_INTERVAL_SMART_UPLOAD',`60')dnl
+define(`SERVICE_INTERVAL_SMART_UPLOAD',`120')dnl
 
     defn(`OFFICE_NAME')_smart_upload:
         image: smtc_smart_upload:latest
         environment:
-            QUERY: "time>=now-eval(defn(`SERVICE_INTERVAL_SMART_UPLOAD')*1000000) where objects.detection.bounding_box.x_max-objects.detection.bounding_box.x_min>0.01"
+            QUERY: "time>=now-eval(defn(`SERVICE_INTERVAL_SMART_UPLOAD')*1000) where objects.detection.bounding_box.x_max-objects.detection.bounding_box.x_min>0.01"
             INDEXES: "recordings,analytics"
             OFFICE: "defn(`OFFICE_LOCATION')"
             DBHOST: "http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')_db,db):9200"
@@ -28,4 +27,9 @@ ifelse(defn(`PLATFORM'),`VCAC-A',`dnl
             placement:
                 constraints:
                     - defn(`OFFICE_ZONE')
+            resources:
+                limits:
+                    cpus: '0.20'
+                reservations:
+                    cpus: '0.10'
 
