@@ -1,6 +1,7 @@
 
 var scenarios={
     traffic: {
+        name: "traffic",
         center: [45.536664,-122.960823],
         icon: {
             office: L.icon({
@@ -27,6 +28,7 @@ var scenarios={
         },
     },
     stadium: {
+        name: "stadium",
         center: [37.388085,-121.963472],
         icon: {
             office: L.icon({
@@ -34,11 +36,18 @@ var scenarios={
                 iconSize: [64,64],
                 iconAnchor: [32,32],
             }),
-            ip_camera: L.icon({
-                iconUrl: "images/queue.gif",
-                iconSize: [180, 64],
-                iconAnchor: [90, 32],
-            }),
+            ip_camera: {
+                left: L.icon({
+                    iconUrl: "images/queue-l.gif",
+                    iconSize: [90, 32],
+                    iconAnchor: [45, 16],
+                }),
+                right: L.icon({
+                    iconUrl: "images/queue-r.gif",
+                    iconSize: [90, 32],
+                    iconAnchor: [45, 16],
+                }),
+            },    
         },
         setup: function (order, tiles, page, map) {
             var layer1=L.tileLayer('images/stadium/{z}/{x}/{y}.png',{
@@ -52,6 +61,7 @@ var scenarios={
         },
     },
     parking: {
+        name: "parking",
         center: [33.310955,-111.932443],
         icon: {
             office: L.icon({

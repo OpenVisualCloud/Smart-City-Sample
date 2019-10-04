@@ -22,7 +22,8 @@ $("#pg-home").on(":initpage", function(e) {
         });
 
         /* add layers switching widget */
-        var heatmap_layer=L.layerGroup().addTo(map);
+        var heatmap_layer=L.layerGroup();
+        if (page.data('scenario').name!="stadium") heatmap_layer.addTo(map);
         page.data('heatmaps',heatmap_layer);
         var stats_layer=L.layerGroup().addTo(map);
         page.data('stats',stats_layer);
@@ -145,19 +146,20 @@ $("#pg-home").on(":initpage", function(e) {
                     sensors[sensorid]={ 
                         address: info._source.address,
                         marker: L.marker(info._source.location,{
-                            icon: scenario.icon[info._source.model],
+                            icon: scenario.name=="stadium"?(info._source.theta>=270 || info._source.theta<90?scenario.icon[info._source.model].right:scenario.icon[info._source.model].left):scenario.icon[info._source.model],
                             riseOnHover:true,
-                            rotationAngle:"theta" in info._source?360+90-info._source.theta:0,
+                            rotationAngle:scenario.name=="stadium" && (info._source.theta>=270||info._source.theta<90)?270-info._source.theta:90-info._source.theta,
                             rotationOrigin:"center",
                         }).on('dblclick',function() {
                             selectPage("recording",['sensor="'+info._id+'"',info._source.office]);
                         }).addTo(map),
-                        line: L.polyline([info._source.location,info._source.office],{color:line_color,dashArray:"15,20"}).addTo(map).bindTooltip("",{ permanent:true, direction:'center', opacity:0.7, className:'tooltip_text' }),
+                        line: L.polyline([info._source.location,info._source.office],{color:line_color,dashArray:"15,20"}).bindTooltip("",{ permanent:true, direction:'center', opacity:0.7, className:'tooltip_text' }),
                         line_dash: "15,20",
                         used: true,
                     };
 
                     var ctx=sensors[sensorid];
+                    if (scenario.name!="stadium") ctx.line.addTo(map);
                     previews.create(page, ctx, info, map, preview_layer);
 		            stats.create(ctx, info, page, map, stats_layer);
                     heatmaps.create(ctx,info._source.location);

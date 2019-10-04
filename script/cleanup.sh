@@ -22,6 +22,7 @@ for id in $(docker node ls -q 2> /dev/null); do
                         worker="$nodeip"
                     fi
 
+                    echo "Clean up $nodeip..."
                     ssh "$worker" "docker container prune -f"
                     ssh "$worker" "docker volume prune -f"
                     ssh "$worker" "docker network prune -f"
@@ -31,6 +32,7 @@ for id in $(docker node ls -q 2> /dev/null); do
     fi
 done
 
+echo "Clean up $(hostname)..."
 docker container prune -f
 docker volume prune -f
 docker network prune -f
