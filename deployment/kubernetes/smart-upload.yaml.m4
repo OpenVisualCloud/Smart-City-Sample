@@ -23,9 +23,9 @@ spec:
           imagePullPolicy: IfNotPresent
           resources:
             requests:
-                cpu: "200m"
+                cpu: "100m"
             limits:
-                cpu: "400m"
+                cpu: "200m"
           env:
             - name: QUERY
               value: "time>=eval(defn(`SERVICE_INTERVAL_SMART_UPLOAD')*1000) where objects.detection.bounding_box.x_max-objects.detection.bounding_box.x_min>0.01"
