@@ -8,10 +8,6 @@ var settings={
         if (typeof(val)!="undefined") $("#sensorUpdate").val(val);
         return parseFloat($("#sensorUpdate").val());
     },
-    analytics_update: function (val) {
-        if (typeof(val)!="undefined") $("#analyticsUpdate").val(val);
-        return parseFloat($("#analyticsUpdate").val());
-    },
     service_update: function (val) {
         if (typeof(val)!="undefined") $("#serviceUpdate").val(val);
         return parseFloat($("#serviceUpdate").val());
@@ -39,15 +35,6 @@ var settings={
     stats_histogram: function (val) {
         if (typeof(val)!="undefined") $("#statsHistogram").val(val);
         return $("#statsHistogram").val();
-    },
-    street_center: function () {
-        return [45.536664,-122.960823];
-    },
-    parking_center: function () {
-        return [33.310955,-111.932443];
-    },
-    stadium_center: function () {
-        return [37.388085,-121.963472];
     },
 }
 

@@ -53,6 +53,7 @@ while True:
             "total": dba.count("name:*"),
         }
    
+        infos=[]
         warnings=[]
         if nsensors["total"]>nsensors["streaming"]+nsensors["idle"]:
             warnings.append({ 
@@ -61,7 +62,7 @@ while True:
             })
 
         if nalgorithms["total"]!=nsensors["streaming"]+nsensors["idle"]:
-            warnings.append({
+            infos.append({
                 "message": "Analytics balancing required",
                 "args": {
                     "nalgorithms": nalgorithms["total"],
@@ -84,8 +85,12 @@ while True:
             warnings.append(workload)
 
         # ingest alerts
-        if warnings or fatals:
+        if infos or warnings or fatals:
             dbat.ingest({
+                "location": {
+                    "lat": office[0],
+                    "lon": office[1],
+                },
                 "office": {
                     "lat": office[0],
                     "lon": office[1],
@@ -93,6 +98,7 @@ while True:
                 "time": int(time.mktime(datetime.datetime.now().timetuple())*1000),
                 "warning": warnings,
                 "fatal": fatals,
+                "info": infos,
             })
 
     except Exception as e:

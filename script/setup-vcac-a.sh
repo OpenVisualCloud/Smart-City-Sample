@@ -23,7 +23,6 @@ ssh $NODEUSER@$NODEIP "docker swarm leave --force 2> /dev/null;$JOINCMD"
 for id in $(docker node ls -q 2> /dev/null); do
     nodeip="$(docker node inspect -f {{.Status.Addr}} $id)"
     if [[ -n "$(echo $nodeip | grep --fixed-strings $NODEIP)" ]]; then
-        echo "label $id: office1_vcac_zone=yes"
         docker node update --label-add vcac_zone=yes $id
     fi
 done

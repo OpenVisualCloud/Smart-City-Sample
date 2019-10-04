@@ -8,6 +8,7 @@ import os
 
 dbhost=os.environ["DBHOST"]
 office=list(map(float,os.environ["OFFICE"].split(","))) if "OFFICE" in os.environ else None
+address=os.environ["ADDRESS"] if "ADDRESS" in os.environ else None
 proxyhost=os.environ["PROXYHOST"]
 
 db=DBIngest(index="offices",office="",host=dbhost)
@@ -21,10 +22,11 @@ signal(SIGTERM, quit_service)
 while office:
     try:
         r=db.ingest({
-            "office": {
+            "location": {
                 "lat": office[0],
                 "lon": office[1],
             },
+            "address": address,
             "uri": proxyhost,
         },"$".join(map(str,office)))
         break

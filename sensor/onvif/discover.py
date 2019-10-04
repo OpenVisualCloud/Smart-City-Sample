@@ -204,15 +204,16 @@ def quit_service(signum, sigframe):
 signal(SIGTERM, quit_service)
 ip_range = os.environ['IP_SCAN_RANGE']
 port_range = os.environ['PORT_SCAN_RANGE']
-locations = [list(map(float,loc.split(","))) for loc in os.environ['LOCATION'].strip().split(" ")]
+simulated=list(map(int,os.environ["SIMULATED_CAMERA"].strip("/").split("/")))
+locations = [list(map(float,loc.split(","))) for loc in os.environ['LOCATION'].strip('/').split('/')]
+addresses = os.environ['ADDRESS'].strip('/').split("/")
+thetas = [float(theta) for theta in os.environ['THETA'].strip('/').split('/')]
 service_interval = float(os.environ["SERVICE_INTERVAL"])
 office = list(map(float,os.environ["OFFICE"].split(",")))
 dbhost= os.environ["DBHOST"]
-simulated=list(map(int,os.environ["SIMULATED_CAMERA"].strip(",").split(",")))
 
 db = DBIngest(index="sensors",office=office,host=dbhost)
 dbs = DBQuery(index="sensors",office=office,host=dbhost)
-camera_count=0
 cameras={}
 while True:
     xml=subprocess.check_output('/usr/bin/nmap -p'+port_range+' '+ip_range+' -Pn -oX -',stderr=subprocess.STDOUT,shell=True,timeout=100)
@@ -266,27 +267,23 @@ while True:
                 continue
 
         # retrieve unique location
-        if mac not in cameras:
-            cameras[mac]=camera_count
-            camera_count=camera_count+1
-        location = locations[int(cameras[mac] % (len(locations)))]
-        print("location: ["+str(location[0])+","+str(location[1])+"]",flush=True)
-
+        if mac not in cameras: cameras[mac]=len(cameras.keys())
         try:
             print("Checking for preexistance", flush=True)
             found=list(dbs.search("sensor:'camera' and model:'ip_camera' and mac='"+mac+"'", size=1))
             if not found:
                 print("Ingesting", flush=True)
+                location = locations[int(cameras[mac]%len(locations))]
                 db.ingest({
                     'sensor': 'camera',
-                    'icon': 'camera.gif',
                     'office': { 'lat': office[0], 'lon': office[1] },
                     'model': 'ip_camera',
                     'resolution': { 'width': width, 'height': height },
                     'location': { "lat": location[0], "lon": location[1] },
+                    'address': addresses[int(cameras[mac]%len(addresses))],
                     'url': rtspuri,
                     'mac': mac,
-                    'theta': 105.0,
+                    'theta': thetas[int(cameras[mac]%len(thetas))],
                     'mnth': 75.0,
                     'alpha': 45.0,
                     'fovh': 90.0,
