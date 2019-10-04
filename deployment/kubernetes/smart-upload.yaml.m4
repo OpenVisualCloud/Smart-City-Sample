@@ -21,6 +21,11 @@ spec:
         - name: defn(`OFFICE_NAME')-smart-upload
           image: smtc_smart_upload:latest
           imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+                cpu: "200m"
+            limits:
+                cpu: "400m"
           env:
             - name: QUERY
               value: "time>=eval(defn(`SERVICE_INTERVAL_SMART_UPLOAD')*1000) where objects.detection.bounding_box.x_max-objects.detection.bounding_box.x_min>0.01"
