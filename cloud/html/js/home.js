@@ -71,6 +71,7 @@ $("#pg-home").on(":initpage", function(e) {
 
         var center=map.getCenter();
         apiHost.search(index,"("+queries+") and location:["+center.lat+","+center.lng+","+settings.radius()+"]",null).then(function (data) {
+            $("[hint-panel]").hide();
             var sensors=page.data('sensors');
             var offices=page.data('offices');
             var stats_layer=page.data('stats');
