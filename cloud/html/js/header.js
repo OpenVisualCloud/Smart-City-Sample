@@ -8,10 +8,6 @@ var settings={
         if (typeof(val)!="undefined") $("#sensorUpdate").val(val);
         return parseFloat($("#sensorUpdate").val());
     },
-    analytics_update: function (val) {
-        if (typeof(val)!="undefined") $("#analyticsUpdate").val(val);
-        return parseFloat($("#analyticsUpdate").val());
-    },
     service_update: function (val) {
         if (typeof(val)!="undefined") $("#serviceUpdate").val(val);
         return parseFloat($("#serviceUpdate").val());

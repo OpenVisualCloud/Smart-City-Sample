@@ -40,11 +40,6 @@
   </div>
 
   <div class="input-group">
-    <span class="input-group-label" style="width:40%"><b>Analytics Update (ms):</b></span>
-    <input class="input-group-field" id="analyticsUpdate" type="number" value=5000>
-  </div>
-
-  <div class="input-group">
     <span class="input-group-label" style="width:40%"><b>Service Update (ms):</b></span>
     <input class="input-group-field" id="serviceUpdate" type="number" value=5000>
   </div>

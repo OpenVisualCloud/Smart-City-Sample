@@ -1,6 +1,8 @@
-<div id="pg-office" style="height:100%;display:none">
+<div id="office" class="reveal large" data-reveal>
 
-  <div style="overflow:auto;height:calc(100% - 200px);position:relative">
+  <h3></h3>
+
+  <div style="overflow:auto;height:400px;position:relative">
     <table style="position:relative" algorithm-table>
       <thead>
         <th>Algorithm</th>
@@ -16,7 +18,7 @@
     </table>
   </div>
 
-  <div id="workload-panel" style="width:300px;height:200px;float:left;position:relative;bottom:0px;border-right:1px solid">
+  <div style="width:300px;height:200px;float:left;position:relative;bottom:0px;border-right:1px solid">
     <canvas style="width:300px !important;height:200px !important"></canvas>
   </div>
 
@@ -31,5 +33,9 @@
       <tbody></tbody>
     </table>
   </div>
-    
+
+  <button class="close-button" data-close aria-label="Close modal" type="button">
+    <span aria-hidden="true">&times;</span>
+  </button>
+
 </div>

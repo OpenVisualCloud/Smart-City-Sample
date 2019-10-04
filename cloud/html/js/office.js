@@ -1,80 +1,46 @@
-$("#pg-office").on(":initpage", function(e, queries, office, address) {
+$("#office").on("open.zf.reveal", function(e) {
     var page=$(this);
-    $("#layoutButton").hide();
-    $("#cloudButton").hide();
+    var ctx=page.data("ctx");
+    var ctx2={};
 
-    /* update home button */
-    $("#homeButton").unbind('click').click(function () {
-        selectPage('home');
-    });
-
-    var search=$("#homeSearch");
-    var index="algorithms";
-    var updateAlgos=function (queries) {
-        if (!page.is(":visible")) return;
-        page.data('queries',queries);
-
-        /* remove old timer */
-        var timer=page.data('timer');
-        if (timer) clearTimeout(timer);
-        
+    page.find("h3").empty().append(ctx.address+" @ ["+ctx.office.lat+","+ctx.office.lon+"]");
+    workloads.create(ctx2,page.find('canvas'),ctx.address+" Workload");
+    var update=function () {
         /* fill the algorithm table */
-        apiHost.search(index,queries,office).then(function (data) {
+        apiHost.search("algorithms","name:*",ctx.office).then(function (data) {
             var tbody=page.find("[algorithm-table] tbody");
             tbody.empty();
             $.each(data.response,function (i,v) {
-                var sensor=("sensor" in v._source)?v._source.sensor:"N/A";
+                var sensor=("sensor" in v._source)?'<a href="javascript:void(0)">'+v._source.sensor+"</a>":"N/A";
                 var latency=("latency" in v._source)?v._source.latency.toFixed(2)+" ms":"N/A";
                 var performance=("performance" in v._source)?v._source.performance.toFixed(2)+" fps":"N/A";
                 var line=$("<tr><td>"+v._source.name+"</td><td>"+v._id+"</td><td>"+sensor+"</td><td>"+v._source.status+"</td><td>"+latency+"</td><td>"+performance+"</td><td>"+v._source.skip+" frame(s)</td></tr>");
                 tbody.append(line);
                 line.find("a").click(function () {
-                    selectPage("recording",['sensor="'+v._source.source+'"',office]);
+                    page.foundation("close");
+                    selectPage("recording",['sensor="'+v._source.sensor+'"',ctx.office]);
                 });
             });
-
-            page.data('timer',setTimeout(updateAlgos,settings.analytics_update(),queries));
         }).catch(function (e) {
-            $("[hint-panel]").trigger(":error", [e.statusText]);
         });
 
-    };
-
-    /* setup the service table */
-    var updateService=function () {
-        if (!page.is(":visible")) return;
-
         /* fill the service table */
-        apiHost.search("services","name:*",office).then(function (data) {
+        apiHost.search("services","name:*",ctx.office).then(function (data) {
             var tbody=page.find("[service-table] tbody");
             tbody.empty();
             $.each(data.response,function (i,v) {
                 var line=$("<tr><td>"+v._source.name+"</td><td>"+v._source.service+"</td><td>"+v._id+"</td><td>"+v._source.status+"</td></tr>");
                 tbody.append(line);
             });
-
-            if (page.data('timer2')) clearTimeout(page.data('timer2'));
-            page.data('timer2',setTimeout(updateService,settings.service_update()));
         }).catch(function (e) {
-            $("[hint-panel]").trigger(":error", [e.statusText]);
         });
-    }; 
-    updateService();
 
-    /* enable recording queries */
-    search.data('index',index).data('office',office).data('invoke',updateAlgos).val(queries).focus().trigger($.Event("keydown",{keyCode:13}));
+        /* update workloads */
+        workloads.update(ctx2,ctx.office);
+    };
 
-    /* enable workload charts */
-    var ctx={};
-    workloads.create(ctx,page.find('canvas'),address+" Workload");
-    ctx.timer=setInterval(workloads.update,2000,ctx,office);
-    page.data('workload',ctx);
-}).on(":closepage",function() {
-    var page=$(this);
-
-    var timer=page.data('timer');
-    if (timer) clearTimeout(timer);
-
-    var ctx=page.data('workload');
-    if (ctx) clearInterval(ctx.timer);
+    page.data('timer', setInterval(update,2000));
+}).on("closed.zf.reveal",function(e) {
+    var timer=$(this).data('timer');
+    if (timer) clearInterval(timer);
 });

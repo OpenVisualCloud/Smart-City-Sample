@@ -60,7 +60,6 @@ $("#pg-home").on(":initpage", function(e) {
     });
 
     /* update map with the sensor info */
-    var animation=[20,15];
     var index="sensors";
     var update=function (queries) {
         if (!page.is(":visible")) return;
@@ -101,16 +100,12 @@ $("#pg-home").on(":initpage", function(e) {
                 });
                 var title='<table style="border-collapse:collapse;line-height:0.5rem"><tbody>'+tmp.join("")+"</tbody></table>";
 
-                var options={ color: 'red', dashArray: animation.join(',') };
-                if (info._source.status == "idle") options.color='black';
-                if (info._source.status == "streaming") options.color='green';
-                animation=[animation[1],animation[0]];
-
                 var officeid=info._source.office.lat+","+info._source.office.lon;
                 if (officeid in offices) {
                     offices[officeid].used=true;
                 } else {
                     offices[officeid]={
+                        office: info._source.office,
                         marker: L.marker(info._source.office, { 
                             icon: scenario.icon.office,
                             riseOnHover: true,
@@ -127,23 +122,24 @@ $("#pg-home").on(":initpage", function(e) {
                         ctx.address=data.response[0]._source.address;
 
                         /* setup marker actions */
-                        var chartdiv=$('<div style="width:300px;height:200px"><canvas style="width:100%;height:100%"></canvas></div>');
-                        ctx.marker.bindTooltip(ctx.address+' @['+officeid+']').on('dblclick', function () {
-                            selectPage('office', ["name=*",info._source.office,ctx.address]);
-                        }).bindPopup(chartdiv[0], {
-                            maxWidth:"auto",
-                            maxHeight:"auto"
+                        ctx.marker.bindTooltip(ctx.address+' @ ['+officeid+']').on('click', function () {
+                            $("#office").data("ctx",ctx);
+                            $("#office").foundation('open');
                         });
-                        /* setup workload chart */
-                        workloads.create(ctx, chartdiv.find("canvas"), ctx.address);
                     }).catch(function () {
                     });
                 }
 
                 var sensorid=info._source.location.lat+","+info._source.location.lon;
+                var line_color=(info._source.status=="idle")?"black":(info._source.status=="streaming")?"green":"red";
                 if (sensorid in sensors) {
-                    sensors[sensorid].used=true;
-                    sensors[sensorid].line.setStyle(options).redraw();
+                    var ctx=sensors[sensorid];
+                    ctx.used=true;
+                    if (line_color=="green") {
+                        var tmp=ctx.line_dash.split(",");
+                        ctx.line_dash=tmp[1]+","+tmp[0];
+                    }
+                    ctx.line.setStyle({ color: line_color, dashArray: ctx.line_dash }).redraw();
                 } else {
                     sensors[sensorid]={ 
                         address: info._source.address,
@@ -155,8 +151,9 @@ $("#pg-home").on(":initpage", function(e) {
                         }).on('dblclick',function() {
                             selectPage("recording",['sensor="'+info._id+'"',info._source.office]);
                         }).addTo(map),
-                        line: L.polyline([info._source.location,info._source.office],options).addTo(map).bindTooltip("",{ permanent:true, direction:'center', opacity:0.7, className:'tooltip_text' }),
-                        used: true 
+                        line: L.polyline([info._source.location,info._source.office],{color:line_color,dashArray:"15,20"}).addTo(map).bindTooltip("",{ permanent:true, direction:'center', opacity:0.7, className:'tooltip_text' }),
+                        line_dash: "15,20",
+                        used: true,
                     };
 
                     var ctx=sensors[sensorid];
