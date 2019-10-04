@@ -22,7 +22,8 @@ $("#pg-home").on(":initpage", function(e) {
         });
 
         /* add layers switching widget */
-        var heatmap_layer=L.layerGroup().addTo(map);
+        var heatmap_layer=L.layerGroup();
+        if (page.data('scenario').name!="stadium") heatmap_layer.addTo(map);
         page.data('heatmaps',heatmap_layer);
         var stats_layer=L.layerGroup().addTo(map);
         page.data('stats',stats_layer);

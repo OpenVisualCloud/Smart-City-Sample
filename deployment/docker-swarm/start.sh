@@ -19,7 +19,7 @@ docker_compose)
         exit 0
     fi
 
-    echo "Cleanup..."
+    echo "Cleanup $(hostname)..."
     docker container prune -f; echo
     docker volume prune -f; echo
     docker network prune -f; echo
@@ -30,7 +30,6 @@ docker_compose)
     docker-compose -f "$yml" -p smtc --compatibility up
     ;;
 *)
-    echo "Cleanup..."
     $DIR/../../script/cleanup.sh; echo
 
     "$DIR/../certificate/self-sign.sh"
