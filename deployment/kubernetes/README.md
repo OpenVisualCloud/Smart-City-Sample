@@ -15,12 +15,12 @@ ssh-copy-id <worker-node>
 ```
 
 4. If you enable more than 1 office, label the worker nodes as follows:    
-    - Label the nodes where cloud/office services can run, for example, ```cloud_zone=yes```, ```office1_zone=yes```, ```office2_zone=yes```, ```office3_zone=yes```, etc.
-    - Label the nodes where recoding storage can be saved (disk space required), for example, ```cloud_storage=yes```, ```office1_storage=yes```, ```office2_storage=yes```, ```office3_storage=yes```, etc.
+    - Label the nodes where cloud/office services can run, for example, ```cloud-zone=yes```, ```office1-zone=yes```, ```office2-zone=yes```, ```office3-zone=yes```, etc.
+    - Label the nodes where recoding storage can be saved (disk space required), for example, ```cloud-storage=yes```, ```office1-storage=yes```, ```office2-storage=yes```, ```office3-storage=yes```, etc.
 
 ```
-kubectl label node <worker-node> office1_zone=yes
-kubectl label node <worker-node> office1_storage=yes
+kubectl label node <worker-node> office1-zone=yes
+kubectl label node <worker-node> office1-storage=yes
 ```
 
 5. Finally, start/stop services as follows:   
