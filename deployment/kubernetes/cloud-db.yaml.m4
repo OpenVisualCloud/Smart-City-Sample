@@ -79,5 +79,5 @@ ifelse(eval(defn(`NOFFICES')>1),1,`dnl
             emptyDir: {}
 ifelse(eval(defn(`NOFFICES')>1),1,`dnl
       nodeSelector:
-        cloud-zone: yes
+        cloud-zone: "yes"
 ')dnl

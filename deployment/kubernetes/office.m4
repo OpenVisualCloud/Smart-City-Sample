@@ -6,5 +6,5 @@ define(`CAMERA_NETWORK',192.168.eval(defn(`SCENARIOIDX')*defn(`NOFFICES')+defn(`
 define(`CAMERA_RTSP_PORT',17000)dnl
 define(`CAMERA_RTP_PORT',27000)dnl
 define(`CAMERA_PORT_STEP',50)dnl
-define(`OFFICE_ZONE',`office'defn(OFFICEIDX)-zone)dnl
-define(`STORAGE_ZONE',`office'defn(OFFICEIDX)-storage)dnl
+define(`OFFICE_ZONE',`office'defn(`OFFICEIDX')-zone)dnl
+define(`STORAGE_ZONE',`office'defn(`OFFICEIDX')-storage)dnl
