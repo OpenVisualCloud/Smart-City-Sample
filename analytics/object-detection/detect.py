@@ -68,7 +68,7 @@ while True:
 while not stop:
     try:
         print("Searching...", flush=True)
-        for sensor in dbs.search("sensor:'camera' and status:'idle' and office:["+str(office[0])+","+str(office[1])+"]"):
+        for sensor in dbs.search("sensor:'camera' and status:'idle' and algorithm='object-detection' and office:["+str(office[0])+","+str(office[1])+"]"):
             try:
                 # compete (with other va instances) for a sensor
                 r=dbs.update(sensor["_id"],{"status":"streaming"},version=sensor["_version"])

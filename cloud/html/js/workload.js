@@ -1,5 +1,5 @@
 
-var workloads={
+var workload={
     create: function (ctx, canvas, title) {
         ctx.workload=new Chart(canvas, {
             type: 'line',

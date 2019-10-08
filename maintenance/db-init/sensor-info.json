@@ -1,0 +1,492 @@
+[{
+    "scenario": "traffic",
+    "address": "Dawson Creek",
+    "location": {
+        "lat": 45.539626,
+        "lon": -122.929569
+    },
+    "sensors": [{
+        "address": "Shute & Dawson Creek",
+        "location": {
+            "lat": 45.544223,
+            "lon": -122.926128
+        },
+        "algorithm": "object-detection",
+        "mnth": 75.0,
+        "alpha": 45.0,
+        "fovh": 90.0,
+        "fovv": 68.0,
+        "theta": 0.0,
+        "simsn": "cams1o1c0"
+    },{
+        "address": "Brookwood & Dawson Creek",
+        "location": {
+            "lat": 45.546249,
+            "lon": -122.932145
+        },
+        "algorithm": "object-detection",
+        "mnth": 75.0,
+        "alpha": 45.0,
+        "fovh": 90.0,
+        "fovv": 68.0,
+        "theta": 115.0,
+        "simsn": "cams1o1c1"
+    },{
+        "address": "Brookwood & Airport Rd",
+        "location": {
+            "lat": 45.538971,
+            "lon": -122.939726
+        },
+        "algorithm": "object-detection",
+        "mnth": 75.0,
+        "alpha": 45.0,
+        "fovh": 90.0,
+        "fovv": 68.0,
+        "theta": 225.0,
+        "simsn": "cams1o1c2"
+    },{
+        "address": "Cornell & 48th Ave",
+        "location": {
+            "lat": 45.533498,
+            "lon": -122.933868
+        },
+        "algorithm": "object-detection",
+        "mnth": 75.0,
+        "alpha": 45.0,
+        "fovh": 90.0,
+        "fovv": 68.0,
+        "theta": 280.0,
+        "simsn": "cams1o1c3"
+    },{
+        "address": "Shute & Butler St",
+        "location": {
+            "lat": 45.538148,
+            "lon": -122.926131
+        },
+        "algorithm": "object-detection",
+        "mnth": 75.0,
+        "alpha": 45.0,
+        "fovh": 90.0,
+        "fovv": 68.0,
+        "theta": 0.0,
+        "simsn": "cams1o1c4"
+    },{
+        "address": "Brookwood & Library",
+        "location": {
+            "lat": 45.54289,
+            "lon": -122.93716
+        },
+        "algorithm": "object-detection",
+        "mnth": 75.0,
+        "alpha": 45.0,
+        "fovh": 90.0,
+        "fovv": 68.0,
+        "theta": 170.0,
+        "simsn": "cams1o1c5"
+    },{
+        "address": "Cornell & Shute",
+        "location": {
+            "lat": 45.5335,
+            "lon": -122.9260
+        },
+        "algorithm": "object-detection",
+        "mnth": 75.0,
+        "alpha": 45.0,
+        "fovh": 90.0,
+        "fovv": 68.0,
+        "theta": 270.0,
+        "simsn": "cams1o1c6"
+    },{
+        "address": "Tendem Way",
+        "location": {
+            "lat": 45.5415,
+            "lon": -122.9227
+        },
+        "algorithm": "object-detection",
+        "mnth": 75.0,
+        "alpha": 45.0,
+        "fovh": 90.0,
+        "fovv": 68.0,
+        "theta": 0.0,
+        "simsn": "cams1o1c7"
+    }]
+},{
+    "scenario": "traffic",
+    "address": "Shady Wood",
+    "location": {
+        "lat": 45.524460,
+        "lon": -122.960475
+    },
+    "sensors": [{
+        "address": "Brogden & 37th Ave",
+        "location": {
+            "lat": 45.524295,
+            "lon": -122.944296
+        },
+        "algorithm": "object-detection",
+        "mnth": 75.0,
+        "alpha": 45.0,
+        "fovh": 90.0,
+        "fovv": 68.0,
+        "theta": 90.0,
+        "simsn": "cams1o2c0"
+    },{
+        "address": "Veteran & 34th Ave",
+        "location": {
+            "lat": 45.528657,
+            "lon": -122.946688
+        },
+        "algorithm": "object-detection",
+        "mnth": 75.0,
+        "alpha": 45.0,
+        "fovh": 90.0,
+        "fovv": 68.0,
+        "theta": 135.0,
+        "simsn": "cams1o2c1"
+    },{
+        "address": "Sunrise & 25th Ave",
+        "location": {
+            "lat": 45.536660,
+            "lon": -122.957050
+        },
+        "algorithm": "object-detection",
+        "mnth": 75.0,
+        "alpha": 45.0,
+        "fovh": 90.0,
+        "fovv": 68.0,
+        "theta": 180.0,
+        "simsn": "cams1o2c2"
+    },{
+        "address": "Cornell & 17th Ave",
+        "location": {
+            "lat": 45.530704,
+            "lon": -122.964528
+        },
+        "algorithm": "object-detection",
+        "mnth": 75.0,
+        "alpha": 45.0,
+        "fovh": 90.0,
+        "fovv": 68.0,
+        "theta": 0.0,
+        "simsn": "cams1o2c3"
+    },{
+        "address": "Grant & Delsey",
+        "location": {
+            "lat": 45.528238,
+            "lon": -122.974870
+        },
+        "algorithm": "object-detection",
+        "mnth": 75.0,
+        "alpha": 45.0,
+        "fovh": 90.0,
+        "fovv": 68.0,
+        "theta": 225.0,
+        "simsn": "cams1o2c4"
+    },{
+        "address": "Cornell & Main St",
+        "location": {
+            "lat": 45.5220,
+            "lon": -122.9738
+        },
+        "algorithm": "object-detection",
+        "mnth": 75.0,
+        "alpha": 45.0,
+        "fovh": 90.0,
+        "fovv": 68.0,
+        "theta": 0.0,
+        "simsn": "cams1o2c5"
+    },{
+        "address": "Oak & 18th Ave",
+        "location": {
+            "lat": 45.5185,
+            "lon": -122.9640
+        },
+        "algorithm": "object-detection",
+        "mnth": 75.0,
+        "alpha": 45.0,
+        "fovh": 90.0,
+        "fovv": 68.0,
+        "theta": 180.0,
+        "simsn": "cams1o2c6"
+    },{
+        "profile": {
+            "sn": "cams1o2c8"
+        },
+        "address": "Main & 28th Ave",
+        "location": {
+            "lat": 45.5207,
+            "lon": -122.9545
+        },
+        "algorithm": "object-detection",
+        "mnth": 75.0,
+        "alpha": 45.0,
+        "fovh": 90.0,
+        "fovv": 68.0,
+        "theta": 75.0,
+        "simsn": "cams1o2c7"
+    }]
+},{
+    "scenario": "traffic",
+    "address": "Glencoe Tract",
+    "location": {
+        "lat": 45.543645,
+        "lon": -122.984178
+    },
+    "sensors": [{
+        "address": "Jackson School & Harewood",
+        "location": {
+            "lat": 45.538991,
+            "lon": -122.979685
+        },
+        "algorithm": "object-detection",
+        "mnth": 75.0,
+        "alpha": 45.0,
+        "fovh": 90.0,
+        "fovv": 68.0,
+        "theta": 90.0,
+        "simsn": "cams1o3c0"
+    },{
+        "address": "Circle Park",
+        "location": {
+            "lat": 45.543897,
+            "lon": -122.970496
+        },
+        "algorithm": "object-detection",
+        "mnth": 75.0,
+        "alpha": 45.0,
+        "fovh": 90.0,
+        "fovv": 68.0,
+        "theta": 315.0,
+        "simsn": "cams1o3c1"
+    },{
+        "address": "Evergreen & Jackson School",
+        "location": {
+            "lat": 45.549972,
+            "lon": -122.979717
+        },
+        "algorithm": "object-detection",
+        "mnth": 75.0,
+        "alpha": 45.0,
+        "fovh": 90.0,
+        "fovv": 68.0,
+        "theta": 270.0,
+        "simsn": "cams1o3c2"
+    },{
+        "address": "Glencoe & Evergreen",
+        "location": {
+            "lat": 45.549807,
+            "lon": -122.995426
+        },
+        "algorithm": "object-detection",
+        "mnth": 75.0,
+        "alpha": 45.0,
+        "fovh": 90.0,
+        "fovv": 68.0,
+        "theta": 0.0,
+        "simsn": "cams1o3c3"
+    },{
+        "address": "Glencoe & Lenox St",
+        "location": {
+            "lat": 45.544388,
+            "lon": -122.995659
+        },
+        "algorithm": "object-detection",
+        "mnth": 75.0,
+        "alpha": 45.0,
+        "fovh": 90.0,
+        "fovv": 68.0,
+        "theta": 90.0,
+        "simsn": "cams1o3c4"
+    },{
+        "address": "Glencoe & Harewood",
+        "location": {
+            "lat": 45.5355,
+            "lon": -122.9910
+        },
+        "algorithm": "object-detection",
+        "mnth": 75.0,
+        "alpha": 45.0,
+        "fovh": 90.0,
+        "fovv": 68.0,
+        "theta": 90.0,
+        "simsn": "cams1o3c5"
+    },{
+        "address": "Jackson School & Evergreen",
+        "location": {
+            "lat": 45.5499,
+            "lon": -122.9734
+        },
+        "algorithm": "object-detection",
+        "mnth": 75.0,
+        "alpha": 45.0,
+        "fovh": 90.0,
+        "fovv": 68.0,
+        "theta": 180.0,
+        "simsn": "cams1o3c6"
+    },{
+        "address": "Evergreen & 3rd Ave",
+        "location": {
+            "lat": 45.5522,
+            "lon": -122.9882
+        },
+        "algorithm": "object-detection",
+        "mnth": 75.0,
+        "alpha": 45.0,
+        "fovh": 90.0,
+        "fovv": 68.0,
+        "theta": 0.0,
+        "simsn": "cams1o3c7"
+    }]
+},{
+    "scenario": "stadium",
+    "address": "National Stadium",
+    "location": {
+        "lat": 37.39856,
+        "lon": -121.94866
+    },
+    "sensors": [{
+        "address": "East Gate",
+        "location": {
+            "lat": 37.38783,
+            "lon": -121.94599
+        },
+        "algorithm": "people-counting",
+        "theta": 90.0,
+        "simsn": "cams2o1c0"
+    },{
+        "address": "North Gate",
+        "location": {
+            "lat": 37.40008,
+            "lon": -121.95925
+        },
+        "algorithm": "people-counting",
+        "theta": 180,
+        "simsn": "cams2o1c2"
+    },{
+        "address": "West Gate",
+        "location": {
+            "lat": 37.38679,
+            "lon": -121.98048
+        },
+        "algorithm": "people-counting",
+        "theta": 270.0,
+        "simsn": "cams2o1c4"
+    },{
+        "address": "South Gate",
+        "location": {
+            "lat": 37.37610,
+            "lon": -121.96242
+        },
+        "algorithm": "people-counting",
+        "theta": 0.0,
+        "simsn": "cams2o1c6"
+    },{
+        "address": "South East Exit",
+        "location": {
+            "lat": 37.38062,
+            "lon": -121.95048
+        },
+        "algorithm": "people-counting",
+        "theta": 45.0,
+        "simsn": "cams2o1c8"
+    },{
+        "address": "North East Exit",
+        "location": {
+            "lat": 37.39628,
+            "lon": -121.95067
+        },
+        "algorithm": "people-counting",
+        "theta": 135.0,
+        "simsn": "cams2o1c10"
+    },{
+        "address": "North West Exit",
+        "location": {
+            "lat": 37.39628,
+            "lon": -121.97461
+        },
+        "algorithm": "people-counting",
+        "theta": 225.0,
+        "simsn": "cams2o1c12"
+    },{
+        "address": "South West Exit",
+        "location": {
+            "lat": 37.38077,
+            "lon": -121.97388
+        },
+        "algorithm": "people-counting",
+        "theta": 315,
+        "simsn": "cams2o1c14"
+    },{
+        "address": "East Wing",
+        "location": {
+            "lat": 37.38873,
+            "lon": -121.95202
+        },
+        "algorithm": "crowd-counting",
+        "zones": [0],
+        "simsn": "cams2o1c1"
+    },{
+        "address": "North East Wing",
+        "location": {
+            "lat": 37.39485,
+            "lon": -121.95271
+        },
+        "algorithm": "crowd-counting",
+        "zones": [1],
+        "simsn": "cams2o1c3"
+    },{
+        "address": "North Wing",
+        "location": {
+            "lat": 37.39541,
+            "lon": -121.96276
+        },
+        "algorithm": "crowd-counting",
+        "zones": [2],
+        "simsn": "cams2o1c5"
+    },{
+        "address": "North West Wing",
+        "location": {
+            "lat": 37.39520,
+            "lon": -121.97216
+        },
+        "algorithm": "crowd-counting",
+        "zones": [3],
+        "simsn": "cams2o1c7"
+    },{
+        "address": "West Wing",
+        "location": {
+            "lat": 37.38867,
+            "lon": -121.97345
+        },
+        "algorithm": "crowd-counting",
+        "zones": [4],
+        "simsn": "cams2o1c9"
+    },{
+        "address": "South West Wing",
+        "location": {
+            "lat": 37.38287,
+            "lon": -121.97143
+        },
+        "algorithm": "crowd-counting",
+        "zones": [5],
+        "simsn": "cams2o1c11"
+    },{
+        "address": "South Wing",
+        "location": {
+            "lat": 37.38196,
+            "lon": -121.96295
+        },
+        "algorithm": "crowd-counting",
+        "zones": [6],
+        "simsn": "cams2o1c13"
+    },{
+        "address": "South East Wing",
+        "location": {
+            "lat": 37.38244,
+            "lon": -121.95284
+        },
+        "algorithm": "crowd-counting",
+        "zones": [7],
+        "simsn": "cams2o1c15"
+    }]
+}]

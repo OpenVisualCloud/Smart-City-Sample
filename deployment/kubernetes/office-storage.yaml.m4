@@ -40,12 +40,8 @@ spec:
           env:
             - name: OFFICE
               value: "defn(`OFFICE_LOCATION')"
-            - name: ADDRESS
-              value: "defn(defn(`SCENARIO_NAME')`_office'defn(`OFFICEIDX')_address)"
             - name: DBHOST
               value: "http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')-db,db)-service:9200"
-            - name: PROXYHOST
-              value: "http://defn(`OFFICE_NAME')-storage-service.default.svc.cluster.local:8080"
             - name: INDEXES
               value: "recordings,analytics"
             - name: RETENTION_TIME

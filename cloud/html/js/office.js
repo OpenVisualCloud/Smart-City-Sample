@@ -4,7 +4,7 @@ $("#office").on("open.zf.reveal", function(e) {
     var ctx2={};
 
     page.find("h3").empty().append(ctx.address+" @ ["+ctx.office.lat+","+ctx.office.lon+"]");
-    workloads.create(ctx2,page.find('canvas'),ctx.address+" Workload");
+    workload.create(ctx2,page.find('canvas'),ctx.address+" Workload");
     var update=function () {
         /* fill the algorithm table */
         apiHost.search("algorithms","name:*",ctx.office).then(function (data) {
@@ -36,7 +36,7 @@ $("#office").on("open.zf.reveal", function(e) {
         });
 
         /* update workloads */
-        workloads.update(ctx2,ctx.office);
+        workload.update(ctx2,ctx.office);
     };
 
     page.data('timer', setInterval(update,2000));

@@ -69,7 +69,7 @@ var stats={
             },
         });
     },
-    create: function (ctx, sensor, page, map, layer) {
+    create: function (ctx, sensor, page, map) {
 	    ctx.chart_icon=L.marker(ctx.marker.getLatLng(), {
             icon: L.icon({
                 iconUrl: 'images/chart.png',
@@ -87,7 +87,7 @@ var stats={
                 e.preventDefault();
                 var div1=div.clone().removeAttr('draggable').css({width:'100%',height:'100%'});
                 var icon1=L.divIcon({html:div1[0],iconSize:[350,200],iconAnchor:[0,0]});
-                var marker1=L.marker(map.mouseEventToLatLng(e),{icon:icon1,draggable:true}).addTo(layer);
+                var marker1=L.marker(map.mouseEventToLatLng(e),{icon:icon1,draggable:true}).addTo(page.data('stat').layer);
                 marker1._sensor=JSON.parse(e.originalEvent.dataTransfer.getData('application/json'));
                 marker1._chart=stats.create_chart(div1.find('canvas'));
                 marker1._zoomargs={zoom:map.getZoom(),width:350,height:200};

@@ -1,5 +1,5 @@
 include(../../script/forloop.m4)
-include(../../script/sensor-info.m4)
+include(../../maintenance/db-init/sensor-info.m4)
 
 version: "3.7"
 

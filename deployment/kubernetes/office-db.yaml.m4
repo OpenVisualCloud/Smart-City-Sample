@@ -103,6 +103,10 @@ spec:
               value: "defn(`OFFICE_LOCATION')"
             - name: "DBHOST"
               value: "http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')-db,db)-service:9200"
+            - name: PROXYHOST
+              value: "http://defn(`OFFICE_NAME')-storage-service.default.svc.cluster.local:8080"
+            - name: `SCENARIO'
+              value: "defn(`SCENARIO_NAME')"
             - name: NO_PROXY
               value: "*"
             - name: no_proxy

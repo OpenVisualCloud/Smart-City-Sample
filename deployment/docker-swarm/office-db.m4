@@ -33,8 +33,16 @@ ifelse(defn(`PLATFORM'),`VCAC-A',`dnl
         environment:
             DBHOST: "http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')_db,db):9200"
             OFFICE: "defn(`OFFICE_LOCATION')"
+            PROXYHOST: "http://defn(`OFFICE_NAME')_storage:8080"
+            `SCENARIO': "defn(`SCENARIO_NAME')"
             NO_PROXY: "*"
             no_proxy: "*"
+        secrets:
+            - source: sensor_info
+              target: sensor-info.json
+              uid: "${USER_ID}"
+              gid: "${GROUP_ID}"
+              mode: 0444
         volumes:
             - /etc/localtime:/etc/localtime:ro
 ifelse(defn(`PLATFORM'),`VCAC-A',`dnl
