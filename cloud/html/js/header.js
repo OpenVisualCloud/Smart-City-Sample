@@ -187,7 +187,7 @@ $("[hint-panel]").on(":display", function (e, message) {
 }).on(":error", function (e, message) {
     var panel=$(this);
     panel.trigger(":display", ['<p style="color:red">'+message+'</p>']);
-    setTimeout(function () { panel.hide(); },1000);
+    setTimeout(function () { panel.hide(); },2000);
 });
 
 $(window).resize(function () {

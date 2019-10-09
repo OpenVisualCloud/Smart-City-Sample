@@ -425,6 +425,10 @@
         "algorithm": "crowd-counting",
         "theta": 270.0,
         "zones": [0],
+        "zonemap": [{
+            "zone": 0,
+            "polygon": [[0,0],[1023,0],[1023,1023],[0,1023],[0,0]]
+        }],
         "simsn": "cams2o1w0"
     },{
         "address": "North East Wing",
@@ -435,6 +439,10 @@
         "algorithm": "crowd-counting",
         "theta": 315.0,
         "zones": [1],
+        "zonemap": [{
+            "zone": 1,
+            "polygon": [[0,0],[1023,0],[1023,1023],[0,1023],[0,0]]
+        }],
         "simsn": "cams2o1w4"
     },{
         "address": "North Wing",
@@ -445,6 +453,10 @@
         "algorithm": "crowd-counting",
         "theta": 0.0,
         "zones": [2],
+        "zonemap": [{
+            "zone": 2,
+            "polygon": [[0,0],[1023,0],[1023,1023],[0,1023],[0,0]]
+        }],
         "simsn": "cams2o1w1"
     },{
         "address": "North West Wing",
@@ -455,6 +467,10 @@
         "algorithm": "crowd-counting",
         "theta": 45.0,
         "zones": [3],
+        "zonemap": [{
+            "zone": 3,
+            "polygon": [[0,0],[1023,0],[1023,1023],[0,1023],[0,0]]
+        }],
         "simsn": "cams2o1w5"
     },{
         "address": "West Wing",
@@ -465,6 +481,10 @@
         "algorithm": "crowd-counting",
         "theta": 90.0,
         "zones": [4],
+        "zonemap": [{
+            "zone": 4,
+            "polygon": [[0,0],[1023,0],[1023,1023],[0,1023],[0,0]]
+        }],
         "simsn": "cams2o1w2"
     },{
         "address": "South West Wing",
@@ -475,6 +495,10 @@
         "algorithm": "crowd-counting",
         "theta": 135.0,
         "zones": [5],
+        "zonemap": [{
+            "zone": 5,
+            "polygon": [[0,0],[1023,0],[1023,1023],[0,1023],[0,0]]
+        }],
         "simsn": "cams2o1w6"
     },{
         "address": "South Wing",
@@ -485,6 +509,10 @@
         "algorithm": "crowd-counting",
         "theta": 180.0,
         "zones": [6],
+        "zonemap": [{
+            "zone": 6,
+            "polygon": [[0,0],[1023,0],[1023,1023],[0,1023],[0,0]]
+        }],
         "simsn": "cams2o1w3"
     },{
         "address": "South East Wing",
@@ -495,6 +523,10 @@
         "algorithm": "crowd-counting",
         "theta": 225.0,
         "zones": [7],
+        "zonemap": [{
+            "zone": 7,
+            "polygon": [[0,0],[1023,0],[1023,1023],[0,1023],[0,0]]
+        }],
         "simsn": "cams2o1w7"
     }]
 }]

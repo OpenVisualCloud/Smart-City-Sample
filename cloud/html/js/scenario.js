@@ -1,14 +1,13 @@
 
 function update_control_options(page, map, options) {
     var control=page.data('controls');
-    $.each(options, function (layer_name,layer_choice) {
+    $.each(['heatmap','stat','preview','alert','lineinfo'], function (x, layer_name) {
         var layer_object=page.data(layer_name);
         control.removeLayer(layer_object.layer);
-        if (layer_choice) {
+        if (map.hasLayer(layer_object.layer)) layer_object.layer.remove();
+        if (layer_name in options) {
             control.addOverlay(layer_object.layer, layer_object.name);
-            if (!map.hasLayer(layer_object.layer)) layer_object.layer.addTo(map);
-        } else {
-            if (map.hasLayer(layer_object.layer)) layer_object.layer.remove();
+            if (options[layer_name]) layer_object.layer.addTo(map);
         }
     });
 }
@@ -55,30 +54,17 @@ var scenarios={
                     'stat': true,
                     'preview': true,
                     'alert': true,
+                    'lineinfo': true,
                 });
             });
             if (order==0) layer1.addTo(map).fire('add');
             page.data('controls').addBaseLayer(layer1,"Traffic Planning");
         },
         create_sensor: function (officectx, sensorctx, sensor, map) {
-            sensorctx.line_dash="15,20";
-            var line_color=(sensor._source.status=="idle")?"black":(sensor._source.status=="streaming")?"green":"red";
-            sensorctx.line=L.polyline([sensor._source.location,sensor._source.office],{color:line_color,dashArray:sensorctx.line_dash}).bindTooltip("",{ permanent:true, direction:'center', opacity:0.7, className:'tooltip_text' }).addTo(map);
         },
         update_sensor: function (sensorctx, sensor) {
-            /* show bandwidth */
-            sensorctx.line.setTooltipContent(format_bandwidth("bandwidth" in sensor._source && sensor._source.status == "streaming"?sensor._source.bandwidth:0));
-
-            /* alter line style */
-            var line_color=(sensor._source.status=="idle")?"black":(sensor._source.status=="streaming")?"green":"red";
-            if (line_color=="green") {
-                var tmp=sensorctx.line_dash.split(",");
-                sensorctx.line_dash=tmp[1]+","+tmp[0];
-            }
-            sensorctx.line.setStyle({ color: line_color, dashArray: sensorctx.line_dash }).redraw();
         },
         close_sensor: function (sensorctx) {
-            sensorctx.line.remove();
         }
     },
     stadium: {
@@ -125,10 +111,10 @@ var scenarios={
                 page.data('scenario', scenarios.stadium);
                 map.setView(scenarios.stadium.center,page.data('zoom'));
                 update_control_options(page, map, {
-                    'heatmap': false,
                     'stat': true,
                     'preview': true,
                     'alert': true,
+                    'lineinfo': false,
                 });
             });
             if (order==0) layer1.addTo(map).fire('add');

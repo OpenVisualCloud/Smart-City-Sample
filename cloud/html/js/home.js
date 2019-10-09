@@ -26,6 +26,7 @@ $("#pg-home").on(":initpage", function(e) {
         page.data('map',map);
 
         /* add layers switching widget */
+        page.data('lineinfo',{ name: "Connection Info", layer: L.layerGroup() });
         page.data('heatmap',{ name: "Density Estimation", layer: L.layerGroup() });
         page.data('stat',{ name: "Statistics Histogram", layer: L.layerGroup() });
         page.data('preview', { name: "Preview Clips", layer: L.layerGroup() });
@@ -130,6 +131,10 @@ $("#pg-home").on(":initpage", function(e) {
                     preview.create(sensorctx, sensor, page, map);
 		            stats.create(sensorctx, sensor, page, map);
                     heatmap.create(sensorctx, sensor._source.location);
+
+                    sensorctx.line_dash="15,20";
+                    var line_color=(sensor._source.status=="idle")?"black":(sensor._source.status=="streaming")?"green":"red";
+                    sensorctx.line=L.polyline([sensor._source.location,sensor._source.office],{color:line_color,dashArray:sensorctx.line_dash}).bindTooltip("",{ permanent:true, direction:'center', opacity:0.7, className:'tooltip_text' }).addTo(page.data('lineinfo').layer);
                 }
 
                 /* update sensor */
@@ -153,6 +158,15 @@ $("#pg-home").on(":initpage", function(e) {
                 var heatmap_layer=page.data('heatmap').layer;
                 if (map.hasLayer(heatmap_layer)) 
                     heatmap.update(heatmap_layer, sensorctx, map.getZoom(), sensor);
+
+                /* show line info */
+                sensorctx.line.setTooltipContent(format_bandwidth("bandwidth" in sensor._source && sensor._source.status == "streaming"?sensor._source.bandwidth:0));
+                var line_color=(sensor._source.status=="idle")?"black":(sensor._source.status=="streaming")?"green":"red";
+                if (line_color=="green") {
+                    var tmp=sensorctx.line_dash.split(",");
+                    sensorctx.line_dash=tmp[1]+","+tmp[0];
+                }
+                sensorctx.line.setStyle({ color: line_color, dashArray: sensorctx.line_dash }).redraw();
             });
 
             /* remove obsolete markers */
@@ -161,6 +175,7 @@ $("#pg-home").on(":initpage", function(e) {
                     delete v.used;
                 } else {
                     sensorctx.marker.remove();
+                    sensorctx.line.remove();
                     scenario.close_sensor(v);
                     preview.close(v);
 		            stats.close(v);
