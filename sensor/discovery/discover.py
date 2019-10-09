@@ -5,14 +5,13 @@ from signal import SIGTERM, signal
 from db_query import DBQuery
 from db_ingest import DBIngest
 from probe import probe
-from onvif_discover import discover
-from onvif_test import test
+from onvif_discover import safe_discover
 import subprocess
 import sys
 import time
 import os
 
-def parse_nmap_xml(nmapxml, sim_ports):
+def parse_nmap_xml(nmapxml, sim_ports, user='admin', passwd='admin'):
     root = ET.fromstring(nmapxml)
     for host1 in root.findall('host'):
         ip = host1.find("address").attrib['addr']
@@ -22,17 +21,32 @@ def parse_nmap_xml(nmapxml, sim_ports):
                 port = int(port1.attrib['portid'])
 
                 print("To test " + ip + ":" + str(port), flush=True)
-                if(test(ip, port) == True):
+                desc=safe_discover(ip, port, user, passwd)
+                if desc:
                     print("Found onvif device service", flush=True)
-                    yield (ip,port)
-                    continue
+                    camid=("MAC",desc["MAC"]) if "MAC" in desc else None
+                    if not camid:
+                        if "NetworkInterfaces" in desc:
+                            if desc["NetworkInterfaces"]:
+                                camid=("NetworkInterfaces.Info.HwAddress",desc['NetworkInterfaces'][0]['Info']['HwAddress'])
+                    if not camid:
+                        if "DeviceInformation" in desc:
+                            camid=("DeviceInformation.SerialNumber",desc['DeviceInformation']['SerialNumber'])
 
-                print("Trying simulated camera", flush=True)
-                if port in sim_ports:
-                    for state1 in port1.findall('state'):
-                        if state1.attrib['state'] == "open":
-                            print("Found simulated camera", flush=True)
-                            yield (ip,port)
+                    rtspuri = desc["MediaStreamUri"]["Uri"]
+                    rtspuri = rtspuri.replace('rtsp://', "rtsp://"+user+":"+passwd+"@")
+                    yield (rtspuri,camid,desc)
+                    continue
+                else:
+                    print("Trying simulated camera", flush=True)
+                    if port in sim_ports:
+                        for state1 in port1.findall('state'):
+                            if state1.attrib['state'] == "open":
+                                print("Found simulated camera", flush=True)
+                                rtspuri = "rtsp://"+ip+":"+str(port)+"/live.sdp"
+                                index=sim_cameras[rtspuri] if rtspuri in sim_cameras else len(sim_cameras.keys())
+                                camid=("simsn",sim_prefix+str(index))
+                                yield (rtspuri,camid,{})
 
 def quit_service(signum, sigframe):
     exit(143)
@@ -54,56 +68,24 @@ sim_cameras={}
 while True:
     xml=subprocess.check_output('/usr/bin/nmap -p'+port_range+' '+ip_range+' -Pn -oX -',stderr=subprocess.STDOUT,shell=True,timeout=100)
     
-    for ip,port in parse_nmap_xml(xml, sim_ports):
-        print("Start discovery "+ip+":"+str(port), flush=True)
-
-        camid=None
-        desc={}
-        try:
-            desc=discover(ip,port)
-            camid=("MAC",desc["MAC"]) if "MAC" in desc else None
-            if not camid:
-                if "NetworkInterfaces" in desc:
-                    if desc["NetworkInterfaces"]:
-                        camid=("NetworkInterfaces.Info.HwAddress",desc['NetworkInterfaces'][0]['Info']['HwAddress'])
-            if not camid:
-                if "DeviceInformation" in desc:
-                    camid=("DeviceInformation.SerialNumber",desc['DeviceInformation']['SerialNumber'])
-        except Exception as e:
-            print("Exception: "+str(e), flush=True)
-            camid=None
-
-        # Add credential to rtsp uri
-        try:
-            rtspuri = desc["MediaStreamUri"]["Uri"]
-            rtspuri = rtspuri.replace('rtsp://', 'rtsp://admin:admin@')
-        except:
-            rtspuri = "rtsp://"+ip+":"+str(port)+"/live.sdp"
-            index=sim_cameras[rtspuri] if rtspuri in sim_cameras else len(sim_cameras)
-            camid=("simsn",sim_prefix+str(index))
+    for rtspuri,camid,desc in parse_nmap_xml(xml, sim_ports):
         print("rtspuri: "+rtspuri, flush=True)
 
-        # width & height
-        sinfo={"streams":[]}
+        # probe width & height from the stream
+        width=height=0
         try:
-            width = int(desc["MediaVideoSources"][0]['Resolution']['Width'])
-            height = int(desc["MediaVideoSources"][0]['Resolution']["Height"])
-        except:
-            # probe from the stream
-            try:
-                print("Probing for width & height", flush=True)
-                sinfo=probe(rtspuri)
-            except Exception as e:
-                print("Exception: "+str(e), flush=True)
-
-            width = 0
-            height = 0
+            print("Probing for width & height", flush=True)
+            sinfo=probe(rtspuri)
             for stream in sinfo["streams"]:
                 if "coded_width" in stream: width=int(stream["coded_width"])
                 if "coded_height" in stream: height=int(stream["coded_height"])
-            if width==0 or height==0: 
-                print("Unknown width & height, skipping", flush=True)
-                continue
+        except Exception as e:
+            print("Exception: "+str(e), flush=True)
+
+        if not width or not height:
+            print("Unknown width & height, skipping", flush=True)
+            continue
+        sinfo["resolution"]={ "width": width, "height": height }
 
         try:
             found=list(dbs.search("sensor:'camera' and "+camid[0]+"='"+camid[1]+"'",size=1))
@@ -112,18 +94,18 @@ while True:
                 if template:
                     print("Ingesting", flush=True)
                     record=desc if desc else {}
+                    record.update(sinfo)
                     record.update(template[0]["_source"])
                     record.update({
                         'sensor': 'camera',
                         'model': 'ip_camera',
-                        'resolution': { 'width': width, 'height': height },
                         'url': rtspuri,
                         'status': 'idle',
                     })
                     dbi.ingest(record)
 
                     # register simulated cameras
-                    if camid[0]=="simsn" and rtspuri not in cameras:
+                    if camid[0]=="simsn" and rtspuri not in sim_cameras:
                         sim_cameras[rtspuri]=len(sim_cameras)
                 else:
                     print("Template not found", flush=True)

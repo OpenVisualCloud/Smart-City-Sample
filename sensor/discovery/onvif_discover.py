@@ -1,6 +1,8 @@
 #!/usr/bin/python3
 
 from onvif import ONVIFCamera
+import subprocess
+import time
 import sys
 
 # A fix for 'NotImplementedError: AnySimpleType.pytonvalue() not implemented'
@@ -10,11 +12,14 @@ def zeep_pythonvalue(self, xmlvalue):
     return xmlvalue
 zeep.xsd.simple.AnySimpleType.pythonvalue = zeep_pythonvalue
 
-def discover(ip, port):
-    user = 'admin'
-    passwd = 'admin'
-    onvif_device_desc = {}
-    cam = ONVIFCamera(ip, port, user, passwd, '/home/wsdl')
+def _discover(ip, port, user, passwd):
+    desc = {}
+
+    try:
+        cam = ONVIFCamera(ip, port, user, passwd, '/home/wsdl')
+    except Exception as e:
+        print("Exception: "+str(e), flush=True)
+        return desc
 
     # Get Device Information
     # Scopes
@@ -25,7 +30,7 @@ def discover(ip, port):
         scopelist = []
         for scope in scopes:
             scopelist.append(str(scope))
-        onvif_device_desc['Scopes'] = scopelist
+        desc['Scopes'] = scopelist
     except Exception as e:
         print("Failed to get scopes: "+str(e), flush=True)
 
@@ -33,8 +38,8 @@ def discover(ip, port):
         devInfo = cam.devicemgmt.GetDeviceInformation()
         print("\n---------- DeviceInformation ----------- ", flush=True)
         print(devInfo, flush=True)
-        #onvif_device_desc['DeviceInformation'] = cam.devicemgmt.to_dict(devInfo)
-        onvif_device_desc['DeviceInformation'] = devInfo
+        #desc['DeviceInformation'] = cam.devicemgmt.to_dict(devInfo)
+        desc['DeviceInformation'] = devInfo
     except Exception as e:
         print("Failed to get device information: "+str(e), flush=True)
 
@@ -43,8 +48,8 @@ def discover(ip, port):
         servList = cam.devicemgmt.GetServices(False)
         print("\n----------- Services -------------- ", flush=True)
         print(servList, flush=True)
-        #onvif_device_desc['Services'] = cam.devicemgmt.to_dict(servList)
-        onvif_device_desc['Services'] = servList
+        #desc['Services'] = cam.devicemgmt.to_dict(servList)
+        desc['Services'] = servList
     except Exception as e:
         print("Failed to get services: "+str(e), flush=True)
 
@@ -53,8 +58,8 @@ def discover(ip, port):
         netIntfs = cam.devicemgmt.GetNetworkInterfaces()
         print("\n----------- NetworkInterfaces -------------- ", flush=True)
         print(netIntfs, flush=True)
-        #onvif_device_desc['NetworkInterfaces'] = cam.devicemgmt.to_dict(netIntfs)
-        onvif_device_desc['NetworkInterfaces'] = netIntfs
+        #desc['NetworkInterfaces'] = cam.devicemgmt.to_dict(netIntfs)
+        desc['NetworkInterfaces'] = netIntfs
     except Exception as e:
         print("Failed to get network interfaces: "+str(e), flush=True)
 
@@ -63,8 +68,8 @@ def discover(ip, port):
         protocols = cam.devicemgmt.GetNetworkProtocols()
         print("\n-----------Protocols-------------- ", flush=True)
         print(protocols, flush=True)
-        #onvif_device_desc['Protocols'] = cam.devicemgmt.to_dict(protocols)
-        onvif_device_desc['Protocols'] = protocols
+        #desc['Protocols'] = cam.devicemgmt.to_dict(protocols)
+        desc['Protocols'] = protocols
     except Exception as e:
         print("Failed to get network protocols: "+str(e), flush=True)
 
@@ -79,8 +84,8 @@ def discover(ip, port):
         videoSources = media_service.GetVideoSources()
         print("\n-----------Video Sources-------------- ", flush=True)
         print(videoSources, flush=True)
-        #onvif_device_desc['MediaVideoSources'] = media_service.to_dict(videoSources)
-        onvif_device_desc['MediaVideoSources'] = videoSources
+        #desc['MediaVideoSources'] = media_service.to_dict(videoSources)
+        desc['MediaVideoSources'] = videoSources
     except Exception as e:
         print("Failed to get video sources: "+str(e), flush=True)
 
@@ -89,8 +94,8 @@ def discover(ip, port):
         videoSourceCfgs = media_service.GetVideoSourceConfigurations()
         print("\n-----------Video Sources Cfg-------------- ", flush=True)
         print(videoSourceCfgs, flush=True)
-        #onvif_device_desc['MediaVideoSourceConfiguration'] = media_service.to_dict(videoSourceCfgs)
-        onvif_device_desc['MediaVideoSourceConfiguration'] = videoSourceCfgs
+        #desc['MediaVideoSourceConfiguration'] = media_service.to_dict(videoSourceCfgs)
+        desc['MediaVideoSourceConfiguration'] = videoSourceCfgs
     except Exception as e:
         print("Failed to get video sources configurations: "+str(e), flush=True)
 
@@ -106,8 +111,8 @@ def discover(ip, port):
         #    profile['PTZConfiguration']['DefaultPTZTimeout'] = str(profile['PTZConfiguration']['DefaultPTZTimeout'])
 
         profile_token = profiles[0].token
-        #onvif_device_desc['MediaProfiles'] = media_service.to_dict(profiles)
-        onvif_device_desc['MediaProfiles'] = profiles
+        #desc['MediaProfiles'] = media_service.to_dict(profiles)
+        desc['MediaProfiles'] = profiles
     except Exception as e:
         print("Failed to get media profiles: "+str(e), flush=True)
 
@@ -120,18 +125,47 @@ def discover(ip, port):
         print("\n-----------Video Stream Uri-------------- ", flush=True)
         print(videoStrmUri, flush=True)
         videoStrmUri['Timeout'] = str(videoStrmUri['Timeout'])
-        #onvif_device_desc['MediaStreamUri'] = media_service.to_dict(videoStrmUri)
-        onvif_device_desc['MediaStreamUri'] = videoStrmUri
+        #desc['MediaStreamUri'] = media_service.to_dict(videoStrmUri)
+        desc['MediaStreamUri'] = videoStrmUri
     except Exception as e:
         print("Failed to get media stream Uri: "+str(e), flush=True)
-    return onvif_device_desc
+    return desc
+
+def safe_discover(ip, port, user='admin', passwd='admin'):
+    # timeout 2 seconds
+    cnt = 0
+    timeout = 2.0
+    interval = 0.5
+    is_timeout = False
+    try:
+        # this routine may hang. Put it into subprocess so we can timeout it.
+        p = subprocess.Popen(["/home/onvif_discover.py", ip, str(port), user, passwd])
+    except Exception as e:
+        print("Excetion: "+str(e), flush=True)
+
+    while p.poll() is None:
+        if(cnt * interval > timeout ):
+            is_timeout = True
+            break
+        time.sleep(interval)
+        cnt += 1
+
+    if(is_timeout == True):
+        p.terminate()
+        return None
+
+    if(p.returncode == 0): 
+        return _discover(ip, port, user, passwd)
+    return None
 
 if __name__ == "__main__":
     if(len(sys.argv) >= 2):
-        print("Usage: ip [port]")
+        print("Usage: ip [port [user [passwd]]]")
         exit(-1)
 
     ip=sys.argv[1]
     port=int(sys.argv[2]) if len(sys.argv)>=3 else 554
-    print(discover(ip, port), flush=True)
-
+    user=sys.argv[3] if len(sys.argv)>=4 else "admin"
+    passwd=sys.argv[4] if len(sys.argv)>=5 else "admin"
+    print(_discover(ip, port, user, passwd), flush=True)
+    exit(0)
