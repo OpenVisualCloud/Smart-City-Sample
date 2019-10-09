@@ -115,12 +115,18 @@ spec:
             - mountPath: /etc/localtime
               name: timezone
               readOnly: true
+            - mountPath: /var/run/secrets
+              name: sensor-info
+              readOnly: true
       restartPolicy: Never
       volumes:
           - name: timezone
             hostPath:
                 path: /etc/localtime
                 type: File
+          - name: sensor-info
+            configMap:
+                name: sensor-info
 ifelse(eval(defn(`NOFFICES')>1),1,`dnl
       nodeSelector:
         defn(`OFFICE_ZONE'): "yes"
