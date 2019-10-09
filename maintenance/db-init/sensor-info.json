@@ -435,7 +435,7 @@
         "algorithm": "crowd-counting",
         "theta": 315.0,
         "zones": [1],
-        "simsn": "cams2o1w1"
+        "simsn": "cams2o1w4"
     },{
         "address": "North Wing",
         "location": {
@@ -445,7 +445,7 @@
         "algorithm": "crowd-counting",
         "theta": 0.0,
         "zones": [2],
-        "simsn": "cams2o1w2"
+        "simsn": "cams2o1w1"
     },{
         "address": "North West Wing",
         "location": {
@@ -455,7 +455,7 @@
         "algorithm": "crowd-counting",
         "theta": 45.0,
         "zones": [3],
-        "simsn": "cams2o1w3"
+        "simsn": "cams2o1w5"
     },{
         "address": "West Wing",
         "location": {
@@ -465,7 +465,7 @@
         "algorithm": "crowd-counting",
         "theta": 90.0,
         "zones": [4],
-        "simsn": "cams2o1w4"
+        "simsn": "cams2o1w2"
     },{
         "address": "South West Wing",
         "location": {
@@ -475,7 +475,7 @@
         "algorithm": "crowd-counting",
         "theta": 135.0,
         "zones": [5],
-        "simsn": "cams2o1w5"
+        "simsn": "cams2o1w6"
     },{
         "address": "South Wing",
         "location": {
@@ -485,7 +485,7 @@
         "algorithm": "crowd-counting",
         "theta": 180.0,
         "zones": [6],
-        "simsn": "cams2o1w6"
+        "simsn": "cams2o1w3"
     },{
         "address": "South East Wing",
         "location": {

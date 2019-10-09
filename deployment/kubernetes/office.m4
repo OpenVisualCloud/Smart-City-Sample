@@ -1,4 +1,4 @@
-include(../../script/sensor-info.m4)dnl
+include(../../maintenance/db-init/sensor-info.m4)dnl
 define(`SCENARIO_NAME',defn(`scenario'defn(`SCENARIOIDX')))dnl
 define(`OFFICE_NAME',defn(`SCENARIO_NAME')`-office'defn(`OFFICEIDX'))dnl
 define(`OFFICE_LOCATION',ifelse(index(defn(`SCENARIO'),defn(`SCENARIO_NAME')),-1,,`defn(defn(`SCENARIO_NAME')`_office'defn(`OFFICEIDX')_location)'))dnl

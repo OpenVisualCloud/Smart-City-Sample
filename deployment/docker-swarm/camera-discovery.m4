@@ -22,7 +22,7 @@ ifelse(defn(`PLATFORM'),`VCAC-A',`dnl
                 constraints:
                     - defn(`OFFICE_ZONE')
 
-ifelse(`SCENARIO_NAME',`stadium',`
+ifelse(defn(`SCENARIO_NAME'),`stadium',`
     defn(`OFFICE_NAME')_camera_discovery_crowd:
         image: smtc_onvif_discovery:latest
         environment:
