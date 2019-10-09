@@ -361,7 +361,7 @@
         },
         "algorithm": "people-counting",
         "theta": 180,
-        "simsn": "cams2o1c2"
+        "simsn": "cams2o1c1"
     },{
         "address": "West Gate",
         "location": {
@@ -370,7 +370,7 @@
         },
         "algorithm": "people-counting",
         "theta": 270.0,
-        "simsn": "cams2o1c4"
+        "simsn": "cams2o1c2"
     },{
         "address": "South Gate",
         "location": {
@@ -379,7 +379,7 @@
         },
         "algorithm": "people-counting",
         "theta": 0.0,
-        "simsn": "cams2o1c6"
+        "simsn": "cams2o1c3"
     },{
         "address": "South East Exit",
         "location": {
@@ -388,7 +388,7 @@
         },
         "algorithm": "people-counting",
         "theta": 45.0,
-        "simsn": "cams2o1c8"
+        "simsn": "cams2o1c4"
     },{
         "address": "North East Exit",
         "location": {
@@ -397,7 +397,7 @@
         },
         "algorithm": "people-counting",
         "theta": 135.0,
-        "simsn": "cams2o1c10"
+        "simsn": "cams2o1c5"
     },{
         "address": "North West Exit",
         "location": {
@@ -406,7 +406,7 @@
         },
         "algorithm": "people-counting",
         "theta": 225.0,
-        "simsn": "cams2o1c12"
+        "simsn": "cams2o1c6"
     },{
         "address": "South West Exit",
         "location": {
@@ -414,79 +414,87 @@
             "lon": -121.97388
         },
         "algorithm": "people-counting",
-        "theta": 315,
-        "simsn": "cams2o1c14"
+        "theta": 315.0,
+        "simsn": "cams2o1c7"
     },{
         "address": "East Wing",
         "location": {
-            "lat": 37.38873,
-            "lon": -121.95202
+            "lat": 37.38865,
+            "lon": -121.95405
         },
         "algorithm": "crowd-counting",
+        "theta": 270.0,
         "zones": [0],
-        "simsn": "cams2o1c1"
+        "simsn": "cams2o1w0"
     },{
         "address": "North East Wing",
         "location": {
-            "lat": 37.39485,
-            "lon": -121.95271
+            "lat": 37.39347,
+            "lon": -121.95452 
         },
         "algorithm": "crowd-counting",
+        "theta": 315.0,
         "zones": [1],
-        "simsn": "cams2o1c3"
+        "simsn": "cams2o1w1"
     },{
         "address": "North Wing",
         "location": {
-            "lat": 37.39541,
-            "lon": -121.96276
+            "lat": 37.39369,
+            "lon": -121.96285
         },
         "algorithm": "crowd-counting",
+        "theta": 0.0,
         "zones": [2],
-        "simsn": "cams2o1c5"
+        "simsn": "cams2o1w2"
     },{
         "address": "North West Wing",
         "location": {
-            "lat": 37.39520,
-            "lon": -121.97216
+            "lat": 37.39365,
+            "lon": -121.97074
         },
         "algorithm": "crowd-counting",
+        "theta": 45.0,
         "zones": [3],
-        "simsn": "cams2o1c7"
+        "simsn": "cams2o1w3"
     },{
         "address": "West Wing",
         "location": {
-            "lat": 37.38867,
-            "lon": -121.97345
+            "lat": 37.38847,
+            "lon": -121.97160
         },
         "algorithm": "crowd-counting",
+        "theta": 90.0,
         "zones": [4],
-        "simsn": "cams2o1c9"
+        "simsn": "cams2o1w4"
     },{
         "address": "South West Wing",
         "location": {
-            "lat": 37.38287,
-            "lon": -121.97143
+            "lat": 37.38351,
+            "lon": -121.97087
         },
         "algorithm": "crowd-counting",
+        "theta": 135.0,
         "zones": [5],
-        "simsn": "cams2o1c11"
+        "simsn": "cams2o1w5"
     },{
         "address": "South Wing",
         "location": {
-            "lat": 37.38196,
-            "lon": -121.96295
+            "lat": 37.38351,
+            "lon": -121.96285
         },
         "algorithm": "crowd-counting",
+        "theta": 180.0,
         "zones": [6],
-        "simsn": "cams2o1c13"
+        "simsn": "cams2o1w6"
     },{
         "address": "South East Wing",
         "location": {
-            "lat": 37.38244,
-            "lon": -121.95284
+            "lat": 37.38369,
+            "lon": -121.95448
         },
         "algorithm": "crowd-counting",
+        "theta": 225.0,
         "zones": [7],
-        "simsn": "cams2o1c15"
+        "simsn": "cams2o1w7"
     }]
 }]

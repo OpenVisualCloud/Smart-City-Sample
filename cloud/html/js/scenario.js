@@ -36,6 +36,12 @@ var scenarios={
                 iconSize: [32,32],
                 iconAnchor: [16,16],
             }),
+            sensor_icon: function (sensor) {
+                return scenarios.traffic.icon[sensor._source.model];
+            },
+            sensor_icon_rotation: function (sensor) {
+                return 90-sensor._source.theta;
+            },
         },
         setup: function (order, page, map) {
             var layer1=L.tileLayer("images/traffic/{z}/{x}/{y}.png",{
@@ -49,25 +55,12 @@ var scenarios={
                     'stat': true,
                     'preview': true,
                     'alert': true,
-                    'zonemap': false,
                 });
             });
             if (order==0) layer1.addTo(map).fire('add');
             page.data('controls').addBaseLayer(layer1,"Traffic Planning");
         },
-        create_sensor: function (sensorctx, sensor, map) {
-            sensorctx.marker=L.marker(sensor._source.location,{
-                icon: scenarios.traffic.icon[sensor._source.model],
-                riseOnHover:true,
-                rotationAngle:90-sensor._source.theta,
-                rotationOrigin:"center",
-            }).on('dblclick',function() {
-                selectPage("recording",['sensor="'+sensor._id+'"',sensor._source.office]);
-            }).on('popupopen',function () {
-                sensorctx.marker.unbindTooltip();
-            }).on('popupclose',function () {
-                sensorctx.marker.bindTooltip(sensorctx.title);
-            }).addTo(map),
+        create_sensor: function (officectx, sensorctx, sensor, map) {
             sensorctx.line_dash="15,20";
             var line_color=(sensor._source.status=="idle")?"black":(sensor._source.status=="streaming")?"green":"red";
             sensorctx.line=L.polyline([sensor._source.location,sensor._source.office],{color:line_color,dashArray:sensorctx.line_dash}).bindTooltip("",{ permanent:true, direction:'center', opacity:0.7, className:'tooltip_text' }).addTo(map);
@@ -84,11 +77,7 @@ var scenarios={
             }
             sensorctx.line.setStyle({ color: line_color, dashArray: sensorctx.line_dash }).redraw();
         },
-        update_tooltip: function (sensorctx, tooltip) {
-            sensorctx.marker.unbindTooltip().bindTooltip(tooltip);
-        },
         close_sensor: function (sensorctx) {
-            sensorctx.marker.remove();
             sensorctx.line.remove();
         }
     },
@@ -101,18 +90,33 @@ var scenarios={
                 iconSize: [64,64],
                 iconAnchor: [32,32],
             }),
-            ip_camera: {
-                left: L.icon({
-                    iconUrl: "images/queue-l.gif",
-                    iconSize: [90, 32],
-                    iconAnchor: [45, 16],
-                }),
-                right: L.icon({
-                    iconUrl: "images/queue-r.gif",
-                    iconSize: [90, 32],
-                    iconAnchor: [45, 16],
-                }),
-            },    
+            ip_camera: L.icon({
+                iconUrl: "images/camera.gif",
+                iconSize: [32,32],
+                iconAnchor: [16,16],
+            }),
+            queue_left: L.icon({
+                iconUrl: "images/queue-l.gif",
+                iconSize: [90, 32],
+                iconAnchor: [45, 16],
+            }),
+            queue_right: L.icon({
+                iconUrl: "images/queue-r.gif",
+                iconSize: [90, 32],
+                iconAnchor: [45, 16],
+            }),
+            sensor_icon: function (sensor) {
+                if (sensor._source.algorithm=="crowd-counting") 
+                    return scenarios.stadium.icon[sensor._source.model];
+                if (sensor._source.theta>=270 || sensor._source.theta<90)
+                    return scenarios.stadium.icon.queue_right;
+                return scenarios.stadium.icon.queue_left;
+            },
+            sensor_icon_rotation: function (sensor) {
+                if (sensor._source.algorithm!="crowd-counting" && (sensor._source.theta>=270||sensor._source.theta<90))
+                    return 270-sensor._source.theta;
+                return 90-sensor._source.theta;
+            },
         },
         setup: function (order, page, map) {
             var layer1=L.tileLayer('images/stadium/{z}/{x}/{y}.png',{
@@ -125,12 +129,52 @@ var scenarios={
                     'stat': true,
                     'preview': true,
                     'alert': true,
-                    'zonemap': true,
                 });
             });
             if (order==0) layer1.addTo(map).fire('add');
             page.data('controls').addBaseLayer(layer1,"Stadium Services");
         },
+        create_sensor: function (officectx, sensorctx, sensor, map) {
+            var add_zonemap=function () {
+                var features=[]
+                $.each(sensor._source.zones,function (x,v) {
+                    features.push(officectx.zonedata[v]);
+                });
+                sensorctx.zonemap=L.geoJSON(features,{
+                    onEachFeature: function (feature, layer) {
+                        layer.on({
+                            'dblclick': function (e) {
+                                e.stopPropagation();
+                                selectPage("recording",['sensor="'+sensor._id+'"',sensor._source.office]);
+                            },
+                            'popupopen': function () {
+                                layer.unbindTooltip();
+                            },
+                            'popupclose': function () {
+                                layer.bindTooltip(sensorctx.title);
+                            },
+                        });
+                    },
+                }).addTo(map);
+            };
+            if (!("zonedata" in officectx)) {
+                $.getJSON("images/stadium/zonemap-"+sensor._source.office.lat+"d"+sensor._source.office.lon+".json").then(function (data) {
+                    var zonedata={};
+                    $.each(data,function (x,v) {
+                        zonedata[v.properties.zone]=v;
+                    });
+                    officectx.zonedata=zonedata;
+                    add_zonemap();
+                });
+            } else {
+                add_zonemap();
+            }
+        },
+        update_sensor: function (sensorctx, sensor) {
+        },
+        close_sensor: function (sensorctx) {
+            sensorctx.zonemap.remove();
+        }
     },
 };
 

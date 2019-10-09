@@ -30,7 +30,6 @@ $("#pg-home").on(":initpage", function(e) {
         page.data('stat',{ name: "Statistics Histogram", layer: L.layerGroup() });
         page.data('preview', { name: "Preview Clips", layer: L.layerGroup() });
         page.data('alert', { name: "Scrolling Alerts", layer: L.layerGroup() });
-        page.data('zonemap', { name: "Zonemap Estimates", layer: L.layerGroup() });
         page.data('controls', L.control.layers().addTo(map));
         alerts.setup(page);
 
@@ -110,7 +109,24 @@ $("#pg-home").on(":initpage", function(e) {
                         address: sensor._source.address,
                     };
                     var sensorctx=sensors[sensorid];
-                    scenario.create_sensor(sensorctx, sensor, map);
+                    sensorctx.marker=L.marker(sensor._source.location,{
+                        icon: scenario.icon.sensor_icon(sensor),
+                        riseOnHover: true,
+                        rotationAngle: scenario.icon.sensor_icon_rotation(sensor),
+                        rotationOrigin: "center",
+                    }).on({
+                        'dblclick': function(e) {
+                            e.stopPropagation();
+                            selectPage("recording",['sensor="'+sensor._id+'"',sensor._source.office]);
+                        },
+                        'popupopen': function () {
+                            sensorctx.marker.unbindTooltip();
+                        },
+                        'popupclose': function () {
+                            sensorctx.marker.bindTooltip(sensorctx.title);
+                        },
+                    }).addTo(map);
+                    scenario.create_sensor(officectx, sensorctx, sensor, map);
                     preview.create(sensorctx, sensor, page, map);
 		            stats.create(sensorctx, sensor, page, map);
                     heatmap.create(sensorctx, sensor._source.location);
@@ -125,7 +141,7 @@ $("#pg-home").on(":initpage", function(e) {
                 var tooltip=format_sensor_tooltip(page.find("[sensor-info-template]").clone().removeAttr('sensor-info_template').show(),sensor);
                 if (sensorctx.tooltip!=tooltip) {
                     sensorctx.tooltip=tooltip;
-                    scenario.update_tooltip(sensorctx, tooltip);
+                    sensorctx.marker.unbindTooltip().bindTooltip(tooltip);
                 }
 
                 /* show bubble stats */
@@ -144,11 +160,11 @@ $("#pg-home").on(":initpage", function(e) {
                 if ("used" in v) {
                     delete v.used;
                 } else {
+                    sensorctx.marker.remove();
                     scenario.close_sensor(v);
                     preview.close(v);
 		            stats.close(v);
                     heatmap.close(v);
-                    zonemap.close(v);
                     delete sensors[x];
                 }
             });

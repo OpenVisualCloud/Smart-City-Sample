@@ -1,4 +1,5 @@
 
+ifelse(defn(`SCENARIO_NAME'),`traffic',`
     defn(`OFFICE_NAME')_analytics:
         image: vcac-container-launcher:latest
         command: ["--volume","defn(`OFFICE_NAME')_andata:/home/video-analytics/app/server/recordings:rw","--network","smtc_default_net","smtc_analytics_object_detection_vcac-a:latest"]
@@ -21,3 +22,4 @@
             placement:
                 constraints:
                     - node.labels.vcac_zone==yes
+')
