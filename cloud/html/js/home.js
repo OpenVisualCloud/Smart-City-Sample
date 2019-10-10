@@ -127,7 +127,7 @@ $("#pg-home").on(":initpage", function(e) {
                             sensorctx.marker.bindTooltip(sensorctx.title);
                         },
                     }).addTo(map);
-                    scenario.create_sensor(officectx, sensorctx, sensor, map);
+                    if (scenario.create_sensor) scenario.create_sensor(officectx, sensorctx, sensor, map);
                     preview.create(sensorctx, sensor, page, map);
 		            stats.create(sensorctx, sensor, page, map);
                     heatmap.create(sensorctx, sensor._source.location);
@@ -142,7 +142,7 @@ $("#pg-home").on(":initpage", function(e) {
                 sensorctx.used=true;
 
                 /* update sensor info */
-                scenario.update_sensor(sensorctx, sensor);
+                if (scenario.update_sensor) scenario.update_sensor(sensorctx, sensor);
                 var tooltip=format_sensor_tooltip(page.find("[sensor-info-template]").clone().removeAttr('sensor-info_template').show(),sensor);
                 if (sensorctx.tooltip!=tooltip) {
                     sensorctx.tooltip=tooltip;
@@ -174,9 +174,9 @@ $("#pg-home").on(":initpage", function(e) {
                 if ("used" in v) {
                     delete v.used;
                 } else {
-                    sensorctx.marker.remove();
-                    sensorctx.line.remove();
-                    scenario.close_sensor(v);
+                    if (v.close_sensor) v.close_sensor();
+                    if (v.marker) v.marker.remove();
+                    if (v.line) v.line.remove();
                     preview.close(v);
 		            stats.close(v);
                     heatmap.close(v);
@@ -187,6 +187,7 @@ $("#pg-home").on(":initpage", function(e) {
                 if ("used" in v) {
                     delete v.used;
                 } else {
+                    if (v.close_office) v.close_office();
                     map.removeLayer(v.marker);
                     delete offices[x];
                 }

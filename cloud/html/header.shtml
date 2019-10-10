@@ -31,7 +31,7 @@
 
   <div class="input-group">
     <span class="input-group-label" style="width:40%"><b>Map Radius (m):</b></span>
-    <input class="input-group-field" id="mapRadius" type="number" value=2000000>
+    <input class="input-group-field" id="mapRadius" type="number" value=300000>
   </div>
 
   <div class="input-group">

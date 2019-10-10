@@ -4,10 +4,10 @@ function update_control_options(page, map, options) {
     $.each(['heatmap','stat','preview','alert','lineinfo'], function (x, layer_name) {
         var layer_object=page.data(layer_name);
         control.removeLayer(layer_object.layer);
-        if (map.hasLayer(layer_object.layer)) layer_object.layer.remove();
+        if (map.hasLayer(layer_object.layer)) map.removeLayer(layer_object.layer);
         if (layer_name in options) {
-            control.addOverlay(layer_object.layer, layer_object.name);
             if (options[layer_name]) layer_object.layer.addTo(map);
+            control.addOverlay(layer_object.layer, layer_object.name);
         }
     });
 }
@@ -60,12 +60,6 @@ var scenarios={
             if (order==0) layer1.addTo(map).fire('add');
             page.data('controls').addBaseLayer(layer1,"Traffic Planning");
         },
-        create_sensor: function (officectx, sensorctx, sensor, map) {
-        },
-        update_sensor: function (sensorctx, sensor) {
-        },
-        close_sensor: function (sensorctx) {
-        }
     },
     stadium: {
         name: "stadium",
@@ -121,27 +115,32 @@ var scenarios={
             page.data('controls').addBaseLayer(layer1,"Stadium Services");
         },
         create_sensor: function (officectx, sensorctx, sensor, map) {
-            var add_zonemap=function () {
+            sensorctx.zonemap=L.geoJSON(null,{
+                onEachFeature: function (feature, layer) {
+                    layer.on({
+                        'dblclick': function (e) {
+                            e.stopPropagation();
+                            selectPage("recording",['sensor="'+sensor._id+'"',sensor._source.office]);
+                        },
+                        'popupopen': function () {
+                            layer.unbindTooltip();
+                        },
+                        'popupclose': function () {
+                            layer.bindTooltip(sensorctx.title);
+                        },
+                    });
+                },
+            }).addTo(map);
+            sensorctx.close_sensor=function () {
+                sensorctx.zonemap.remove();
+            };
+
+            var add_zones=function () {
                 var features=[]
                 $.each(sensor._source.zones,function (x,v) {
                     features.push(officectx.zonedata[v]);
                 });
-                sensorctx.zonemap=L.geoJSON(features,{
-                    onEachFeature: function (feature, layer) {
-                        layer.on({
-                            'dblclick': function (e) {
-                                e.stopPropagation();
-                                selectPage("recording",['sensor="'+sensor._id+'"',sensor._source.office]);
-                            },
-                            'popupopen': function () {
-                                layer.unbindTooltip();
-                            },
-                            'popupclose': function () {
-                                layer.bindTooltip(sensorctx.title);
-                            },
-                        });
-                    },
-                }).addTo(map);
+                sensorctx.zonemap.addData(features);
             };
             if (!("zonedata" in officectx)) {
                 $.getJSON("images/stadium/zonemap-"+sensor._source.office.lat+"d"+sensor._source.office.lon+".json").then(function (data) {
@@ -150,17 +149,12 @@ var scenarios={
                         zonedata[v.properties.zone]=v;
                     });
                     officectx.zonedata=zonedata;
-                    add_zonemap();
+                    add_zones();
                 });
             } else {
-                add_zonemap();
+                add_zones();
             }
         },
-        update_sensor: function (sensorctx, sensor) {
-        },
-        close_sensor: function (sensorctx) {
-            sensorctx.zonemap.remove();
-        }
     },
 };
 

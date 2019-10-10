@@ -185,3 +185,6 @@ with open("/run/secrets/sensor-info.json","rt") as fd:
 
         for s in sensors: s["office"]=location1
         dbp.ingest_bulk(sensors)
+
+print("DB Initialized", flush=True)
+
