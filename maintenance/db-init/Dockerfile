@@ -3,6 +3,7 @@ FROM centos:7.6.1810
 
 RUN yum -y install epel-release && yum -y install python36-requests python36-ply && rm -rf /var/cache/yum/*
 
+COPY --from=smtc_common /*.py /home/
 COPY    *.py /home/
 CMD     ["/home/db-init.py"]
 

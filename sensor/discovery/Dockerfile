@@ -1,6 +1,6 @@
 FROM ubuntu:18.04
 
-RUN  DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y -q python3-ply nmap wget python3-setuptools ffmpeg
+RUN  DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y -q python3-ply nmap wget python3-setuptools ffmpeg && rm -rf /var/lib/apt/lists/*
 
 ARG ZEEP_VER=3.3.1
 ARG ZEEP_REPO=https://github.com/mvantellingen/python-zeep/archive/${ZEEP_VER}.tar.gz
@@ -38,6 +38,6 @@ ARG  GID
 ## must use ; here to ignore user exist status code
 RUN  [ ${GID} -gt 0 ] && groupadd -f -g ${GID} ${GROUP}; \
      [ ${UID} -gt 0 ] && useradd -d /home/${USER} -g ${GID} -K UID_MAX=${UID} -K UID_MIN=${UID} ${USER}; \
-     echo
+     chown -R ${UID}.${GID} /home
 USER ${UID}
 ####

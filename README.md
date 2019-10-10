@@ -29,7 +29,7 @@ The following diagram illustrates how the sample is constructed: a set of servic
 (1) Install [docker engine](https://docs.docker.com/install).     
 (2) Install [docker compose](https://docs.docker.com/compose/install), if you plan to deploy through docker compose. Version 1.20+ is required.    
 (3) Setup [docker swarm](https://docs.docker.com/engine/swarm), if you plan to deploy through docker swarm. See [docker swarm setup](deployment/docker-swarm/README.md) for additional setup details.  
-(4) Setup [Kubernetes](https://kubernetes.io/docs/setup), if you plan to deploy through Kubernetes. Skip to [Kubernetes setup](deployment/kubernetes/README.md) for setup details.     
+(4) Setup [Kubernetes](https://kubernetes.io/docs/setup), if you plan to deploy through Kubernetes. See [Kubernetes setup](deployment/kubernetes/README.md) for additional setup details.     
 
 ### Setup docker proxy:
 

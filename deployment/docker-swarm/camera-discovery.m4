@@ -4,11 +4,9 @@
         environment:
             IP_SCAN_RANGE: "defn(`OFFICE_NAME')_simulated_cameras"
             PORT_SCAN_RANGE: "defn(`CAMERA_RTSP_PORT')-eval(defn(`CAMERA_RTSP_PORT')+defn(`NCAMERAS')*defn(`CAMERA_PORT_STEP'))"
-            SIMULATED_CAMERA: "forloop(`cid',1,defn(`NCAMERAS'),`eval(defn(`CAMERA_RTSP_PORT')+defn(`cid')*defn(`CAMERA_PORT_STEP')-defn(`CAMERA_PORT_STEP'))/')"
+            SIM_PORT: "forloop(`CAMERAIDX',1,defn(`NCAMERAS'),`eval(defn(`CAMERA_RTSP_PORT')+defn(`CAMERAIDX')*defn(`CAMERA_PORT_STEP')-defn(`CAMERA_PORT_STEP'))/')"
+            SIM_PREFIX: "`cams'defn(`SCENARIOIDX')`o'defn(`OFFICEIDX')c"
             OFFICE: "defn(`OFFICE_LOCATION')"
-            LOCATION: "forloop(`cid',1,defn(`NCAMERAS'),`defn(defn(`OFFICE_NAME')`_camera'defn(`cid')_location)/')"
-            ADDRESS: "forloop(`cid',1,defn(`NCAMERAS'),`defn(defn(`OFFICE_NAME')`_camera'defn(`cid')_address)/')"
-            THETA: "forloop(`cid',1,defn(`NCAMERAS'),`defn(defn(`OFFICE_NAME')`_camera'defn(`cid')_theta)/')"
             DBHOST: "http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')_db,db):9200"
             SERVICE_INTERVAL: "30"
             NO_PROXY: "*"
@@ -23,3 +21,28 @@ ifelse(defn(`PLATFORM'),`VCAC-A',`dnl
             placement:
                 constraints:
                     - defn(`OFFICE_ZONE')
+
+ifelse(defn(`SCENARIO_NAME'),`stadium',`
+    defn(`OFFICE_NAME')_camera_discovery_crowd:
+        image: smtc_onvif_discovery:latest
+        environment:
+            IP_SCAN_RANGE: "defn(`OFFICE_NAME')_simulated_cameras_crowd"
+            PORT_SCAN_RANGE: "defn(`CAMERA_RTSP_PORT')-eval(defn(`CAMERA_RTSP_PORT')+defn(`NCAMERAS2')*defn(`CAMERA_PORT_STEP'))"
+            SIM_PORT: "forloop(`CAMERAIDX',1,defn(`NCAMERAS2'),`eval(defn(`CAMERA_RTSP_PORT')+defn(`CAMERAIDX')*defn(`CAMERA_PORT_STEP')-defn(`CAMERA_PORT_STEP'))/')"
+            SIM_PREFIX: "`cams'defn(`SCENARIOIDX')`o'defn(`OFFICEIDX')w"
+            OFFICE: "defn(`OFFICE_LOCATION')"
+            DBHOST: "http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')_db,db):9200"
+            SERVICE_INTERVAL: "30"
+            NO_PROXY: "*"
+            no_proxy: "*"
+        volumes:
+            - /etc/localtime:/etc/localtime:ro
+ifelse(defn(`PLATFORM'),`VCAC-A',`dnl
+        networks:
+            - default_net
+')dnl
+        deploy:
+            placement:
+                constraints:
+                    - defn(`OFFICE_ZONE')
+')

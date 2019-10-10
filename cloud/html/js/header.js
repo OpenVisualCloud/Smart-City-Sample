@@ -28,6 +28,10 @@ var settings={
         if (typeof(val)!="undefined") $("#heatmapQueries").val(val);
         return $("#heatmapQueries").val();
     },
+    zonemap_query: function (val) {
+        if (typeof(val)!="undefined") $("#zoneMapQueries").val(val);
+        return $("#zoneMapQueries").val();
+    },
     stats_query: function (val) {
         if (typeof(val)!="undefined") $("#statsQueries").val(val);
         return $("#statsQueries").val();
@@ -181,7 +185,9 @@ $("[hint-panel]").on(":display", function (e, message) {
     });
     panel.show();
 }).on(":error", function (e, message) {
-    $(this).trigger(":display", ['<p style="color:red">'+message+'</p>']);
+    var panel=$(this);
+    panel.trigger(":display", ['<p style="color:red">'+message+'</p>']);
+    setTimeout(function () { panel.hide(); },2000);
 });
 
 $(window).resize(function () {

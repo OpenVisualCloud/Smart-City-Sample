@@ -1,16 +1,16 @@
-# smtc_analytics_object_detection_xeon
+# smtc_analytics_object_detection_vcac-a
 
-FROM smtc_analytics_common_xeon
+FROM smtc_analytics_common_vcac-a
 
-RUN  apt-get update && apt-get install -y python3-paho-mqtt python3-ply python3-requests python3-watchdog
-RUN  rm -rf /home/video-analytics/models && rm -rf /home/video-analytics/pipelines
-RUN  sed -i 's/DEBUG/WARNING/' /home/video-analytics/app/common/settings.py
+RUN  apt-get update && apt-get install -y mosquitto mosquitto-clients python3-ply python3-requests python3-watchdog && pip3 install paho-mqtt && rm -rf /var/lib/apt/lists/* && \
+     rm -rf /home/video-analytics/models /home/video-analytics/pipelines && \
+     sed -i 's/DEBUG/WARNING/' /home/video-analytics/app/common/settings.py
 
 COPY --from=smtc_common /*.py /home/
 COPY *.py /home/
 COPY models /home/video-analytics/models
-COPY platforms/Xeon/pipelines/gstreamer /home/video-analytics/pipelines
-CMD ["/home/detect.py"]
+COPY platforms/VCAC-A/pipelines/gstreamer /home/video-analytics/pipelines
+CMD ["/home/detect-object.py"]
 
 ####
 ARG  USER

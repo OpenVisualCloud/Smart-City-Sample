@@ -1,6 +1,6 @@
 var alerts={
-    setup: function (page, layer) {
-        layer.on('add', function () {
+    setup: function (page) {
+        page.data('alert').layer.on('add', function () {
             $("[alert-screen]").show();
         }).on('remove', function () {
             $("[alert-screen]").hide();
