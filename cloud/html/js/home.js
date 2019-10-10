@@ -142,7 +142,7 @@ $("#pg-home").on(":initpage", function(e) {
                 sensorctx.used=true;
 
                 /* update sensor info */
-                if (scenario.update_sensor) scenario.update_sensor(sensorctx, sensor);
+                if (sensorctx.update_sensor) sensorctx.update_sensor();
                 var tooltip=format_sensor_tooltip(page.find("[sensor-info-template]").clone().removeAttr('sensor-info_template').show(),sensor);
                 if (sensorctx.tooltip!=tooltip) {
                     sensorctx.tooltip=tooltip;
@@ -188,7 +188,7 @@ $("#pg-home").on(":initpage", function(e) {
                     delete v.used;
                 } else {
                     if (v.close_office) v.close_office();
-                    map.removeLayer(v.marker);
+                    v.marker.remove();
                     delete offices[x];
                 }
             });
