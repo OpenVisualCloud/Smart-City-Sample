@@ -12,17 +12,21 @@ if test ! -f ~/.ssh/id_rsa; then
     echo
 fi
 NODEUSER="root"
-NODEIP="172.32.1.1"
-ssh-copy-id $NODEUSER@$NODEIP 2> /dev/null || echo
+NODEPREFIX="172.32"
 echo
-
-# setup node to join the host docker swarm 
-ssh $NODEUSER@$NODEIP "docker swarm leave --force 2> /dev/null;$JOINCMD"
+# setup node to join the host docker swarm
+sudo vcactl blockio list 2> /dev/null
+for nodeip in $(sudo vcactl network ip |grep $NODEPREFIX 2>/dev/null); do
+    ssh-copy-id $NODEUSER@${nodeip} 2> /dev/null || echo
+    echo "Node: $nodeip"
+    ssh $NODEUSER@${nodeip} "docker swarm leave --force 2> /dev/null;$JOINCMD"
+done
 
 # setup node labels for office1
 for id in $(docker node ls -q 2> /dev/null); do
     nodeip="$(docker node inspect -f {{.Status.Addr}} $id)"
-    if [[ -n "$(echo $nodeip | grep --fixed-strings $NODEIP)" ]]; then
+    if test -z "$(hostname -I | grep --fixed-strings $nodeip)"; then
+        echo "label $id: vcac_zone=yes"
         docker node update --label-add vcac_zone=yes $id
     fi
 done

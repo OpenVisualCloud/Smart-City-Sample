@@ -1,11 +1,12 @@
 #!/bin/bash -e
 
+NODEPREFIX="172.32"
 function transfer_image {
     image="$1"
     nodeip="$2"
 
     # trasnfer VCAC-A images to VCAC-A nodes only
-    if [[ -n "$(echo $nodeip | grep --fixed-strings 172.32.1.1)" ]] || [[ "$(id -u)" -eq "0" ]]; then
+    if [[ -n "$(echo $nodeip | grep ${NODEPREFIX})" ]] || [[ "$(id -u)" -eq "0" ]]; then
         worker="root@$nodeip"
     else
         worker="$nodeip"
