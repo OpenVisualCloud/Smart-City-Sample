@@ -1,19 +1,15 @@
 
 function update_control_options(page, map, options) {
     var control=page.data('controls');
-    var all_layers=['heatmap','stat','preview','alert','lineinfo'];
-    $.each(all_layers, function (x, layer_name) {
+    $.each(['heatmap','stat','preview','alert','lineinfo'], function (x, layer_name) {
         var layer_object=page.data(layer_name);
         control.removeLayer(layer_object.layer);
-        if (layer_name in options) control.addOverlay(layer_object.layer, layer_object.name);
-    });
-    setTimeout(function () { /* workaround: let map update before altering */
-        $.each(all_layers, function (x, layer_name) {
-            var layer_object=page.data(layer_name);
-            map.removeLayer(layer_object.layer);
+        map.removeLayer(layer_object.layer);
+        if (layer_name in options) {
+            control.addOverlay(layer_object.layer, layer_object.name);
             if (options[layer_name]) layer_object.layer.addTo(map);
-        });
-    },50);
+        }
+    });
 }
 
 function format_bandwidth(bandwidth) {
@@ -51,13 +47,15 @@ var scenarios={
                 attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
                 id: 'base'
             }).on('add', function () {
-                update_control_options(page, map, {
-                    'heatmap': true,
-                    'stat': true,
-                    'preview': true,
-                    'alert': true,
-                    'lineinfo': true,
-                });
+                setTimeout(function () { /* outof callback */
+                    update_control_options(page, map, {
+                        'heatmap': true,
+                        'stat': true,
+                        'preview': true,
+                        'alert': true,
+                        'lineinfo': true,
+                    });
+                },100);
                 page.data('scenario', scenarios.traffic);
                 map.setView(scenarios.traffic.center,page.data('zoom'));
             });
@@ -106,12 +104,14 @@ var scenarios={
             var layer1=L.tileLayer('images/stadium/{z}/{x}/{y}.png',{
                 tms:true
             }).on('add',function() {
-                update_control_options(page, map, {
-                    'stat': true,
-                    'preview': true,
-                    'alert': true,
-                    'lineinfo': false,
-                });
+                setTimeout(function () { /* outof callback */
+                    update_control_options(page, map, {
+                        'stat': true,
+                        'preview': true,
+                        'alert': true,
+                        'lineinfo': false,
+                    });
+                },100);
                 page.data('scenario', scenarios.stadium);
                 map.setView(scenarios.stadium.center,page.data('zoom'));
             });
