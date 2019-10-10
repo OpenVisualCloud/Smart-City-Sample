@@ -1,0 +1,27 @@
+# smtc_analytics_object_detection_xeon
+
+FROM smtc_analytics_common_xeon
+
+RUN  apt-get update && apt-get install -y python3-paho-mqtt python3-ply python3-requests python3-watchdog && rm -rf /var/lib/apt/lists/* && \
+     rm -rf /home/video-analytics/models && rm -rf /home/video-analytics/pipelines && \
+     sed -i 's/DEBUG/WARNING/' /home/video-analytics/app/common/settings.py
+
+COPY --from=smtc_common /*.py /home/
+COPY *.py /home/
+COPY models /home/video-analytics/models
+COPY platforms/Xeon/pipelines/gstreamer /home/video-analytics/pipelines
+CMD ["/home/detect-object.py"]
+
+####
+ARG  USER
+ARG  GROUP
+ARG  UID
+ARG  GID
+## must use ; here to ignore user exist status code
+RUN  [ ${GID} -gt 0 ] && groupadd -f -g ${GID} ${GROUP}; \
+     [ ${UID} -gt 0 ] && useradd -d /home/${USER} -g ${GID} -K UID_MAX=${UID} -K UID_MIN=${UID} ${USER}; \
+     mkdir -p /home/video-analytics/app/server/recordings && \
+     chown -R ${UID}.${GID} /home
+VOLUME ["/home/video-analytics/app/server/recordings"]
+USER ${UID}
+####

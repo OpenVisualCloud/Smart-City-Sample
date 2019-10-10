@@ -1,14 +1,35 @@
 #!/usr/bin/python3
 
+from db_ingest import DBIngest
 import requests
 import time
 import os
+import json
 
 dbhost=os.environ["DBHOST"]
-office='$'+('$'.join(map(str,map(float,os.environ["OFFICE"].split(",")))))
+office=list(map(float,os.environ["OFFICE"].split(",")))
+proxyhost=os.environ["PROXYHOST"]
+scenario=os.environ["SCENARIO"]
+
 _type="_doc"
+officestr='$'+('$'.join(map(str,office)))
 settings={
     "offices": {
+        "settings": {
+            "index": {
+                "number_of_shards": 1,
+                "number_of_replicas": 1,
+            },
+        },
+        "mappings": {
+            _type: {
+                "properties": {
+                    "location": { "type": "geo_point", },
+                },
+            },
+        },
+    },
+    "recordings_c": {
         "settings": {
             "index": {
                 "number_of_shards": 1,
@@ -23,7 +44,22 @@ settings={
             },
         },
     },
-    "sensors"+office: {
+    "provisions"+officestr: {
+        "settings": {
+            "index": {
+                "number_of_shards": 1,
+                "number_of_replicas": 1,
+            },
+        },
+        "mappings": {
+            _type: {
+                "properties": {
+                    "location": { "type": "geo_point", },
+                },
+            },
+        },
+    },
+    "sensors"+officestr: {
         "settings": {
             "index": {
                 "number_of_shards": 1,
@@ -39,7 +75,7 @@ settings={
             },
         },
     },
-    "recordings"+office: {
+    "recordings"+officestr: {
         "settings": {
             "index": {
                 "number_of_shards": 1,
@@ -56,7 +92,7 @@ settings={
             },
         },
     },
-    "algorithms"+office: {
+    "algorithms"+officestr: {
         "settings": {
             "index": {
                 "number_of_shards": 1,
@@ -71,7 +107,7 @@ settings={
             },
         },
     },
-    "analytics"+office: {
+    "analytics"+officestr: {
         "settings": {
             "index": {
                 "number_of_shards": 1,
@@ -88,7 +124,7 @@ settings={
             },
         },
     },
-    "alerts"+office: {
+    "alerts"+officestr: {
         "settings": {
             "index": {
                 "number_of_shards": 1,
@@ -100,20 +136,29 @@ settings={
                 "properties": {
                     "time": { "type": "date" },
                     "office": { "type": "geo_point" },
+                    "location": { "type": "geo_point" },
                 },
             },
         },
     },
-    "services"+office: {
+    "services"+officestr: {
         "settings": {
             "index": {
                 "number_of_shards": 1,
                 "number_of_replicas": 1,
             },
         },
+        "mappings": {
+            _type: {
+                "properties": {
+                    "office": { "type": "geo_point" },
+                },
+            },
+        },
     },
 }
 
+# initialize db index settings
 for index in settings:
     while True:
         try:
@@ -122,3 +167,24 @@ for index in settings:
         except Exception as e:
             print("Exception: "+str(e),flush=True)
             time.sleep(10)
+
+# populate db with simulated offices and provisions
+with open("/run/secrets/sensor-info.json","rt") as fd:
+    data=json.load(fd)
+    dbo=DBIngest(index="offices",office="",host=dbhost)
+    dbp=DBIngest(index="provisions", office=office, host=dbhost)
+    for office1 in data:
+        if scenario != office1["scenario"]: continue
+        location1=office1["location"]
+        if location1["lat"]!=office[0] or location1["lon"]!=office[1]: continue
+        office1.pop("scenario")
+
+        sensors=office1.pop("sensors")
+        office1["uri"]=proxyhost
+        dbo.ingest(office1,officestr[1:])
+
+        for s in sensors: s["office"]=location1
+        dbp.ingest_bulk(sensors)
+
+print("DB Initialized", flush=True)
+

@@ -1,6 +1,6 @@
 
-var previews={
-    create: function (page, ctx, sensor, map, layer) {
+var preview={
+    create: function (ctx, sensor, page, map) {
         var div=page.find("[preview-template]").clone();
         div.removeAttr("preview-template").show();
         ctx.marker.bindPopup(div[0],{
@@ -12,7 +12,7 @@ var previews={
                 delete ctx.video;
             }
             ctx.marker.closeTooltip();
-            previews.play(div,sensor);
+            preview.play(div,sensor);
 
             div.attr('draggable','true').bind('dragstart',function (e) {
                 e.originalEvent.dataTransfer.setData("application/json",JSON.stringify(sensor));
@@ -23,11 +23,11 @@ var previews={
                     var div=page.find("[preview-template]").clone().show();
                     div.removeAttr("preview-template").css({width:'100%',height:'100%'});
                     var icon=L.divIcon({html:div[0],iconSize:[300,200],iconAnchor:[0,0]});
-                    var marker=L.marker(map.mouseEventToLatLng(e),{icon:icon,draggable:true}).addTo(layer);
+                    var marker=L.marker(map.mouseEventToLatLng(e),{icon:icon,draggable:true}).addTo(page.data('preview').layer);
                     marker._zoomargs={zoom:map.getZoom(),width:300,height:200};
                     $(marker._icon).css({'border-radius':'10px'});
                     var sensor1=JSON.parse(e.originalEvent.dataTransfer.getData("application/json"));
-                    previews.play(div,sensor1);
+                    preview.play(div,sensor1);
 
                     div.append('<a class="leaflet-popup-close-button" href="javascript:void(0)" style="z-index:100">x</a>').find('a').click(function() {
                         marker.remove();
@@ -57,5 +57,8 @@ var previews={
             });
         };
         update();
+    },
+    close: function (ctx) {
+        if ("video" in ctx) delete ctx.video.remove();
     },
 };

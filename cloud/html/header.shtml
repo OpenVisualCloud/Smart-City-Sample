@@ -31,17 +31,12 @@
 
   <div class="input-group">
     <span class="input-group-label" style="width:40%"><b>Map Radius (m):</b></span>
-    <input class="input-group-field" id="mapRadius" type="number" value=2000000>
+    <input class="input-group-field" id="mapRadius" type="number" value=300000>
   </div>
 
   <div class="input-group">
     <span class="input-group-label" style="width:40%"><b>Sensor Update (ms):</b></span>
     <input class="input-group-field" id="sensorUpdate" type="number" value=2000>
-  </div>
-
-  <div class="input-group">
-    <span class="input-group-label" style="width:40%"><b>Analytics Update (ms):</b></span>
-    <input class="input-group-field" id="analyticsUpdate" type="number" value=5000>
   </div>
 
   <div class="input-group">
@@ -52,6 +47,11 @@
   <div class="input-group">
     <span class="input-group-label" style="width:40%"><b>Analytics Precision (ms):</b></span>
     <input class="input-group-field" id="frameDuration" type="number" value=180>
+  </div>
+
+  <div class="input-group">
+    <span class="input-group-label" style="width:40%"><b>Alert Window (ms):</b></span>
+    <input class="input-group-field" id="alertWindow" type="number" value=300000>
   </div>
 
   <div class="input-group">
@@ -72,6 +72,11 @@
   <div class="input-group">
     <span class="input-group-label" style="width:40%"><b>Statistics Historgram:</b></span>
     <input class="input-group-field" id="statsHistogram" type="text" value="objects.detection.label">
+  </div>
+
+  <div class="input-group">
+    <span class="input-group-label" style="width:40%"><b>Zone Map Queries:</b></span>
+    <input class="input-group-field" id="zoneMapQueries" type="text" value="time>=now-75000">
   </div>
 
 </div>

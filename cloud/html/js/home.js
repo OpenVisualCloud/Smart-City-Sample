@@ -1,3 +1,13 @@
+
+function format_sensor_tooltip(template, sensor) {
+    $.each(template.find("td[field]"),function (x,v) {
+        $(v).text(sensor._source[$(v).attr("field")]);
+    });
+    template.find("[location]").text("["+sensor._source.location.lat.toFixed(3)+","+sensor._source.location.lon.toFixed(3)+"]");
+    template.find("[resolution]").text(sensor._source.resolution.width+"x"+sensor._source.resolution.height);
+    return template.html();
+}
+
 $("#pg-home").on(":initpage", function(e) {
     var page=$(this);
     $("#layoutButton").hide();
@@ -7,69 +17,28 @@ $("#pg-home").on(":initpage", function(e) {
     var map=page.data('map');
     if (!map) {
         page.data('zoom', 15);
-        page.data('sensors',{});
         page.data('offices',{});
-        page.data('icons',{});
+        page.data('sensors',{});
         page.data('queries',"sensor=*");
 
         /* create map */
         map=L.map("mapCanvas",{ zoom: page.data('zoom'), minZoom: 13 });
         page.data('map',map);
 
+        /* add layers switching widget */
+        page.data('lineinfo',{ name: "Connection Info", layer: L.layerGroup() });
+        page.data('heatmap',{ name: "Density Estimation", layer: L.layerGroup() });
+        page.data('stat',{ name: "Statistics Histogram", layer: L.layerGroup() });
+        page.data('preview', { name: "Preview Clips", layer: L.layerGroup() });
+        page.data('alert', { name: "Scrolling Alerts", layer: L.layerGroup() });
+        page.data('controls', L.control.layers().addTo(map));
+        alerts.setup(page);
+
         /* add tiles */
-        var tiles={};
-        $.each(settings.scenarios, function (i,sc) {
-            if (sc=="traffic") {
-                var layer1=L.tileLayer("images/street/{z}/{x}/{y}.png",{
-                    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
-                    id: 'base'
-                }).on('add', function () {
-                    page.data('center', settings.street_center());
-                    map.setView(page.data('center'),page.data('zoom'));
-                });
-                if (!Object.keys(tiles).length) layer1.addTo(map).fire('add');
-                tiles["Traffic Planning"]=layer1;
-            }
-            if (sc=="parking") {
-                var layer1=L.tileLayer('images/parking/{z}/{x}/{y}.png',{
-                    tms:true
-                }).on('add',function(){
-                    page.data('center', settings.parking_center());
-                    map.setView(page.data('center'),page.data('zoom'));
-                });
-                if (!Object.keys(tiles).length) layer1.addTo(map).fire('add');
-                tiles["Parking Management"]=layer1;
-            }
-            if (sc=="stadium") {
-                var layer1=L.tileLayer('images/stadium/{z}/{x}/{y}.png',{
-                    tms:true
-                }).on('add',function(){
-                    page.data('center', settings.stadium_center());
-                    map.setView(page.data('center'),page.data('zoom'));
-                });
-                if (!Object.keys(tiles).length) layer1.addTo(map).fire('add');
-                tiles["Stadium Services"]=layer1;
-            }
+        $.each(scenarios.setting, function (i,sc) {
+            scenarios[sc].setup(i,page,map);
         });
 
-        /* add layers switching widget */
-        var heatmap_layer=L.layerGroup().addTo(map);
-        page.data('heatmaps',heatmap_layer);
-        var stats_layer=L.layerGroup().addTo(map);
-        page.data('stats',stats_layer);
-        var preview_layer=L.layerGroup().addTo(map);
-        page.data('previews',preview_layer);
-
-        L.control.layers(tiles,{
-            "Density Estimation": heatmap_layer,
-            "Statistics Histogram": stats_layer,
-            "Preview Clips": preview_layer, 
-        }).addTo(map);
-
-        //var circle = new L.Circle([33.310955,-111.932443],2000).addTo(map);
-        //console.log(circle.getBounds());
-        //var circle = new L.Circle([37.388085,-121.963472],2000).addTo(map);
-        //console.log(circle.getBounds());
         map.on('zoomend', function () {
             var update_layer=function (layer) {
                 var z=layer._zoomargs;
@@ -79,19 +48,18 @@ $("#pg-home").on(":initpage", function(e) {
                 var height=Math.floor(z.height*scale);
                 $(layer._icon).css({width:width+'px',height:height+'px'});
             };
-            stats_layer.eachLayer(update_layer);
-            preview_layer.eachLayer(update_layer);
+            page.data('stat').layer.eachLayer(update_layer);
+            page.data('preview').layer.eachLayer(update_layer);
         });
     }
 
     /* enable the office button */
     var search=$("#homeSearch");
     $("#homeButton").unbind('click').click(function () {
-        map.setView(page.data('center'), page.data('zoom'));
+        map.setView(page.data('scenario').center, page.data('zoom'));
     });
 
     /* update map with the sensor info */
-    var animation=[20,15];
     var index="sensors";
     var update=function (queries) {
         if (!page.is(":visible")) return;
@@ -103,137 +71,102 @@ $("#pg-home").on(":initpage", function(e) {
 
         var center=map.getCenter();
         apiHost.search(index,"("+queries+") and location:["+center.lat+","+center.lng+","+settings.radius()+"]",null).then(function (data) {
-            var sensors=page.data('sensors');
             var offices=page.data('offices');
-            var stats_layer=page.data('stats');
-            var heatmap_layer=page.data('heatmaps');
-            var preview_layer=page.data('previews');
-            var icons=page.data('icons');
+            var sensors=page.data('sensors');
+            var scenario=page.data('scenario');
 
-            $.each(data.response, function (x,info) {
-                var tmp=[];
-                $.each([
-                    ["Type",info._source.sensor],
-                    ["Model",info._source.model],
-                    ["Location","["+info._source.location.lat.toFixed(3)+","+info._source.location.lon.toFixed(3)+"]"],
-                    ["Office","["+info._source.office.lat.toFixed(3)+","+info._source.office.lon.toFixed(3)+"]"],
-                    ["MAC",info._source.mac],
-                    ["Resolution",info._source.resolution.width+"x"+info._source.resolution.height],
-                    ["URL",info._source.url],
-                    ["Theta",info._source.theta],
-                    ["Mnt-H",info._source.mnth],
-                    ["Alpha",info._source.alpha],
-                    ["FOV-H",info._source.fovh],
-                    ["FOV-V",info._source.fovv],
-                    ["Status", info._source.status],
-                ],function (x,v) {
-                    tmp.push("<tr><td>"+v[0]+"</td><td>"+v[1]+"</td></tr>");
-                });
-                var title='<table style="border-collapse:collapse;line-height:0.5rem"><tbody>'+tmp.join("")+"</tbody></table>";
-
-                var options={ color: 'red', dashArray: animation.join(',') };
-                if (info._source.status == "idle") options.color='black';
-                if (info._source.status == "streaming") options.color='green';
-                animation=[animation[1],animation[0]];
-
-                var officeid=info._source.office.lat+","+info._source.office.lon;
-                if (officeid in offices) {
-                    offices[officeid].used=true;
-                } else {
-                    var icon="images/office.gif";
-                    if (!(icon in icons)) {
-                        icons[icon]=L.icon({
-                            iconUrl: icon,
-                            iconSize: [64,64],
-                            iconAnchor: [32,32],
-                        });
-                    }
-                    
-                    var ctx=offices[officeid]={
-                        marker: L.marker(info._source.office, { 
-                            icon: icons[icon],
+            $.each(data.response, function (x,sensor) {
+                var officeid=sensor._source.office.lat+","+sensor._source.office.lon;
+                if (!(officeid in offices)) {
+                    offices[officeid]={
+                        office: sensor._source.office,
+                        marker: L.marker(sensor._source.office, { 
+                            icon: scenario.icon.office,
                             riseOnHover: true,
-                        }),
-                        used: true,
+                        }).addTo(map),
                     };
+                }
 
-                    /* setup office tooltip */
-                    ctx.marker.bindTooltip("["+info._source.office.lat+","+info._source.office.lon+"]");
+                /* setup office address & tooltip */
+                var officectx=offices[officeid];
+                officectx.used=true;
+                if (!("address" in officectx)) {
+                    apiHost.search('offices','location:['+officeid+']',null,1).then(function (data) {
+                        if (data.response.length==0) return;
+                        officectx.address=data.response[0]._source.address;
 
-                    /* setup marker actions */
-                    var chartdiv=$('<div style="width:300px;height:200px"><canvas style="width:100%;height:100%"></canvas></div>');
-                    ctx.marker.on('dblclick', function () {
-                        selectPage('office', ["name=*",info._source.office]);
-                    }).bindPopup(chartdiv[0],{
-                        maxWidth:"auto",
-                        maxHeight:"auto"
+                        /* setup marker actions */
+                        officectx.marker.bindTooltip(officectx.address+' @ ['+officeid+']').on('click', function () {
+                            $("#office").data("ctx",officectx);
+                            $("#office").foundation('open');
+                        });
+                    }).catch(function () {
+                    });
+                }
+
+                var sensorid=sensor._source.location.lat+","+sensor._source.location.lon;
+                if (!(sensorid in sensors)) {
+                    sensors[sensorid]={ 
+                        address: sensor._source.address,
+                    };
+                    var sensorctx=sensors[sensorid];
+                    sensorctx.marker=L.marker(sensor._source.location,{
+                        icon: scenario.icon.sensor_icon(sensor),
+                        riseOnHover: true,
+                        rotationAngle: scenario.icon.sensor_icon_rotation(sensor),
+                        rotationOrigin: "center",
+                    }).on({
+                        'dblclick': function(e) {
+                            e.stopPropagation();
+                            selectPage("recording",['sensor="'+sensor._id+'"',sensor._source.office]);
+                        },
+                        'popupopen': function () {
+                            sensorctx.marker.unbindTooltip();
+                        },
+                        'popupclose': function () {
+                            sensorctx.marker.bindTooltip(sensorctx.title);
+                        },
                     }).addTo(map);
+                    if (scenario.create_sensor) scenario.create_sensor(officectx, sensorctx, sensor, map);
+                    preview.create(sensorctx, sensor, page, map);
+		            stats.create(sensorctx, sensor, page, map);
+                    heatmap.create(sensorctx, sensor._source.location);
 
-                    /* setup workload chart */
-                    workloads.create(ctx,chartdiv.find("canvas"),'Office ['+officeid+']');
+                    sensorctx.line_dash="15,20";
+                    var line_color=(sensor._source.status=="idle")?"black":(sensor._source.status=="streaming")?"green":"red";
+                    sensorctx.line=L.polyline([sensor._source.location,sensor._source.office],{color:line_color,dashArray:sensorctx.line_dash}).bindTooltip("",{ permanent:true, direction:'center', opacity:0.7, className:'tooltip_text' }).addTo(page.data('lineinfo').layer);
                 }
 
-                if (!(info._source.icon in icons)) {
-                    icons[info._source.icon]=L.icon({
-                        iconUrl: 'images/'+info._source.icon,
-                        iconSize: [32,32],
-                        iconAnchor: [16,16],
-                    });
+                /* update sensor */
+                var sensorctx=sensors[sensorid];
+                sensorctx.used=true;
+
+                /* update sensor info */
+                if (sensorctx.update_sensor) sensorctx.update_sensor();
+                var tooltip=format_sensor_tooltip(page.find("[sensor-info-template]").clone().removeAttr('sensor-info_template').show(),sensor);
+                if (sensorctx.tooltip!=tooltip) {
+                    sensorctx.tooltip=tooltip;
+                    sensorctx.marker.unbindTooltip().bindTooltip(tooltip);
                 }
-
-                if (info._id in sensors) {
-                    sensors[info._id].used=true;
-                    sensors[info._id].line.setStyle(options).redraw();
-                } else {
-                    var marker=L.marker(info._source.location,{
-                        icon: icons[info._source.icon],
-                        riseOnHover:true,
-                        rotationAngle:"theta" in info._source?360-info._source.theta:0,
-                        rotationOrigin:"center",
-                    }).addTo(map).on('dblclick',function() {
-                        selectPage("recording",['sensor="'+info._id+'"',info._source.office]);
-                    });
-
-                    var ctx=sensors[info._id]={ 
-                        marker: marker,
-                        line: L.polyline([info._source.location,info._source.office],options).addTo(map).bindTooltip("",{ permanent:true, direction:'center', opacity:0.7, className:'tooltip_text' }),
-                        used: true 
-                    };
-                    previews.create(page, ctx, info, map, preview_layer);
-		            stats.create(ctx, info, page, map, stats_layer);
-                    heatmaps.create(ctx,info._source.location);
-
-                    /* disable tooltip while popup open */
-                    ctx.marker.on('popupopen',function () {
-                        ctx.marker.unbindTooltip();
-                    }).on('popupclose',function () {
-                        ctx.marker.bindTooltip(ctx.title);
-                    });
-                }
-
-                /* show bandwidth */
-                var bandwidth=("bandwidth" in info._source && info._source.status == "streaming")?info._source.bandwidth:0, unit="b/s";
-                if (bandwidth>1024) { bandwidth=bandwidth/1024; unit="Kb/s"; }
-                if (bandwidth>1024) { bandwidth=bandwidth/1024; unit="Mb/s"; }
-                if (bandwidth>1024) { bandwidth=bandwidth/1024; unit="Gb/s"; }
-                sensors[info._id].line.setTooltipContent(bandwidth>0?bandwidth.toFixed(1)+unit:"");
 
                 /* show bubble stats */
-                if (map.hasLayer(stats_layer)) 
-                    stats.update(stats_layer, sensors[info._id], map.getZoom(), info);
+                var stat_layer=page.data('stat').layer;
+                if (map.hasLayer(stat_layer)) 
+                    stats.update(stat_layer, sensorctx, map.getZoom(), sensor);
 
-                /* show heatmaps */
+                /* show heatmap */
+                var heatmap_layer=page.data('heatmap').layer;
                 if (map.hasLayer(heatmap_layer)) 
-                    heatmaps.update(heatmap_layer, sensors[info._id], map.getZoom(), info);
+                    heatmap.update(heatmap_layer, sensorctx, map.getZoom(), sensor);
 
-                /* show workload */
-                if (offices[officeid].marker.getPopup().isOpen())
-                    workloads.update(offices[officeid],info._source.office);
-
-                if (sensors[info._id].title!=title) {
-                    sensors[info._id].marker.unbindTooltip().bindTooltip(title);
-                    sensors[info._id].title=title;
+                /* show line info */
+                sensorctx.line.setTooltipContent(format_bandwidth("bandwidth" in sensor._source && sensor._source.status == "streaming"?sensor._source.bandwidth:0));
+                var line_color=(sensor._source.status=="idle")?"black":(sensor._source.status=="streaming")?"green":"red";
+                if (line_color=="green") {
+                    var tmp=sensorctx.line_dash.split(",");
+                    sensorctx.line_dash=tmp[1]+","+tmp[0];
                 }
+                sensorctx.line.setStyle({ color: line_color, dashArray: sensorctx.line_dash }).redraw();
             });
 
             /* remove obsolete markers */
@@ -241,12 +174,12 @@ $("#pg-home").on(":initpage", function(e) {
                 if ("used" in v) {
                     delete v.used;
                 } else {
-                    if ("video" in v) v.video.remove();
-                    v.marker.remove();
-                    v.line.remove();
+                    if (v.close_sensor) v.close_sensor();
+                    if (v.marker) v.marker.remove();
+                    if (v.line) v.line.remove();
+                    preview.close(v);
 		            stats.close(v);
-                    heatmaps.close(v);
-                    workloads.close(v);
+                    heatmap.close(v);
                     delete sensors[x];
                 }
             });
@@ -254,11 +187,11 @@ $("#pg-home").on(":initpage", function(e) {
                 if ("used" in v) {
                     delete v.used;
                 } else {
-                    map.removeLayer(v.marker);
+                    if (v.close_office) v.close_office();
+                    v.marker.remove();
                     delete offices[x];
                 }
             });
-
             page.data('timer',setTimeout(update,settings.sensor_update(),queries));
         }).catch(function (e) {
             $("[hint-panel]").trigger(":error", [e.statusText]);

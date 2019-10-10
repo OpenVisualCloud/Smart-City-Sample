@@ -6,4 +6,22 @@
     <div style="width:300px;height:200px;display:none" preview-template>
     </div>
 
+    <div style="display:none" sensor-info-template>
+        <table style="border-collapse:collapse;line-height:0.5rem"><tbody>
+            <tr><td>Type</td><td colspan="3" field="sensor"></td></tr>
+            <tr><td>Model</td><td colspan="3" field="model"></td></tr>
+            <tr><td>Location</td><td colspan="3" location></td></tr>
+            <tr><td>Address</td><td colspan="3" field="address"></td></tr>
+            <tr><td>URL</td><td colspan="3" field="url"></td></tr>
+            <tr><td>MAC</td><td colspan="3" field="MAC"></td></tr>
+            <tr><td>Resolution</td><td resolution></td><td>Alpha</td><td field="alpha"></td></tr>
+            <tr><td>Theta</td><td field="theta"></td><td>Mnt-H</td><td field="mnth"></td></tr>
+            <tr><td>FOV-H</td><td field="fovh"></td><td>FOV-V</td><td field="fovv"></td></tr>
+        </tbody></table>
+    </div>
+
+    <div alert-screen style="width:650px;height:100px;position:absolute;top:95px;left:60px;z-index:1000;background-color:black;opacity:0.8;border-radius:10px;padding:10px;font-size:large;resize:both;overflow:hidden" draggable="true">
+        <ul style="list-style-type:none">
+        </ul>
+    </div>
 </div>

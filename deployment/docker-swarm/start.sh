@@ -4,8 +4,6 @@ DIR=$(dirname $(readlink -f "$0"))
 NOFFICES="${4:-1}"
 yml="$DIR/docker-compose.yml"
 
-echo "Cleanup..."
-$DIR/../../script/cleanup.sh; echo
 
 export USER_ID="$(id -u)"
 export GROUP_ID="$(id -g)"
@@ -21,15 +19,22 @@ docker_compose)
         exit 0
     fi
 
+    echo "Cleanup $(hostname)..."
+    docker container prune -f; echo
+    docker volume prune -f; echo
+    docker network prune -f; echo
+
     "$DIR/../certificate/self-sign.sh"
     shift
     . "$DIR/build.sh"
-    sudo -E docker-compose -f "$yml" -p smtc --compatibility up
+    docker-compose -f "$yml" -p smtc --compatibility up
     ;;
 *)
+    $DIR/../../script/cleanup.sh; echo
+
     "$DIR/../certificate/self-sign.sh"
     shift
     . "$DIR/build.sh"
-    sudo -E docker stack deploy -c "$yml" smtc
+    docker stack deploy -c "$yml" smtc
     ;;
 esac
