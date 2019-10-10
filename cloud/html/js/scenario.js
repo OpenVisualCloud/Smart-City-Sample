@@ -3,6 +3,7 @@ function update_control_options(page, map, options) {
     var control=page.data('controls');
     $.each(['heatmap','stat','preview','alert','lineinfo'], function (x, layer_name) {
         var layer_object=page.data(layer_name);
+        layer_object.layer.clearLayers();
         control.removeLayer(layer_object.layer);
         map.removeLayer(layer_object.layer);
         if (layer_name in options) {
@@ -55,7 +56,7 @@ var scenarios={
                         'alert': true,
                         'lineinfo': true,
                     });
-                },100);
+                },10);
                 page.data('scenario', scenarios.traffic);
                 map.setView(scenarios.traffic.center,page.data('zoom'));
             });
@@ -111,7 +112,7 @@ var scenarios={
                         'alert': true,
                         'lineinfo': false,
                     });
-                },100);
+                },10);
                 page.data('scenario', scenarios.stadium);
                 map.setView(scenarios.stadium.center,page.data('zoom'));
             });

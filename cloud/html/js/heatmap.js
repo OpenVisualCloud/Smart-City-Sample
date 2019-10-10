@@ -96,9 +96,7 @@ var heatmap={
                 ctx.heatmap.remove(); 
             } else {
                 ctx.heatmap.setLatLngs(latlngs);
-		if(!layer.hasLayer(ctx.heatmap)) {
-                    ctx.heatmap.addTo(layer);
-		}
+		        if(!layer.hasLayer(ctx.heatmap)) ctx.heatmap.addTo(layer);
             }
         }).catch(function () {
             ctx.heatmap.remove();
