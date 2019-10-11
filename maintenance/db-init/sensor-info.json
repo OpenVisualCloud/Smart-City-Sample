@@ -347,8 +347,8 @@
     "sensors": [{
         "address": "East Gate",
         "location": {
-            "lat": 37.38783,
-            "lon": -121.94599
+            "lat": 37.38813,
+            "lon": -121.94370 
         },
         "algorithm": "people-counting",
         "theta": 90.0,
