@@ -15,13 +15,17 @@ every_nth_frame = int(os.environ["EVERY_NTH_FRAME"])
 
 stop=False
 
+def quit_service(signum, sigframe):
+    global stop
+    stop=True
+
 def connect(sensor, algorithm, uri):
     db=DBIngest(host=dbhost, index="algorithms",office=office)
     db.update(algorithm["_id"], {
         "sensor": sensor["_id"],
     })
     db=DBIngest(host=dbhost, index="analytics", office=office)
-    while True:
+    while not stop:
         counts=[]
         for i in range(60):
             counts.append({
@@ -39,16 +43,12 @@ def connect(sensor, algorithm, uri):
         db.ingest_bulk(counts)
         time.sleep(2)
 
-def quit_service(signum, sigframe):
-    global stop
-    stop=True
-
 signal(SIGTERM, quit_service)
 dba=DBIngest(host=dbhost, index="algorithms", office=office)
 dbs=DBQuery(host=dbhost, index="sensors", office=office)
 
 # register algorithm (while waiting for db to startup)
-while True:
+while not stop:
     try:
         algorithm=dba.ingest({
             "name": "people-counting",

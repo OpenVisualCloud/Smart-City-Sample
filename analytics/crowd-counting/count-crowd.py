@@ -21,7 +21,7 @@ def connect(sensor, algorithm, uri):
         "sensor": sensor["_id"],
     })
     db=DBIngest(host=dbhost, index="analytics", office=office)
-    while True:
+    while not stop:
         counts=[]
         for i in range(60):
             zonecount={}
@@ -51,7 +51,7 @@ dba=DBIngest(host=dbhost, index="algorithms", office=office)
 dbs=DBQuery(host=dbhost, index="sensors", office=office)
 
 # register algorithm (while waiting for db to startup)
-while True:
+while not stop:
     try:
         algorithm=dba.ingest({
             "name": "crowd-counting",
