@@ -67,7 +67,7 @@ var scenarios={
             stats.create(sensorctx, sensor, page, map, function (chart_div) { return null; });
             heatmap.create(sensorctx, sensor._source.location);
 
-            sensorctx.update_sensor=function () {
+            sensorctx.update_sensor=function (sensor) {
                 var stat_layer=page.data('stat').layer;
                 if (map.hasLayer(stat_layer)) {
                     apiHost.histogram("analytics",'sensor="'+sensor._id+'" and '+settings.stats_query(),settings.stats_histogram(),25,sensor._source.office).then(function (data) {
@@ -102,22 +102,41 @@ var scenarios={
                 iconSize: [32,32],
                 iconAnchor: [16,16],
             }),
-            queue_left: L.icon({
-                iconUrl: "images/queue-l.gif",
+            queue_left_idle: L.icon({
+                iconUrl: "images/queue-l-idle.gif",
                 iconSize: [90, 32],
                 iconAnchor: [45, 16],
             }),
-            queue_right: L.icon({
-                iconUrl: "images/queue-r.gif",
+            queue_left_streaming: L.icon({
+                iconUrl: "images/queue-l-streaming.gif",
+                iconSize: [90, 32],
+                iconAnchor: [45, 16],
+            }),
+            queue_left_disconnected: L.icon({
+                iconUrl: "images/queue-l-disconnected.gif",
+                iconSize: [90, 32],
+                iconAnchor: [45, 16],
+            }),
+            queue_right_idle: L.icon({
+                iconUrl: "images/queue-r-idle.gif",
+                iconSize: [90, 32],
+                iconAnchor: [45, 16],
+            }),
+            queue_right_streaming: L.icon({
+                iconUrl: "images/queue-r-streaming.gif",
+                iconSize: [90, 32],
+                iconAnchor: [45, 16],
+            }),
+            queue_right_disconnected: L.icon({
+                iconUrl: "images/queue-r-disconnected.gif",
                 iconSize: [90, 32],
                 iconAnchor: [45, 16],
             }),
             sensor_icon: function (sensor) {
                 if (sensor._source.algorithm=="crowd-counting") 
                     return scenarios.stadium.icon[sensor._source.model];
-                if (sensor._source.theta>=270 || sensor._source.theta<90)
-                    return scenarios.stadium.icon.queue_right;
-                return scenarios.stadium.icon.queue_left;
+                var lr=(sensor._source.theta>=270 || sensor._source.theta<90)?"right":"left";
+                return scenarios.stadium.icon["queue_"+lr+"_"+sensor._source.status];
             },
             sensor_icon_rotation: function (sensor) {
                 if (sensor._source.algorithm!="crowd-counting" && (sensor._source.theta>=270||sensor._source.theta<90))
@@ -155,7 +174,7 @@ var scenarios={
                 }
                 return null;
             });
-            sensorctx.update_sensor=function () {
+            sensorctx.update_sensor=function (sensor) {
                 var stat_layer=page.data('stat').layer;
                 if (map.hasLayer(stat_layer)) {
                     var fields=[];
@@ -177,6 +196,11 @@ var scenarios={
                         stats.update(stat_layer,sensorctx,map.getZoom(),sensor,{},null);
                     });
                 }
+
+                /* change icon if status changes */
+                var icon=scenarios.stadium.icon.sensor_icon(sensor);
+                if (icon!=sensorctx.marker.getIcon())
+                    sensorctx.marker.setIcon(icon);
             };
             sensorctx.close_sensor=function () {
                 stats.close(sensorctx);
