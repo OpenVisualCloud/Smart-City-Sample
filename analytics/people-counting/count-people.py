@@ -23,9 +23,9 @@ def connect(sensor, algorithm, uri):
     db=DBIngest(host=dbhost, index="analytics", office=office)
     while True:
         counts=[]
-        for i in range(100):
+        for i in range(60):
             counts.append({
-                "time": int(time.mktime(datetime.datetime.now().timetuple())*1000),
+                "time": int(time.mktime(datetime.datetime.now().timetuple())*1000+i*33.333),
                 "office": {
                     "lat": office[0],
                     "lon": office[1],
@@ -37,7 +37,7 @@ def connect(sensor, algorithm, uri):
                 },
             })
         db.ingest_bulk(counts)
-        time.sleep(1000)
+        time.sleep(2)
 
 def quit_service(signum, sigframe):
     global stop

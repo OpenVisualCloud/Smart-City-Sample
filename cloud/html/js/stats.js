@@ -146,7 +146,7 @@ var stats={
         });
         if (count>0) {
             var pretty=function(value) {
-                if (value<1000) return value.toString(10);
+                if (value<1000) return ((value<10)?value.toFixed(1):Math.floor(value)).toString(10);
                 for (var unit of ['K','M','B']) {
                     value=value/1000;
                     if (value<1000) 
@@ -165,8 +165,11 @@ var stats={
 	        if(!layer.hasLayer(sensorctx.text)) 
                 sensorctx.text.addTo(layer);
         } else {
-            sensorctx.chart_icon.remove();
-            sensorctx.text.remove();
+            if (layer.hasLayer(sensorctx.chart_icon))
+                layer.removeLayer(sensorctx.chart_icon);
+            sensorctx.text.setContent("");
+            if (layer.hasLayer(sensorctx.text))
+                layer.removeLayer(sensorctx.text);
         }
     },
     close: function (sensorctx) {

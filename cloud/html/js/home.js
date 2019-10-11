@@ -107,6 +107,7 @@ $("#pg-home").on(":initpage", function(e) {
                 var sensorid=sensor._source.location.lat+","+sensor._source.location.lon;
                 if (!(sensorid in sensors)) {
                     sensors[sensorid]={ 
+                        scenario: scenario,
                         address: sensor._source.address,
                     };
                     var sensorctx=sensors[sensorid];
@@ -141,9 +142,14 @@ $("#pg-home").on(":initpage", function(e) {
                 var sensorctx=sensors[sensorid];
                 sensorctx.used=true;
 
+                /* update sensor icon */
+                var icon=sensorctx.scenario.icon.sensor_icon(sensor);
+                if (icon!=sensorctx.marker.getIcon())
+                    sensorctx.marker.setIcon(icon);
+
                 /* update sensor info */
                 if (sensorctx.update_sensor) 
-                    sensorctx.update_sensor();
+                    sensorctx.update_sensor(sensor);
 
                 /* update sensor tooltip */
                 var tooltip=format_sensor_tooltip(page.find("[sensor-info-template]").clone().removeAttr('sensor-info_template').show(),sensor);

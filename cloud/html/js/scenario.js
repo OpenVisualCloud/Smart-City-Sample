@@ -31,13 +31,25 @@ var scenarios={
                 iconSize: [64,64],
                 iconAnchor: [32,32],
             }),
-            ip_camera: L.icon({
-                iconUrl: "images/camera.gif",
-                iconSize: [32,32],
-                iconAnchor: [16,16],
-            }),
+            ip_camera: {
+                idle: L.icon({
+                    iconUrl: "images/camera-idle.gif",
+                    iconSize: [32,32],
+                    iconAnchor: [16,16],
+                }),
+                streaming: L.icon({
+                    iconUrl: "images/camera-streaming.gif",
+                    iconSize: [32,32],
+                    iconAnchor: [16,16],
+                }),
+                disconnected: L.icon({
+                    iconUrl: "images/camera-disconnected.gif",
+                    iconSize: [32,32],
+                    iconAnchor: [16,16],
+                }),
+            },
             sensor_icon: function (sensor) {
-                return scenarios.traffic.icon[sensor._source.model];
+                return scenarios.traffic.icon[sensor._source.model][sensor._source.status];
             },
             sensor_icon_rotation: function (sensor) {
                 return 90-sensor._source.theta;
@@ -67,7 +79,7 @@ var scenarios={
             stats.create(sensorctx, sensor, page, map, function (chart_div) { return null; });
             heatmap.create(sensorctx, sensor._source.location);
 
-            sensorctx.update_sensor=function () {
+            sensorctx.update_sensor=function (sensor) {
                 var stat_layer=page.data('stat').layer;
                 if (map.hasLayer(stat_layer)) {
                     apiHost.histogram("analytics",'sensor="'+sensor._id+'" and '+settings.stats_query(),settings.stats_histogram(),25,sensor._source.office).then(function (data) {
@@ -97,27 +109,64 @@ var scenarios={
                 iconSize: [64,64],
                 iconAnchor: [32,32],
             }),
-            ip_camera: L.icon({
-                iconUrl: "images/camera.gif",
-                iconSize: [32,32],
-                iconAnchor: [16,16],
-            }),
-            queue_left: L.icon({
-                iconUrl: "images/queue-l.gif",
-                iconSize: [90, 32],
-                iconAnchor: [45, 16],
-            }),
-            queue_right: L.icon({
-                iconUrl: "images/queue-r.gif",
-                iconSize: [90, 32],
-                iconAnchor: [45, 16],
-            }),
+            ip_camera: {
+                idle: L.icon({
+                    iconUrl: "images/camera-idle.gif",
+                    iconSize: [32,32],
+                    iconAnchor: [16,16],
+                }),
+                streaming: L.icon({
+                    iconUrl: "images/camera-streaming.gif",
+                    iconSize: [32,32],
+                    iconAnchor: [16,16],
+                }),
+                disconnected: L.icon({
+                    iconUrl: "images/camera-disconnected.gif",
+                    iconSize: [32,32],
+                    iconAnchor: [16,16],
+                }),
+            },
+            queue: {
+                left: {
+                    idle: L.icon({
+                        iconUrl: "images/queue-l-idle.gif",
+                        iconSize: [90, 32],
+                        iconAnchor: [45, 16],
+                    }),
+                    streaming: L.icon({
+                        iconUrl: "images/queue-l-streaming.gif",
+                        iconSize: [90, 32],
+                        iconAnchor: [45, 16],
+                    }),
+                    disconnected: L.icon({
+                        iconUrl: "images/queue-l-disconnected.gif",
+                        iconSize: [90, 32],
+                        iconAnchor: [45, 16],
+                    }),
+                },
+                right: {
+                    idle: L.icon({
+                        iconUrl: "images/queue-r-idle.gif",
+                        iconSize: [90, 32],
+                        iconAnchor: [45, 16],
+                    }),
+                    streaming: L.icon({
+                        iconUrl: "images/queue-r-streaming.gif",
+                        iconSize: [90, 32],
+                        iconAnchor: [45, 16],
+                    }),
+                    disconnected: L.icon({
+                        iconUrl: "images/queue-r-disconnected.gif",
+                        iconSize: [90, 32],
+                        iconAnchor: [45, 16],
+                    }),
+                },
+            },
             sensor_icon: function (sensor) {
                 if (sensor._source.algorithm=="crowd-counting") 
-                    return scenarios.stadium.icon[sensor._source.model];
-                if (sensor._source.theta>=270 || sensor._source.theta<90)
-                    return scenarios.stadium.icon.queue_right;
-                return scenarios.stadium.icon.queue_left;
+                    return scenarios.stadium.icon[sensor._source.model][sensor._source.status];
+                var lr=(sensor._source.theta>=270 || sensor._source.theta<90)?"right":"left";
+                return scenarios.stadium.icon.queue[lr][sensor._source.status];
             },
             sensor_icon_rotation: function (sensor) {
                 if (sensor._source.algorithm!="crowd-counting" && (sensor._source.theta>=270||sensor._source.theta<90))
@@ -155,14 +204,15 @@ var scenarios={
                 }
                 return null;
             });
-            sensorctx.update_sensor=function () {
+            sensorctx.update_sensor=function (sensor) {
                 var stat_layer=page.data('stat').layer;
                 if (map.hasLayer(stat_layer)) {
-                    var fields=[];
+                    var fields=[], iconloc=null;
                     if (sensor._source.algorithm=="people-counting") {
                         fields.push("count.people");
                     }
                     if (sensor._source.algorithm=="crowd-counting") {
+                        iconloc=sensorctx.zonemap.getBounds().getCenter();
                         $.each(sensor._source.zones,function (x,v) {
                             fields.push("count.zone"+v);
                         });
@@ -171,10 +221,30 @@ var scenarios={
                         $.each(data,function (k,v) {
                             data[k]=v.count?v.avg:0;
                         });
-                        var iconloc=(typeof(sensorctx.zonemap)!=="undefined")?sensorctx.zonemap.getBounds().getCenter():null; 
+
+                        if (sensor._source.algorithm=="crowd-counting") {
+                            var rgb2hex=function (color) {
+                                var hex=Number(color).toString(16);
+                                return hex.length<2?"0"+hex:hex;
+                            };
+                            sensorctx.zonemap.eachLayer(function (layer1) {
+                                var zonex="count.zone"+layer1.feature.properties.zone;
+                                var color=Math.floor(Math.min(255,Math.max(0,zonex in data?data[zonex]/1000.0*256:0)));
+                                layer1.setStyle({
+                                    fillColor: "#"+rgb2hex(color)+"0000",
+                                    fillOpacity: 0.3,
+                                    weight: 0.5,
+                                });
+                            });
+                        }
                         stats.update(stat_layer,sensorctx,map.getZoom(),sensor,data,iconloc);
                     }).catch(function () {
-                        stats.update(stat_layer,sensorctx,map.getZoom(),sensor,{},null);
+                        if (sensor._source.algorithm=="crowd-counting") {
+                            sensorctx.zonemap.eachLayer(function (layer1) {
+                                layer1.resetStyle();
+                            });
+                        }
+                        stats.update(stat_layer,sensorctx,map.getZoom(),sensor,{},iconloc);
                     });
                 }
             };
