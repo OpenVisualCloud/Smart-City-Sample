@@ -1,7 +1,9 @@
 
 var preview={
     create: function (sensorctx, sensor, page, map) {
-        var div=page.find("[preview-template]").clone();
+        var div=page.find("[preview-template]").clone().dblclick(function () {
+            selectPage("recording",['sensor="'+sensor._id+'"',sensor._source.office]);
+        });
         div.removeAttr("preview-template").show();
         sensorctx.marker.bindPopup(div[0],{
             maxWidth:"auto",

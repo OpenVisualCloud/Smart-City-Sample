@@ -116,17 +116,12 @@ $("#pg-home").on(":initpage", function(e) {
                         riseOnHover: true,
                         rotationAngle: scenario.icon.sensor_icon_rotation(sensor),
                         rotationOrigin: "center",
-                    }).on({
-                        'dblclick': function(e) {
-                            e.stopPropagation();
-                            selectPage("recording",['sensor="'+sensor._id+'"',sensor._source.office]);
-                        },
-                        'popupopen': function () {
-                            sensorctx.marker.unbindTooltip();
-                        },
-                        'popupclose': function () {
-                            sensorctx.marker.bindTooltip(sensorctx.title);
-                        },
+                    }).on('dblclick', function() {
+                        selectPage("recording",['sensor="'+sensor._id+'"',sensor._source.office]);
+                    }).on('popupopen', function () {
+                        sensorctx.marker.unbindTooltip();
+                    }).on('popupclose', function () {
+                        sensorctx.marker.bindTooltip(sensorctx.title);
                     }).addTo(map);
 
                     preview.create(sensorctx, sensor, page, map);
