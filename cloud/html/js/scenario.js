@@ -63,6 +63,30 @@ var scenarios={
             if (order==0) layer1.addTo(map).fire('add');
             page.data('controls').addBaseLayer(layer1,"Traffic Planning");
         },
+        create_sensor: function (officectx, sensorctx, sensor, page, map) {
+            stats.create(sensorctx, sensor, page, map, function (chart_div) { return null; });
+            heatmap.create(sensorctx, sensor._source.location);
+
+            sensorctx.update_sensor=function () {
+                var stat_layer=page.data('stat').layer;
+                if (map.hasLayer(stat_layer)) {
+                    apiHost.histogram("analytics",'sensor="'+sensor._id+'" and '+settings.stats_query(),settings.stats_histogram(),25,sensor._source.office).then(function (data) {
+                        stats.update(stat_layer, sensorctx, map.getZoom(), sensor, data, null);
+                    }).catch(function () {
+                        stats.update(stat_layer, sensorctx, map.getZoom(), sensor, {}, null);
+                    });
+                }
+
+                /* show heatmap */
+                var heatmap_layer=page.data('heatmap').layer;
+                if (map.hasLayer(heatmap_layer))
+                    heatmap.update(heatmap_layer, sensorctx, map.getZoom(), sensor);
+            };
+            sensorctx.close_sensor=function () {
+                stats.close(sensorctx);
+                heatmap.close(sensorctx);
+            };
+        },
     },
     stadium: {
         name: "stadium",
@@ -119,25 +143,43 @@ var scenarios={
             if (order==0) layer1.addTo(map).fire('add');
             page.data('controls').addBaseLayer(layer1,"Stadium Services");
         },
-        create_sensor: function (officectx, sensorctx, sensor, map) {
-            sensorctx.zonemap=L.geoJSON(null,{
-                onEachFeature: function (feature, layer) {
-                    layer.on({
-                        'dblclick': function (e) {
-                            e.stopPropagation();
-                            selectPage("recording",['sensor="'+sensor._id+'"',sensor._source.office]);
-                        },
-                        'popupopen': function () {
-                            layer.unbindTooltip();
-                        },
-                        'popupclose': function () {
-                            layer.bindTooltip(sensorctx.title);
+        create_sensor: function (officectx, sensorctx, sensor, page, map) {
+            stats.create(sensorctx, sensor, page, map, function (chart_div) {
+                if (sensor._source.algorithm=="crowd-counting") {
+                    sensorctx.zonemap=L.geoJSON(null,{
+                        onEachFeature: function (feature, layer) {
+                            layer.bindPopup(chart_div,{ maxWidth:"auto",maxHeight:"auto" });
                         },
                     });
-                },
-            }).addTo(map);
+                    return sensorctx.zonemap;
+                }
+                return null;
+            });
+            sensorctx.update_sensor=function () {
+                var stat_layer=page.data('stat').layer;
+                if (map.hasLayer(stat_layer)) {
+                    var fields=[];
+                    if (sensor._source.algorithm=="people-counting") {
+                        fields.push("count.people");
+                    }
+                    if (sensor._source.algorithm=="crowd-counting") {
+                        $.each(sensor._source.zones,function (x,v) {
+                            fields.push("count.zone"+v);
+                        });
+                    }
+                    apiHost.stats("analytics",'sensor="'+sensor._id+'" and '+settings.zonemap_query()+" and ("+fields.join("=* or ")+"=*)",fields,sensor._source.office).then(function (data) {
+                        $.each(data,function (k,v) {
+                            data[k]=v.count?v.avg:0;
+                        });
+                        var iconloc=(typeof(sensorctx.zonemap)!=="undefined")?sensorctx.zonemap.getBounds().getCenter():null; 
+                        stats.update(stat_layer,sensorctx,map.getZoom(),sensor,data,iconloc);
+                    }).catch(function () {
+                        stats.update(stat_layer,sensorctx,map.getZoom(),sensor,{},null);
+                    });
+                }
+            };
             sensorctx.close_sensor=function () {
-                sensorctx.zonemap.remove();
+                stats.close(sensorctx);
             };
 
             var add_zones=function () {
@@ -145,9 +187,10 @@ var scenarios={
                 $.each(sensor._source.zones,function (x,v) {
                     features.push(officectx.zonedata[v]);
                 });
-                sensorctx.zonemap.addData(features);
+                if (typeof(sensorctx.zonemap)!=="undefined")
+                    sensorctx.zonemap.addData(features);
             };
-            if (!("zonedata" in officectx)) {
+            if (typeof(officectx.zonedata)==="undefined") {
                 $.getJSON("images/stadium/zonemap-"+sensor._source.office.lat+"d"+sensor._source.office.lon+".json").then(function (data) {
                     var zonedata={};
                     $.each(data,function (x,v) {

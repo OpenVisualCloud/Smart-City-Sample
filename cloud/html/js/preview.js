@@ -1,17 +1,17 @@
 
 var preview={
-    create: function (ctx, sensor, page, map) {
+    create: function (sensorctx, sensor, page, map) {
         var div=page.find("[preview-template]").clone();
         div.removeAttr("preview-template").show();
-        ctx.marker.bindPopup(div[0],{
+        sensorctx.marker.bindPopup(div[0],{
             maxWidth:"auto",
             maxHeight:"auto",
         }).on('click',function () {
-            if ("video" in ctx) {
-                ctx.video.remove();
-                delete ctx.video;
+            if ("video" in sensorctx) {
+                sensorctx.video.remove();
+                delete sensorctx.video;
             }
-            ctx.marker.closeTooltip();
+            sensorctx.marker.closeTooltip();
             preview.play(div,sensor);
 
             div.attr('draggable','true').bind('dragstart',function (e) {
@@ -58,7 +58,7 @@ var preview={
         };
         update();
     },
-    close: function (ctx) {
-        if ("video" in ctx) delete ctx.video.remove();
+    close: function (sensorctx) {
+        if ("video" in sensorctx) delete sensorctx.video.remove();
     },
 };

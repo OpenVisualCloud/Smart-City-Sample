@@ -68,6 +68,29 @@ class DBQuery(object):
         self._check_error(r)
         return r.json()["count"]
 
+    def stats(self, queries, fields):
+        specs=self._specs()
+        dsl=compile(queries,specs)
+        query={"query":dsl[0],"aggs":{},"size":0}
+        for field in fields:
+            nested,var=check_nested_label(specs[0],field)
+            # nested aggs
+            aggs={"stats":{"field":var, "missing":0}}
+            if nested: 
+                for nest1 in nested:
+                    aggs={"nested":{"path":nest1},"aggs":{field:aggs}}
+            query["aggs"][field]=aggs
+        r=requests.post(self._host+"/"+self._index+"/"+self._type+"/_search",json=query)
+        self._check_error(r)
+        aggs=r.json()["aggregations"]
+        data={}
+        for field in fields:
+            values=aggs
+            while field in values: 
+                values=values[field]
+            data[field]=values
+        return data
+
     def _scan_bucket(self, buckets, r):
         for k in r:
             if k=="buckets":

@@ -5,7 +5,7 @@
        "lat": 37.39856,
        "lon": -121.94866
     },
-    "zone": 0,
+    "zone": 2,
     "name": "North Wing"
   },
   "geometry": {
@@ -33,7 +33,7 @@
        "lat": 37.39856,
        "lon": -121.94866
     },
-    "zone": 1,
+    "zone": 0,
     "name": "East Wing"
   },
   "geometry": {
@@ -57,7 +57,7 @@
        "lat": 37.39856,
        "lon": -121.94866
     },
-    "zone": 2,
+    "zone": 6,
     "name": "South Wing"
   },
   "geometry": {
@@ -85,7 +85,7 @@
        "lat": 37.39856,
        "lon": -121.94866
     },
-    "zone": 3,
+    "zone": 4,
     "name": "West Wing"
   },
   "geometry": {
@@ -106,7 +106,7 @@
        "lat": 37.39856,
        "lon": -121.94866
     },
-    "zone": 4,
+    "zone": 3,
     "name": "North West Wing"
   },
   "geometry": {
@@ -143,7 +143,7 @@
        "lat": 37.39856,
        "lon": -121.94866
     },
-    "zone": 5,
+    "zone": 1,
     "name": "North East Wing"
   },
   "geometry": {
@@ -180,7 +180,7 @@
        "lat": 37.39856,
        "lon": -121.94866
     },
-    "zone": 6,
+    "zone": 7,
     "name": "South East Wing"
   },
   "geometry": {
@@ -217,7 +217,7 @@
        "lat": 37.39856,
        "lon": -121.94866
     },
-    "zone": 7,
+    "zone": 5,
     "name": "South West Wing"
   },
   "geometry": {
