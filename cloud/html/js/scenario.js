@@ -177,22 +177,43 @@ var scenarios={
             sensorctx.update_sensor=function (sensor) {
                 var stat_layer=page.data('stat').layer;
                 if (map.hasLayer(stat_layer)) {
-                    var fields=[];
+                    var fields=[], iconloc=null;
                     if (sensor._source.algorithm=="people-counting") {
                         fields.push("count.people");
                     }
                     if (sensor._source.algorithm=="crowd-counting") {
+                        iconloc=sensorctx.zonemap.getBounds().getCenter();
                         $.each(sensor._source.zones,function (x,v) {
                             fields.push("count.zone"+v);
                         });
                     }
                     apiHost.stats("analytics",'sensor="'+sensor._id+'" and '+settings.zonemap_query()+" and ("+fields.join("=* or ")+"=*)",fields,sensor._source.office).then(function (data) {
                         $.each(data,function (k,v) {
-                            data[k]=Math.floor(v.count?v.avg:0);
+                            data[k]=v.count?v.avg:0;
                         });
-                        var iconloc=(typeof(sensorctx.zonemap)!=="undefined")?sensorctx.zonemap.getBounds().getCenter():null; 
+
+                        if (sensor._source.algorithm=="crowd-counting") {
+                            var rgb2hex=function (color) {
+                                var hex=Number(color).toString(16);
+                                return hex.length<2?"0"+hex:hex;
+                            };
+                            sensorctx.zonemap.eachLayer(function (layer1) {
+                                var zonex="count.zone"+layer1.feature.properties.zone;
+                                var color=Math.floor(Math.min(255,Math.max(0,zonex in data?data[zonex]/1000.0*256:0)));
+                                layer1.setStyle({
+                                    fillColor: "#"+rgb2hex(color)+"0000",
+                                    fillOpacity: 0.3,
+                                    weight: 0.5,
+                                });
+                            });
+                        }
                         stats.update(stat_layer,sensorctx,map.getZoom(),sensor,data,iconloc);
                     }).catch(function () {
+                        if (sensor._source.algorithm=="crowd-counting") {
+                            sensorctx.zonemap.eachLayer(function (layer1) {
+                                layer1.resetStyle();
+                            });
+                        }
                         stats.update(stat_layer,sensorctx,map.getZoom(),sensor,{},iconloc);
                     });
                 }
