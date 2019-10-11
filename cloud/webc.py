@@ -6,6 +6,7 @@ from search import SearchHandler
 from hint import HintHandler
 from redirect import RedirectHandler
 from stats import StatsHandler
+from histogram import HistogramHandler
 from subprocess import Popen
 from signal import signal, SIGTERM, SIGQUIT
 import os
@@ -34,6 +35,7 @@ def quit_service(signum, frame):
 app = web.Application([
     (r'/api/search',SearchHandler),
     (r'/api/stats',StatsHandler),
+    (r'/api/histogram',HistogramHandler),
     (r'/api/workload',RedirectHandler),
     (r'/api/hint',HintHandler),
     (r'/recording/.*',RedirectHandler),

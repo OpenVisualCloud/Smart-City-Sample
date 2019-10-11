@@ -127,10 +127,10 @@ $("#pg-home").on(":initpage", function(e) {
                             sensorctx.marker.bindTooltip(sensorctx.title);
                         },
                     }).addTo(map);
-                    if (scenario.create_sensor) scenario.create_sensor(officectx, sensorctx, sensor, map);
+
                     preview.create(sensorctx, sensor, page, map);
-		            stats.create(sensorctx, sensor, page, map);
-                    heatmap.create(sensorctx, sensor._source.location);
+                    if (scenario.create_sensor) 
+                        scenario.create_sensor(officectx, sensorctx, sensor, page, map);
 
                     sensorctx.line_dash="15,20";
                     var line_color=(sensor._source.status=="idle")?"black":(sensor._source.status=="streaming")?"green":"red";
@@ -142,22 +142,15 @@ $("#pg-home").on(":initpage", function(e) {
                 sensorctx.used=true;
 
                 /* update sensor info */
-                if (sensorctx.update_sensor) sensorctx.update_sensor();
+                if (sensorctx.update_sensor) 
+                    sensorctx.update_sensor();
+
+                /* update sensor tooltip */
                 var tooltip=format_sensor_tooltip(page.find("[sensor-info-template]").clone().removeAttr('sensor-info_template').show(),sensor);
                 if (sensorctx.tooltip!=tooltip) {
                     sensorctx.tooltip=tooltip;
                     sensorctx.marker.unbindTooltip().bindTooltip(tooltip);
                 }
-
-                /* show bubble stats */
-                var stat_layer=page.data('stat').layer;
-                if (map.hasLayer(stat_layer)) 
-                    stats.update(stat_layer, sensorctx, map.getZoom(), sensor);
-
-                /* show heatmap */
-                var heatmap_layer=page.data('heatmap').layer;
-                if (map.hasLayer(heatmap_layer)) 
-                    heatmap.update(heatmap_layer, sensorctx, map.getZoom(), sensor);
 
                 /* show line info */
                 sensorctx.line.setTooltipContent(format_bandwidth("bandwidth" in sensor._source && sensor._source.status == "streaming"?sensor._source.bandwidth:0));
@@ -178,8 +171,6 @@ $("#pg-home").on(":initpage", function(e) {
                     if (v.marker) v.marker.remove();
                     if (v.line) v.line.remove();
                     preview.close(v);
-		            stats.close(v);
-                    heatmap.close(v);
                     delete sensors[x];
                 }
             });

@@ -69,16 +69,8 @@ var stats={
             },
         });
     },
-    create: function (ctx, sensor, page, map) {
-	    ctx.chart_icon=L.marker(ctx.marker.getLatLng(), {
-            icon: L.icon({
-                iconUrl: 'images/chart.png',
-                iconSize: [55,40],
-                iconAnchor: [29,15],
-            }),
-            opacity: 0.6,
-        });
-	    ctx.text=L.tooltip({permanent:true,direction:'center',className:'tooltip_text'});
+    create: function (sensorctx, sensor, page, map, create_chart_icon) {
+	    sensorctx.text=L.tooltip({permanent:true,direction:'center',className:'tooltip_text'});
         var div=$('<div style="width:350px;height:200px;padding-top:5px;padding-bottom:5px" draggable="true"><canvas style="width:100%;height:100%"></canvas></div>').on('dragstart', function (e) {
             e.originalEvent.dataTransfer.setData('application/json',JSON.stringify(sensor));
             page.find("#mapCanvas").unbind('dragover').on('dragover', function (e) {
@@ -99,8 +91,18 @@ var stats={
                 });
             });
         });
-        ctx.chart=stats.create_chart(div.find("canvas"));
-        ctx.chart_icon.bindPopup(div[0],{ maxWidth:"auto",maxHeight:"auto" });
+        sensorctx.chart=stats.create_chart(div.find("canvas"));
+        sensorctx.chart_icon=create_chart_icon(div[0]);
+        if (!sensorctx.chart_icon) {
+            sensorctx.chart_icon=L.marker(sensorctx.marker.getLatLng(), {
+                icon: L.icon({
+                    iconUrl: 'images/chart.png',
+                    iconSize: [55,40],
+                    iconAnchor: [29,15],
+                }),
+                opacity: 0.6,
+            }).bindPopup(div[0], { maxWidth:"auto",maxHeight:"auto" });
+        }
     },
     update_chart: function (chart, data) {
         var labels=chart.config.data.labels;
@@ -132,45 +134,43 @@ var stats={
         chart.config.options.legend.display=(datasets.length<4);
         chart.update();
     },
-    update: function (layer, ctx, zoom, sensor) {
-        apiHost.stats("analytics",'sensor="'+sensor._id+'" and '+settings.stats_query(),settings.stats_histogram(),25,sensor._source.office).then(function (data) {
-            var count=0;
-            for (var k in data) 
-                count=count+data[k];
-            stats.update_chart(ctx.chart, data);
-            layer.eachLayer(function (layer1) {
-                if (!layer1._sensor || !layer1._chart) return;
-                if (layer1._sensor._id!=sensor._id || layer1._sensor._source.office.lat!=sensor._source.office.lat || layer1._sensor._source.office.lon!=sensor._source.office.lon) return;
-                stats.update_chart(layer1._chart,data);
-            });
-            if (count>0) {
-                var pretty=function(value) {
-                    if (value<1000) return value.toString(10);
-                    for (var unit of ['K','M','B']) {
-                        value=value/1000;
-                        if (value<1000) 
-                            return ((value<10)?value.toFixed(1):Math.floor(value))+unit;
-                    }
-                    return ((value<10)?value.toFixed(1):Math.floor(value))+'B';
-                };
-
-                ctx.chart_icon.setLatLng([sensor._source.location.lat+0.003*Math.pow(2,14-zoom),sensor._source.location.lon]);
-		        if(!layer.hasLayer(ctx.chart_icon)) ctx.chart_icon.addTo(layer);
-
-                ctx.text.setLatLng(ctx.chart_icon.getLatLng()).setContent(pretty(count));
-		        if(!layer.hasLayer(ctx.text)) ctx.text.addTo(layer);
-            } else {
-                ctx.chart_icon.remove();
-                ctx.text.remove();
-            }
-        }).catch(function () {
-            ctx.chart_icon.remove();
-            ctx.text.remove();
-            stats.update_chart(ctx.chart, {});
+    update: function (layer, sensorctx, zoom, sensor, data, loc) {
+        var count=0;
+        for (var k in data) 
+            count=count+data[k];
+        stats.update_chart(sensorctx.chart, data);
+        layer.eachLayer(function (layer1) {
+            if (!layer1._sensor || !layer1._chart) return;
+            if (layer1._sensor._id!=sensor._id || layer1._sensor._source.office.lat!=sensor._source.office.lat || layer1._sensor._source.office.lon!=sensor._source.office.lon) return;
+            stats.update_chart(layer1._chart,data);
         });
+        if (count>0) {
+            var pretty=function(value) {
+                if (value<1000) return value.toString(10);
+                for (var unit of ['K','M','B']) {
+                    value=value/1000;
+                    if (value<1000) 
+                        return ((value<10)?value.toFixed(1):Math.floor(value))+unit;
+                }
+                return ((value<10)?value.toFixed(1):Math.floor(value))+'B';
+            };
+
+            var iconloc=[sensor._source.location.lat+0.003*Math.pow(2,14-zoom),sensor._source.location.lon];
+            if (typeof(sensorctx.chart_icon.setLatLng) !== "undefined")
+                sensorctx.chart_icon.setLatLng(iconloc);
+	        if(!layer.hasLayer(sensorctx.chart_icon)) 
+                sensorctx.chart_icon.addTo(layer);
+
+            sensorctx.text.setLatLng(loc?loc:iconloc).setContent(pretty(count));
+	        if(!layer.hasLayer(sensorctx.text)) 
+                sensorctx.text.addTo(layer);
+        } else {
+            sensorctx.chart_icon.remove();
+            sensorctx.text.remove();
+        }
     },
-    close: function (ctx) {
-        ctx.chart_icon.remove();
-        ctx.text.remove();
+    close: function (sensorctx) {
+        sensorctx.chart_icon.remove();
+        sensorctx.text.remove();
     },
 };

@@ -8,9 +8,9 @@ from db_query import DBQuery
 import os
 import json
 
-class StatsHandler(web.RequestHandler):
+class HistogramHandler(web.RequestHandler):
     def __init__(self, app, request, **kwargs):
-        super(StatsHandler, self).__init__(app, request, **kwargs)
+        super(HistogramHandler, self).__init__(app, request, **kwargs)
         self.executor= ThreadPoolExecutor(8)
         self.dbhost=os.environ["DBHOST"]
 
@@ -18,21 +18,29 @@ class StatsHandler(web.RequestHandler):
         return True
 
     @run_on_executor
-    def _stats(self, index, queries, fields, office):
+    def _bucketize(self, index, queries, field, size, office):
         db=DBQuery(index=index,office=office,host=self.dbhost)
         try:
-            return db.stats(queries, fields)
+            buckets=db.bucketize(queries, [field], size)
         except Exception as e:
             return str(e)
+
+        # reformat buckets to have str keys
+        buckets1={}
+        if field in buckets:
+            for k in buckets[field]: 
+                buckets1[str(k)]=buckets[field][k]
+        return buckets1
 
     @gen.coroutine
     def get(self):
         queries=unquote(str(self.get_argument("queries")))
         index=unquote(str(self.get_argument("index")))
-        fields=unquote(str(self.get_argument("fields"))).split(",")
+        field=unquote(str(self.get_argument("field")))
+        size=int(self.get_argument("size"))
         office=list(map(float,unquote(str(self.get_argument("office"))).split(",")))
 
-        r=yield self._stats(index, queries, fields, office)
+        r=yield self._bucketize(index, queries, field, size, office)
         if isinstance(r,str):
             self.set_status(400, str(r))
             return
