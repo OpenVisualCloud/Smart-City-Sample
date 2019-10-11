@@ -31,13 +31,25 @@ var scenarios={
                 iconSize: [64,64],
                 iconAnchor: [32,32],
             }),
-            ip_camera: L.icon({
-                iconUrl: "images/camera.gif",
-                iconSize: [32,32],
-                iconAnchor: [16,16],
-            }),
+            ip_camera: {
+                idle: L.icon({
+                    iconUrl: "images/camera-idle.gif",
+                    iconSize: [32,32],
+                    iconAnchor: [16,16],
+                }),
+                streaming: L.icon({
+                    iconUrl: "images/camera-streaming.gif",
+                    iconSize: [32,32],
+                    iconAnchor: [16,16],
+                }),
+                disconnected: L.icon({
+                    iconUrl: "images/camera-disconnected.gif",
+                    iconSize: [32,32],
+                    iconAnchor: [16,16],
+                }),
+            },
             sensor_icon: function (sensor) {
-                return scenarios.traffic.icon[sensor._source.model];
+                return scenarios.traffic.icon[sensor._source.model][sensor._source.status];
             },
             sensor_icon_rotation: function (sensor) {
                 return 90-sensor._source.theta;
@@ -97,46 +109,64 @@ var scenarios={
                 iconSize: [64,64],
                 iconAnchor: [32,32],
             }),
-            ip_camera: L.icon({
-                iconUrl: "images/camera.gif",
-                iconSize: [32,32],
-                iconAnchor: [16,16],
-            }),
-            queue_left_idle: L.icon({
-                iconUrl: "images/queue-l-idle.gif",
-                iconSize: [90, 32],
-                iconAnchor: [45, 16],
-            }),
-            queue_left_streaming: L.icon({
-                iconUrl: "images/queue-l-streaming.gif",
-                iconSize: [90, 32],
-                iconAnchor: [45, 16],
-            }),
-            queue_left_disconnected: L.icon({
-                iconUrl: "images/queue-l-disconnected.gif",
-                iconSize: [90, 32],
-                iconAnchor: [45, 16],
-            }),
-            queue_right_idle: L.icon({
-                iconUrl: "images/queue-r-idle.gif",
-                iconSize: [90, 32],
-                iconAnchor: [45, 16],
-            }),
-            queue_right_streaming: L.icon({
-                iconUrl: "images/queue-r-streaming.gif",
-                iconSize: [90, 32],
-                iconAnchor: [45, 16],
-            }),
-            queue_right_disconnected: L.icon({
-                iconUrl: "images/queue-r-disconnected.gif",
-                iconSize: [90, 32],
-                iconAnchor: [45, 16],
-            }),
+            ip_camera: {
+                idle: L.icon({
+                    iconUrl: "images/camera-idle.gif",
+                    iconSize: [32,32],
+                    iconAnchor: [16,16],
+                }),
+                streaming: L.icon({
+                    iconUrl: "images/camera-streaming.gif",
+                    iconSize: [32,32],
+                    iconAnchor: [16,16],
+                }),
+                disconnected: L.icon({
+                    iconUrl: "images/camera-disconnected.gif",
+                    iconSize: [32,32],
+                    iconAnchor: [16,16],
+                }),
+            },
+            queue: {
+                left: {
+                    idle: L.icon({
+                        iconUrl: "images/queue-l-idle.gif",
+                        iconSize: [90, 32],
+                        iconAnchor: [45, 16],
+                    }),
+                    streaming: L.icon({
+                        iconUrl: "images/queue-l-streaming.gif",
+                        iconSize: [90, 32],
+                        iconAnchor: [45, 16],
+                    }),
+                    disconnected: L.icon({
+                        iconUrl: "images/queue-l-disconnected.gif",
+                        iconSize: [90, 32],
+                        iconAnchor: [45, 16],
+                    }),
+                },
+                right: {
+                    idle: L.icon({
+                        iconUrl: "images/queue-r-idle.gif",
+                        iconSize: [90, 32],
+                        iconAnchor: [45, 16],
+                    }),
+                    streaming: L.icon({
+                        iconUrl: "images/queue-r-streaming.gif",
+                        iconSize: [90, 32],
+                        iconAnchor: [45, 16],
+                    }),
+                    disconnected: L.icon({
+                        iconUrl: "images/queue-r-disconnected.gif",
+                        iconSize: [90, 32],
+                        iconAnchor: [45, 16],
+                    }),
+                },
+            },
             sensor_icon: function (sensor) {
                 if (sensor._source.algorithm=="crowd-counting") 
-                    return scenarios.stadium.icon[sensor._source.model];
+                    return scenarios.stadium.icon[sensor._source.model][sensor._source.status];
                 var lr=(sensor._source.theta>=270 || sensor._source.theta<90)?"right":"left";
-                return scenarios.stadium.icon["queue_"+lr+"_"+sensor._source.status];
+                return scenarios.stadium.icon.queue[lr][sensor._source.status];
             },
             sensor_icon_rotation: function (sensor) {
                 if (sensor._source.algorithm!="crowd-counting" && (sensor._source.theta>=270||sensor._source.theta<90))
@@ -217,11 +247,6 @@ var scenarios={
                         stats.update(stat_layer,sensorctx,map.getZoom(),sensor,{},iconloc);
                     });
                 }
-
-                /* change icon if status changes */
-                var icon=scenarios.stadium.icon.sensor_icon(sensor);
-                if (icon!=sensorctx.marker.getIcon())
-                    sensorctx.marker.setIcon(icon);
             };
             sensorctx.close_sensor=function () {
                 stats.close(sensorctx);
