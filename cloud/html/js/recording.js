@@ -3,7 +3,7 @@ $("#pg-recording").on(":initpage", function(e, queries, office) {
 
     /* setup the layout button */
     $("#layoutButton").show().unbind('click').click(function () {
-        $(this).find("i").toggleClass("fi-arrows-out").toggleClass("fi-arrows-in");
+        $(this).find("i").toggleClass("fi-zoom-out").toggleClass("fi-zoom-in");
         page.find("[layout1]").toggle();
         page.find("[layout4]").toggle();
     });
