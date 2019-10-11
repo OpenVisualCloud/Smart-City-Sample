@@ -76,7 +76,7 @@
 
   <div class="input-group">
     <span class="input-group-label" style="width:40%"><b>Zone Map Queries:</b></span>
-    <input class="input-group-field" id="zoneMapQueries" type="text" value="time=*">
+    <input class="input-group-field" id="zoneMapQueries" type="text" value="time>=now-75000">
   </div>
 
 </div>

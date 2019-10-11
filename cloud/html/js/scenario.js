@@ -188,12 +188,12 @@ var scenarios={
                     }
                     apiHost.stats("analytics",'sensor="'+sensor._id+'" and '+settings.zonemap_query()+" and ("+fields.join("=* or ")+"=*)",fields,sensor._source.office).then(function (data) {
                         $.each(data,function (k,v) {
-                            data[k]=v.count?v.avg:0;
+                            data[k]=Math.floor(v.count?v.avg:0);
                         });
                         var iconloc=(typeof(sensorctx.zonemap)!=="undefined")?sensorctx.zonemap.getBounds().getCenter():null; 
                         stats.update(stat_layer,sensorctx,map.getZoom(),sensor,data,iconloc);
                     }).catch(function () {
-                        stats.update(stat_layer,sensorctx,map.getZoom(),sensor,{},null);
+                        stats.update(stat_layer,sensorctx,map.getZoom(),sensor,{},iconloc);
                     });
                 }
 
