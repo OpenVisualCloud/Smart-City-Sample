@@ -60,7 +60,7 @@ spec:
               name: defn(`OFFICE_NAME')-stdata
       initContainers:
         - name: storage-init
-          image: centos:7.6.1810
+          image: busybox:latest
           command: ["sh","-c","mkdir -p /var/www/log /var/www/tmp /var/www/cache /var/www/upload /var/www/mp4 && chown -R defn(`USERID').defn(`GROUPID') /var/www"]
           volumeMounts:
             - mountPath: /etc/localtime

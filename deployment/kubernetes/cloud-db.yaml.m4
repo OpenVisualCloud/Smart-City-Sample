@@ -35,6 +35,7 @@ spec:
       labels:
         app: defn(`DB_NAME')
     spec:
+      enableServiceLinks: false
       containers:
         - name: defn(`DB_NAME')
           image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.8.1
@@ -70,6 +71,12 @@ ifelse(eval(defn(`NOFFICES')>1),1,`dnl
               readOnly: true
             - mountPath: /usr/share/elasticsearch/data
               name: defn(`DB_NAME')-esdata
+      initContainers:
+        - name: init-volume-sysctl
+          image: busybox:latest
+          command: ["sh","-c","sysctl -w vm.max_map_count=262144"]
+          securityContext:
+            privileged: true
       volumes:
           - name: timezone
             hostPath:
