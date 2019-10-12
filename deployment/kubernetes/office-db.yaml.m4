@@ -37,6 +37,7 @@ spec:
       labels:
         app: defn(`OFFICE_NAME')-db
     spec:
+      enableServiceLinks: false
       containers:
         - name: defn(`OFFICE_NAME')-db
           image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.8.1
