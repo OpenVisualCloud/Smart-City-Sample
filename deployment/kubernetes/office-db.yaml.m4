@@ -60,7 +60,7 @@ spec:
             - name: "action.auto_create_index"
               value: "0"
             - name: "ES_JAVA_OPTS"
-              value: "-Xms4096m -Xmx4096m"
+              value: "-Xms2048m -Xmx2048m"
             - name: NO_PROXY
               value: "*"
             - name: no_proxy
@@ -71,6 +71,12 @@ spec:
               readOnly: true
             - mountPath: /usr/share/elasticsearch/data
               name: defn(`OFFICE_NAME')-esdata
+      initContainers:
+        - name: init-volume-sysctl
+          image: busybox:latest
+          command: ["sh","-c","sysctl -w vm.max_map_count=262144"]
+          securityContext:
+            privileged: true
       volumes:
           - name: timezone
             hostPath:
