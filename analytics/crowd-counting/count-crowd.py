@@ -25,8 +25,11 @@ def connect(sensor, algorithm, uri):
         counts=[]
         for i in range(60):
             zonecount={}
+            nseats=0
             for zonemap in sensor["_source"]["zonemap"]:
-                zonecount["zone"+str(zonemap["zone"])]=int(random.random()*1000)
+                count=int(random.random()*1000)
+                zonecount["zone"+str(zonemap["zone"])]=count
+                if count>nseats: nseats=count
 
             counts.append({
                 "time": int(time.mktime(datetime.datetime.now().timetuple())*1000+i*33.333),
@@ -35,8 +38,10 @@ def connect(sensor, algorithm, uri):
                     "lon": office[1],
                 },
                 "sensor": sensor["_id"],
+                "location": sensor["_source"]["location"],
                 "algorithm": algorithm["_id"],
                 "count": zonecount,
+                "nseats": nseats,
             })
 
         db.ingest_bulk(counts)

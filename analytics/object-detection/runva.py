@@ -27,7 +27,7 @@ class RunVA(object):
     def stop(self):
         self._stop=True
 
-    def loop(self, sensor, uri, algorithm, topic):
+    def loop(self, sensor, location, uri, algorithm, topic):
         req={
             "source": {
                 "uri": uri,
@@ -35,6 +35,7 @@ class RunVA(object):
             },
             "tags": {
                 "sensor": sensor,
+                "location": location,
                 "algorithm": algorithm,
                 "office": {
                     "lat": office[0],

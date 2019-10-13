@@ -3,22 +3,22 @@ include(office.m4)
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: defn(`OFFICE_NAME')-health-check
+  name: defn(`OFFICE_NAME')-alert
   labels:
-     app: defn(`OFFICE_NAME')-health-check
+     app: defn(`OFFICE_NAME')-alert
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: defn(`OFFICE_NAME')-health-check
+      app: defn(`OFFICE_NAME')-alert
   template:
     metadata:
       labels:
-        app: defn(`OFFICE_NAME')-health-check
+        app: defn(`OFFICE_NAME')-alert
     spec:
       containers:
-        - name: defn(`OFFICE_NAME')-health-check
-          image: smtc_trigger_health:latest
+        - name: defn(`OFFICE_NAME')-alert
+          image: smtc_alert:latest
           imagePullPolicy: IfNotPresent
           env:
             - name: OFFICE
@@ -26,7 +26,9 @@ spec:
             - name: DBHOST
               value: "http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')-db,db)-service:9200"
             - name: SERVICE_INTERVAL
-              value: "30"
+              value: "3,5,15"
+            - name: OCCUPENCY_ARGS
+              value: "120000,10,200,300"
             - name: NO_PROXY
               value: "*"
             - name: no_proxy
