@@ -21,7 +21,7 @@ class OccupencyTrigger(Trigger):
        seats=("",0)
        people=("",0)
        try:
-           for q in self._db.search("time>=now-"+str(args[0])+" and (nobjects>"+str(args[1])+" or count.people>"+str(args[2])+" or nseats>"+str(args[3])+")",size=25):
+           for q in self._db.search("time>=now-"+str(args[0])+" and (nobjects>"+str(args[1])+" or count.people>"+str(args[2])+" or nseats>"+str(args[3])+")",size=75):
 
                if "nobjects" in q["_source"]:
                    if q["_source"]["nobjects"]>objects[1]:
