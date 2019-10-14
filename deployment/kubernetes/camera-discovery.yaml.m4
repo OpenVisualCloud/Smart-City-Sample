@@ -17,6 +17,7 @@ spec:
       labels:
         app: defn(`OFFICE_NAME')-camera-discovery
     spec:
+      enableServiceLinks: false
       containers:
         - name: defn(`OFFICE_NAME')-camera-discovery
           image: smtc_onvif_discovery:latest

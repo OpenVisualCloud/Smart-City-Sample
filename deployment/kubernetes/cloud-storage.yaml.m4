@@ -30,6 +30,7 @@ spec:
       labels:
         app: cloud-storage
     spec:
+      enableServiceLinks: false
       containers:
         - name: cloud-storage
           image: smtc_storage_manager:latest

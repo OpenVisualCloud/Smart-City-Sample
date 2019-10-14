@@ -17,6 +17,7 @@ spec:
       labels:
         app: defn(`OFFICE_NAME')-analytics
     spec:
+      enableServiceLinks: false
       containers:
         - name: defn(`OFFICE_NAME')-analytics
           image: smtc_analytics_object_detection_xeon:latest
@@ -71,6 +72,7 @@ spec:
       labels:
         app: defn(`OFFICE_NAME')-analytics-people
     spec:
+      enableServiceLinks: false
       containers:
         - name: defn(`OFFICE_NAME')-analytics-people
           image: smtc_analytics_people_counting_xeon:latest
@@ -120,6 +122,7 @@ spec:
       labels:
         app: defn(`OFFICE_NAME')-analytics-crowd
     spec:
+      enableServiceLinks: false
       containers:
         - name: defn(`OFFICE_NAME')-analytics-crowd
           image: smtc_analytics_crowd_counting_xeon:latest

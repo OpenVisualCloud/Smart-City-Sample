@@ -39,6 +39,7 @@ spec:
       labels:
         app: defn(`OFFICE_NAME')-cameras
     spec:
+      enableServiceLinks: false
       containers:
         - name: defn(`OFFICE_NAME')-cameras
           image: smtc_sensor_simulation:latest

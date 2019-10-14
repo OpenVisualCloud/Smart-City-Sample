@@ -16,6 +16,7 @@ spec:
       labels:
         app: defn(`OFFICE_NAME')-alert
     spec:
+      enableServiceLinks: false
       containers:
         - name: defn(`OFFICE_NAME')-alert
           image: smtc_alert:latest

@@ -16,6 +16,7 @@ spec:
       labels:
         app: defn(`OFFICE_NAME')-where-indexing
     spec:
+      enableServiceLinks: false
       containers:
         - name: defn(`OFFICE_NAME')-where-indexing
           image: smtc_where_indexing:latest

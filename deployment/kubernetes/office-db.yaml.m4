@@ -101,6 +101,7 @@ metadata:
 spec:
   template:
     spec:
+      enableServiceLinks: false
       containers:
         - name: defn(`OFFICE_NAME')-db-init
           image: smtc_db_init:latest
