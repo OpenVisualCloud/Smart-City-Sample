@@ -40,7 +40,7 @@ class ImbalanceTrigger(Trigger):
                 }]
             })
 
-        if nalgorithms["total"]!=nsensors["streaming"]+nsensors["idle"]:
+        if nalgorithms["total"]>nsensors["streaming"]+nsensors["idle"]:
             info.append({
                 "warning": [{
                     "message": "Imbalance: #analytics="+str(nalgorithms["total"])+",#sensors="+str(nsensors["streaming"]+nsensors["idle"]),
