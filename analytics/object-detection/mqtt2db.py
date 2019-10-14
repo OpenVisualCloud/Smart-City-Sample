@@ -55,6 +55,7 @@ class MQTT2DB(object):
             del r["tags"]
             if "real_base" not in r: r["real_base"]=0
             r["time"]=int((r["real_base"]+r["timestamp"])/1000000)
+            if "objects" in r: r["nobjects"]=int(len(r["objects"]))
         except Exception as e:
             print("Exception: "+str(e), flush=True)
         self._lock.acquire()

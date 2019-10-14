@@ -19,7 +19,7 @@ rec2db=None
 runva=None
 stop=False
 
-def connect(sensor, algorithm, uri):
+def connect(sensor, location, algorithm, uri):
     global mqtt2db, rec2db, runva
 
     try:
@@ -31,7 +31,7 @@ def connect(sensor, algorithm, uri):
         with ThreadPoolExecutor(3) as e:
             e.submit(mqtt2db.loop, topic)
             e.submit(rec2db.loop)
-            e.submit(runva.loop, sensor, uri, algorithm, topic)
+            e.submit(runva.loop, sensor, location, uri, algorithm, topic)
 
     except Exception as e:
         print("Exception: "+str(e), flush=True)
@@ -75,7 +75,7 @@ while not stop:
 
                 # stream from the sensor
                 print("Connected to "+sensor["_id"]+"...",flush=True)
-                connect(sensor["_id"],algorithm,sensor["_source"]["url"])
+                connect(sensor["_id"],sensor["_source"]["location"],algorithm,sensor["_source"]["url"])
 
                 # if exit, there is somehting wrong
                 r=dbs.update(sensor["_id"],{"status":"disconnected"})

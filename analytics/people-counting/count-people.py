@@ -35,6 +35,7 @@ def connect(sensor, algorithm, uri):
                     "lon": office[1],
                 },
                 "sensor": sensor["_id"],
+                "location": sensor["_source"]["location"],
                 "algorithm": algorithm["_id"],
                 "count": {
                     "people": int(random.random()*1000),
