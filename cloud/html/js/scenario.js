@@ -105,9 +105,9 @@ var scenarios={
         center: [37.388085,-121.963472],
         icon: {
             office: L.icon({
-                iconUrl: "images/office.gif",
-                iconSize: [64,64],
-                iconAnchor: [32,32],
+                iconUrl: "images/control-room.gif",
+                iconSize: [80,64],
+                iconAnchor: [40,32],
             }),
             ip_camera: {
                 idle: L.icon({
