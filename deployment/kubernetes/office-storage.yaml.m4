@@ -31,6 +31,7 @@ spec:
       labels:
         app: defn(`OFFICE_NAME')-storage
     spec:
+      enableServiceLinks: false
       containers:
         - name: defn(`OFFICE_NAME')-storage
           image: smtc_storage_manager:latest

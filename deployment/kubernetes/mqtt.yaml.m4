@@ -31,6 +31,7 @@ spec:
       labels:
         app: defn(`OFFICE_NAME')-mqtt
     spec:
+      enableServiceLinks: false
       containers:
         - name: defn(`OFFICE_NAME')-mqtt
           image: eclipse-mosquitto:1.5.8

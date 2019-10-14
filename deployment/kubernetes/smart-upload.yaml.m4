@@ -17,6 +17,7 @@ spec:
       labels:
         app: defn(`OFFICE_NAME')-smart-upload
     spec:
+      enableServiceLinks: false
       containers:
         - name: defn(`OFFICE_NAME')-smart-upload
           image: smtc_smart_upload:latest

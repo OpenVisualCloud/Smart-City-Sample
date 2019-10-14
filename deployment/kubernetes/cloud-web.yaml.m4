@@ -31,6 +31,7 @@ spec:
       labels:
         app: cloud-web
     spec:
+      enableServiceLinks: false
       containers:
         - name: cloud-web
           image: smtc_web_cloud:latest
