@@ -1,6 +1,6 @@
-# smtc_analytics_object_detection_xeon
+# smtc_analytics_object_detection_xeon_gst
 
-FROM smtc_analytics_common_xeon
+FROM smtc_analytics_common_xeon_gst
 
 RUN  apt-get update && apt-get install -y python3-paho-mqtt python3-ply python3-requests python3-watchdog && rm -rf /var/lib/apt/lists/* && \
      rm -rf /home/video-analytics/models && rm -rf /home/video-analytics/pipelines && \

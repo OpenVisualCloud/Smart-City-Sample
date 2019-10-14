@@ -23,7 +23,6 @@ class GStreamerPipeline(Pipeline):
     GObject.threads_init()
     GVA_INFERENCE_ELEMENT_TYPES = ["GstGvaDetect",
                                    "GstGvaClassify",
-                                   "GstGvaIdentify",
                                    "GstGvaInference"]
 
 

@@ -1,4 +1,4 @@
-# smtc_analytics_common_vcac-a
+# smtc_analytics_common_vcac-a_gst
 ARG base_name=vcac-a-ubuntu1604-openvino-gst-va
 
 FROM ${base_name}:build AS gst-python-build
@@ -50,6 +50,7 @@ RUN pip3 install kazoo==2.2.1
 
 
 COPY ./app /home/video-analytics/app
+
 
 COPY ./platforms/VCAC-A/pipelines/gstreamer /home/video-analytics/pipelines
 

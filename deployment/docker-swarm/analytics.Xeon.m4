@@ -1,7 +1,7 @@
 
 ifelse(defn(`SCENARIO_NAME'),`traffic',`
     defn(`OFFICE_NAME')_analytics:
-        image: smtc_analytics_object_detection_xeon:latest
+        `image: smtc_analytics_object_detection_xeon_'defn(`FRAMEWORK'):latest
         environment:
             OFFICE: "defn(`OFFICE_LOCATION')"
             DBHOST: "http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')_db,db):9200"
@@ -21,7 +21,7 @@ ifelse(defn(`SCENARIO_NAME'),`traffic',`
 ')
 ifelse(defn(`SCENARIO_NAME'),`stadium',`
     defn(`OFFICE_NAME')_analytics_people:
-        image: smtc_analytics_people_counting_xeon:latest
+        `image: smtc_analytics_people_counting_xeon_'defn(`FRAMEWORK'):latest
         environment:
             OFFICE: "defn(`OFFICE_LOCATION')"
             DBHOST: "http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')_db,db):9200"
@@ -38,7 +38,7 @@ ifelse(defn(`SCENARIO_NAME'),`stadium',`
                     - defn(`OFFICE_ZONE')
 
     defn(`OFFICE_NAME')_analytics_crowd:
-        image: smtc_analytics_crowd_counting_xeon:latest
+        `image: smtc_analytics_crowd_counting_xeon_'defn(`FRAMEWORK'):latest
         environment:
             OFFICE: "defn(`OFFICE_LOCATION')"
             DBHOST: "http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')_db,db):9200"
