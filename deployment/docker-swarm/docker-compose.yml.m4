@@ -15,7 +15,7 @@ forloop(`OFFICEIDX',1,defn(`NOFFICES'),`
         include(camera.m4)
         include(office-db.m4)
         include(camera-discovery.m4)
-        include(health-check.m4)
+        include(alert.m4)
         include(where-indexing.m4)
         include(office-storage.m4)
         include(smart-upload.m4)

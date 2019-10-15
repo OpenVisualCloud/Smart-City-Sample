@@ -118,6 +118,7 @@ settings={
             _type: {
                 "properties": {
                     "office": { "type": "geo_point" },
+                    "location": { "type": "geo_point" },
                     "time": { "type": "date" },
                     "objects": { "type": "nested" },
                 },
@@ -135,8 +136,8 @@ settings={
             _type: {
                 "properties": {
                     "time": { "type": "date" },
-                    "office": { "type": "geo_point" },
                     "location": { "type": "geo_point" },
+                    "office": { "type": "geo_point" },
                 },
             },
         },
