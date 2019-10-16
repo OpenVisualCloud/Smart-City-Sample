@@ -4,6 +4,7 @@ FROM smtc_analytics_common_xeon
 RUN  apt-get update && apt-get install -y python3-ply python3-requests
 COPY --from=smtc_common /*.py /home/
 COPY *.py /home/
+COPY /models/ /home/video-analytics/pipelines/
 CMD ["/home/count-people.py"]
 
 ####
