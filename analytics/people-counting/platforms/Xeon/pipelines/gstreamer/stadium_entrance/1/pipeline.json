@@ -1,0 +1,54 @@
+{
+    "name": "object_detection",
+    "version": 1,
+    "type": "GStreamer",
+    "template": "urisourcebin uri=\"{source[uri]}\" ! concat name=c ! decodebin ! video/x-raw ! videoconvert name=\"videoconvert\" ! gvadetect model=\"{models[object_detection][1][network]}\" model-proc=\"{models[object_detection][1][proc]}\" name=\"detection\" ! gvametaconvert converter=json method=detection source=\"{source[uri]}\" name=\"jsonmetaconvert\" ! gvametapublish name=metapublish ! queue ! appsink name=appsink",
+    "description": "Object Detection Pipeline",
+    "parameters": {
+		"type" : "object",
+		"properties" : {
+			"every-nth-frame": {
+				"element":"detection",
+				"type": "integer",
+				"minimum": 0,
+				"maximum": 4294967295
+			},
+			"cpu-streams": {
+				"element":"detection",
+				"type": "string"
+			},
+			"n-threads": {
+				"element":"videoconvert",
+				"type": "integer"
+			},
+			"nireq": {
+				"element":"detection",
+				"type": "integer",
+				"minimum": 1,
+				"maximum": 64
+			},
+			"method":{
+				"element":"metapublish",
+				"type":"string",
+				"default":"mqtt"
+			},
+			"address":{
+				"element":"metapublish",
+				"type":"string"
+			},
+			"clientid":{
+				"element":"metapublish",
+				"type":"string"
+			},
+			"topic":{
+				"element":"metapublish",
+				"type":"string"
+			},
+			"timeout":{
+				"element":"metapublish",
+				"type":"integer",
+				"default": 1000
+			}
+		}
+    }
+}
