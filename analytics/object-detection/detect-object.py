@@ -9,6 +9,7 @@ from rec2db import Rec2DB
 from runva import RunVA
 import os
 import time
+import uuid
 
 office = list(map(float, os.environ["OFFICE"].split(",")))
 dbhost = os.environ["DBHOST"]
@@ -27,11 +28,19 @@ def connect(sensor, location, algorithm, uri):
         rec2db=Rec2DB(sensor)
         runva=RunVA()
 
-        topic="smtc_va_inferences_"+algorithm
-        with ThreadPoolExecutor(3) as e:
+        topic=str(uuid.uuid4())   # topic must be different as camera may reconnect
+        with ThreadPoolExecutor(2) as e:
             e.submit(mqtt2db.loop, topic)
             e.submit(rec2db.loop)
-            e.submit(runva.loop, sensor, location, uri, algorithm, topic)
+
+            # any VA exit indicates a camera disconnect
+            with ThreadPoolExecutor(1) as e1:
+                e1.submit(runva.loop, sensor, location, uri, algorithm, topic)
+
+            if not stop: 
+                mqtt2db.stop()
+                rec2db.stop()
+                raise Exception("VA exited. This should not happen.")
 
     except Exception as e:
         print("Exception: "+str(e), flush=True)

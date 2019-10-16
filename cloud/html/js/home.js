@@ -121,7 +121,7 @@ $("#pg-home").on(":initpage", function(e) {
                     }).on('popupopen', function () {
                         sensorctx.marker.unbindTooltip();
                     }).on('popupclose', function () {
-                        sensorctx.marker.bindTooltip(sensorctx.title);
+                        sensorctx.marker.bindTooltip(sensorctx.tooltip);
                     }).addTo(map);
 
                     preview.create(sensorctx, sensor, page, map);
