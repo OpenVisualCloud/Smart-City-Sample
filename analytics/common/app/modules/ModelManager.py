@@ -26,7 +26,7 @@ class ModelsDict(MutableMapping):
                 return "{{models[{}][{}][VA_DEVICE_DEFAULT][network]}}".format(self._model_name,self._model_version)
         if (key in self._dict["networks"]):
             return self._dict["networks"][key]
-        return self._dict[key]
+        return self._dict.get(key, None)
     def __iter__(self):
         return iter(self._dict)    
     def __len__(self):
@@ -62,7 +62,7 @@ class ModelManager:
         networks = {}
         default = ModelManager._get_model_network(path)
         if (default):
-            networks["default"] = ModelManager._get_model_network(path)
+            networks["default"] = default
         for network_type in os.listdir(path):
             network_type_path = os.path.join(path,network_type)
             if (os.path.isdir(network_type_path)):
@@ -72,11 +72,26 @@ class ModelManager:
         return networks
 
     @staticmethod
+    def get_network(model, network):
+        preferred_model=model.replace("VA_DEVICE_DEFAULT",network)
+        try:
+            preferred_model=string.Formatter().vformat(preferred_model, [], {'models':ModelManager.models})
+            return preferred_model
+        except Exception:
+            pass
+        return None
+        
+    @staticmethod
     def get_default_network_for_device(device,model):
-        model=model.replace("VA_DEVICE_DEFAULT",ModelManager.network_preference[device])
-        model=string.Formatter().vformat(model, [], {'models':ModelManager.models})
+        if "VA_DEVICE_DEFAULT" in model:
+            for preference in ModelManager.network_preference[device]:
+                ret = ModelManager.get_network(model,preference)
+                if ret:
+                    return ret
+                logger.info("Device preferred network {net} not found".format(net=preference))
+            model=model.replace("[VA_DEVICE_DEFAULT]","")
+            logger.error("Could not resolve any preferred network {net} for model {model}".format(net=ModelManager.network_preference[device],model=model))
         return model
-    
     
     @staticmethod
     def load_config(model_dir,network_preference):
@@ -87,6 +102,8 @@ class ModelManager:
             logger.warning("Models directory is mount point")
         models = {}
         ModelManager.network_preference.update(network_preference)
+        for key in ModelManager.network_preference:
+            ModelManager.network_preference[key] = ModelManager.network_preference[key].split(',')
         for model_name in os.listdir(model_dir):
             try:
                 model_path = os.path.join(model_dir,model_name)
@@ -117,7 +134,6 @@ class ModelManager:
                 logger.error("Error Loading Model {model_name} from: {model_dir}: {err}".format(err=error,model_name=model_name,model_dir=model_dir))
 
         ModelManager.models = models
-        
         logger.info("Completed Loading Models")
 
     @staticmethod

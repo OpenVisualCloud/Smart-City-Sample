@@ -1,0 +1,19 @@
+{
+    "name": "face_recognition",
+    "version": 1,
+    "type": "FFmpeg",
+    "template":"-i \"{source[uri]}\" -vf \"detect=model={models[face_detection_retail][1][network]}:model_proc=\"{models[face_detection_retail][1][proc]}\":interval=\"{parameters[every-nth-frame]}\",classify=model=\"{models[face_reidentification][1][network]}\":model_proc=\"{models[face_reidentification][1][proc]}\",identify=gallery=\"/home/video-analytics/gallery/face_gallery_FP32/gallery.json\"\"",
+    "description":"Face Recognition Pipeline",
+    "parameters": {
+        "type" : "object",
+        "properties" : {
+            "every-nth-frame": {
+                "element":"detection",
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 4294967295,
+                "default": 1
+            }
+        }
+    }
+}
