@@ -109,6 +109,36 @@
         "fovv": 68.0,
         "theta": 0.0,
         "simsn": "cams1o1c7"
+    },{
+        "address": "Cornell and Brookwood",
+        "location": {
+            "lat": 45.532718,
+            "lon": -122.938067
+        },
+        "algorithm": "object-detection",
+        "mnth": 75.0,
+        "alpha": 45.0,
+        "fovh": 90.0,
+        "fovv": 68.0,
+        "theta": 45.0,
+        "device": {
+            "SerialNumber": "071D3E467CCB"
+        }
+    },{
+        "address": "Cornell and Elan Young Parkway",
+        "location": {
+            "lat": 45.533671,
+            "lon": -122.930607
+        },
+        "algorithm": "object-detection",
+        "mnth": 75.0,
+        "alpha": 45.0,
+        "fovh": 90.0,
+        "fovv": 68.0,
+        "theta": 90.0,
+        "device": {
+            "SerialNumber": "AMC0468C3847D602CA"
+        }
     }]
 },{
     "scenario": "traffic",
