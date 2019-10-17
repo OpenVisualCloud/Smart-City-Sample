@@ -63,7 +63,7 @@ class RunVA(object):
             time.sleep(10)
 
         while not self._stop:
-            r=requests.get(vahost+"/seating_rate/2"+str(pid)+"/status", timeout=10)
+            r=requests.get(vahost+"/seating_rate/2/"+str(pid)+"/status", timeout=10)
             if r.status_code!=200: 
                 print("pipeline status: "+str(r.status_code), flush=True)
                 print(r.text, flush=True)

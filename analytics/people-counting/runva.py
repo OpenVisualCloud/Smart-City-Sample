@@ -17,6 +17,7 @@ class RunVA(object):
     def __init__(self):
         super(RunVA,self).__init__()
         # remove HTTP_PROXY
+        print("__init__")
         env=os.environ.copy()
         env.pop("http_proxy",None)
         env.pop("HTTP_PROXY",None)
@@ -54,6 +55,7 @@ class RunVA(object):
 
         while True:
             try:
+                print("requests.post: ", vahost+"/stadium_entrance/2")
                 r = requests.post(vahost+"/stadium_entrance/2", json=req, timeout=10)
                 if r.status_code==200: 
                     pid=int(r.text)
@@ -63,7 +65,8 @@ class RunVA(object):
             time.sleep(10)
 
         while not self._stop:
-            r=requests.get(vahost+"/stadium_entrance/2"+str(pid)+"/status", timeout=10)
+            print("requests.get: ", vahost+"/stadium_entrance/2/"+str(pid)+"/status")
+            r=requests.get(vahost+"/stadium_entrance/2/"+str(pid)+"/status", timeout=10)
             if r.status_code!=200: 
                 print("pipeline status: "+str(r.status_code), flush=True)
                 print(r.text, flush=True)
@@ -73,6 +76,7 @@ class RunVA(object):
             print(pinfo, flush=True)
 
             state = pinfo["state"]
+            print("state: ", state)
             if state == "COMPLETED" or state == "ABORTED" or state == "ERROR":
                 print("pineline ended with "+str(state),flush=True)
                 break

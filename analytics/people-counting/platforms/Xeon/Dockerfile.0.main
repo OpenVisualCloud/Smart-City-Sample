@@ -1,7 +1,7 @@
 # smtc_analytics_people_counting_xeon
 
 FROM smtc_analytics_common_xeon
-RUN  apt-get update && apt-get install -y python3-ply python3-requests python3-watchdog && rm -rf /var/lib/apt/lists/* && \
+RUN  apt-get update && apt-get install -y python3-paho-mqtt python3-ply python3-requests python3-watchdog && rm -rf /var/lib/apt/lists/* && \
      rm -rf /home/video-analytics/models && rm -rf /home/video-analytics/pipelines && \
      sed -i 's/DEBUG/WARNING/' /home/video-analytics/app/common/settings.py
 
