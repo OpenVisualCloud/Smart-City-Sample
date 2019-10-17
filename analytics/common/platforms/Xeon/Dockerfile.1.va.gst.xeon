@@ -1,4 +1,4 @@
-# smtc_analytics_common_xeon
+# smtc_analytics_common_xeon_gst
 ARG base_name=xeon-ubuntu1804-dldt-gst-va
 
 FROM ${base_name}:build AS gst-python-build
@@ -46,6 +46,7 @@ COPY ./app/server/requirements.txt /
 RUN pip3 install  --no-cache-dir -r /requirements.txt
 
 COPY ./app /home/video-analytics/app
+
 
 COPY ./platforms/Xeon/pipelines/gstreamer /home/video-analytics/pipelines
 

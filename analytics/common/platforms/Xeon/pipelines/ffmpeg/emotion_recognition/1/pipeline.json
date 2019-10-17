@@ -1,0 +1,19 @@
+{
+    "name": "emotion_recognition",
+    "version": 1,
+    "type": "FFmpeg",
+    "template":"-i \"{source[uri]}\" -vf \"detect=model={models[face_detection_retail][1][network]}:model_proc=\"{models[face_detection_retail][1][proc]}\":interval=\"{parameters[every-nth-frame]}\",classify=model=\"{models[emotion_recognition][1][network]}\":model_proc=\"{models[emotion_recognition][1][proc]}\"\"",
+    "description":"Emotion Recognition",
+    "parameters": {
+        "type" : "object",
+        "properties" : {
+            "every-nth-frame": {
+                "element":"detection",
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 4294967295,
+                "default": 1
+            }
+        }
+    }
+}

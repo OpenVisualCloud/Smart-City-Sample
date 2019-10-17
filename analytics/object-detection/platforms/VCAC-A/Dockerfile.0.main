@@ -1,6 +1,6 @@
-# smtc_analytics_object_detection_vcac-a
+# smtc_analytics_object_detection_vcac-a_gst
 
-FROM smtc_analytics_common_vcac-a
+FROM smtc_analytics_common_vcac-a_gst
 
 RUN  apt-get update && apt-get install -y mosquitto mosquitto-clients python3-ply python3-requests python3-watchdog && pip3 install paho-mqtt && rm -rf /var/lib/apt/lists/* && \
      rm -rf /home/video-analytics/models /home/video-analytics/pipelines && \

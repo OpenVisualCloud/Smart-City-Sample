@@ -1,0 +1,31 @@
+# smtc_analytics_common_xeon_ffmpeg
+
+From xeon-ubuntu1804-dldt-ffmpeg-va
+
+# Fetch python3 and Install python3
+RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y -q --no-install-recommends libgirepository-1.0-1 libsoup2.4.1 python3-gi python3-kafka python3-kazoo python3-requests python3-tornado python3-pip python3-setuptools python3-wheel &&  \
+    rm -rf /var/lib/apt/lists/*;
+    
+COPY ./app/server/requirements.txt /
+RUN pip3 install  --no-cache-dir -r /requirements.txt
+
+COPY ./app /home/video-analytics/app
+
+
+COPY ./platforms/Xeon/pipelines/ffmpeg /home/video-analytics/pipelines
+
+
+
+
+
+
+
+####
+ARG  USER
+ARG  GROUP
+ARG  UID
+ARG  GID
+
+
+
+####
