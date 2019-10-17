@@ -108,5 +108,7 @@ where ```simsn``` identifies simulated cameras. Replace any of the sensor defini
 
 #### (3) Enabling Discovering Service
 
-Enable the ```ipcamera-discovery``` service in the deployment scripts ([camera-discovery.m4](../deployment/docker-swarm/camera-discovery.m4) for docker compose or docker swarm and [camera-discovery.yaml.m4](../deployment/kubernetes/camera-discovery.yaml.m4) for kubernetes) by replacing ```replicas: 0``` with ```replicas: 1```. Then restart the sample, your IP cameras should show up in the sample UI.      
+Enable the ```ipcamera-discovery``` service in the deployment scripts ([camera-discovery.m4](../deployment/docker-swarm/camera-discovery.m4) for docker compose or docker swarm and [camera-discovery.yaml.m4](../deployment/kubernetes/camera-discovery.yaml.m4) for kubernetes) by replacing ```replicas: 0``` with ```replicas: 1```.   
+
+Restart the sample. Your IP camera(s) should show up in the sample UI.      
 
