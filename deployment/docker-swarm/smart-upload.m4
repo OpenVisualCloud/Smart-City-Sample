@@ -22,8 +22,6 @@ ifelse(defn(`PLATFORM'),`VCAC-A',`dnl
             - default_net
 ')dnl
         deploy:
-            restart_policy:
-                condition: none
             placement:
                 constraints:
                     - defn(`OFFICE_ZONE')
