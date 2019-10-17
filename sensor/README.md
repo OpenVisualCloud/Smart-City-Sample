@@ -1,5 +1,5 @@
 
-The sample scans the specified IP block for any IP cameras. If found, they will be registered to the database and be invoked by analytic instances for streaming.
+The sample scans the specified IP block for any cameras. If found, they will be registered to the database and be invoked by analytic instances for streaming.
 
 ### Sensor Simulation
 
@@ -13,7 +13,9 @@ ffmpeg -i <source>.mp4 -c:v libx264 -profile:v baseline -x264-params keyint=30:b
 
 The sample implements the ONVIF protocol to discover IP cameras on the specified IP range. Do the following to add IP cameras to the sample:   
 
-- **Camera IDs**: To uniquely identify a camera, we need to define a camera ID. This is usually the camera serial number (1st choice) or the MAC address of the network interface (2nd choice if serial number is missing from probing). Scan the camera IP range as follows:
+#### (1) Finding Camera IDs
+
+To uniquely identify a camera, we need to define a camera ID. This is usually the camera serial number (1st choice) or the MAC address of the network interface (2nd choice if serial number is missing from probing). Scan the camera IP range as follows:
 
 ```
 PORT_SCAN='-p80-65535 192.168.1.0/24' make discover
@@ -42,7 +44,9 @@ where ```PORT_SCAN``` specifies the ```nmap``` command line arguments. The camer
 
 Note that the sample uses a predefined username and password for camera authentication. See [```probe_camera_info```](../sensor/discovery/discover.py) for details.  
 
-- **Provisioning**: Provisioning is a process of associating a set of application-specific parameters to a camera, for example, the GPS location, field of view, direction and positioning transformation. Developing provisioning tools is outside the sample scope. As a workaround, the sample stores the provisioning information at [sensor-info.json](../maintenance/db-init/sensor-info.json) and uses it to initialize the database.   
+#### (2) Provisioning Cameras
+
+Provisioning is a process of associating a set of application-specific parameters to a camera, for example, the GPS location, field of view, direction and positioning transformation. Developing provisioning tools is outside the sample scope. As a workaround, the sample stores the provisioning information at [sensor-info.json](../maintenance/db-init/sensor-info.json) and uses it to initialize the database.   
 
 The provisioning information of the traffic scenario is as follows:
 ```
@@ -102,5 +106,7 @@ where ```simsn``` identifies simulated cameras. Replace any of the sensor defini
 ...
 ```
 
-- **Deployment**: Enable the ```ipcamera-discovery``` service in the deployment scripts ([camera-discovery.m4](../deployment/docker-swarm/camera-discovery.m4) for docker compose or docker swarm and [camera-discovery.yaml.m4](../deployment/kubernetes/camera-discovery.yaml.m4) for kubernetes) by replacing ```replacas: 0``` with ```replicas: 1```. Then restart the sample, your IP cameras should show up in the sample UI.      
+#### (3) Enabling Discovering Service
+
+Enable the ```ipcamera-discovery``` service in the deployment scripts ([camera-discovery.m4](../deployment/docker-swarm/camera-discovery.m4) for docker compose or docker swarm and [camera-discovery.yaml.m4](../deployment/kubernetes/camera-discovery.yaml.m4) for kubernetes) by replacing ```replacas: 0``` with ```replicas: 1```. Then restart the sample, your IP cameras should show up in the sample UI.      
 
