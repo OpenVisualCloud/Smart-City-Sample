@@ -19,9 +19,10 @@ The sample implements the ONVIF protocol to discover IP cameras on the specified
 PORT_SCAN='-p80-65535 192.168.1.0/24' make discover
 ```
 
-where ```PORT_SCAN``` specifies the ```nmap``` commandline arguments. The camera network is ```192.168.1.0/24``` and the port range is ```80-65535```. The output is similar to the following lines:    
+where ```PORT_SCAN``` specifies the ```nmap``` command line arguments. The camera network is ```192.168.1.0/24``` and the port range is ```80-65535```. The output is similar to the following lines:    
 
 ```
+...
   "device": {
     "Manufacturer": "LOREX",
     "Model": "LNB8973B",
@@ -36,11 +37,12 @@ where ```PORT_SCAN``` specifies the ```nmap``` commandline arguments. The camera
       "MTU": 1500
     }
   ],
+...
 ```
 
 Note that the sample uses a predefined username and password for camera authentication. See [```probe_camera_info```](../sensor/discovery/discover.py) for details.  
 
-- **Provision**: Provisioning is a process of associating a set of application-specific parameters to a camera, for example, the GPS location, field of view, direction and positioning transformation. Developing provisioning tools is outside the sample scope. As a workaround, the sample stores the provisioning information at [sensor-info.json](../maintenance/db-init/sensor-info.json) and uses it to initialize the database.   
+- **Provisioning**: Provisioning is a process of associating a set of application-specific parameters to a camera, for example, the GPS location, field of view, direction and positioning transformation. Developing provisioning tools is outside the sample scope. As a workaround, the sample stores the provisioning information at [sensor-info.json](../maintenance/db-init/sensor-info.json) and uses it to initialize the database.   
 
 The provisioning information of the traffic scenario is as follows:
 ```
@@ -75,11 +77,13 @@ The provisioning information for the ```stadium``` scenario is as follows:
             "polygon": [[0,0],[1023,0],[1023,1023],[0,1023],[0,0]]
         }],
         "simsn": "cams2o1w7"
+...
 ```
 
 where ```simsn``` identifies simulated cameras. Replace any of the sensor definitions with the discovered camera ID, for example,   
 
 ```
+...
         "address": "South East Wing",
         "location": {
             "lat": 37.38369,
@@ -95,7 +99,8 @@ where ```simsn``` identifies simulated cameras. Replace any of the sensor defini
         "device": { 
             "SerialNumber": "ND021808019141"
         }
+...
 ```
 
-- **Deployment**: Enable the ipcamera-discovery service in the deployment scripts ([camera-discovery.m4](../deployment/docker-swarm/camera-discovery.m4) for docker compose or docker swarm and [camera-discovery.yaml.m4](../deployment/kubernetes/camera-discovery.yaml.m4) for kubernetes) by replacing ```replacas: 0``` to ```replicas: 1```. Then restart the sample, your IP cameras should show up in the sample UI.      
+- **Deployment**: Enable the ```ipcamera-discovery``` service in the deployment scripts ([camera-discovery.m4](../deployment/docker-swarm/camera-discovery.m4) for docker compose or docker swarm and [camera-discovery.yaml.m4](../deployment/kubernetes/camera-discovery.yaml.m4) for kubernetes) by replacing ```replacas: 0``` with ```replicas: 1```. Then restart the sample, your IP cameras should show up in the sample UI.      
 
