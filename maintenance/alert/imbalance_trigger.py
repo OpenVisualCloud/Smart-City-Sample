@@ -34,7 +34,7 @@ class ImbalanceTrigger(Trigger):
    
         if nsensors["total"]>nsensors["streaming"]+nsensors["idle"]:
             info.append({
-                "warning": [{ 
+                "fatal": [{ 
                     "message": "Check sensor: #disconnected="+str(nsensors["total"]-nsensors["streaming"]-nsensors["idle"]),
                     "args": nsensors,
                 }]
