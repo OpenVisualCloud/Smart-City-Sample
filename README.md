@@ -79,23 +79,11 @@ Launch your browser and point to `https://<host-ip>`. Note that if you see a bro
 
 <IMG src="doc/screenshot.gif" height="270px"></IMG>    
   
-### Camera Simulation:
-
-The sample implemented camera simulation to facilitate evalaution. Camera simulation requires that you have a dataset to simulate camera feeds. The build script includes a sample clip (to be downloaded after accepting the license terms.)    
-
-If you plan to use your own dataset, put the files under [sensor/simulation](sensor/simulation). The dataset must be a set of MP4 files, encoded with H.264 (configuration: baseline, closed-GOP and no-B-frames) and AAC.    
-
-If unsure, it is recommended that you transcode your dataset with FFmpeg:   
-
-```
-ffmpeg -i <source>.mp4 -c:v libx264 -profile:v baseline -x264-params keyint=30:bframes=0 -c:a aac -ss 0 <target>.mp4
-```
-
 ### See Also
 
 - [CMake Options](doc/cmake.md)          
-- [Search Capabilities](doc/search.md)       
-- [Utility Scripts](doc/script.md)       
 - [Docker Swarm Setup](deployment/docker-swarm/README.md)      
 - [Kubernetes Setup](deployment/kubernetes/README.md)
-- [Camera Discovery](sensor/README.md)  
+- [Sensor Simulation and Discovery](sensor/README.md)  
+- [Search Capabilities](doc/search.md)       
+- [Utility Scripts](doc/script.md)       
