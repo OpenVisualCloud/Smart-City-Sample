@@ -9,8 +9,6 @@ from rec2db import Rec2DB
 from runva import RunVA
 import os
 import time
-import datetime
-import random
 import uuid
 
 office = list(map(float, os.environ["OFFICE"].split(",")))
