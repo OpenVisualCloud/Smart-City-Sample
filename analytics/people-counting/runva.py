@@ -81,7 +81,7 @@ class RunVA(object):
                 print("pineline ended with "+str(state),flush=True)
                 break
 
-            if state == "RUNNING" or state == "COMPLETED":
+            if state == "RUNNING":
                 if "avg_pipeline_latency" not in pinfo: pinfo["avg_pipeline_latency"]=0
                 self._db.update(algorithm, {
                     "sensor": sensor,
@@ -91,5 +91,4 @@ class RunVA(object):
             time.sleep(10)
 
         print("exiting va pipeline",flush=True)
-        self._va.kill()
-        self._va.wait()
+        self._va.terminate()
