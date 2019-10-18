@@ -22,37 +22,30 @@ rec2db=None
 runva=None
 stop=False
 
-def connect(sensor, algorithm, uri):
-    db=DBIngest(host=dbhost, index="algorithms",office=office)
-    db.update(algorithm["_id"], {
-        "sensor": sensor["_id"],
-    })
-    db=DBIngest(host=dbhost, index="analytics", office=office)
-    while not stop:
-        counts=[]
-        for i in range(60):
-            zonecount={}
-            nseats=0
-            for zonemap in sensor["_source"]["zonemap"]:
-                count=int(random.random()*1000)
-                zonecount["zone"+str(zonemap["zone"])]=count
-                if count>nseats: nseats=count
+def connect(sensor, location, algorithm, uri):
+    global mqtt2db, rec2db, runva
 
-            counts.append({
-                "time": int(time.mktime(datetime.datetime.now().timetuple())*1000+i*33.333),
-                "office": {
-                    "lat": office[0],
-                    "lon": office[1],
-                },
-                "sensor": sensor["_id"],
-                "location": sensor["_source"]["location"],
-                "algorithm": algorithm["_id"],
-                "count": zonecount,
-                "nseats": nseats,
-            })
+    try:
+        mqtt2db=MQTT2DB(algorithm)  # this waits for mqtt
+        rec2db=Rec2DB(sensor)
+        runva=RunVA()
 
-        db.ingest_bulk(counts)
-        time.sleep(2)
+        topic=str(uuid.uuid4())   # topic must be different as camera may reconnect
+        with ThreadPoolExecutor(2) as e:
+            e.submit(mqtt2db.loop, topic)
+            e.submit(rec2db.loop)
+
+            # any VA exit indicates a camera disconnect
+            with ThreadPoolExecutor(1) as e1:
+                e1.submit(runva.loop, sensor, location, uri, algorithm, topic)
+
+            if not stop:
+                mqtt2db.stop()
+                rec2db.stop()
+                raise Exception("VA exited. This should not happen.")
+
+    except Exception as e:
+        print("Exception: "+str(e), flush=True)
 
 def quit_service(signum, sigframe):
     global stop
@@ -93,7 +86,7 @@ while not stop:
 
                 # stream from the sensor
                 print("Connected to "+sensor["_id"]+"...",flush=True)
-                connect(sensor,algorithm,sensor["_source"]["url"])
+                connect(sensor["_id"],sensor["_source"]["location"],algorithm,sensor["_source"]["url"])
 
                 # if exit, there is somehting wrong
                 r=dbs.update(sensor["_id"],{"status":"disconnected"})
