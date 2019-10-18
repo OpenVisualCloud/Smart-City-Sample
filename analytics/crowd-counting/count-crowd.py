@@ -4,8 +4,9 @@ from db_ingest import DBIngest
 from db_query import DBQuery
 from signal import signal, SIGTERM
 from concurrent.futures import ThreadPoolExecutor
+from mqtt2db import MQTT2DB
 from rec2db import Rec2DB
-#from runva import RunVA
+from runva import RunVA
 import os
 import time
 import datetime
@@ -16,8 +17,9 @@ office = list(map(float, os.environ["OFFICE"].split(",")))
 dbhost = os.environ["DBHOST"]
 every_nth_frame = int(os.environ["EVERY_NTH_FRAME"])
 
+mqtt2db=None
 rec2db=None
-#runva=None
+runva=None
 stop=False
 
 def connect(sensor, algorithm, uri):
@@ -55,8 +57,9 @@ def connect(sensor, algorithm, uri):
 def quit_service(signum, sigframe):
     global stop
     stop=True
+    if mqtt2db: mqtt2db.stop()
     if rec2db: rec2db.stop()
-    #if runva: runva.stop()
+    if runva: runva.stop()
 
 signal(SIGTERM, quit_service)
 dba=DBIngest(host=dbhost, index="algorithms", office=office)

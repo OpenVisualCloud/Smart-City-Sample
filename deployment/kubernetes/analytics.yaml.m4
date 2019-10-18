@@ -82,6 +82,8 @@ spec:
               value: "defn(`OFFICE_LOCATION')"
             - name: DBHOST
               value: "http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')-db,db)-service:9200"
+            - name: MQTTHOST
+              value: "defn(`OFFICE_NAME')-mqtt-service"
             - name: STHOST
               value: "http://defn(`OFFICE_NAME')-storage-service:8080/api/upload"
             - name: EVERY_NTH_FRAME
@@ -132,6 +134,8 @@ spec:
               value: "defn(`OFFICE_LOCATION')"
             - name: DBHOST
               value: "http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')-db,db)-service:9200"
+            - name: MQTTHOST
+              value: "defn(`OFFICE_NAME')-mqtt-service"
             - name: STHOST
               value: "http://defn(`OFFICE_NAME')-storage-service:8080/api/upload"
             - name: EVERY_NTH_FRAME
