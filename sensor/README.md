@@ -19,8 +19,9 @@ The sample implements the ONVIF protocol to discover IP cameras on the specified
 
 #### (1) Finding Camera IDs
 
-To uniquely identify a camera, we need to define a camera ID. This is usually the camera serial number (1st choice) or the MAC address of the network interface (2nd choice if serial number is missing from probing). Scan the camera IP range as follows:
+To uniquely identify a camera, we need to define a camera ID. This is usually the camera serial number (1st choice) or the MAC address of the network interface (2nd choice if serial number is missing from probing).  
 
+Scan the camera IP range as follows:
 ```
 PORT_SCAN='-p80-65535 192.168.1.0/24' make discover
 ```
@@ -52,7 +53,7 @@ Note that the sample uses a predefined username and password for camera authenti
 
 Provisioning is a process of associating a set of application-specific parameters to a camera, for example, the GPS location, field of view, direction and positioning transformation. Developing provisioning tools is outside the sample scope. As a workaround, the sample stores the provisioning information at [sensor-info.json](../maintenance/db-init/sensor-info.json) and uses it to initialize the database.   
 
-The provisioning information of the traffic scenario is as follows:
+The provisioning information is scenario specific. The ```traffic``` scenario parameters are as follows:
 ```
 ...
         "address": "Tendem Way",
@@ -69,7 +70,7 @@ The provisioning information of the traffic scenario is as follows:
         "simsn": "cams1o1c7"
 ...
 ```
-The provisioning information for the ```stadium``` scenario is as follows:
+The ```stadium``` scenario parameters are as follows:
 ```
 ...
         "address": "South East Wing",
@@ -88,8 +89,7 @@ The provisioning information for the ```stadium``` scenario is as follows:
 ...
 ```
 
-where ```simsn``` identifies simulated cameras. Replace any of the sensor definitions with the discovered camera ID, for example,   
-
+In above provisioning parameters, the ```simsn``` fields identify simulated cameras. Replace those with the discovered camera IDs. For example, the following parameters associate the ```South East Wing``` or ```zone 7``` with the IP camera, whose serial number is ```ND021808019141```.   
 ```
 ...
         "address": "South East Wing",
