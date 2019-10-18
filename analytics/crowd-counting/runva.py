@@ -59,7 +59,7 @@ class RunVA(object):
                     pid=int(r.text)
                     break
             except Exception as e:
-                print("Exception: "+str(e), flush=True)
+                print("Exception in runva requests.post: "+str(e), flush=True)
             time.sleep(10)
 
         while not self._stop:
