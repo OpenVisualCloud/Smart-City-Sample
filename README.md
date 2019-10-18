@@ -98,3 +98,4 @@ ffmpeg -i <source>.mp4 -c:v libx264 -profile:v baseline -x264-params keyint=30:b
 - [Utility Scripts](doc/script.md)       
 - [Docker Swarm Setup](deployment/docker-swarm/README.md)      
 - [Kubernetes Setup](deployment/kubernetes/README.md)
+- [Camera Discovery](sensor/README.md)  
