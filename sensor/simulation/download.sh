@@ -1,7 +1,11 @@
 #!/bin/bash -e
 
 DIR=$(dirname $(readlink -f "$0"))
-CLIPS=(https://www.pexels.com/video/1388383/download,1388383_traffic.mp4,https://www.pexels.com/photo-license)
+CLIPS=(https://www.pexels.com/video/1388383/download,1388383_traffic.mp4,https://www.pexels.com/photo-license, 
+       https://www.pexels.com/video/853889/download,853889_people.mp4,https://www.pexels.com/photo-license,
+       https://www.pexels.com/video/855564/download,85564_people.mp4,https://www.pexels.com/photo-license,
+       https://www.pexels.com/video/1677252/download,1677252_crowd.mp4,https://www.pexels.com/photo-license,
+       https://www.pexels.com/video/992599/download,992599_people.mp4,https://www.pexels.com/photo-license)
 
 for clip in "${CLIPS[@]}"; do
     url=$(echo "$clip" | cut -f1 -d',')
@@ -10,8 +14,10 @@ for clip in "${CLIPS[@]}"; do
     license=$(echo "$clip" | cut -f3 -d',')
 
     if test ! -f "$DIR/$clip_mp4"; then
-        printf "\n\n\nThe Smart City sample requires you to have a dataset to simulate camera, please accept downloading dataset for camera simulation:\n\nDataset: $url\nLicense: $license\n\nThe terms and conditions of the data set license apply. Intel does not grant any rights to the data files.\n\n\nPlease type \"accept\" or anything else to skip the download.\n"
-        read reply
+        if test "$reply" = ""; then
+            printf "\n\n\nThe Smart City sample requires you to have a dataset to simulate camera, please accept downloading dataset for camera simulation:\n\nDataset: $url\nLicense: $license\n\nThe terms and conditions of the data set license apply. Intel does not grant any rights to the data files.\n\n\nPlease type \"accept\" or anything else to skip the download.\n"
+            read reply
+        fi
         if test "$reply" = "accept"; then
             echo "Downloading..."
             tmp="tmp_$clip_name"
