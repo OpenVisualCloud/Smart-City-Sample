@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 DIR=$(dirname $(readlink -f "$0"))
-CLIPS=(https://www.pexels.com/video/1388383/download,1388383.mp4,https://www.pexels.com/photo-license)
+CLIPS=(https://www.pexels.com/video/1388383/download,1388383_traffic.mp4,https://www.pexels.com/photo-license)
 
 for clip in "${CLIPS[@]}"; do
     url=$(echo "$clip" | cut -f1 -d',')
