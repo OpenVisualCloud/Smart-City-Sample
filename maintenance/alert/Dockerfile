@@ -1,8 +1,5 @@
 
-FROM centos:7.6.1810
-
-RUN yum install -y epel-release && yum install -y python36-requests python36-ply python36-psutil && rm -rf /var/cache/yum/*
-COPY --from=smtc_common /*.py /home/
+FROM smtc_common
 COPY *.py /home/
 CMD  ["/home/alert.py"]
 

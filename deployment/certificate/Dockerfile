@@ -1,6 +1,6 @@
 
 FROM centos:7.6.1810
-RUN yum -y install openssl && rm -rf /var/cache/yum/*
+RUN  yum install -y -q openssl && rm -rf /var/cache/yum/*
 
 ####
 ARG  USER
