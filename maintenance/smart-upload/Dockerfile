@@ -1,9 +1,8 @@
 
-FROM openvisualcloud/xeon-centos76-media-ffmpeg:latest
+FROM openvisualcloud/xeon-centos76-media-ffmpeg:19.10
+RUN  yum install -y -q epel-release && yum install -y -q python36-requests python36-ply python36-psutil && rm -rf /var/cache/yum/* curl
 
-RUN yum -y install epel-release && yum -y install python36-requests python36-ply python36-psutil && rm -rf /var/cache/yum/* curl
-
-COPY --from=smtc_common /*.py /home/
+COPY --from=smtc_common /home/*.py /home/
 COPY    *.py /home/
 CMD     ["/home/smart-upload.py"]
 
