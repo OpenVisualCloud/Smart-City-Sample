@@ -2,11 +2,11 @@
 
 FROM smtc_analytics_common_vcac-a_gst
 
-RUN  apt-get update && apt-get install -y mosquitto mosquitto-clients python3-ply python3-requests python3-watchdog && pip3 install paho-mqtt && rm -rf /var/lib/apt/lists/* && \
+RUN  apt-get update -qq && apt-get install -qq mosquitto mosquitto-clients python3-ply python3-requests python3-watchdog && pip3 install paho-mqtt && rm -rf /var/lib/apt/lists/* && \
      rm -rf /home/video-analytics/models /home/video-analytics/pipelines && \
      sed -i 's/DEBUG/WARNING/' /home/video-analytics/app/common/settings.py
 
-COPY --from=smtc_common /*.py /home/
+COPY --from=smtc_common /home/*.py /home/
 COPY *.py /home/
 COPY models /home/video-analytics/models
 COPY platforms/VCAC-A/pipelines/gstreamer /home/video-analytics/pipelines
