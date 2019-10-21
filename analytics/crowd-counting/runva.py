@@ -54,16 +54,16 @@ class RunVA(object):
 
         while True:
             try:
-                r = requests.post(vahost+"/seating_rate/2", json=req, timeout=10)
+                r = requests.post(vahost+"/crowd_counting/2", json=req, timeout=10)
                 if r.status_code==200: 
                     pid=int(r.text)
                     break
             except Exception as e:
-                print("Exception: "+str(e), flush=True)
+                print("Exception in runva requests.post: "+str(e), flush=True)
             time.sleep(10)
 
         while not self._stop:
-            r=requests.get(vahost+"/seating_rate/2/"+str(pid)+"/status", timeout=10)
+            r=requests.get(vahost+"/crowd_counting/2/"+str(pid)+"/status", timeout=10)
             if r.status_code!=200: 
                 print("pipeline status: "+str(r.status_code), flush=True)
                 print(r.text, flush=True)

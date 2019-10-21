@@ -53,8 +53,14 @@ forloop(`STREAMIDX',1,defn(`CAMERA_PORT_STEP'),`dnl
               protocol: UDP
 ')')dnl
           env:
+ifelse(defn(`SCENARIO_NAME'),`traffic',`dnl
             - name: FILES
-              value: ".mp4$$"
+              value: "traffic.mp4$$"
+')dnl
+ifelse(defn(`SCENARIO_NAME'),`stadium',`dnl
+            - name: FILES
+              value: "people.mp4$$"
+')dnl
             - name: `NCAMERAS'
               value: "defn(`NCAMERAS')"
             - name: RTSP_PORT
@@ -132,7 +138,7 @@ forloop(`STREAMIDX',1,defn(`CAMERA_PORT_STEP'),`dnl
 ')')dnl
           env:
             - name: FILES
-              value: ".mp4$$"
+              value: "crowd.mp4$$"
             - name: `NCAMERAS'
               value: "defn(`NCAMERAS2')"
             - name: RTSP_PORT

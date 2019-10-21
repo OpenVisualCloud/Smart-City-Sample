@@ -24,7 +24,7 @@ class Handler(FileSystemEventHandler):
             try:
                 self._process_file(self._last_file)
             except Exception as e:
-                print("Exception: "+str(e), flush=True)
+                print("Exception in rec2db on_created: "+str(e), flush=True)
         self._last_file = event.src_path
 
     def _process_file(self, filename):

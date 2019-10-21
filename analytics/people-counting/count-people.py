@@ -9,8 +9,6 @@ from rec2db import Rec2DB
 from runva import RunVA
 import os
 import time
-import datetime
-import random
 import uuid
 
 office = list(map(float, os.environ["OFFICE"].split(",")))
@@ -45,7 +43,7 @@ def connect(sensor, location, algorithm, uri):
                 raise Exception("VA exited. This should not happen.")
 
     except Exception as e:
-        print("Exception: "+str(e), flush=True)
+        print("Exception in connect: "+str(e), flush=True)
 
 def quit_service(signum, sigframe):
     global stop
@@ -69,10 +67,10 @@ while not stop:
             },
             "status": "processing",
             "skip": every_nth_frame,
-        })
+        })["_id"]
         break
     except Exception as e:
-        print("Exception: "+str(e), flush=True)
+        print("Exception in count-people register algorithm: "+str(e), flush=True)
         time.sleep(10)
 
 # compete for a sensor connection
@@ -93,13 +91,13 @@ while not stop:
                 if stop: break
 
             except Exception as e:
-                print("Exception: "+str(e), flush=True)
+                print("Exception in count-people search sensor: "+str(e), flush=True)
 
     except Exception as e:
-        print("Exception: "+str(e), flush=True)
+        print("Exception in count-people sensor connection: "+str(e), flush=True)
 
     time.sleep(10)
 
 # delete the algorithm instance
-dba.delete(algorithm["_id"])
+dba.delete(algorithm)
 
