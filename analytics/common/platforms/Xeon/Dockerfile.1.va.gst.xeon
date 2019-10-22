@@ -1,5 +1,5 @@
 # smtc_analytics_common_xeon_gst
-ARG base_name=openvisualcloud/xeon-ubuntu1804-analytics-gst:19.10
+ARG base_name=openvisualcloud/xeon-ubuntu1804-analytics-gst:19.10.1
 
 FROM ${base_name}
 
