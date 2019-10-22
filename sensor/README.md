@@ -5,7 +5,7 @@ The Smart City sample scans the specified IP block for any cameras. If found, th
 
 The sample implemented camera simulation to facilitate evalaution. Camera simulation requires that you have a dataset to simulate camera feeds. The build script includes a sample clip (to be downloaded after accepting the license terms.)
 
-If you plan to use your own dataset, put the files under the [simulation](simulation) directory. The dataset must be a set of MP4 files, encoded with H.264 (configuration: baseline, closed-GOP and no-B-frames) and AAC.
+If you plan to use your own dataset, put the files under the [simulation](simulation) directory. Rename them to follow the convention of ```<dataset-name>_<scenario>.mp4```. The dataset must be a set of MP4 files, encoded with H.264 (configuration: baseline, closed-GOP and no-B-frames) and AAC.   
 
 If unsure, it is recommended that you transcode your dataset with FFmpeg:
 

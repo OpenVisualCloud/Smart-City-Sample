@@ -20,7 +20,7 @@ spec:
       enableServiceLinks: false
       containers:
         - name: defn(`OFFICE_NAME')-analytics
-          image: smtc_analytics_object_detection_xeon:latest
+          image: `smtc_analytics_object_detection_xeon_'defn(`FRAMEWORK'):latest
           imagePullPolicy: IfNotPresent
           env:
             - name: OFFICE
@@ -75,7 +75,7 @@ spec:
       enableServiceLinks: false
       containers:
         - name: defn(`OFFICE_NAME')-analytics-people
-          image: smtc_analytics_people_counting_xeon:latest
+          image: `smtc_analytics_people_counting_xeon_'defn(`FRAMEWORK'):latest
           imagePullPolicy: IfNotPresent
           env:
             - name: OFFICE
@@ -127,7 +127,7 @@ spec:
       enableServiceLinks: false
       containers:
         - name: defn(`OFFICE_NAME')-analytics-crowd
-          image: smtc_analytics_crowd_counting_xeon:latest
+          image: `smtc_analytics_crowd_counting_xeon_'defn(`FRAMEWORK'):latest
           imagePullPolicy: IfNotPresent
           env:
             - name: OFFICE
