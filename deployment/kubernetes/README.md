@@ -5,7 +5,7 @@ The Smart City sample can be deployed with Kubernetes.
 
 1. Follow the [instructions](https://kubernetes.io/docs/setup) to setup your Kubernetes cluster. If you run into issues with Kubernetes/1.16 and Flannel/master, this [link](https://stackoverflow.com/questions/58024643/kubernetes-master-node-not-ready-state) might help.
 
-2. Setup password-less acess from the Kubernetes controller to each worker node (required by ```make update```):   
+2. Setup password-less access from the Kubernetes controller to each worker node (required by ```make update```):   
 
 ```
 ssh-keygen

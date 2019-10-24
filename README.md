@@ -52,26 +52,31 @@ See also how to customize the building process with [cmake options](doc/cmake.md
 
 ### Start/stop services:
 
-Use the following commands to start/stop services via docker swarm:    
-```bash
-(1) make start_docker_swarm      
-(2) make stop_docker_swarm      
-```
-See also how to setup [docker swarm](deployment/docker-swarm/README.md).    
-
 Use the following commands to start/stop services via docker-compose:        
+
 ```bash
 (1) make start_docker_compose      
 (2) make stop_docker_compose      
 ```
 
+Use the following commands to start/stop services via docker swarm:    
+
+```bash
+(1) make update
+(2) make start_docker_swarm      
+(3) make stop_docker_swarm      
+```
+
+See also how to setup [docker swarm](deployment/docker-swarm/README.md).    
+
 Use the following commands to start/stop Kubernetes services:
 ```
 (1) make update
 (2) make start_kubernetes
-(3) make expose_service
-(4) make stop_kubernetes
+(3) make stop_kubernetes
 ```
+
+See also how to setup [Kubernetes](deployment/kubernetes/README.md).    
 
 ### Launch browser:
 
@@ -81,7 +86,7 @@ Launch your browser and point to `https://<host-ip>`. Note that if you see a bro
   
 ### See Also
 
-- [CMake Options](doc/cmake.md)          
+- [Configuration Options](doc/cmake.md)          
 - [Docker Swarm Setup](deployment/docker-swarm/README.md)      
 - [Kubernetes Setup](deployment/kubernetes/README.md)
 - [Sensor Simulation and Discovery](sensor/README.md)  
