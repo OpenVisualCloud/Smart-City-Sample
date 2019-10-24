@@ -89,6 +89,7 @@ Launch your browser and point to `https://<host-ip>`. Note that if you see a bro
 - [Configuration Options](doc/cmake.md)          
 - [Docker Swarm Setup](deployment/docker-swarm/README.md)      
 - [Kubernetes Setup](deployment/kubernetes/README.md)
+- [Intel VCAC-A Setup](doc/vcac-a.md)
 - [Sensor Simulation and Discovery](sensor/README.md)  
 - [Search Capabilities](doc/search.md)       
 - [Utility Scripts](doc/script.md)       
