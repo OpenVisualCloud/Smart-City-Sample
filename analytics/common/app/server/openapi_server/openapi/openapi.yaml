@@ -1,8 +1,8 @@
 openapi: 3.0.0
 info:
-  description: Pipeline Serving API
-  title: Video Analytics API
-  version: 0.0.1
+  description: Video Analytics Serving API
+  title: Video Analytics Serving API
+  version: 0.0.2
 servers:
 - url: /
 paths:
@@ -288,26 +288,37 @@ components:
       - type
       - uri
       type: object
+    DeviceSource:
+      properties:
+        type:
+          enum:
+          - device
+          type: string
+        path:
+          type: string
+          format: path
+      required:
+      - type
+      - path
+      type: object
     FileDestination:
       properties:
         type:
           enum:
           - file
           type: string
-        uri:
-          format: uri
+        path:
+          format: path
           type: string
       required:
       - type
-      - uri
+      - path
       type: object
     KafkaDestination:
       properties:
-        hosts:
-          description: List of host:port to use as boostrap servers.
-          items:
-            type: string
-          type: array
+        host:
+          description: Comma separated list of host:port to use as boostrap servers.
+          type: string
         topic:
           type: string
         type:
@@ -340,6 +351,7 @@ components:
             propertyName: type
           oneOf:
           - $ref: '#/components/schemas/URISource'
+          - $ref: '#/components/schemas/DeviceSource'
           type: object
         destination:
           discriminator:
@@ -355,8 +367,6 @@ components:
         parameters:
           description: Pipeline specific parameters.
           type: object
-      required:
-      - source
       type: object
     Model:
       example:
