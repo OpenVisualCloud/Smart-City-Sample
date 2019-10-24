@@ -1,4 +1,10 @@
 #!/usr/bin/env python3
+'''
+* Copyright (C) 2019 Intel Corporation.
+* 
+* SPDX-License-Identifier: BSD-3-Clause
+'''
+
 import sys
 import os
 import connexion
@@ -7,9 +13,7 @@ import asyncio
 from openapi_server import encoder
 
 sys.path.append(os.path.dirname(__file__) + "/../../")
-
-from common.settings import CONFIG_PATH
-from common.settings import MAX_RUNNING_PIPELINES
+from common import settings
 from modules.PipelineManager import PipelineManager
 from modules.ModelManager import ModelManager
 from threading import Thread
@@ -22,16 +26,26 @@ logger = logging.get_logger('main', is_static=True)
 
 def get_options():
     parser = OptionParser()
-    parser.add_option("-p", "--port", action="store", type="int", dest="port", default=8080)
+    parser.add_option("-p", "--port", action="store", type="int", dest="port", default=int(os.getenv('PORT','8080')))
     parser.add_option("--framework", action="store", dest="framework",
-                      choices=['gstreamer', 'ffmpeg'], default='gstreamer')
+                      choices=['gstreamer', 'ffmpeg'], default=os.getenv('FRAMEWORK','gstreamer'))
     parser.add_option("--pipeline_dir", action="store", dest="pipeline_dir",
-                      type="string", default='pipelines')
+                      type="string", default=os.getenv("PIPELINE_DIR",'pipelines'))
     parser.add_option("--model_dir", action="store", dest="model_dir",
-                      type="string", default='models')
+                      type="string", default=os.getenv("MODEL_DIR",'models'))
     parser.add_option("--network_preference", action="store", 
                       dest="network_preference",
                       type="string", default=os.getenv('NETWORK_PREFERENCE', '{}'))
+    parser.add_option("--max_running_pipelines", action="store", 
+                      dest="max_running_pipelines",
+                      type="int", default=int(os.getenv('MAX_RUNNING_PIPELINES', '1')))
+    parser.add_option("--log_level", action="store", 
+                      dest="log_level",
+                      choices=['INFO','DEBUG'], default=os.getenv('LOG_LEVEL', 'INFO'))
+    parser.add_option("--config_path", action="store", 
+                      dest="config_path",
+                      default=os.getenv('CONFIG_PATH', os.path.dirname(__file__) + "/../../../"))
+    
 
     return parser.parse_args()
 
@@ -54,15 +68,12 @@ def parse_network_preference(options):
         return {}
 
 def main(options):
-        
-    PipelineManager.load_config(os.path.join(CONFIG_PATH, options.pipeline_dir), MAX_RUNNING_PIPELINES)
-    ModelManager.load_config(os.path.join(CONFIG_PATH, options.model_dir),parse_network_preference(options))
-
-    asyncio.set_event_loop(asyncio.new_event_loop())
-
+    
+    PipelineManager.load_config(os.path.join(options.config_path, options.pipeline_dir), options.max_running_pipelines)
+    ModelManager.load_config(os.path.join(options.config_path, options.model_dir),parse_network_preference(options))
     app = connexion.App(__name__, specification_dir='./openapi/')
     app.app.json_encoder = encoder.JSONEncoder
-    app.add_api('openapi.yaml', arguments={'title': 'Video Analytics API'})
+    app.add_api('openapi.yaml', arguments={'title': 'Video Analytics Serving API'})
     logger.info("Starting Tornado Server on port: {p}".format(p=options.port))
     app.run(server='tornado', port=options.port)
 
@@ -71,6 +82,7 @@ if __name__ == '__main__':
 
     try:
         options, args = get_options()
+        settings.set_log_level(options.log_level)
     except Exception as error:
         print(error)
         logger.error("Getopt Error!")

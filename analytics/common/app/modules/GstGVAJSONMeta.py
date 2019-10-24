@@ -1,3 +1,9 @@
+'''
+* Copyright (C) 2019 Intel Corporation.
+* 
+* SPDX-License-Identifier: BSD-3-Clause
+'''
+
 from ctypes import *  # pylint: disable=unused-wildcard-import
 
 clib = CDLL("/usr/lib/x86_64-linux-gnu/gstreamer-1.0/libgstvideoanalyticsmeta.so")

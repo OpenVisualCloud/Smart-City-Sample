@@ -1,3 +1,9 @@
+'''
+* Copyright (C) 2019 Intel Corporation.
+* 
+* SPDX-License-Identifier: BSD-3-Clause
+'''
+
 from modules.Destination import Destination  # pylint: disable=import-error
 from kafka import KafkaProducer  # pylint: disable=import-error
 from kafka.client import KafkaClient  # pylint: disable=import-error

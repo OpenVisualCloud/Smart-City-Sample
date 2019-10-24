@@ -1,3 +1,9 @@
+'''
+* Copyright (C) 2019 Intel Corporation.
+* 
+* SPDX-License-Identifier: BSD-3-Clause
+'''
+
 import os
 from modules.Destination import Destination  # pylint: disable=import-error
 import urllib
