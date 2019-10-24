@@ -1,18 +1,11 @@
-'''
-* Copyright (C) 2019 Intel Corporation.
-*
-* SPDX-License-Identifier: BSD-3-Clause
-'''
-
 """
-    define logging settings here
+    define service level settings for Video Analytics Service here
 """
 
 import os
 
-LOG_LEVEL = "INFO"
-LOG_ATTRS = ['levelname', 'asctime', 'message', 'name']
+CONFIG_PATH = os.path.dirname(__file__) + "/../../"
+MAX_RUNNING_PIPELINES = -1
 
-def set_log_level(level):
-    global LOG_LEVEL
-    LOG_LEVEL = level
+LOG_LEVEL = "DEBUG"
+LOG_ATTRS = ['levelname', 'asctime', 'message', 'name']

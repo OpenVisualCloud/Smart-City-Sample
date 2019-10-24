@@ -1,14 +1,9 @@
-'''
-* Copyright (C) 2019 Intel Corporation.
-* 
-* SPDX-License-Identifier: BSD-3-Clause
-'''
-
 import string
 import json
 import time
 import os
 import copy
+import modules.Destination as Destination  # pylint: disable=import-error
 import modules.GstGVAJSONMeta as GstGVAJSONMeta  # pylint: disable=import-error
 from modules.Pipeline import Pipeline  # pylint: disable=import-error
 from modules.PipelineManager import PipelineManager  # pylint: disable=import-error
@@ -21,7 +16,9 @@ from gi.repository import Gst, GObject  # pylint: disable=import-error
 
 logger = logging.get_logger('GSTPipeline', is_static=True)
 
+
 class GStreamerPipeline(Pipeline):
+
     Gst.init(None)
     GObject.threads_init()
     GVA_INFERENCE_ELEMENT_TYPES = ["GstGvaDetect",
@@ -47,35 +44,29 @@ class GStreamerPipeline(Pipeline):
         self.sum_pipeline_latency = 0
         self.count_pipeline_latency = 0
 
-    def pipeline_is_in_terminal_state(self):
-        if self.pipeline is None and self.state != "QUEUED":
-            return True
-        return False
-
-    def shutdown_and_delete_pipeline(self, new_state):
-        if not self.pipeline_is_in_terminal_state():
-            self.stop_time = time.time()
-            logger.debug("Setting Pipeline {id} State to {next_state}".format(id=self.id, next_state=new_state))
-            self.state = new_state
-            self.pipeline.set_state(Gst.State.NULL)
-            del self.pipeline
-            self.pipeline = None
-            PipelineManager.pipeline_finished()
-        elif self.state == "QUEUED":
-            logger.debug("Setting Pipeline {id} State to {next_state} and removing from queue".format(id=self.id, next_state=new_state))
-            self.stop_time = time.time()
-            self.state = new_state
-  
     def stop(self):
-        if not self.pipeline_is_in_terminal_state():
-            GObject.idle_add(self.shutdown_and_delete_pipeline, "ABORTED")
+        if self.pipeline is not None:
+            self.pipeline.set_state(Gst.State.NULL)
+            if self.state is "RUNNING":
+                self.state = "ABORTED"
+                logger.debug("Setting Pipeline {id} State to ABORTED".format(id=self.id))
+            self.stop_time = time.time()
+            PipelineManager.pipeline_finished()
+        if self.state is "QUEUED":
+            self.state = "ABORTED"
+            PipelineManager.remove_from_queue(self.id)
+            logger.debug("Setting Pipeline {id} State to ABORTED and removing from the queue".format(id=self.id))
+
+
+        del self.pipeline
+        self.pipeline = None
+
         return self.status()
 
     def params(self):
 
         request = copy.deepcopy(self.request)
-        if "models" in request:
-            del request["models"]
+        del request["models"]
 
         params_obj = {
             "id": self.id,
@@ -88,11 +79,10 @@ class GStreamerPipeline(Pipeline):
 
     def status(self):
         logger.debug("Called Status")
-        if self.start_time is not None:
-            if self.stop_time is not None:
-                elapsed_time = max(0, self.stop_time - self.start_time)
-            else:
-                elapsed_time = max(0, time.time() - self.start_time)
+        if self.stop_time is not None:
+            elapsed_time = max(0, self.stop_time - self.start_time)
+        elif self.start_time is not None:
+            elapsed_time = max(0, time.time() - self.start_time)
         else:
             elapsed_time = None
 
@@ -110,39 +100,39 @@ class GStreamerPipeline(Pipeline):
 
     def get_avg_fps(self):
         return self.avg_fps
-    
-    def _get_element_property(self,element,key):
-        if isinstance(element,str):
-            return (element,key,None)
-        if isinstance(element,dict):
-            return (element["name"],element["property"],element.get("format",None))
 
-    def _set_section_properties(self,request_section=[],config_section=[]):
-        request,config = PipelineManager.get_section_and_config(self.request,self.config,request_section,config_section)
-        
-        for key in config:
-            if isinstance(config[key],dict) and "element" in config[key]:
-                if key in request:
-                    if (isinstance(config[key]["element"],list)):
-                        element_properties = [self._get_element_property(x,key) for x in config[key]["element"]]
+    def _add_tags(self):
+        if "tags" in self.request:
+            metaconvert = self.pipeline.get_by_name("jsonmetaconvert")
+            if metaconvert:
+                metaconvert.set_property("tags", json.dumps(self.request["tags"]))
+            else:
+                logger.debug("tags given but no metaconvert element found")
+
+    def _add_default_parameters(self):
+        request_parameters = self.request.get("parameters", {})
+        pipeline_parameters = self.config.get("parameters", {}).get("properties", {})
+
+        for key in pipeline_parameters:
+            if (not key in request_parameters) and ("default" in pipeline_parameters[key]):
+                request_parameters[key] = pipeline_parameters[key]["default"]
+
+        self.request["parameters"] = request_parameters
+
+    def _add_element_parameters(self):
+        request_parameters = self.request.get("parameters", {})
+        pipeline_parameters = self.config.get("parameters", {}).get("properties", {})
+
+        for key in pipeline_parameters:                
+            if "element" in pipeline_parameters[key]:
+                if key in request_parameters:
+                    element = self.pipeline.get_by_name(pipeline_parameters[key]["element"])
+                    if element:
+                        element.set_property(key, request_parameters[key])
                     else:
-                        element_properties = [self._get_element_property(config[key]["element"],key)]
+                        logger.debug("parameter given for element but no element found")
 
-                    for name,property,format in element_properties:
-                        element = self.pipeline.get_by_name(name)
-                        if (element):
-                            if (property in [x.name for x in element.list_properties()]):
-                                if (format=="json"):
-                                    element.set_property(property,json.dumps(request[key]))
-                                else:
-                                    element.set_property(property,request[key])
-                                logger.debug("Setting element: {}, property: {}, value: {}".format(name,property,element.get_property(property)))
-                            else:
-                                logger.debug("Parameter {} given for element {} but no property found".format(property,name))
-                        else:
-                            logger.debug("Parameter {} given for element {} but no element found".format(property,name))
-               
-    def _set_default_models(self):
+    def _add_default_models(self):
         gva_elements = [e for e in self.pipeline.iterate_elements() if (e.__gtype__.name in self.GVA_INFERENCE_ELEMENT_TYPES and "VA_DEVICE_DEFAULT" in e.get_property("model"))]
         for e in gva_elements:
             network = ModelManager.get_default_network_for_device(e.get_property("device"),e.get_property("model"))
@@ -154,8 +144,8 @@ class GStreamerPipeline(Pipeline):
         template = config["template"]
         pipeline = Gst.parse_launch(template)
         appsink = pipeline.get_by_name("appsink")
-        jsonmetaconvert = pipeline.get_by_name("metaconvert")
-        metapublish = pipeline.get_by_name("destination")
+        jsonmetaconvert = pipeline.get_by_name("jsonmetaconvert")
+        metapublish = pipeline.get_by_name("metapublish")
         if appsink is None:
             logger.warning("Missing appsink element")
         if jsonmetaconvert is None:
@@ -191,43 +181,34 @@ class GStreamerPipeline(Pipeline):
         self._year_base = time.strftime("%Y", time.localtime(adjusted_time / 1000000000))
         self._month_base = time.strftime("%m", time.localtime(adjusted_time / 1000000000))
         self._day_base = time.strftime("%d", time.localtime(adjusted_time / 1000000000))
-        self._dirName = "{prefix}/{yearbase}/{monthbase}/{daybase}".format(prefix=self.request["parameters"]["recording_prefix"], yearbase=self._year_base,
-                                                                            monthbase=self._month_base, daybase=self._day_base)
+        self._dirName = "%s/%s/%s/%s" %(self.request["parameters"]["recording_prefix"],self._year_base,self._month_base,self._day_base)
 
         try:
             os.makedirs(self._dirName)
         except FileExistsError:
             logger.debug("Directory already exists")
 
-        return "{dirname}/{adjustedtime}_{time}.mp4".format(dirname=self._dirName,
-                                adjustedtime=adjusted_time,
-                                time=times["stream_time"]-self._stream_base)
+        return "%s/%d_%d.mp4" %(self._dirName,
+                                adjusted_time,
+                                times["stream_time"]-self._stream_base)
 
-    def _set_properties(self):
-        self._set_section_properties(["parameters"],
-                                     ["parameters","properties"])
-        self._set_section_properties(["destination"],
-                                     ["destination","properties"])
-        if "destination" in self.request and "type" in self.request["destination"]:
-            self._set_section_properties(["destination"],
-                                         ["destination",self.request["destination"]["type"],"properties"])
-        self._set_section_properties(["source"],
-                                     ["source","properties"])
-        if "source" in self.request and "type" in self.request["source"]:
-            self._set_section_properties(["source"],
-                                         ["source",self.request["source"]["type"],"properties"])
-        self._set_section_properties()
 
-        
     def start(self):
         logger.debug("Starting Pipeline {id}".format(id=self.id))
 
+        try:
+            self.destination = Destination.create_instance(self.request)
+        except:
+            self.destination = None
+
         self.request["models"] = self.models
+        self._add_default_parameters()
         self._gst_launch_string = string.Formatter().vformat(self.template, [], self.request)
         logger.debug(self._gst_launch_string)
         self.pipeline = Gst.parse_launch(self._gst_launch_string)
-        self._set_properties()
-        self._set_default_models()
+        self._add_element_parameters()
+        self._add_tags()
+        self._add_default_models()
         sink = self.pipeline.get_by_name("appsink")
 
         if sink is not None:
@@ -279,7 +260,7 @@ class GStreamerPipeline(Pipeline):
         buffer = info.get_buffer()
         pts = buffer.pts
         source_time = self.latency_times.pop(pts, -1)
-        if source_time != -1:
+        if not source_time == -1:
             self.sum_pipeline_latency += time.time() - source_time
             self.count_pipeline_latency += 1
         return Gst.PadProbeReturn.OK
@@ -303,6 +284,7 @@ class GStreamerPipeline(Pipeline):
             else:
                 json_string = GstGVAJSONMeta.get_json_message(meta).decode('utf-8')  # pylint: disable=undefined-variable
                 json_object = json.loads(json_string)
+                #json_object['tags']={'times':self.calculate_times(sample)}
                 logger.debug(json.dumps(json_object))
                 if self.destination and ("objects" in json_object) and (len(json_object["objects"]) > 0):
                     self.destination.send(json_object)
@@ -318,21 +300,39 @@ class GStreamerPipeline(Pipeline):
         t = message.type
         if t == Gst.MessageType.EOS:
             logger.info("Pipeline {id} Ended".format(id=self.id))
+            self.pipeline.set_state(Gst.State.NULL)
+            if self.state is "RUNNING":
+                logger.debug("Setting Pipeline {id} State to COMPLETED".format(id=self.id))
+                self.state = "COMPLETED"
+            self.stop_time = time.time()
             bus.remove_signal_watch()
-            self.shutdown_and_delete_pipeline("COMPLETED")
+            if (self.destination):
+                del self.destination
+                self.destination=None
+            del self.pipeline
+            self.pipeline = None
+            PipelineManager.pipeline_finished()
         elif t == Gst.MessageType.ERROR:
             err, debug = message.parse_error()
             logger.error("Error on Pipeline {id}: {err}".format(id=id, err=err))
+            
+            if (self.state is None) or (self.state is "RUNNING") or (self.state is "QUEUED"):
+                logger.debug("Setting Pipeline {id} State to ERROR".format(id=self.id))
+                self.stop_time = time.time()
+                self.state = "ERROR"
+            self.pipeline.set_state(Gst.State.NULL)
+            self.stop_time = time.time()
             bus.remove_signal_watch()
-            self.shutdown_and_delete_pipeline("ERROR")
+            del self.pipeline
+            self.pipeline = None
+            PipelineManager.pipeline_finished()
         elif t == Gst.MessageType.STATE_CHANGED:
             old_state, new_state, pending_state = message.parse_state_changed()
             if message.src == self.pipeline:
                 if old_state == Gst.State.PAUSED and new_state == Gst.State.PLAYING:
-                    if self.state == "QUEUED":
+                    if self.state is "QUEUED":
                         logger.debug("Setting Pipeline {id} State to RUNNING".format(id=self.id))
                         self.state = "RUNNING"
         else:
             pass
         return True
-    

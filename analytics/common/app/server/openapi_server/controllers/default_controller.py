@@ -1,9 +1,3 @@
-'''
-* Copyright (C) 2019 Intel Corporation.
-* 
-* SPDX-License-Identifier: BSD-3-Clause
-'''
-
 import connexion
 import six
 
@@ -169,5 +163,5 @@ def pipelines_name_version_post(name, version):  # noqa: E501
                 return pipeline_id
             return (err, HTTPStatus.BAD_REQUEST)
         except Exception as e:
-            logger.error('pipelines_name_version_post ' +str(e))
+            logger.error('pipelines_name_version_post ' +e)
             return ('Unexpected error', HTTPStatus.INTERNAL_SERVER_ERROR)
