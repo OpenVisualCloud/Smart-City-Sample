@@ -59,5 +59,6 @@ make stop_docker_swarm
 
 - [Utility Scripts](../../doc/script.md)   
 - [CMake Options](../../doc/cmake.md)   
+- [Intel VCAC-A Setup](../../doc/vcac-a.md)    
 
 
