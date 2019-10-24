@@ -1,6 +1,6 @@
 
 Use the following definitions to customize the building process:   
-- **PLATFORM**: Specify the target platform: ```Xeon``` or ```VCAC-A```.   
+- **PLATFORM**: Specify the target platform: ```Xeon``` or [```VCAC-A```](vcac-a.md).   
 - **FRAMEWORK**: Specify the target framework: ```gst``` or ```ffmpeg``` , Now gst is enabled.   
 - **SCENARIO**: Specify the sample scenario(s): ```traffic```, ```stadium```, or their combination ```traffic,stadium```. As each scenario runs its own set of services and databases, it is recommended that you run multiple scenarios only on a multiple-node deployment setting.     
 - **NOFFICES**: Specify the number of offices in the deployment. Support 1-3 offices in the traffic scenario and 1 office in the stadium scenario.       
