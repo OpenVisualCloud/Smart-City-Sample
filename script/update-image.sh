@@ -13,7 +13,7 @@ function transfer_image {
     fi
 
     echo "Update image: $image to $worker"
-    sig1=$(docker image inspect -f {{.ID}} $image || ((docker pull $image 1>&2) && docker image inspect -f {{.ID}} $image))
+    sig1=$((docker image inspect -f {{.ID}} $image || ((docker pull $image 1>&2) && docker image inspect -f {{.ID}} $image)) | grep .)
     echo " local: $sig1"
 
     sig2=$(ssh $worker "docker image inspect -f {{.ID}} $image 2> /dev/null || echo")
