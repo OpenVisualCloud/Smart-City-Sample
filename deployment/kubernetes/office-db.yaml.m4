@@ -54,6 +54,8 @@ spec:
               value: "false"
             - name: "node.data"
               value: "true"
+            - name: "node.attr.zone"
+              value: "defn(`OFFICE_NAME')"
             - name: "discovery.zen.minimum_master_nodes"
               value: "1"
             - name: "discovery.zen.ping.unicast.hosts"
@@ -115,6 +117,8 @@ spec:
               value: "http://defn(`OFFICE_NAME')-storage-service.default.svc.cluster.local:8080"
             - name: `SCENARIO'
               value: "defn(`SCENARIO_NAME')"
+            - name: "ZONE"
+              value: "defn(`OFFICE_NAME')"
             - name: NO_PROXY
               value: "*"
             - name: no_proxy
