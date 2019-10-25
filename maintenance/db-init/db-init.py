@@ -10,15 +10,17 @@ dbhost=os.environ["DBHOST"]
 office=list(map(float,os.environ["OFFICE"].split(",")))
 proxyhost=os.environ["PROXYHOST"]
 scenario=os.environ["SCENARIO"]
+zone=os.environ["ZONE"]
 
 _type="_doc"
 officestr='$'+('$'.join(map(str,office)))
 settings={
     "offices": {
         "settings": {
+            "index.routing.allocation.include.zone": "cloud",
             "index": {
                 "number_of_shards": 1,
-                "number_of_replicas": 1,
+                "number_of_replicas": 0,
             },
         },
         "mappings": {
@@ -31,9 +33,10 @@ settings={
     },
     "recordings_c": {
         "settings": {
+            "index.routing.allocation.include.zone": "cloud",
             "index": {
                 "number_of_shards": 1,
-                "number_of_replicas": 1,
+                "number_of_replicas": 0,
             },
         },
         "mappings": {
@@ -46,6 +49,7 @@ settings={
     },
     "provisions"+officestr: {
         "settings": {
+            "index.routing.allocation.include.zone": "cloud,"+zone,
             "index": {
                 "number_of_shards": 1,
                 "number_of_replicas": 1,
@@ -61,6 +65,7 @@ settings={
     },
     "sensors"+officestr: {
         "settings": {
+            "index.routing.allocation.include.zone": "cloud,"+zone,
             "index": {
                 "number_of_shards": 1,
                 "number_of_replicas": 1,
@@ -77,6 +82,7 @@ settings={
     },
     "recordings"+officestr: {
         "settings": {
+            "index.routing.allocation.include.zone": "cloud,"+zone,
             "index": {
                 "number_of_shards": 1,
                 "number_of_replicas": 1,
@@ -94,6 +100,7 @@ settings={
     },
     "algorithms"+officestr: {
         "settings": {
+            "index.routing.allocation.include.zone": "cloud,"+zone,
             "index": {
                 "number_of_shards": 1,
                 "number_of_replicas": 1,
@@ -109,6 +116,7 @@ settings={
     },
     "analytics"+officestr: {
         "settings": {
+            "index.routing.allocation.include.zone": "cloud,"+zone,
             "index": {
                 "number_of_shards": 1,
                 "number_of_replicas": 1,
@@ -127,6 +135,7 @@ settings={
     },
     "alerts"+officestr: {
         "settings": {
+            "index.routing.allocation.include.zone": "cloud,"+zone,
             "index": {
                 "number_of_shards": 1,
                 "number_of_replicas": 1,
@@ -144,6 +153,7 @@ settings={
     },
     "services"+officestr: {
         "settings": {
+            "index.routing.allocation.include.zone": "cloud,"+zone,
             "index": {
                 "number_of_shards": 1,
                 "number_of_replicas": 1,
@@ -160,10 +170,13 @@ settings={
 }
 
 # initialize db index settings
+routing_key="index.routing.allocation.include.zone"
 for index in settings:
+    routing_value=settings[index]["settings"].pop(routing_key)
     while True:
         try:
             r=requests.put(dbhost+"/"+index,json=settings[index])
+            r=requests.put(dbhost+"/"+index+"/_settings",json={ routing_key: routing_value })
             break
         except Exception as e:
             print("Exception: "+str(e),flush=True)

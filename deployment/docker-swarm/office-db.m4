@@ -8,6 +8,7 @@ ifelse(eval(defn(`NOFFICES')>1),1,`
             - "node.name=defn(`OFFICE_NAME')_db"
             - "node.master=false"
             - "node.data=true"
+            - "node.attr.zone=defn(`OFFICE_NAME')"
             - "discovery.zen.minimum_master_nodes=1"
             - "discovery.zen.ping.unicast.hosts=cloud_db"
             - "action.auto_create_index=0"
@@ -35,6 +36,7 @@ ifelse(defn(`PLATFORM'),`VCAC-A',`dnl
             OFFICE: "defn(`OFFICE_LOCATION')"
             PROXYHOST: "http://defn(`OFFICE_NAME')_storage:8080"
             `SCENARIO': "defn(`SCENARIO_NAME')"
+            ZONE: "defn(`OFFICE_NAME')"
             NO_PROXY: "*"
             no_proxy: "*"
         secrets:

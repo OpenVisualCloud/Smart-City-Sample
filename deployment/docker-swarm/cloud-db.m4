@@ -7,6 +7,7 @@ ifelse(eval(defn(`NOFFICES')>1),1,`dnl
             - "node.name=cloud_db"
             - "node.master=true"
             - "node.data=true"
+            - "node.attr.zone=cloud"
 ',`dnl
             - "discovery.type=single-node"
 ')dnl
