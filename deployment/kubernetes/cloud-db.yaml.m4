@@ -53,6 +53,8 @@ ifelse(eval(defn(`NOFFICES')>1),1,`dnl
               value: "true"
             - name: "node.data"
               value: "true"
+            - name: "node.attr.zone"
+              value: "cloud"
 ',`dnl
             - name: "discovery.type"
               value: "single-node"
