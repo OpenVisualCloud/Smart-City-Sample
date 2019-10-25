@@ -9,6 +9,7 @@
         environment:
             DBHOST: "http://ifelse(eval(defn(`NOFFICES')>1),1,cloud_db,db):9200"
             `SCENARIO': "defn(`SCENARIO')"
+            HEALTH_CHECK: "ifelse(eval(defn(`NOFFICES')>1),1,enabled,disabled)"
             NO_PROXY: "*"
             no_proxy: "*"
         volumes:

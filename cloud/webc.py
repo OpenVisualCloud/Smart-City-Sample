@@ -3,6 +3,7 @@
 from tornado import ioloop, web
 from tornado.options import define, options, parse_command_line
 from search import SearchHandler
+from health import HealthHandler
 from hint import HintHandler
 from redirect import RedirectHandler
 from stats import StatsHandler
@@ -33,6 +34,7 @@ def quit_service(signum, frame):
     if nginxc: nginxc.send_signal(SIGQUIT)
         
 app = web.Application([
+    (r'/api/health',HealthHandler),
     (r'/api/search',SearchHandler),
     (r'/api/stats',StatsHandler),
     (r'/api/histogram',HistogramHandler),

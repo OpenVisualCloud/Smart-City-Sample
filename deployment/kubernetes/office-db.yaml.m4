@@ -49,7 +49,7 @@ spec:
             - name: "cluster.name"
               value: "db-cluster"
             - name: "node.name"
-              value: "defn(`OFFICE_NAME')-db"
+              value: "defn(`OFFICE_NAME')"
             - name: "node.master"
               value: "false"
             - name: "node.data"
