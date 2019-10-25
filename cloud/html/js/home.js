@@ -13,6 +13,11 @@ function marker_update_icon(marker, icon) {
         marker.setIcon(icon);
 }
 
+function sensor_line_color(officectx, sensor) {
+    if (!officectx.online) return "red";
+    return (sensor._source.status=="idle")?"black":(sensor._source.status=="streaming")?"green":"red";
+}
+
 $("#pg-home").on(":initpage", function(e) {
     var page=$(this);
     $("#layoutButton").hide();
@@ -92,6 +97,7 @@ $("#pg-home").on(":initpage", function(e) {
                             icon: scenario.icon.office.online,
                             riseOnHover: true,
                         }).addTo(map),
+                        online: true,
                     };
                 }
 
@@ -107,8 +113,10 @@ $("#pg-home").on(":initpage", function(e) {
                         var zone=data.response[0]._source.zone;
                         officectx.health_check=setInterval(function () {
                             apiHost.health(zone).then(function (e) {
+                                officectx.online=true;
                                 marker_update_icon(officectx.marker, officectx.scenario.icon.office.online);    
                             }).catch(function (e) {
+                                officectx.online=false;
                                 marker_update_icon(officectx.marker, officectx.scenario.icon.office.offline);
                             });
                         }, 5000),
@@ -130,7 +138,7 @@ $("#pg-home").on(":initpage", function(e) {
                     };
                     var sensorctx=sensors[sensorid];
                     sensorctx.marker=L.marker(sensor._source.location,{
-                        icon: scenario.icon.sensor_icon(sensor),
+                        icon: scenario.icon.sensor_icon(sensor, officectx.online),
                         riseOnHover: true,
                         rotationAngle: scenario.icon.sensor_icon_rotation(sensor),
                         rotationOrigin: "center",
@@ -147,7 +155,7 @@ $("#pg-home").on(":initpage", function(e) {
                         scenario.create_sensor(officectx, sensorctx, sensor, page, map);
 
                     sensorctx.line_dash="15,20";
-                    var line_color=(sensor._source.status=="idle")?"black":(sensor._source.status=="streaming")?"green":"red";
+                    var line_color=sensor_line_color(officectx, sensor);
                     sensorctx.line=L.polyline([sensor._source.location,sensor._source.office],{color:line_color,dashArray:sensorctx.line_dash}).bindTooltip("",{ permanent:true, direction:'center', opacity:0.7, className:'tooltip_text' }).addTo(page.data('lineinfo').layer);
                 }
 
@@ -156,7 +164,7 @@ $("#pg-home").on(":initpage", function(e) {
                 sensorctx.used=true;
 
                 /* update sensor icon */
-                marker_update_icon(sensorctx.marker, sensorctx.scenario.icon.sensor_icon(sensor));
+                marker_update_icon(sensorctx.marker, sensorctx.scenario.icon.sensor_icon(sensor, officectx.online));
 
                 /* update sensor info */
                 if (sensorctx.update_sensor) 
@@ -171,7 +179,7 @@ $("#pg-home").on(":initpage", function(e) {
 
                 /* show line info */
                 sensorctx.line.setTooltipContent(format_bandwidth("bandwidth" in sensor._source && sensor._source.status == "streaming"?sensor._source.bandwidth:0));
-                var line_color=(sensor._source.status=="idle")?"black":(sensor._source.status=="streaming")?"green":"red";
+                var line_color=sensor_line_color(officectx, sensor);
                 if (line_color=="green") {
                     var tmp=sensorctx.line_dash.split(",");
                     sensorctx.line_dash=tmp[1]+","+tmp[0];
