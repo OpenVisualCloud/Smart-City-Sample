@@ -195,6 +195,7 @@ with open("/run/secrets/sensor-info.json","rt") as fd:
 
         sensors=office1.pop("sensors")
         office1["uri"]=proxyhost
+        office1["zone"]=zone
         dbo.ingest(office1,officestr[1:])
 
         for s in sensors: s["office"]=location1

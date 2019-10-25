@@ -26,11 +26,18 @@ var scenarios={
         name: "traffic",
         center: [45.536664,-122.960823],
         icon: {
-            office: L.icon({
-                iconUrl: "images/office.gif",
-                iconSize: [64,64],
-                iconAnchor: [32,32],
-            }),
+            office: {
+                online: L.icon({
+                    iconUrl: "images/office-online.gif",
+                    iconSize: [64,64],
+                    iconAnchor: [32,32],
+                }),
+                offline: L.icon({
+                    iconUrl: "images/office-offline.gif",
+                    iconSize: [64,64],
+                    iconAnchor: [32,32],
+                }),
+            },
             ip_camera: {
                 idle: L.icon({
                     iconUrl: "images/camera-idle.gif",
@@ -104,11 +111,18 @@ var scenarios={
         name: "stadium",
         center: [37.388085,-121.963472],
         icon: {
-            office: L.icon({
-                iconUrl: "images/office.gif",
-                iconSize: [64,64],
-                iconAnchor: [32,32],
-            }),
+            office: {
+                online: L.icon({
+                    iconUrl: "images/office-online.gif",
+                    iconSize: [64,64],
+                    iconAnchor: [32,32],
+                }),
+                offline: L.icon({
+                    iconUrl: "images/office-offline.gif",
+                    iconSize: [64,64],
+                    iconAnchor: [32,32],
+                }),
+            },
             ip_camera: {
                 idle: L.icon({
                     iconUrl: "images/camera-idle.gif",

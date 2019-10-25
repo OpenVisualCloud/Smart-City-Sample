@@ -5,7 +5,7 @@ ifelse(eval(defn(`NOFFICES')>1),1,`
         image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.8.1
         environment:
             - "cluster.name=db-cluster"
-            - "node.name=defn(`OFFICE_NAME')_db"
+            - "node.name=defn(`OFFICE_NAME')"
             - "node.master=false"
             - "node.data=true"
             - "node.attr.zone=defn(`OFFICE_NAME')"

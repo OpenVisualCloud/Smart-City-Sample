@@ -8,6 +8,11 @@ function format_sensor_tooltip(template, sensor) {
     return template.html();
 }
 
+function marker_update_icon(marker, icon) {
+    if (icon!=marker.getIcon())
+        marker.setIcon(icon);
+}
+
 $("#pg-home").on(":initpage", function(e) {
     var page=$(this);
     $("#layoutButton").hide();
@@ -78,10 +83,13 @@ $("#pg-home").on(":initpage", function(e) {
             $.each(data.response, function (x,sensor) {
                 var officeid=sensor._source.office.lat+","+sensor._source.office.lon;
                 if (!(officeid in offices)) {
+                    var office_location=sensor._source.office;
+                    var office_icon=scenario.icon.office;
                     offices[officeid]={
-                        office: sensor._source.office,
-                        marker: L.marker(sensor._source.office, { 
-                            icon: scenario.icon.office,
+                        office: office_location,
+                        scenario: scenario,
+                        marker: L.marker(office_location, {
+                            icon: scenario.icon.office.online,
                             riseOnHover: true,
                         }).addTo(map),
                     };
@@ -94,6 +102,16 @@ $("#pg-home").on(":initpage", function(e) {
                     apiHost.search('offices','location:['+officeid+']',null,1).then(function (data) {
                         if (data.response.length==0) return;
                         officectx.address=data.response[0]._source.address;
+
+                        /* setup health check every 5 seconds */
+                        var zone=data.response[0]._source.zone;
+                        officectx.health_check=setInterval(function () {
+                            apiHost.health(zone).then(function (e) {
+                                marker_update_icon(officectx.marker, officectx.scenario.icon.office.online);    
+                            }).catch(function (e) {
+                                marker_update_icon(officectx.marker, officectx.scenario.icon.office.offline);
+                            });
+                        }, 5000),
 
                         /* setup marker actions */
                         officectx.marker.bindTooltip(officectx.address+' @ ['+officeid+']').on('click', function () {
@@ -138,9 +156,7 @@ $("#pg-home").on(":initpage", function(e) {
                 sensorctx.used=true;
 
                 /* update sensor icon */
-                var icon=sensorctx.scenario.icon.sensor_icon(sensor);
-                if (icon!=sensorctx.marker.getIcon())
-                    sensorctx.marker.setIcon(icon);
+                marker_update_icon(sensorctx.marker, sensorctx.scenario.icon.sensor_icon(sensor));
 
                 /* update sensor info */
                 if (sensorctx.update_sensor) 
@@ -181,6 +197,7 @@ $("#pg-home").on(":initpage", function(e) {
                 } else {
                     if (v.close_office) v.close_office();
                     v.marker.remove();
+                    if (v.health_check) clearInterval(v.health_check);
                     delete offices[x];
                 }
             });

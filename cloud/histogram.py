@@ -8,18 +8,19 @@ from db_query import DBQuery
 import os
 import json
 
+dbhost=os.environ["DBHOST"]
+
 class HistogramHandler(web.RequestHandler):
     def __init__(self, app, request, **kwargs):
         super(HistogramHandler, self).__init__(app, request, **kwargs)
         self.executor= ThreadPoolExecutor(8)
-        self.dbhost=os.environ["DBHOST"]
 
     def check_origin(self, origin):
         return True
 
     @run_on_executor
     def _bucketize(self, index, queries, field, size, office):
-        db=DBQuery(index=index,office=office,host=self.dbhost)
+        db=DBQuery(index=index,office=office,host=dbhost)
         try:
             buckets=db.bucketize(queries, [field], size)
         except Exception as e:

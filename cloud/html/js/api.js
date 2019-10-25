@@ -31,4 +31,10 @@ var apiHost={
         console.log("GET "+url+"?"+$.param(args));
         return $.get(url,args);
     },
+    health: function (zone) {
+        var url="api/health";
+        var args={ zone: zone }
+        console.log("GET "+url+"?"+$.param(args));
+        return $.get(url,args);
+    },
 };
