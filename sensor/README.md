@@ -114,5 +114,7 @@ In above provisioning parameters, the ```simsn``` fields identify simulated came
 
 Enable the ```ipcamera-discovery``` service in the deployment scripts ([camera-discovery.m4](../deployment/docker-swarm/camera-discovery.m4) for docker compose or docker swarm and [camera-discovery.yaml.m4](../deployment/kubernetes/camera-discovery.yaml.m4) for kubernetes) by replacing ```replicas: 0``` with ```replicas: 1```.   
 
+If you enable more than 1 office, addtionally check the ```PORT_SCAN``` value. The default setting assumes each office occupies a block in the ```192.168.x.0/24``` network. Modify as necessary. Also, make sure that the worker node that runs the ```ipcamera-discovery``` service can access to the specified network.     
+
 Restart the sample. Your IP camera(s) should show up in the sample UI.      
 
