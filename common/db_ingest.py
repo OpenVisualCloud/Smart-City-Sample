@@ -39,8 +39,10 @@ class DBIngest(object):
         self._check_error(r)
         return r.json()
 
-    def update(self, _id, info, version=None):
-        options={} if version is None else { "version": version }
+    def update(self, _id, info, seq_no=None, primary_term=None):
+        options={}
+        if seq_no: options["if_seq_no"]=seq_no
+        if primary_term: options["if_primary_term"]=primary_term
         r=requests.post(self._host+"/"+self._index+"/"+self._type+"/"+_id+"/_update",params=options,json={"doc":info})
         self._check_error(r)
         return r.json()

@@ -80,7 +80,7 @@ while not stop:
         for sensor in dbs.search("sensor:'camera' and status:'idle' and algorithm='people-counting' and office:["+str(office[0])+","+str(office[1])+"]"):
             try:
                 # compete (with other va instances) for a sensor
-                r=dbs.update(sensor["_id"],{"status":"streaming"},version=sensor["_version"])
+                r=dbs.update(sensor["_id"],{"status":"streaming"},seq_no=sensor["_seq_no"],primary_term=sensor["_primary_term"])
 
                 # stream from the sensor
                 print("Connected to "+sensor["_id"]+"...",flush=True)
