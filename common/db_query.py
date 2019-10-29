@@ -57,7 +57,7 @@ class DBQuery(object):
             self._check_error(r)
             ids=[x["key"] for x in r.json()["aggregations"]["recording"]["buckets"]]
             query={"bool":{"must":[query,{"ids":{"values":ids}}]}}
-        r=requests.post(self._host+"/"+self._index+"/"+self._type+"/_search",json={"query":query,"size":size,"version":True})
+        r=requests.post(self._host+"/"+self._index+"/"+self._type+"/_search",json={"query":query,"size":size, "seq_no_primary_term": True})
         self._check_error(r)
         for x in r.json()["hits"]["hits"]:
             yield x
@@ -137,8 +137,10 @@ class DBQuery(object):
         specs=self._specs()
         return self._bucketize(queries,fields,size,specs)
 
-    def update(self, _id, info, version=None):
-        options={} if version is None else { "version": version }
+    def update(self, _id, info, seq_no=None, primary_term=None):
+        options={}
+        if seq_no: options["if_seq_no"]=seq_no
+        if primary_term: options["if_primary_term"]=primary_term
         r=requests.post(self._host+"/"+self._index+"/"+self._type+"/"+_id+"/_update",params=options,json={"doc":info})
         self._check_error(r)
         return r.json()
