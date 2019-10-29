@@ -33,7 +33,8 @@ def doc_value(spec, var):
     value="doc['"+var+"'].value"
     if "types" in spec:
         if var in spec["types"]:
-            if spec["types"][var]=="date": return value+".millis"
+            if spec["types"][var]=="date": 
+                return value+".toInstant().toEpochMilli()"
     return value
 
 def nested_query(nested, query):
