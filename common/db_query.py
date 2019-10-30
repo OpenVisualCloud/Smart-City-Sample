@@ -37,11 +37,11 @@ class DBQuery(object):
 
     def _spec_from_index(self, specs, index):
         specs.append({"nested":[],"types":{}})
-        r=requests.get(self._host+"/"+index+"/"+self._type+"/_mapping")
+        r=requests.get(self._host+"/"+index+"/_mapping",params={"include_type_name":"false"})
         if r.status_code!=200: return
         r=r.json()
         for index1 in r: 
-            self._spec_from_mapping(specs[-1],"",r[index1]["mappings"][self._type]["properties"])
+            self._spec_from_mapping(specs[-1],"",r[index1]["mappings"]["properties"])
 
     def _specs(self):
         specs=[]
