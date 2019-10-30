@@ -139,8 +139,8 @@ class DBQuery(object):
 
     def update(self, _id, info, seq_no=None, primary_term=None):
         options={}
-        if seq_no: options["if_seq_no"]=seq_no
-        if primary_term: options["if_primary_term"]=primary_term
+        if seq_no is not None: options["if_seq_no"]=seq_no
+        if primary_term is not None: options["if_primary_term"]=primary_term
         r=requests.post(self._host+"/"+self._index+"/"+self._type+"/"+_id+"/_update",params=options,json={"doc":info})
         self._check_error(r)
         return r.json()
