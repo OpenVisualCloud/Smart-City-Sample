@@ -43,6 +43,15 @@ def nested_query(nested, query):
         query = {"nested": {"path": nest1, "query": query}}
     return query
 
+def range_dsl(spec, var, ops, number):
+    (nested, var1)=check_nested_label(spec, var)
+    query={"range":{var1:{ops:number}}}
+    if "types" in spec:
+        if var1 in spec["types"]:
+            if spec["types"][var1]=="date":
+                query={"range":{var1:{ops:int(number)}}}
+    return nested_query(nested,query)
+
 def painless_code(optree, params, nested):
     if "number" in optree:
         try:
@@ -234,8 +243,7 @@ def p_query_gte(p):
         else:
             p[0]= { "match_none": {} }
     elif "var" in p[1] and "number" in p[3]:
-        (nested, var) = check_nested_label(p[1]["spec"], p[1]["var"])
-        p[0] = nested_query(nested, {"range": {var: {"gte": p[3]["number"]}}})
+        p[0] = range_dsl(p[1]["spec"], p[1]["var"], "gte", p[3]["number"])
     else:
         p[0] = painless_query({"op": [">=", p[1], p[3]]})
 
@@ -247,8 +255,7 @@ def p_query_gt(p):
         else:
             p[0]= { "match_none": {} }
     elif "var" in p[1] and "number" in p[3]:
-        (nested, var) = check_nested_label(p[1]["spec"], p[1]["var"])
-        p[0] = nested_query(nested, {"range": {var: {"gt": p[3]["number"]}}})
+        p[0] = range_dsl(p[1]["spec"], p[1]["var"], "gt", p[3]["number"])
     else:
         p[0] = painless_query({"op": [">", p[1], p[3]]})
 
@@ -260,8 +267,7 @@ def p_query_lte(p):
         else:
             p[0]= { "match_none": {} }
     elif "var" in p[1] and "number" in p[3]:
-        (nested, var) = check_nested_label(p[1]["spec"], p[1]["var"])
-        p[0] = nested_query(nested, {"range": {var: {"lte": p[3]["number"]}}})
+        p[0] = range_dsl(p[1]["spec"], p[1]["var"], "lte", p[3]["number"])
     else:
         p[0] = painless_query({"op": ["<=", p[1], p[3]]})
 
@@ -273,8 +279,7 @@ def p_query_lt(p):
         else:
             p[0]= { "match_none": {} }
     elif "var" in p[1] and "number" in p[3]:
-        (nested, var) = check_nested_label(p[1]["spec"], p[1]["var"])
-        p[0] = nested_query(nested, {"range": {var: {"lt": p[3]["number"]}}})
+        p[0] = range_dsl(p[1]["spec"], p[1]["var"], "lt", p[3]["number"])
     else:
         p[0] = painless_query({"op": ["<", p[1], p[3]]})
 
