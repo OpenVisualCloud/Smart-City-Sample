@@ -12,7 +12,7 @@ proxyhost=os.environ["PROXYHOST"]
 scenario=os.environ["SCENARIO"]
 zone=os.environ["ZONE"]
 
-_type="_doc"
+_include_type_name={"include_type_name":"false"}
 officestr='$'+('$'.join(map(str,office)))
 settings={
     "offices": {
@@ -24,10 +24,8 @@ settings={
             },
         },
         "mappings": {
-            _type: {
-                "properties": {
-                    "location": { "type": "geo_point", },
-                },
+            "properties": {
+                "location": { "type": "geo_point", },
             },
         },
     },
@@ -40,10 +38,8 @@ settings={
             },
         },
         "mappings": {
-            _type: {
-                "properties": {
-                    "office": { "type": "geo_point", },
-                },
+            "properties": {
+                "office": { "type": "geo_point", },
             },
         },
     },
@@ -56,10 +52,8 @@ settings={
             },
         },
         "mappings": {
-            _type: {
-                "properties": {
-                    "location": { "type": "geo_point", },
-                },
+            "properties": {
+                "location": { "type": "geo_point", },
             },
         },
     },
@@ -72,11 +66,9 @@ settings={
             },
         },
         "mappings": {
-            _type: {
-                "properties": {
-                    "office": { "type": "geo_point", },
-                    "location": { "type": "geo_point", },
-                },
+            "properties": {
+                "office": { "type": "geo_point", },
+                "location": { "type": "geo_point", },
             },
         },
     },
@@ -89,12 +81,10 @@ settings={
             },
         },
         "mappings": {
-            _type: {
-                "properties": {
-                    "office": { "type": "geo_point" },
-                    "time": { "type": "date" },
-                    "streams": { "type": "nested" },
-                },
+            "properties": {
+                "office": { "type": "geo_point" },
+                "time": { "type": "date" },
+                "streams": { "type": "nested" },
             },
         },
     },
@@ -107,10 +97,8 @@ settings={
             },
         },
         "mappings": {
-            _type: {
-                "properties": {
-                    "office": { "type": "geo_point" },
-                },
+            "properties": {
+                "office": { "type": "geo_point" },
             },
         },
     },
@@ -123,13 +111,11 @@ settings={
             },
         },
         "mappings": {
-            _type: {
-                "properties": {
-                    "office": { "type": "geo_point" },
-                    "location": { "type": "geo_point" },
-                    "time": { "type": "date" },
-                    "objects": { "type": "nested" },
-                },
+            "properties": {
+                "office": { "type": "geo_point" },
+                "location": { "type": "geo_point" },
+                "time": { "type": "date" },
+                "objects": { "type": "nested" },
             },
         },
     },
@@ -142,12 +128,10 @@ settings={
             },
         },
         "mappings": {
-            _type: {
-                "properties": {
-                    "time": { "type": "date" },
-                    "location": { "type": "geo_point" },
-                    "office": { "type": "geo_point" },
-                },
+            "properties": {
+                "time": { "type": "date" },
+                "location": { "type": "geo_point" },
+                "office": { "type": "geo_point" },
             },
         },
     },
@@ -160,10 +144,8 @@ settings={
             },
         },
         "mappings": {
-            _type: {
-                "properties": {
-                    "office": { "type": "geo_point" },
-                },
+            "properties": {
+                "office": { "type": "geo_point" },
             },
         },
     },
@@ -175,7 +157,7 @@ for index in settings:
     routing_value=settings[index]["settings"].pop(routing_key)
     while True:
         try:
-            r=requests.put(dbhost+"/"+index,json=settings[index])
+            r=requests.put(dbhost+"/"+index,json=settings[index],params=_include_type_name)
             r=requests.put(dbhost+"/"+index+"/_settings",json={ routing_key: routing_value })
             break
         except Exception as e:
