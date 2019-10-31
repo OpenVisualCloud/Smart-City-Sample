@@ -12,6 +12,7 @@ proxyhost=os.environ["PROXYHOST"]
 scenario=os.environ["SCENARIO"]
 zone=os.environ["ZONE"]
 
+_include_type_name={"include_type_name":"false"}
 officestr='$'+('$'.join(map(str,office)))
 settings={
     "offices": {
@@ -156,7 +157,7 @@ for index in settings:
     routing_value=settings[index]["settings"].pop(routing_key)
     while True:
         try:
-            r=requests.put(dbhost+"/"+index,json=settings[index],params={"include_type_name":"false"})
+            r=requests.put(dbhost+"/"+index,json=settings[index],params=_include_type_name)
             r=requests.put(dbhost+"/"+index+"/_settings",json={ routing_key: routing_value })
             break
         except Exception as e:

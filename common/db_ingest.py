@@ -9,7 +9,6 @@ class DBIngest(object):
         self._host=host
         if isinstance(office,list): office='$'+('$'.join(map(str,office)))
         self._index=index+office
-        self._type="_doc"
 
     def _check_error(self, r):
         if r.status_code==200 or r.status_code==201: return
@@ -26,7 +25,12 @@ class DBIngest(object):
         while bulk:
             cmds=[]
             for b in bulk[0:batch]:
-                cmds.append({"index":{"_index":self._index,"_type":self._type}})
+                cmds.append({
+                    "index":{
+                        "_index":self._index,
+                        "_type":"_doc",  # ES6.8
+                    },
+                })
                 cmds.append(b)
             bulk=bulk[batch:]
                 
@@ -35,7 +39,7 @@ class DBIngest(object):
             self._check_error(r)
         
     def ingest(self, info, id1=None):
-        r=requests.put(self._host+"/"+self._index+"/"+self._type+"/"+id1,json=info) if id1 else requests.post(self._host+"/"+self._index+"/"+self._type,json=info)
+        r=requests.put(self._host+"/"+self._index+"/_doc/"+id1,json=info) if id1 else requests.post(self._host+"/"+self._index+"/_doc",json=info)
         self._check_error(r)
         return r.json()
 
@@ -43,11 +47,12 @@ class DBIngest(object):
         options={}
         if seq_no is not None: options["if_seq_no"]=seq_no
         if primary_term is not None: options["if_primary_term"]=primary_term
-        r=requests.post(self._host+"/"+self._index+"/"+self._type+"/"+_id+"/_update",params=options,json={"doc":info})
+        r=requests.post(self._host+"/"+self._index+"/_doc/"+_id+"/_update",params=options,json={"doc":info})  #ES6.8
+        #r=requests.post(self._host+"/"+self._index+"/_update/"+_id,params=options,json={"doc":info})  #ES7.4
         self._check_error(r)
         return r.json()
 
     def delete(self, _id):
-        r=requests.delete(self._host+"/"+self._index+"/"+self._type+"/"+_id,headers={'Content-Type':'application/json'})
+        r=requests.delete(self._host+"/"+self._index+"/_doc/"+_id,headers={'Content-Type':'application/json'})
         self._check_error(r)
         return r.json()
