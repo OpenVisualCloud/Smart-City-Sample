@@ -169,9 +169,9 @@ Modify the following files to update or extend office defintions:
 
 #### Extending Scenario Map
 
-A stadium scenario map is a 2D image transformed to the Earth coordinates. First draw a stadium map using any image editor. SVG-type image editor is preferred as we need to scale the image later. See [Stadium Map.vsdx](asset/Stadium Map.vsdx) as an example. The image must be a square image and the size not larger than ```12960x12960```. Save it as a PNG file.   
+A stadium scenario map is a 2D image transformed to the Earth coordinates. First draw a stadium map using any image editor. SVG-type image editor is preferred as we need to scale the image later. See [Stadium Map.vsdx](asset/Stadium%20Map.vsdx) as an example. The image must be a square image and the size not larger than ```12960x12960```. Save it as a PNG file.   
 
-Run the [png_totiles.sh](../script/png_totiles.sh) as follows:    
+Run the [png_totiles.sh](../script/png_totiles.sh) script as follows:    
 ```
 cd cloud/html/images
 ../../../script/png_totiles.sh stadium <lon_min> <lon_max> <lat_min> <lat_max> stadium.png .
