@@ -93,3 +93,5 @@ Launch your browser and point to `https://<host-ip>`. Note that if you see a bro
 - [Sensor Simulation and Discovery](sensor/README.md)  
 - [Search Capabilities](doc/search.md)       
 - [Utility Scripts](doc/script.md)       
+- [Extending Offices, Sensors and Maps](doc/extend.md)  
+
