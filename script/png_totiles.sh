@@ -2,17 +2,11 @@
 
 scheme="$1"
 case "$scheme" in
-street)
+traffic)
     x0=-122.97570389153029
     x1=-122.95002310846972
     y0=45.55110181605918
     y1=45.5331153839408
-    ;;
-parking)
-    x0=-111.95396553338196
-    x1=-111.91092046661805
-    y0=33.32894143211838
-    y1=33.29296856788165
     ;;
 stadium)
     x0=-121.98610951561652
@@ -21,10 +15,17 @@ stadium)
     y1=37.37009856788163
     ;;
 *)
-    echo "Usage: <sceme> <IMAGE> [DIR]"
+    echo "Usage: <scheme [x0 x1 y0 y1]> <IMAGE> [DIR]"
     exit 3
     ;;
 esac
+
+if test -n "$6"; then
+    x0="$2"; shift
+    x1="$2"; shift
+    y0="$2"; shift
+    y1="$2"; shift
+fi
 
 image="$2"
 if test "$image" != "${image/ /_}"; then

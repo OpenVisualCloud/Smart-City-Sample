@@ -40,12 +40,12 @@ For each office (and scenario), [sensor-info.json](../maintenance/db-init/sensor
             "lon": -122.926128              # Sensor location
         },
         "algorithm": "object-detection",    # The analytic algorithm to run
-        "mnth": 75.0,      # Height of the mounted camera (meter)
-        "alpha": 45.0,     # Angle of camera optical axis relative to earth surface
-        "fovh": 90.0,      # Horizontal field of view
-        "fovv": 68.0,      # Vertical field of view
-        "theta": 0.0,      # Angle of camera optical axis relative to North
-        "simsn": "cams1o1c0"    # cams1o<office-number>c<camera-id>
+        "mnth": 75.0,         # Height of the mounted camera (meter)
+        "alpha": 45.0,        # Angle of camera optical axis relative to earth surface
+        "fovh": 90.0,         # Horizontal field of view
+        "fovv": 68.0,         # Vertical field of view
+        "theta": 0.0,         # Angle of camera optical axis relative to North
+        "simsn": "cams1o1c0"  # Camera identifier
     },{
        ...
     }],
@@ -61,19 +61,135 @@ You can modify or add new entries that represent new simulated cameras or IP cam
 
 The scenario map is currently limited to portion of Hillsboro, Oregon, USA. You can extend it to any location you like as follows:   
 - Download an .osm.pbf extract from [geofabrik.de](https://download.geofabrik.de) for the area you are interested in.    
-- Run the [osm_host.sh](../script/osm_host.sh) script, which will setup a local tile server on your machine http://localhost:8080. The script takes a single command-line argument: the .osm.pbf file.     
-- Run the [osm_totiles.sh](../script/osm_totiles.sh) script, which will extract the tiles from the local tile server. The script takes a rectangular region as input: ```<lon_min> <lon_max> <lat_min> <lat_max>```. This region will be your observable scenario map. The extracted tiles should be copied under [images/traffic](../cloud/html/images/traffic).  
+- Run the [osm_host.sh](../script/osm_host.sh) script, which will setup a local tile server on your machine ```http://localhost:8080```. The script takes the .osm.pbf file as the input argument. You can check if the map is properly rendered by looking at ```http://localhost:8080```.         
+- Run the [osm_totiles.sh](../script/osm_totiles.sh) script, which will extract the tiles from the local tile server. The script takes a rectangular region as input: ```<lon_min> <lon_max> <lat_min> <lat_max>```. This region will be your observable scenario map. The extracted tiles should be copied under [images/traffic](../cloud/html/images/traffic). You can delete any old tiles under [images/traffic](../cloud/html/images/traffic).   
 - Kill the local tile server: ```docker ps``` and ```docker kill```. We don't need it any more.   
 - Modify [scenario.js](../cloud/html/js/scenario.js) with the new display center location.   
 
 Rebuild the sample. You are good to go.  
 
-### Stadium Scenario: Entrance People Counting
+### Stadium Scenario
 
-TODO
+The stadium scenario includes the following modes: entrance people counting and seating-area crowd counting. The following sub-sections describe extension possibilities.  
 
-### Stadium Scenario: Seat Crowd Counting
+#### Extending Entrances/Service Points
 
-TODO
+The sensor provisioning information is described in [sensor-info.json](../maintenance/db-init/sensor-info.json). An example is as follows:   
 
+```
+...
+{
+    "scenario": "stadium",
+    "address": "National Stadium",  # Office friendly name
+    "location": {
+        "lat": 37.39856,            # Office location
+        "lon": -121.94866           # Office location
+    },
+    "sensors": [{
+        "address": "East Gate",     # Sensor friendly name
+        "location": {
+            "lat": 37.38813,        # Sensor location
+            "lon": -121.94370       # Sensor location
+        },
+        "algorithm": "people-counting",  # Analytic algorithm to associate with
+        "theta": 90.0,              # The rotation angle with 0 degree facing North
+        "simsn": "cams2o1c0"        # Camera identifier
+    },{
+        ...
+    }]
+}
+...
+```
+
+Modify [sensor-info.json](../maintenance/db-init/sensor-info.json) as needed to change or add more entrances/service points.  
+
+#### Extending Seating Zones
+
+Crowd-counting requires the following transformations (and thus parameters that you must provide as part of the provisioning information):   
+- **Image to Zone**: A camera may point to a zone or multiple zones of seats. The mapping from image pixels to zones are described in [sensor-info.json](../maintenance/db-init/sensor-info.json). An example is as follows:  
+
+```
+    {
+        "address": "East Wing",         # Sensor friendly name
+        "location": {
+            "lat": 37.38865,            # Sensor location
+            "lon": -121.95405           # Sensor location
+        },
+        "algorithm": "crowd-counting",  # Analytics algorithm to be associated with 
+        "theta": 270.0,                 # Sensor rotation with 0 degree facing North
+        "zones": [0],                   # Zone information
+        "zonemap": [{
+            "zone": 0,                  # 2D polygons to describe the zone boundary
+            "polygon": [[0,0],[1023,0],[1023,1023],[0,1023],[0,0]]
+        }],
+        "simsn": "cams2o1w0"            # Camera identifier
+    }
+```
+
+- **Zone to Map**: After analytics, to display the estimated seat occupencies on the scenario map, the mapping from zone to map location is required. See [zonemap-xxx.json](../cloud/html/images/stadium/zonemap-37.39856d-121.94866.json):   
+
+```
+[{
+  "type": "Feature",
+  "properties": {
+    "office": {
+       "lat": 37.39856,           # Office location
+       "lon": -121.94866          # Office location
+    },
+    "zone": 2,                    # Zone index
+    "name": "North Wing"          # Office friendly name
+  },
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [[             # Polygons to describe the zone boundary
+      [ -121.97061, 37.39661 ],
+      [ -121.97061, 37.39581 ],
+      [ -121.97011, 37.39581 ],
+      [ -121.97011, 37.39506 ],
+      [ -121.96880, 37.39506 ],
+      [ -121.96880, 37.39428 ],
+      [ -121.95647, 37.39428 ],
+      [ -121.95647, 37.39504 ],
+      [ -121.95545, 37.39504 ],
+      [ -121.95545, 37.39581 ],
+      [ -121.95444, 37.39581 ],
+      [ -121.95446, 37.39661 ],
+      [ -121.97061, 37.39661 ]
+    ]]
+  }
+}]
+```
+
+#### Extending Offices
+
+Modify the following files to update or extend office defintions:   
+- [sensor-info.m4](../maintenance/db-init/sensor-info.m4)
+- [sensor-info.json](../maintenance/db-init/sensor-info.json)
+- [zonemap-xxx.json](../cloud/html/images/stadium/zonemap-37.39856d-121.94866.json)
+
+#### Extending Scenario Map
+
+A stadium scenario map is a 2D image transformed to the Earth coordinates. First draw a stadium map using any image editor. SVG-type image editor is preferred as we need to scale the image later. See [Stadium Map.vsdx](asset/Stadium Map.vsdx) as an example. The image must be a square image and the size not larger than ```12960x12960```. Save it as a PNG file.   
+
+Run the [png_totiles.sh](../script/png_totiles.sh) as follows:    
+```
+cd cloud/html/images
+../../../script/png_totiles.sh stadium <lon_min> <lon_max> <lat_min> <lat_max> stadium.png .
+```
+where ```<lon_min>...<lat_max>``` are the square region coordinates.  
+
+The script will generate the map tiles under [cloud/html/images/stadium](../cloud/html/images/stadium), and a geo-wrapped image ```stadium_modified.tiff```. 
+
+The geo-wrapped image ```stadium_modified.tiff``` can be used to obtain location coordinates for offices, sensors, and seats. You can use [QGIS](https://www.qgis.org/en/site/index.html) or similar software to import the image and then examine the coordinates. The following files defines the office, sensor, and seats geo locations:   
+
+- [sensor-info.m4](../maintenance/db-init/sensor-info.m4)   
+- [sensor-info.json](../maintenance/db-init/sensor-info.json)   
+- [zonemap-xxx.json](../cloud/html/images/stadium/zonemap-37.39856d-121.94866.json)  
+- [scenario.js](../cloud/html/js/scenario.js)   
+
+The geo-wrapped image is not directly used in the sample. You should delete it before building the sample.   
+
+### See Also
+
+- [Extending with IP Cameras](../sensor/README.md)   
 
