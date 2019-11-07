@@ -171,3 +171,62 @@ div[sensor-info-template] table {
     border-top:1px solid;
 }
 
+#pg-recording table {
+    table-layout: fixed;
+    margin: 0;
+}
+
+#pg-recording table tr {
+    border: 0;
+}
+
+#pg-recording table tr td {
+    position: relative;
+    vertical-align: top;
+    padding: 0;
+}
+
+#pg-recording td[playlist-section] {
+    width: 20%;
+    height: 100%;
+    vertical-align: top;
+    padding: 0;
+}
+
+#pg-recording td[playlist-section] table {
+    table-layout: fixed;
+    margin: 0;
+}
+
+#pg-recording td[playlist-section] table tbody {
+    display: block;
+    height: 100%;
+    border: 0;
+    overflow: auto;
+}
+
+.page-recording-title {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0.9;
+    background-color: white;
+    pointer-events: none;
+}
+
+.page-recording-analytics {
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+}
+
+.no-padding {
+    padding: 0;
+}
+
+.xx-small {
+    font-size: xx-small;
+}
+
