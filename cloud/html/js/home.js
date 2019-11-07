@@ -171,7 +171,7 @@ $("#pg-home").on(":initpage", function(e) {
                     sensorctx.update_sensor(sensor);
 
                 /* update sensor tooltip */
-                var tooltip=format_sensor_tooltip(page.find("[sensor-info-template]").clone().removeAttr('sensor-info_template').show(),sensor);
+                var tooltip=format_sensor_tooltip($("[template] [sensor-info-template]").clone(),sensor);
                 if (sensorctx.tooltip!=tooltip) {
                     sensorctx.tooltip=tooltip;
                     sensorctx.marker.unbindTooltip().bindTooltip(tooltip);

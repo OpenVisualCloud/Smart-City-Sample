@@ -71,7 +71,7 @@ var stats={
     },
     create: function (sensorctx, sensor, page, map, create_chart_icon) {
 	    sensorctx.text=L.tooltip({permanent:true,direction:'center',className:'tooltip_text'});
-        var div=$('<div style="width:350px;height:200px;padding-top:5px;padding-bottom:5px" draggable="true"><canvas style="width:100%;height:100%"></canvas></div>').on('dragstart', function (e) {
+        var div=$('<div class="page-stats" draggable="true"><canvas class="max-size"></canvas></div>').on('dragstart', function (e) {
             e.originalEvent.dataTransfer.setData('application/json',JSON.stringify(sensor));
             page.find("#mapCanvas").unbind('dragover').on('dragover', function (e) {
                 e.preventDefault();
@@ -85,7 +85,7 @@ var stats={
                 marker1._zoomargs={zoom:map.getZoom(),width:350,height:200};
                 $(marker1._icon).css({'border-radius':'10px'});
 
-                div1.append('<a class="leaflet-popup-close-button" href="javascript:void(0)" style="z-index:100">x</a>');
+                div1.append('<a class="leaflet-popup-close-button front" href="javascript:void(0)">x</a>');
                 div1.find('a').click(function() {
                     marker1.remove();
                 });

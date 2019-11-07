@@ -1,13 +1,21 @@
-<div id="pg-home" style="height:100%">
+<div id="pg-home" class="page">
 
-    <div id="mapCanvas" style="height:100%;position:relative">
+    <div id="mapCanvas" class="page-home-canvas">
     </div>
 
-    <div style="width:300px;height:200px;display:none" preview-template>
+    <div class="page-home-alert-screen" draggable="true">
+        <ul>
+        </ul>
     </div>
 
-    <div style="display:none" sensor-info-template>
-        <table style="border-collapse:collapse;line-height:0.5rem"><tbody>
+</div>
+
+<div template>
+    <div preview-template>
+    </div>
+
+    <div sensor-info-template>
+        <table><tbody>
             <tr><td>Type</td><td colspan="3" field="sensor"></td></tr>
             <tr><td>Model</td><td colspan="3" field="model"></td></tr>
             <tr><td>Location</td><td colspan="3" location></td></tr>
@@ -18,10 +26,5 @@
             <tr><td>Theta</td><td field="theta"></td><td>Mnt-H</td><td field="mnth"></td></tr>
             <tr><td>FOV-H</td><td field="fovh"></td><td>FOV-V</td><td field="fovv"></td></tr>
         </tbody></table>
-    </div>
-
-    <div alert-screen style="width:650px;height:100px;position:absolute;top:700px;left:60px;z-index:1000;background-color:black;opacity:0.8;border-radius:10px;padding:10px;font-size:large;resize:both;overflow:hidden" draggable="true">
-        <ul style="list-style-type:none">
-        </ul>
     </div>
 </div>

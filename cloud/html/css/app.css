@@ -33,3 +33,219 @@ form .form-icons .fa {
 .leaflet-popup-content {
   margin:0 !important;
 }
+
+.header-background-color {
+    background-color: #0071c5 !important;
+}
+
+.header-text-color {
+    color: #FDEDEC;
+}
+
+.header-menu-row {
+    bottom: -8px;
+}
+
+.header-menu-col {
+    min-width:400px;
+}
+
+.header-search-bar {
+    max-width: 100% !important;
+}
+
+.header-search-hint {
+    position: absolute;
+    line-height: 1.2em;
+    background-color: white;
+    z-index: 9999;
+    overflow: hidden;
+    display: none;
+    font-size: small;
+}
+
+.header-search-hint-text {
+    background-color: lightgrey;
+    margin-bottom: 5px;
+}
+
+.header-search-hint-text-highlight {
+    background-color: lightblue;
+}
+
+.header-search-hint-error {
+    color: red;
+}
+
+.header-menu-button {
+    font-size: 1rem;
+}
+
+.hidden {
+    display: none;
+}
+
+.header-setting-label {
+    width: 40%;
+    font-weight: bold;
+}
+
+.page {
+    height: 100%;
+}
+
+.page-home-canvas {
+    height: 100%;
+    position: relative;
+}
+
+.page-home-alert-screen {
+    width: 650px;
+    height: 100px;
+    position: absolute;
+    top: 700px;
+    left: 60px;
+    z-index: 1000;
+    background-color: black;
+    opacity: 0.8;
+    border-radius: 10px;
+    padding: 10px;
+    font-size: large;
+    resize: both;
+    overflow: hidden;
+}
+
+.page-home-alert-screen ul {
+    list-style-type: none;
+}
+
+div[template] {
+    display: none;
+}
+
+div[sensor-info-template] table {
+    border-collapse: collapse;
+    line-height: 0.5rem;
+}
+
+.max-size {
+    width: 100%;
+    height: 100%;
+}
+
+.page-home-preview-screen {
+    border-radius: 10px;
+}
+
+.page-home-preview-screen-size {
+    width: 300px;
+    height: 200px;
+}
+
+.page-home-preview-screen-recording-unavailable {
+    line-height: 200px;
+    text-align: center;
+}
+
+.front {
+    z-index: 100;
+}
+
+.page-office-algorithm-table {
+    overflow: auto;
+    height: 400px;
+    position: relative;
+}
+
+.page-office-algorithm-table [algorithm-table] {
+    position: relative;
+}
+
+.page-office-workload {
+    width: 300px;
+    height: 200px;
+    float: left;
+    position: relative;
+    bottom: 0px;
+    border-right: 1px solid;
+}
+
+.page-office-workload canvas {
+    width: 300px !important;
+    height: 200px !important;
+}
+
+.page-office-service-table {
+    overflow: auto;
+    height: 200px;
+    max-height: 200px;
+    position: relative;
+    bottom: 0px;
+    border-top:1px solid;
+}
+
+#pg-recording table {
+    table-layout: fixed;
+    margin: 0;
+}
+
+#pg-recording table tr {
+    border: 0;
+}
+
+#pg-recording table tr td {
+    position: relative;
+    vertical-align: top;
+    padding: 0;
+}
+
+#pg-recording td[playlist-section] {
+    width: 20%;
+    height: 100%;
+    vertical-align: top;
+    padding: 0;
+}
+
+#pg-recording td[playlist-section] table {
+    table-layout: fixed;
+    margin: 0;
+}
+
+#pg-recording td[playlist-section] table tbody {
+    display: block;
+    height: 100%;
+    border: 0;
+    overflow: auto;
+}
+
+.page-recording-title {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0.9;
+    background-color: white;
+    pointer-events: none;
+}
+
+.page-recording-analytics {
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+}
+
+.no-padding {
+    padding: 0;
+}
+
+.xx-small {
+    font-size: xx-small;
+}
+
+.page-stats {
+    width: 350px;
+    height: 200px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}

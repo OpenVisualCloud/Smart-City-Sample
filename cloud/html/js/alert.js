@@ -1,13 +1,15 @@
 var alerts={
     setup: function (page) {
+        var screen=$(".page-home-alert-screen");
+
         page.data('alert').layer.on('add', function () {
-            $("[alert-screen]").show();
+            screen.show();
         }).on('remove', function () {
-            $("[alert-screen]").hide();
+            screen.hide();
         });
         setTimeout(alerts.update,5000,page.data('map'),page.data('offices'),page.data('sensors'));
 
-        $("[alert-screen]").bind('dragstart',function (e) {
+        screen.bind('dragstart',function (e) {
             var screen=$(this);
             var rect=screen[0].getBoundingClientRect();
             var offsetX=e.clientX-rect.left;
@@ -22,12 +24,12 @@ var alerts={
         });
     },
     append: function (time,address,text,level) {
-        var screen=$("[alert-screen] ul");
+        var screen=$(".page-home-alert-screen ul");
         var timestamp=time.toLocaleDateString(undefined,{
             dateStyle:'short',timeStyle:'short', hour12:false,
         });
         var colors={info:"#4AFC0B",warning:"#F7FA0C",fatal:"#FF0013"};
-        var li=$('<li style="color:'+colors[level]+';font-size:0">'+timestamp+' @'+address+': '+text+'</li>');
+        var li=$('<li>'+timestamp+' @'+address+': '+text+'</li>').css({color:colors[level],"font-size":0});
         li.data('time',time);
 
         var exist=false;
@@ -43,7 +45,7 @@ var alerts={
             screen.find("li:last").remove();
     },
     update: function (map, offices,sensors) {
-        var screen=$("[alert-screen]");
+        var screen=$(".page-home-alert-screen");
         if (screen.is(":visible")) {
             var center=map.getCenter();
             apiHost.search("alerts","time>=now-"+settings.alert_window()+" and location:["+center.lat+","+center.lng+","+settings.radius()+"]",null).then(function (r) {
