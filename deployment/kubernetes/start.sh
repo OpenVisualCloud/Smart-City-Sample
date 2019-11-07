@@ -22,11 +22,11 @@ for yaml in $(find "$DIR" -maxdepth 1 -name "*.yaml" -print); do
 done
 
 echo "Workaround: Patching cloud-web-service..."
+hostip=$(kubectl get nodes -o jsonpath='{.items[*].status.addresses[?(@.type=="InternalIP")].address}' --selector='node-role.kubernetes.io/master' | cut -f1 -d' ')
 while true; do
     if test -n "$(kubectl get services cloud-web-service 2>/dev/null)"; then
-        hostip=$( (hostname -i || hostname -I ) | cut -f1 -d' ')
+        echo "Patch to expose https://$hostip. File a bug if this is not your host IP address."
         kubectl patch svc cloud-web-service -p "{\"spec\":{\"externalIPs\":[\"$hostip\"]}}"
-        echo "patched to expose https://$hostip"
         exit 0
     fi
     sleep 2
