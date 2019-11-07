@@ -33,3 +33,46 @@ form .form-icons .fa {
 .leaflet-popup-content {
   margin:0 !important;
 }
+
+.header-background-color {
+    background-color: #0071c5 !important;
+}
+
+.header-text-color {
+    color: #FDEDEC;
+}
+
+.header-menu-row {
+    bottom: -8px;
+}
+
+.header-menu-col {
+    min-width:400px;
+}
+
+.header-search-bar {
+    max-width: 100% !important;
+}
+
+.header-search-hint {
+    position: absolute;
+    line-height: 1.2em;
+    background-color: white;
+    z-index: 9999;
+    overflow: hidden;
+    display: none;
+    font-size: small;
+}
+
+.header-menu-button {
+    font-size: 1rem;
+}
+
+.hidden {
+    display: none;
+}
+
+.header-setting-label {
+    width: 40%;
+    font-weight: bold;
+}
