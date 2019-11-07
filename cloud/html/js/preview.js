@@ -1,10 +1,9 @@
 
 var preview={
     create: function (sensorctx, sensor, page, map) {
-        var div=page.find("[preview-template]").clone().dblclick(function () {
+        var div=$("[template] [preview-template]").clone().dblclick(function () {
             selectPage("recording",['sensor="'+sensor._id+'"',sensor._source.office]);
         });
-        div.removeAttr("preview-template").show();
         sensorctx.marker.bindPopup(div[0],{
             maxWidth:"auto",
             maxHeight:"auto",
@@ -22,16 +21,15 @@ var preview={
                     e.preventDefault();
                 }).unbind('drop').on('drop', function (e) {
                     e.preventDefault();
-                    var div=page.find("[preview-template]").clone().show();
-                    div.removeAttr("preview-template").css({width:'100%',height:'100%'});
+                    var div=$("[template] [preview-template]").clone().addClass("max-size");
                     var icon=L.divIcon({html:div[0],iconSize:[300,200],iconAnchor:[0,0]});
                     var marker=L.marker(map.mouseEventToLatLng(e),{icon:icon,draggable:true}).addTo(page.data('preview').layer);
                     marker._zoomargs={zoom:map.getZoom(),width:300,height:200};
-                    $(marker._icon).css({'border-radius':'10px'});
+                    $(marker._icon).addClass("page-home-preview-screen");
                     var sensor1=JSON.parse(e.originalEvent.dataTransfer.getData("application/json"));
                     preview.play(div,sensor1);
 
-                    div.append('<a class="leaflet-popup-close-button" href="javascript:void(0)" style="z-index:100">x</a>').find('a').click(function() {
+                    div.append('<a class="leaflet-popup-close-button page-home-marker-popup-close-button" href="javascript:void(0)">x</a>').find('a').click(function() {
                         marker.remove();
                     });
                 });
@@ -40,7 +38,7 @@ var preview={
     },
     play: function (div, sensor) {
         var update=function () {
-            var error='<div style="line-height:200px;text-align:center">Recording Unavailable</div>';
+            var error='<div class="page-home-preview-screen-recording-unavailable">Recording Unavailable</div>';
             apiHost.search("recordings",settings.preview_query()+" and sensor='"+sensor._id+"'",sensor._source.office,1).then(function (r) {
                 div.find("div,video").remove();
                 r=r.response;
@@ -48,7 +46,7 @@ var preview={
                     div.append(error);
                     return setTimeout(update,5000);
                 }
-                var video=$('<video style="width:100%;height:100%" autoplay muted><source src="recording/'+r[0]._source.path+'?'+$.param({office:sensor._source.office.lat+","+sensor._source.office.lon})+'"></source></video>').bind('ended',update).bind('error',function () {
+                var video=$('<video class="max-size" autoplay muted><source src="recording/'+r[0]._source.path+'?'+$.param({office:sensor._source.office.lat+","+sensor._source.office.lon})+'"></source></video>').bind('ended',update).bind('error',function () {
                     setTimeout(update,5000);
                 });
                 div.append(video);
