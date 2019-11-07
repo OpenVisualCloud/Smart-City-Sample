@@ -29,7 +29,7 @@ var alerts={
             dateStyle:'short',timeStyle:'short', hour12:false,
         });
         var colors={info:"#4AFC0B",warning:"#F7FA0C",fatal:"#FF0013"};
-        var li=$('<li style="color:'+colors[level]+';font-size:0">'+timestamp+' @'+address+': '+text+'</li>');
+        var li=$('<li>'+timestamp+' @'+address+': '+text+'</li>').css({color:colors[level],"font-size":0});
         li.data('time',time);
 
         var exist=false;

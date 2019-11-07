@@ -30,7 +30,7 @@ var preview={
                     var sensor1=JSON.parse(e.originalEvent.dataTransfer.getData("application/json"));
                     preview.play(div,sensor1);
 
-                    div.append('<a class="leaflet-popup-close-button page-home-marker-popup-close-button" href="javascript:void(0)">x</a>').find('a').click(function() {
+                    div.append('<a class="leaflet-popup-close-button front" href="javascript:void(0)">x</a>').find('a').click(function() {
                         marker.remove();
                     });
                 });

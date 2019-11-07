@@ -64,6 +64,19 @@ form .form-icons .fa {
     font-size: small;
 }
 
+.header-search-hint-text {
+    background-color: lightgrey;
+    margin-bottom: 5px;
+}
+
+.header-search-hint-text-highlight {
+    background-color: lightblue;
+}
+
+.header-search-hint-error {
+    color: red;
+}
+
 .header-menu-button {
     font-size: 1rem;
 }
@@ -134,7 +147,7 @@ div[sensor-info-template] table {
     text-align: center;
 }
 
-.page-home-marker-popup-close-button {
+.front {
     z-index: 100;
 }
 
@@ -230,3 +243,9 @@ div[sensor-info-template] table {
     font-size: xx-small;
 }
 
+.page-stats {
+    width: 350px;
+    height: 200px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}

@@ -52,12 +52,12 @@ function showHints() {
     var candidates=page.data('candidates');
     var candidateIdx=page.data('candidateIdx');
 
-    var hintText=(desc!="")?'<div style="background-color:lightgrey;margin-bottom:5px">'+desc+"</div>":"";
+    var hintText=(desc!="")?'<div class="header-search-hint-text">'+desc+"</div>":"";
     var s=(candidateIdx>9)?candidateIdx-9:0;
     var e=(s+10>=candidates.length)?candidates.length:s+10;
     for (var i=s;i<e;i++) {
         if (i==candidateIdx) {
-            hintText=hintText+"<span style='background-color:lightblue'>"+candidates[i]+"</span><BR>";
+            hintText=hintText+'<span class="header-search-hint-text-highlight">'+candidates[i]+"</span><BR>";
         } else {
             hintText=hintText+candidates[i]+"<BR>";
         }
@@ -186,7 +186,7 @@ $("[hint-panel]").on(":display", function (e, message) {
     panel.show();
 }).on(":error", function (e, message) {
     var panel=$(this);
-    panel.trigger(":display", ['<p style="color:red">'+message+'</p>']);
+    panel.trigger(":display", ['<p class="header-search-hint-error">'+message+'</p>']);
     setTimeout(function () { panel.hide(); },2000);
 });
 
