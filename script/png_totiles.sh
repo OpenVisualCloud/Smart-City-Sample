@@ -54,11 +54,11 @@ if test "$width" -ne "$height"; then
     exit 3
 fi
 
-docker run -u $user -v "$image_dir:/home:ro" -v "$cwd:/mnt" --rm -it $GDAL2 gdal_translate -of GTiff -gcp 0 0 $x0 $y0 -gcp 0 $height $x0 $y1 -gcp $width $height $x1 $y1 -gcp $width 0 $x1 $y0 "/home/${image}" "/mnt/${image}.tmp.tif"
+docker run --rm -u $user -v "$image_dir:/home:ro" -v "$cwd:/mnt" --rm -it $GDAL2 gdal_translate -of GTiff -gcp 0 0 $x0 $y0 -gcp 0 $height $x0 $y1 -gcp $width $height $x1 $y1 -gcp $width 0 $x1 $y0 "/home/${image}" "/mnt/${image}.tmp.tif"
 rm -f "$cwd/${image}.modified.tif"
-docker run -u $user -v "$cwd:/home" --rm -it $GDAL2 gdalwarp -r cubic -tps -co COMPRESS=LZW  "/home/${image}.tmp.tif" "/home/${image}.modified.tif"
+docker run --rm -u $user -v "$cwd:/home" --rm -it $GDAL2 gdalwarp -r cubic -tps -co COMPRESS=LZW  "/home/${image}.tmp.tif" "/home/${image}.modified.tif"
 rm -f "$cwd/${image}.tmp.tif"
 rm -rf "$cwd/${scheme}"
 mkdir -p "$cwd/${scheme}"
-docker run -u $user -v "$cwd:/home" --rm -it $GDAL2 gdal2tiles.py -p mercator -z 13-18 -s EPSG:4326 -d -n -w none -r cubic /home/${image}.modified.tif /home/${scheme}
+docker run --rm -u $user -v "$cwd:/home" --rm -it $GDAL2 gdal2tiles.py -p mercator -z 13-18 -s EPSG:4326 -d -n -w none -r cubic /home/${image}.modified.tif /home/${scheme}
 find "$cwd/${scheme}" -name "*.xml" -exec rm -f {} \;
