@@ -110,11 +110,6 @@ div[template] {
     display: none;
 }
 
-div[preview-template] {
-    width: 300px;
-    height: 200px;
-}
-
 div[sensor-info-template] table {
     border-collapse: collapse;
     line-height: 0.5rem;
@@ -129,6 +124,11 @@ div[sensor-info-template] table {
     border-radius: 10px;
 }
 
+.page-home-preview-screen-size {
+    width: 300px;
+    height: 200px;
+}
+
 .page-home-preview-screen-recording-unavailable {
     line-height: 200px;
     text-align: center;
@@ -137,3 +137,37 @@ div[sensor-info-template] table {
 .page-home-marker-popup-close-button {
     z-index: 100;
 }
+
+.page-office-algorithm-table {
+    overflow: auto;
+    height: 400px;
+    position: relative;
+}
+
+.page-office-algorithm-table [algorithm-table] {
+    position: relative;
+}
+
+.page-office-workload {
+    width: 300px;
+    height: 200px;
+    float: left;
+    position: relative;
+    bottom: 0px;
+    border-right: 1px solid;
+}
+
+.page-office-workload canvas {
+    width: 300px !important;
+    height: 200px !important;
+}
+
+.page-office-service-table {
+    overflow: auto;
+    height: 200px;
+    max-height: 200px;
+    position: relative;
+    bottom: 0px;
+    border-top:1px solid;
+}
+

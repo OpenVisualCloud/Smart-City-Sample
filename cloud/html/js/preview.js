@@ -3,7 +3,8 @@ var preview={
     create: function (sensorctx, sensor, page, map) {
         var div=$("[template] [preview-template]").clone().dblclick(function () {
             selectPage("recording",['sensor="'+sensor._id+'"',sensor._source.office]);
-        });
+        }).addClass("page-home-preview-screen-size");
+
         sensorctx.marker.bindPopup(div[0],{
             maxWidth:"auto",
             maxHeight:"auto",
