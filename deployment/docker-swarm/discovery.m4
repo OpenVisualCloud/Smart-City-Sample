@@ -54,7 +54,7 @@ ifelse(defn(`DISCOVER_IP_CAMERA'),`true',`dnl
     defn(`OFFICE_NAME')_ipcamera_discovery:
         image: smtc_onvif_discovery:latest
         environment:
-            PORT_SCAN: "-p80-65535 192.168.defn(`OFFICEIDX').0/24"
+            PORT_SCAN: "-p T:80-65535 defn(`IP_CAMERA_NETWORK')"
             OFFICE: "defn(`OFFICE_LOCATION')"
             DBHOST: "http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')_db,db):9200"
             SERVICE_INTERVAL: "30"
