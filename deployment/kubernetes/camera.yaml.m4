@@ -13,11 +13,7 @@ forloop(`CAMERAIDX',1,defn(`NCAMERAS'),`dnl
   - port: eval(defn(`CAMERA_RTSP_PORT')+defn(`CAMERAIDX')*defn(`CAMERA_PORT_STEP')-defn(`CAMERA_PORT_STEP'))
     protocol: TCP
     name: `rtsp'defn(`CAMERAIDX')
-forloop(`STREAMIDX',1,defn(`CAMERA_PORT_STEP'),`dnl
-  - port: eval(defn(`CAMERA_RTP_PORT')+defn(`CAMERAIDX')*defn(`CAMERA_PORT_STEP')-defn(`CAMERA_PORT_STEP')+defn(`STREAMIDX')-1)
-    protocol: UDP
-    name: `rtp'defn(`CAMERAIDX')`s'defn(`STREAMIDX')
-')')dnl
+')dnl
   selector:
     app: defn(`OFFICE_NAME')-cameras
 
@@ -48,10 +44,7 @@ spec:
 forloop(`CAMERAIDX',1,defn(`NCAMERAS'),`dnl
             - containerPort: eval(defn(`CAMERA_RTSP_PORT')+defn(`CAMERAIDX')*defn(`CAMERA_PORT_STEP')-defn(`CAMERA_PORT_STEP'))
               protocol: TCP
-forloop(`STREAMIDX',1,defn(`CAMERA_PORT_STEP'),`dnl
-            - containerPort: eval(defn(`CAMERA_RTP_PORT')+defn(`CAMERAIDX')*defn(`CAMERA_PORT_STEP')-defn(`CAMERA_PORT_STEP')+defn(`STREAMIDX')-1)
-              protocol: UDP
-')')dnl
+')dnl
           env:
 ifelse(defn(`SCENARIO_NAME'),`traffic',`dnl
             - name: FILES
@@ -98,11 +91,7 @@ forloop(`CAMERAIDX',1,defn(`NCAMERAS2'),`dnl
   - port: eval(defn(`CAMERA_RTSP_PORT')+defn(`CAMERAIDX')*defn(`CAMERA_PORT_STEP')-defn(`CAMERA_PORT_STEP'))
     protocol: TCP
     name: `rtsp'defn(`CAMERAIDX')
-forloop(`STREAMIDX',1,defn(`CAMERA_PORT_STEP'),`dnl
-  - port: eval(defn(`CAMERA_RTP_PORT')+defn(`CAMERAIDX')*defn(`CAMERA_PORT_STEP')-defn(`CAMERA_PORT_STEP')+defn(`STREAMIDX')-1)
-    protocol: UDP
-    name: `rtp'defn(`CAMERAIDX')`s'defn(`STREAMIDX')
-')')dnl
+')dnl
   selector:
     app: defn(`OFFICE_NAME')-cameras-crowd
 
@@ -132,10 +121,7 @@ spec:
 forloop(`CAMERAIDX',1,defn(`NCAMERAS2'),`dnl
             - containerPort: eval(defn(`CAMERA_RTSP_PORT')+defn(`CAMERAIDX')*defn(`CAMERA_PORT_STEP')-defn(`CAMERA_PORT_STEP'))
               protocol: TCP
-forloop(`STREAMIDX',1,defn(`CAMERA_PORT_STEP'),`dnl
-            - containerPort: eval(defn(`CAMERA_RTP_PORT')+defn(`CAMERAIDX')*defn(`CAMERA_PORT_STEP')-defn(`CAMERA_PORT_STEP')+defn(`STREAMIDX')-1)
-              protocol: UDP
-')')dnl
+')dnl
           env:
             - name: FILES
               value: "crowd.mp4$$"
