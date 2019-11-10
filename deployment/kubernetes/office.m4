@@ -8,3 +8,5 @@ define(`CAMERA_RTP_PORT',27000)dnl
 define(`CAMERA_PORT_STEP',10)dnl
 define(`OFFICE_ZONE',`office'defn(`OFFICEIDX')-zone)dnl
 define(`STORAGE_ZONE',`office'defn(`OFFICEIDX')-storage)dnl
+define(`DISCOVER_IP_CAMERA',`false')dnl
+define(`DISCOVER_SIMULATED_CAMERA',`true')dnl

@@ -1,4 +1,6 @@
 
+ifelse(defn(`DISCOVER_SIMULATED_CAMERA'),`true',`dnl
+
     defn(`OFFICE_NAME')_camera_discovery:
         image: smtc_onvif_discovery:latest
         environment:
@@ -18,27 +20,6 @@ ifelse(defn(`PLATFORM'),`VCAC-A',`dnl
 ')dnl
         deploy:
             replicas: 1
-            placement:
-                constraints:
-                    - defn(`OFFICE_ZONE')
-
-    defn(`OFFICE_NAME')_ipcamera_discovery:
-        image: smtc_onvif_discovery:latest
-        environment:
-            PORT_SCAN: "-p80-65535 192.168.defn(`OFFICEIDX').0/24"
-            OFFICE: "defn(`OFFICE_LOCATION')"
-            DBHOST: "http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')_db,db):9200"
-            SERVICE_INTERVAL: "30"
-            NO_PROXY: "*"
-            no_proxy: "*"
-        volumes:
-            - /etc/localtime:/etc/localtime:ro
-ifelse(defn(`PLATFORM'),`VCAC-A',`dnl
-        networks:
-            - default_net
-')dnl
-        deploy:
-            replicas: 0
             placement:
                 constraints:
                     - defn(`OFFICE_ZONE')
@@ -65,4 +46,30 @@ ifelse(defn(`PLATFORM'),`VCAC-A',`dnl
             placement:
                 constraints:
                     - defn(`OFFICE_ZONE')
-')
+')dnl
+')dnl
+
+ifelse(defn(`DISCOVER_IP_CAMERA'),`true',`dnl
+
+    defn(`OFFICE_NAME')_ipcamera_discovery:
+        image: smtc_onvif_discovery:latest
+        environment:
+            PORT_SCAN: "-p80-65535 192.168.defn(`OFFICEIDX').0/24"
+            OFFICE: "defn(`OFFICE_LOCATION')"
+            DBHOST: "http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')_db,db):9200"
+            SERVICE_INTERVAL: "30"
+            NO_PROXY: "*"
+            no_proxy: "*"
+        volumes:
+            - /etc/localtime:/etc/localtime:ro
+ifelse(defn(`PLATFORM'),`VCAC-A',`dnl
+        networks:
+            - default_net
+')dnl
+        deploy:
+            replicas: 1
+            placement:
+                constraints:
+                    - defn(`OFFICE_ZONE')
+
+')dnl

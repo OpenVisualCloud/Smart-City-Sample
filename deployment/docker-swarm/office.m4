@@ -7,3 +7,5 @@ define(`CAMERA_RTP_PORT',27000)dnl
 define(`CAMERA_PORT_STEP',10)dnl
 define(`OFFICE_ZONE',node.ifelse(eval(defn(`NOFFICES')>1),1,`labels.office'defn(`OFFICEIDX')_zone==yes,role==manager))dnl
 define(`STORAGE_ZONE',node.ifelse(eval(defn(`NOFFICES')>1),1,`labels.office'defn(`OFFICEIDX')_storage==yes,role==manager))dnl
+define(`DISCOVER_IP_CAMERA',`false')dnl
+define(`DISCOVER_SIMULATED_CAMERA',`true')dnl
