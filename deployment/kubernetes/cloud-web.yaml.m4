@@ -10,6 +10,8 @@ spec:
     - port: 443
       targetPort: 8443
       name: https
+  externalIPs:
+    - defn(`HOSTIP')
   selector:
     app: cloud-web
 

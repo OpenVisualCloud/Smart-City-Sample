@@ -7,6 +7,7 @@ NOFFICES="${3:-1}"
 IFS="," read -r -a NCAMERAS <<< "${4:-5}"
 IFS="," read -r -a NANALYTICS <<< "${5:-3}"
 FRAMEWORK="${6:-gst}"
+HOSTIP=$(kubectl get nodes -o jsonpath='{.items[*].status.addresses[?(@.type=="InternalIP")].address}' --selector='node-role.kubernetes.io/master' | cut -f1 -d' ')
 
 echo "Generating templates with PLATFORM=${PLATFORM}, SCENARIO=${SCENARIO}, NOFFICES=${NOFFICES}"
 find "${DIR}" -maxdepth 1 -name "*.yaml" -exec rm -rf "{}" \;
@@ -23,6 +24,6 @@ for template in $(find "${DIR}" -maxdepth 1 -name "*.yaml.m4" -print); do
         done
     else
         yaml=${template/.m4/}
-        m4 -DNOFFICES=${NOFFICES} -DSCENARIO=${SCENARIO} -DPLATFORM=${PLATFORM} -DNCAMERAS=${NCAMERAS[0]} -DNCAMERAS2=${NCAMERAS[1]:-${NCAMERAS[0]}} -DNANALYTICS=${NANALYTICS[0]} -DNANALYTICS2=${NANALYTICS[1]:-${NANALYTICS[0]}} -DFRAMEWORK=${FRAMEWORK} -DUSERID=$(id -u) -DGROUPID=$(id -g) -I "${DIR}" "${template}" > "${yaml}"
+        m4 -DNOFFICES=${NOFFICES} -DSCENARIO=${SCENARIO} -DPLATFORM=${PLATFORM} -DNCAMERAS=${NCAMERAS[0]} -DNCAMERAS2=${NCAMERAS[1]:-${NCAMERAS[0]}} -DNANALYTICS=${NANALYTICS[0]} -DNANALYTICS2=${NANALYTICS[1]:-${NANALYTICS[0]}} -DFRAMEWORK=${FRAMEWORK} -DUSERID=$(id -u) -DGROUPID=$(id -g) -DHOSTIP=${HOSTIP} -I "${DIR}" "${template}" > "${yaml}"
     fi
 done
