@@ -47,25 +47,4 @@ COPY ./app/server/requirements.txt /
 RUN pip3 install  --no-cache-dir -r /requirements.txt
 RUN pip3 install kafka-python==1.3.2
 RUN pip3 install kazoo==2.2.1
-
-
 COPY ./app /home/video-analytics/app
-
-
-COPY ./platforms/VCAC-A/pipelines/gstreamer /home/video-analytics/pipelines
-
-
-
-
-
-
-
-####
-ARG  USER
-ARG  GROUP
-ARG  UID
-ARG  GID
-
-
-
-####
