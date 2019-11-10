@@ -110,11 +110,15 @@ In above provisioning parameters, the ```simsn``` fields identify simulated came
 ...
 ```
 
-#### (3) Enabling Discovering Service
+#### (3) Enabling the Discovering Service
 
-Enable the ```ipcamera-discovery``` service in the deployment scripts ([camera-discovery.m4](../deployment/docker-swarm/camera-discovery.m4) for docker compose or docker swarm and [camera-discovery.yaml.m4](../deployment/kubernetes/camera-discovery.yaml.m4) for kubernetes) by replacing ```replicas: 0``` with ```replicas: 1```.   
+Enable the IP camera discovering service by configuring ```DISCOVER_IP_CAMERA``` to ```true``` in [docker-swarm/office.m4](../deployment/docker-swarm/office.m4) and/or [kubernetes/office.m4](../deployment/kubernetes/office.m4).   
 
-If you enable more than 1 office, addtionally check the ```PORT_SCAN``` value. The default setting assumes each office occupies a block in the ```192.168.x.0/24``` network. Modify as necessary. Also, make sure that the worker node that runs the ```ipcamera-discovery``` service can access to the specified network.     
+---
+Due to Kubernetes limitation, if IP camera is enabled, the discovering service and the analytics instances will run on the host network to reliably receive RTP streams.   
+---
+
+If you enable more than 1 office, addtionally check the ```PORT_SCAN``` value. The default setting assumes each office occupies a block in the ```192.168.x.0/24``` network. Modify as necessary. Also, make sure that the worker node that runs the IP camera discovering service can access to the specified network.     
 
 Restart the sample. Your IP camera(s) should show up in the sample UI.      
 
