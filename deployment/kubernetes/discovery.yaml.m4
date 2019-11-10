@@ -137,7 +137,7 @@ spec:
           imagePullPolicy: IfNotPresent
           env:
             - name: PORT_SCAN
-              value: "-p T:80-65535 192.168.defn(`OFFICEIDX').0/24"
+              value: "-p T:80-65535 defn(`IP_CAMERA_NETWORK')"
             - name: OFFICE
               value: "defn(`OFFICE_LOCATION')"
             - name: DBHOST
