@@ -14,7 +14,7 @@ forloop(`OFFICEIDX',1,defn(`NOFFICES'),`
     ifelse(index(defn(`OFFICE_LOCATION'),`,'),-1,,`
         include(camera.m4)
         include(office-db.m4)
-        include(camera-discovery.m4)
+        include(discovery.m4)
         include(alert.m4)
         include(where-indexing.m4)
         include(office-storage.m4)
