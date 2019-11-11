@@ -60,7 +60,7 @@ You can modify or add new entries that represent new simulated cameras or IP cam
 #### Extending the Scenario Map
 
 The scenario map is currently limited to portion of Hillsboro, Oregon, USA. You can extend it to any location you like as follows:   
-- Download an .osm.pbf extract from [geofabrik.de](https://download.geofabrik.de) for the area you are interested in.    
+- Download an .osm.pbf extract from [geofabrik.de](https://download.geofabrik.de) for the area you are interested in. It is recommended you download a small regional map to reduce the processing time.     
 - Run the [osm_host.sh](../script/osm_host.sh) script, which will setup a local tile server on your machine ```http://localhost:8080```. The script takes the .osm.pbf file as the input argument. You can check if the map is properly rendered by looking at ```http://localhost:8080```.         
 - Run the [osm_totiles.sh](../script/osm_totiles.sh) script, which will extract the tiles from the local tile server. The script takes a rectangular region as input: ```<lon_min> <lon_max> <lat_min> <lat_max>```. This region will be your observable scenario map. The extracted tiles should be copied under [images/traffic](../cloud/html/images/traffic). You can delete any old tiles under [images/traffic](../cloud/html/images/traffic).   
 - Kill the local tile server: ```docker ps``` and ```docker kill```. We don't need it any more.   
