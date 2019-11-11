@@ -33,7 +33,11 @@ make start_kubernetes
 make stop_kubernetes
 ```
 
-Note: The command ```make update``` uploads the sample images to each worker node. If you prefer to use a private docker registry, replace with your instructions to upload the images to your docker registry.   
+---
+
+The command ```make update``` uploads the sample images to each worker node. If you prefer to use a private docker registry, replace with your instructions to upload the images to your docker registry.   
+
+---
 
 ### See Also 
 
