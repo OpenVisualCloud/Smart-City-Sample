@@ -23,7 +23,7 @@ To uniquely identify a camera, we need to define a camera ID. This is usually th
 
 Scan the camera IP range as follows:
 ```
-PORT_SCAN='-p80-65535 192.168.1.0/24' make discover
+PORT_SCAN='-p T:80-65535 192.168.1.0/24' make discover
 ```
 
 where ```PORT_SCAN``` specifies the ```nmap``` command line arguments. The camera network is ```192.168.1.0/24``` and the port range is ```80-65535```. The output is similar to the following lines:    
