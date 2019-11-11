@@ -18,8 +18,10 @@ spec:
         app: defn(`OFFICE_NAME')-analytics
     spec:
       enableServiceLinks: false
+ifelse(defn(`DISCOVER_IP_CAMERA'),`true',`dnl
       hostNetwork: true
       dnsPolicy: ClusterFirstWithHostNet
+')dnl
       containers:
         - name: defn(`OFFICE_NAME')-analytics
           image: `smtc_analytics_object_detection_xeon_'defn(`FRAMEWORK'):latest
@@ -76,7 +78,7 @@ spec:
         app: defn(`OFFICE_NAME')-analytics-people
     spec:
       enableServiceLinks: false
-ifelse(defn(`DISCOVER_IP_CAMERA',`true',`dnl
+ifelse(defn(`DISCOVER_IP_CAMERA'),`true',`dnl
       hostNetwork: true
       dnsPolicy: ClusterFirstWithHostNet
 ')dnl
@@ -132,8 +134,10 @@ spec:
         app: defn(`OFFICE_NAME')-analytics-crowd
     spec:
       enableServiceLinks: false
+ifelse(defn(`DISCOVER_IP_CAMERA'),`true',`dnl
       hostNetwork: true
       dnsPolicy: ClusterFirstWithHostNet
+')dnl
       containers:
         - name: defn(`OFFICE_NAME')-analytics-crowd
           image: `smtc_analytics_crowd_counting_xeon_'defn(`FRAMEWORK'):latest
