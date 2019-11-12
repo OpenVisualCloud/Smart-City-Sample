@@ -26,27 +26,27 @@ The following diagram illustrates how the sample is constructed: a set of servic
 
 ### Install docker engine:        
 
-(1) Install [docker engine](https://docs.docker.com/install).     
-(2) Install [docker compose](https://docs.docker.com/compose/install), if you plan to deploy through docker compose. Version 1.20+ is required.    
-(3) Setup [docker swarm](https://docs.docker.com/engine/swarm), if you plan to deploy through docker swarm. See [docker swarm setup](deployment/docker-swarm/README.md) for additional setup details.  
-(4) Setup [Kubernetes](https://kubernetes.io/docs/setup), if you plan to deploy through Kubernetes. See [Kubernetes setup](deployment/kubernetes/README.md) for additional setup details.     
+- Install [docker engine](https://docs.docker.com/install).     
+- Install [docker compose](https://docs.docker.com/compose/install), if you plan to deploy through docker compose. Version 1.20+ is required.    
+- Setup [docker swarm](https://docs.docker.com/engine/swarm), if you plan to deploy through docker swarm. See [docker swarm setup](deployment/docker-swarm/README.md) for additional setup details.  
+- Setup [Kubernetes](https://kubernetes.io/docs/setup), if you plan to deploy through Kubernetes. See [Kubernetes setup](deployment/kubernetes/README.md) for additional setup details.     
 
 ### Setup docker proxy:
 
 ```bash
-(4) sudo mkdir -p /etc/systemd/system/docker.service.d       
-(5) printf "[Service]\nEnvironment=\"HTTPS_PROXY=$https_proxy\" \"NO_PROXY=$no_proxy\"\n" | sudo tee /etc/systemd/system/docker.service.d/proxy.conf       
-(6) sudo systemctl daemon-reload          
-(7) sudo systemctl restart docker     
+sudo mkdir -p /etc/systemd/system/docker.service.d       
+printf "[Service]\nEnvironment=\"HTTPS_PROXY=$https_proxy\" \"NO_PROXY=$no_proxy\"\n" | sudo tee /etc/systemd/system/docker.service.d/proxy.conf       
+sudo systemctl daemon-reload          
+sudo systemctl restart docker     
 ```
 
 ### Build docker images: 
 
 ```bash
-(1) mkdir build    
-(2) cd build     
-(3) cmake ..    
-(4) make     
+mkdir build    
+cd build     
+cmake ..    
+make     
 ```
 See also how to customize the building process with [cmake options](doc/cmake.md).    
 
@@ -55,25 +55,25 @@ See also how to customize the building process with [cmake options](doc/cmake.md
 Use the following commands to start/stop services via docker-compose:        
 
 ```bash
-(1) make start_docker_compose      
-(2) make stop_docker_compose      
+make start_docker_compose      
+make stop_docker_compose      
 ```
 
 Use the following commands to start/stop services via docker swarm:    
 
 ```bash
-(1) make update
-(2) make start_docker_swarm      
-(3) make stop_docker_swarm      
+make update
+make start_docker_swarm      
+make stop_docker_swarm      
 ```
 
 See also how to setup [docker swarm](deployment/docker-swarm/README.md).    
 
 Use the following commands to start/stop Kubernetes services:
 ```
-(1) make update
-(2) make start_kubernetes
-(3) make stop_kubernetes
+make update
+make start_kubernetes
+make stop_kubernetes
 ```
 
 See also how to setup [Kubernetes](deployment/kubernetes/README.md).    
