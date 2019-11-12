@@ -3,7 +3,7 @@ The E2E sample implements aspects of smart city sensing, analytics and managemen
 <IMG src="doc/scope.png" height="250px">
 
 - **Camera Provisioning**: Tag and calibrate cameras for installation locations, calibration parameters and other usage pattern information.   
-- **Camera Discovery**: Discover and register IP cameras on specified IP blocks. Registered cameras automatically participate into the analytics activities. See [Sensor README](sensor/README.md) for additional details.    
+- **Camera Discovery**: Discover and register IP cameras on specified IP blocks. Registered cameras automatically participate into the analytics activities. See [Sensor Simulation and Discovery](sensor/README.md) for additional details.    
 - **Recording**: Record and manage segmented camera footage for preview or review (at a later time) purpose.     
 - **Analytics**: Perform analytics on the live/recorded camera streams. Latency-sensitive analytics are performed on Edge while others are on cloud.     
 - **Triggers and Alerts**: Manage triggers on analytics data. Respond with actions on triggered alerts.   
@@ -20,18 +20,18 @@ The sample showcases the following pipeline operations using the Open Visual Clo
 
 <IMG src="doc/smart-upload-arch.png" height="180px">
 
-The following diagram illustrates how the sample is constructed: a set of services each retrieves the work order by querying the database and submits the processing results back into the database. See also [content search](doc/search.md).          
+The following diagram illustrates how the sample is constructed: a set of services each retrieves the work order by querying the database and submits the processing results back into the database. See also: [Content Search](doc/search.md).          
 
-<IMG src="doc/data-centric-design.png" height="500px">
+<IMG src="doc/data-centric-design.png" height="400px">
 
-### Install docker engine:        
+### Install Docker Engine:        
 
 - Install [docker engine](https://docs.docker.com/install).     
 - Install [docker compose](https://docs.docker.com/compose/install), if you plan to deploy through docker compose. Version 1.20+ is required.    
-- Setup [docker swarm](https://docs.docker.com/engine/swarm), if you plan to deploy through docker swarm. See [docker swarm setup](deployment/docker-swarm/README.md) for additional setup details.  
-- Setup [Kubernetes](https://kubernetes.io/docs/setup), if you plan to deploy through Kubernetes. See [Kubernetes setup](deployment/kubernetes/README.md) for additional setup details.     
+- Setup [docker swarm](https://docs.docker.com/engine/swarm), if you plan to deploy through docker swarm. See [Docker Swarm Setup](deployment/docker-swarm/README.md) for additional setup details.  
+- Setup [Kubernetes](https://kubernetes.io/docs/setup), if you plan to deploy through Kubernetes. See [Kubernetes Setup](deployment/kubernetes/README.md) for additional setup details.     
 
-### Setup docker proxy:
+### Setup Docker Proxy:
 
 ```bash
 sudo mkdir -p /etc/systemd/system/docker.service.d       
@@ -40,7 +40,7 @@ sudo systemctl daemon-reload
 sudo systemctl restart docker     
 ```
 
-### Build docker images: 
+### Build Sample: 
 
 ```bash
 mkdir build    
@@ -48,9 +48,10 @@ cd build
 cmake ..    
 make     
 ```
-See also how to customize the building process with [cmake options](doc/cmake.md).    
 
-### Start/stop services:
+See also: [Customize Build Process](doc/cmake.md).    
+
+### Start/stop Sample: 
 
 Use the following commands to start/stop services via docker-compose:        
 
@@ -67,23 +68,24 @@ make start_docker_swarm
 make stop_docker_swarm      
 ```
 
-See also how to setup [docker swarm](deployment/docker-swarm/README.md).    
+See also:  [Docker-swarm Setup](deployment/docker-swarm/README.md).    
 
 Use the following commands to start/stop Kubernetes services:
+
 ```
 make update
 make start_kubernetes
 make stop_kubernetes
 ```
 
-See also how to setup [Kubernetes](deployment/kubernetes/README.md).    
+See also: [Kubernetes Setup](deployment/kubernetes/README.md).    
 
-### Launch browser:
+### Launch Sample UI:
 
-Launch your browser and point to `https://<host-ip>`. Note that if you see a browser warning of self-signed certificate, please accept it to proceed to the sample UI.    
+Launch your browser and browse to ```https://<hostname>```. Note that if you see a browser warning of self-signed certificate, please accept it to proceed to the sample UI.    
 
 <IMG src="doc/screenshot.gif" height="270px"></IMG>    
-  
+
 ### See Also
 
 - [Configuration Options](doc/cmake.md)          
@@ -92,6 +94,6 @@ Launch your browser and point to `https://<host-ip>`. Note that if you see a bro
 - [Intel VCAC-A Setup](doc/vcac-a.md)
 - [Sensor Simulation and Discovery](sensor/README.md)  
 - [Search Capabilities](doc/search.md)       
-- [Utility Scripts](doc/script.md)       
 - [Extending Offices, Sensors and Maps](doc/extend.md)  
+- [Utility Scripts](doc/script.md)       
 
