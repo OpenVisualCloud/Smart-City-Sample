@@ -68,7 +68,7 @@ make start_docker_swarm
 make stop_docker_swarm      
 ```
 
-See also:  [Docker-swarm Setup](deployment/docker-swarm/README.md).    
+See also:  [Docker Swarm Setup](deployment/docker-swarm/README.md).    
 
 Use the following commands to start/stop Kubernetes services:
 
