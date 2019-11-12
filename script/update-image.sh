@@ -48,15 +48,12 @@ for id in $(docker node ls -q 2> /dev/null); do
 done
 
 if test -x /usr/bin/kubectl; then
-    for id in $(kubectl get nodes | grep Ready | cut -f1 -d' '); do
+    for id in $(kubectl get nodes --selector='!node-role.kubernetes.io/master' 2> /dev/null | grep Ready | cut -f1 -d' '); do
         nodeip="$(kubectl describe node $id | grep InternalIP | sed -E 's/[^0-9]+([0-9.]+)$/\1/')"
         labels="$(kubectl describe node $id | awk '/Annotations:/{lf=0}/Labels:/{sub("Labels:","",$0);lf=1}lf==1{sub("=",":",$1);print$1}')"
 
-        # skip unavailable or manager node
-        if test -z "$(hostname -I | grep --fixed-strings $nodeip)"; then
-            for image in $(awk -v labels="$labels" -f "$DIR/scan-yaml.awk" "${DIR}/../deployment/kubernetes"/*.yaml); do
-                transfer_image $image "$nodeip"
-            done
-        fi
+        for image in $(awk -v labels="$labels" -f "$DIR/scan-yaml.awk" "${DIR}/../deployment/kubernetes"/*.yaml); do
+            transfer_image $image "$nodeip"
+        done
     done
 fi
