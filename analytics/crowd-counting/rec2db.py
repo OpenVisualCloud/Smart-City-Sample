@@ -6,7 +6,6 @@ import requests
 import os
 
 office=list(map(float,os.environ["OFFICE"].split(",")))
-storage="/home/video-analytics/app/server/recordings"
 sthost=os.environ["STHOST"]
 
 class Handler(FileSystemEventHandler):
@@ -49,8 +48,7 @@ class Rec2DB(object):
     def loop(self):
         self._observer.start()
 
-        folder=os.path.join(os.path.realpath(storage),self._sensor)
-        print("Observing "+folder, flush=True)
+        folder="/tmp/"+self._sensor
         os.makedirs(folder, exist_ok=True)
         self._watcher=self._observer.schedule(self._handler, folder, recursive=True)
         self._observer.join()

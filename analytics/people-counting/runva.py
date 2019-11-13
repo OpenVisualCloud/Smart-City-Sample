@@ -44,7 +44,7 @@ class RunVA(object):
             },
             "parameters": {
                 "every-nth-frame": every_nth_frame,
-                "recording_prefix": "recordings/" + sensor,
+                "recording_prefix": "/tmp/" + sensor,
                 "method": "mqtt",
                 "address": mqtthost,
                 "clientid": algorithm,
