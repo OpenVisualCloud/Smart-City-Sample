@@ -11,8 +11,6 @@ ifelse(index(defn(`SCENARIO'),defn(`SCENARIO_NAME')),-1,,`dnl
 ifelse(defn(`OFFICE_LOCATION'),`',,`dnl
     defn(`OFFICE_NAME')_esdata:
         driver: local
-    defn(`OFFICE_NAME')_andata:
-        driver: local
     defn(`OFFICE_NAME')_stdata:
         driver: local
 ')')')')

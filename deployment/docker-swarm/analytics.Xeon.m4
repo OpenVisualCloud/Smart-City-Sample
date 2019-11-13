@@ -12,7 +12,6 @@ ifelse(defn(`SCENARIO_NAME'),`traffic',`
             no_proxy: "*"
         volumes:
             - /etc/localtime:/etc/localtime:ro
-            - defn(`OFFICE_NAME')_andata:/home/video-analytics/app/server/recordings:rw
         deploy:
             replicas: defn(`NANALYTICS')
             placement:
@@ -32,7 +31,6 @@ ifelse(defn(`SCENARIO_NAME'),`stadium',`
             no_proxy: "*"
         volumes:
             - /etc/localtime:/etc/localtime:ro
-            - defn(`OFFICE_NAME')_andata:/home/video-analytics/app/server/recordings:rw
         deploy:
             replicas: defn(`NANALYTICS')
             placement:
@@ -51,7 +49,6 @@ ifelse(defn(`SCENARIO_NAME'),`stadium',`
             no_proxy: "*"
         volumes:
             - /etc/localtime:/etc/localtime:ro
-            - defn(`OFFICE_NAME')_andata:/home/video-analytics/app/server/recordings:rw
         deploy:
             replicas: defn(`NANALYTICS2')
             placement:
