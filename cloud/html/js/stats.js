@@ -44,7 +44,6 @@ var stats={
                     }], 
                     xAxes: [{
                         display: true,
-                        barThickness: 'flex',
                         scaleLabel: {
                             display: false,
                         },
@@ -117,7 +116,7 @@ var stats={
             delete data[v.label];
         });
         $.each(data, function (k,v) {
-            datasets.push({label:k,data:[{t:time,y:v}]});
+            datasets.push({label:k,barThickness:'flex',data:[{t:time,y:v}]});
         });
 
         if (labels.length>25) {
