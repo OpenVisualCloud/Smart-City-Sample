@@ -45,17 +45,11 @@ ifelse(defn(`DISCOVER_IP_CAMERA'),`true',`dnl
             - mountPath: /etc/localtime
               name: timezone
               readOnly: true
-            - mountPath: /tmp
-              name: tmp
       volumes:
           - name: timezone
             hostPath:
                 path: /etc/localtime
                 type: File
-          - name: tmp
-            hostPath:
-                path: /tmp
-                type: Directory
 ifelse(eval(defn(`NOFFICES')>1),1,`dnl
       nodeSelector:
         defn(`OFFICE_ZONE'): "yes"
@@ -107,17 +101,11 @@ ifelse(defn(`DISCOVER_IP_CAMERA'),`true',`dnl
             - mountPath: /etc/localtime
               name: timezone
               readOnly: true
-            - mountPath: /tmp
-              name: tmp
       volumes:
           - name: timezone
             hostPath:
                 path: /etc/localtime
                 type: File
-          - name: tmp
-            hostPath:
-                path: /tmp
-                type: Directory
 ifelse(eval(defn(`NOFFICES')>1),1,`dnl
       nodeSelector:
         defn(`OFFICE_ZONE'): "yes"
@@ -169,17 +157,11 @@ ifelse(defn(`DISCOVER_IP_CAMERA'),`true',`dnl
             - mountPath: /etc/localtime
               name: timezone
               readOnly: true
-            - mountPath: /tmp
-              name: tmp
       volumes:
           - name: timezone
             hostPath:
                 path: /etc/localtime
                 type: File
-          - name: tmp
-            hostPath:
-                path: /tmp
-                type: Directory
 ifelse(eval(defn(`NOFFICES')>1),1,`dnl
       nodeSelector:
         defn(`OFFICE_ZONE'): "yes"
