@@ -26,7 +26,7 @@ def connect(sensor, location, algorithm, uri):
     try:
         mqtt2db=MQTT2DB(algorithm)  # this waits for mqtt
         rec2db=Rec2DB(sensor)
-        runva=RunVA()
+        runva=RunVA("crowd_counting")
 
         topic=str(uuid.uuid4())   # topic must be different as camera may reconnect
         with ThreadPoolExecutor(2) as e:

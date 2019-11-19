@@ -1,6 +1,0 @@
-{
-    "name": "object_detection",
-    "version": 1,
-    "type": "GStreamer",
-    "description": "Object Detection Pipeline"
-}
