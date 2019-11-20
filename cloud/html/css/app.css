@@ -163,7 +163,7 @@ div[sensor-info-template] table {
 
 .page-office-workload {
     width: 300px;
-    height: 200px;
+    height: 220px;
     float: left;
     position: relative;
     bottom: 0px;
@@ -172,13 +172,12 @@ div[sensor-info-template] table {
 
 .page-office-workload canvas {
     width: 300px !important;
-    height: 200px !important;
+    height: 220px !important;
 }
 
 .page-office-service-table {
     overflow: auto;
-    height: 200px;
-    max-height: 200px;
+    height: 220px;
     position: relative;
     bottom: 0px;
     border-top:1px solid;
