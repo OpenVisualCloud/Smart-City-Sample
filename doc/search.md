@@ -1,7 +1,7 @@
 The sample UI presents a search box that enables search database content:    
 - On the home page, the users can search cameras properties, for example, the office location (the computing facilities where the cameras are connected to.)    
 - On the office page, the users can search analytics algorithms and see their execution statuses.    
-- On the recording page, the users can search recoded clips and review them.    
+- On the recording page, the users can search recorded clips and review them.    
 
 The search box implements the following search features:    
 - Field Existance Search:   
