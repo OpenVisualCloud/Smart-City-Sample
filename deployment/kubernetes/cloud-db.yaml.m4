@@ -55,14 +55,14 @@ ifelse(eval(defn(`NOFFICES')>1),1,`dnl
               value: "true"
             - name: "node.attr.zone"
               value: "cloud"
+            - name: "ES_JAVA_OPTS"
+              value: "-Xms2048m -Xmx2048m"
 ',`dnl
             - name: "discovery.type"
               value: "single-node"
 ')dnl
             - name: "action.auto_create_index"
               value: "0"
-            - name: "ES_JAVA_OPTS"
-              value: "-Xms2048m -Xmx2048m"
             - name: NO_PROXY
               value: "*"
             - name: no_proxy
