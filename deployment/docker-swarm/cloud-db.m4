@@ -8,11 +8,11 @@ ifelse(eval(defn(`NOFFICES')>1),1,`dnl
             - "node.master=true"
             - "node.data=true"
             - "node.attr.zone=cloud"
+            - "ES_JAVA_OPTS=-Xms2048m -Xmx2048m"
 ',`dnl
             - "discovery.type=single-node"
 ')dnl
             - "action.auto_create_index=0"
-            - "ES_JAVA_OPTS=-Xms2048m -Xmx2048m"
             - "NO_PROXY=*"
             - "no_proxy=*"
         volumes:
