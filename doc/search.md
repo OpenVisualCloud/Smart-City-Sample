@@ -54,5 +54,5 @@ Example: ```time>now-10000 where objects.detection.bounding_box.x_max-objects.de
 
 - The database is configured as a development setup: single host and no replication. Usually, a database should be setup on multiple systems for horizonal scaling and high availability.   
 - Each data type, such as recordings and analytics, is saved on a single index. Each index can hold a maximum of 2 billion records.
-- The response of any database search is limited to 10,000 records. Rewrite [script/db_query.py](../script/db_query.py) with the [Scroll](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-request-scroll.html) API to overcome this limitation.   
+- The response of any database search is limited to 10,000 records. Rewrite [db_query.py](../common/db_query.py) with the [Scroll](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-request-scroll.html) API to overcome this limitation.   
 
