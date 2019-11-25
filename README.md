@@ -26,7 +26,7 @@ The following diagram illustrates how the sample is constructed: a set of servic
 
 ### Install Prerequisites:
 
-- **Time Zone**: Check that the timezone setting of your host machine is correctly configured. Timezone is used during build. If you plan to run the sample on a cluster of machines managed by Docker Swarm or Kubernetes, please make sure to synchronize time among the manager node and worker nodes.    
+- **Time Zone**: Check that the timezone setting of your host machine is correctly configured. Timezone is used during build. If you plan to run the sample on a cluster of machines managed by Docker Swarm or Kubernetes, please make sure to synchronize time among the manager/master node and worker nodes.    
 
 - **Build Tools**: Install ```cmake``` and ```m4``` if they are not available on your system.        
 
@@ -92,7 +92,7 @@ Launch your browser and browse to ```https://<hostname>```. You should see somet
 
 ---
 
-* For Kubernetes/Docker Swarm, ```<hostname>``` is the hostname of the master node.
+* For Kubernetes/Docker Swarm, ```<hostname>``` is the hostname of the manager/master node.
 * If you see a browser warning of self-signed certificate, please accept it to proceed to the sample UI.    
   
 ---
