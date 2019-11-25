@@ -88,7 +88,7 @@ See also: [Kubernetes Setup](deployment/kubernetes/README.md).
 
 Launch your browser and browse to ```https://<hostname>```. You should see something similar to the following UI:   
 
-<IMG src="doc/screenshot.git" height="270px"></IMG>
+<IMG src="doc/screenshot.gif" height="270px"></IMG>
 
 ---
 
