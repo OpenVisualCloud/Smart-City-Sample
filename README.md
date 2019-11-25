@@ -24,14 +24,18 @@ The following diagram illustrates how the sample is constructed: a set of servic
 
 <IMG src="doc/data-centric-design.png" height="400px">
 
-### Install Docker Engine:        
+### Install Prerequisites:
 
-- Install [docker engine](https://docs.docker.com/install).     
-- Install [docker compose](https://docs.docker.com/compose/install), if you plan to deploy through docker compose. Version 1.20+ is required.    
-- Setup [docker swarm](https://docs.docker.com/engine/swarm), if you plan to deploy through docker swarm. See [Docker Swarm Setup](deployment/docker-swarm/README.md) for additional setup details.  
-- Setup [Kubernetes](https://kubernetes.io/docs/setup), if you plan to deploy through Kubernetes. See [Kubernetes Setup](deployment/kubernetes/README.md) for additional setup details.     
+- **Time Zone**: Check that the timezone setting of your host machine is correctly configured. Timezone is used during build. If you plan to run the sample on a cluster of machines managed by Docker Swarm or Kubernetes, please make sure to synchronize time among the manager/master node and worker nodes.    
 
-### Setup Docker Proxy:
+- **Build Tools**: Install ```cmake``` and ```m4``` if they are not available on your system.        
+
+- **Docker Engine**:        
+  - Install [docker engine](https://docs.docker.com/install).     
+  - Install [docker compose](https://docs.docker.com/compose/install), if you plan to deploy through docker compose. Version 1.20+ is required.    
+  - Setup [docker swarm](https://docs.docker.com/engine/swarm), if you plan to deploy through docker swarm. See [Docker Swarm Setup](deployment/docker-swarm/README.md) for additional setup details.  
+  - Setup [Kubernetes](https://kubernetes.io/docs/setup), if you plan to deploy through Kubernetes. See [Kubernetes Setup](deployment/kubernetes/README.md) for additional setup details.     
+  - Setup docker proxy as follows if you are behind a firewall:   
 
 ```bash
 sudo mkdir -p /etc/systemd/system/docker.service.d       
@@ -82,9 +86,16 @@ See also: [Kubernetes Setup](deployment/kubernetes/README.md).
 
 ### Launch Sample UI:
 
-Launch your browser and browse to ```https://<hostname>```. Note that if you see a browser warning of self-signed certificate, please accept it to proceed to the sample UI.    
+Launch your browser and browse to ```https://<hostname>```. You should see something similar to the following UI:   
 
-<IMG src="doc/screenshot.gif" height="270px"></IMG>    
+<IMG src="doc/screenshot.gif" height="270px"></IMG>
+
+---
+
+* For Kubernetes/Docker Swarm, ```<hostname>``` is the hostname of the manager/master node.
+* If you see a browser warning of self-signed certificate, please accept it to proceed to the sample UI.    
+  
+---
 
 ### See Also
 
