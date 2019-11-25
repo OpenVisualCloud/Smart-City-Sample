@@ -24,20 +24,18 @@ The following diagram illustrates how the sample is constructed: a set of servic
 
 <IMG src="doc/data-centric-design.png" height="400px">
 
-### Prerequisite
+### Prerequisites
 
-##### Install Build Tools:
+- **Time Zone**: Check that the timezone setting of your host machine is correctly configured. Timezone is used during build. If you plan to run the sample on a cluster of machines managed by Docker Swarm or Kubernetes, please make sure to synchronize time among the manager node and worker nodes.    
 
-- Install ```cmake``` and ```m4``` if they are not available on your system.        
+- **Build Tools**: Install ```cmake``` and ```m4``` if they are not available on your system.        
 
-##### Install Docker Engine:        
-
-- Install [docker engine](https://docs.docker.com/install).     
-- Install [docker compose](https://docs.docker.com/compose/install), if you plan to deploy through docker compose. Version 1.20+ is required.    
-- Setup [docker swarm](https://docs.docker.com/engine/swarm), if you plan to deploy through docker swarm. See [Docker Swarm Setup](deployment/docker-swarm/README.md) for additional setup details.  
-- Setup [Kubernetes](https://kubernetes.io/docs/setup), if you plan to deploy through Kubernetes. See [Kubernetes Setup](deployment/kubernetes/README.md) for additional setup details.     
-
-##### Setup Docker Proxy:
+- **Docker Engine**:        
+  - Install [docker engine](https://docs.docker.com/install).     
+  - Install [docker compose](https://docs.docker.com/compose/install), if you plan to deploy through docker compose. Version 1.20+ is required.    
+  - Setup [docker swarm](https://docs.docker.com/engine/swarm), if you plan to deploy through docker swarm. See [Docker Swarm Setup](deployment/docker-swarm/README.md) for additional setup details.  
+  - Setup [Kubernetes](https://kubernetes.io/docs/setup), if you plan to deploy through Kubernetes. See [Kubernetes Setup](deployment/kubernetes/README.md) for additional setup details.     
+  - Setup docker proxy as follows if you are behind a firewall:   
 
 ```bash
 sudo mkdir -p /etc/systemd/system/docker.service.d       
@@ -45,10 +43,6 @@ printf "[Service]\nEnvironment=\"HTTPS_PROXY=$https_proxy\" \"NO_PROXY=$no_proxy
 sudo systemctl daemon-reload          
 sudo systemctl restart docker     
 ```
-
-##### Setup Time Zone:
-
-Check that the timezone setting of your host is correctly configured. Datetime and timezone are used during build and sample execution.  
 
 ### Build Sample: 
 
