@@ -24,14 +24,20 @@ The following diagram illustrates how the sample is constructed: a set of servic
 
 <IMG src="doc/data-centric-design.png" height="400px">
 
-### Install Docker Engine:        
+### Prerequisite
+
+##### Install Build Tools:
+
+- Install ```cmake``` and ```m4``` if they are not available on your system.        
+
+##### Install Docker Engine:        
 
 - Install [docker engine](https://docs.docker.com/install).     
 - Install [docker compose](https://docs.docker.com/compose/install), if you plan to deploy through docker compose. Version 1.20+ is required.    
 - Setup [docker swarm](https://docs.docker.com/engine/swarm), if you plan to deploy through docker swarm. See [Docker Swarm Setup](deployment/docker-swarm/README.md) for additional setup details.  
 - Setup [Kubernetes](https://kubernetes.io/docs/setup), if you plan to deploy through Kubernetes. See [Kubernetes Setup](deployment/kubernetes/README.md) for additional setup details.     
 
-### Setup Docker Proxy:
+##### Setup Docker Proxy:
 
 ```bash
 sudo mkdir -p /etc/systemd/system/docker.service.d       
@@ -39,6 +45,10 @@ printf "[Service]\nEnvironment=\"HTTPS_PROXY=$https_proxy\" \"NO_PROXY=$no_proxy
 sudo systemctl daemon-reload          
 sudo systemctl restart docker     
 ```
+
+##### Setup Time Zone:
+
+Check that the timezone setting of your host is correctly configured. Datetime and timezone are used during build and sample execution.  
 
 ### Build Sample: 
 
@@ -82,9 +92,16 @@ See also: [Kubernetes Setup](deployment/kubernetes/README.md).
 
 ### Launch Sample UI:
 
-Launch your browser and browse to ```https://<hostname>```. Note that if you see a browser warning of self-signed certificate, please accept it to proceed to the sample UI.    
+Launch your browser and browse to ```https://<hostname>```. You should see something similar to the following UI:   
 
-<IMG src="doc/screenshot.gif" height="270px"></IMG>    
+<IMG src="doc/screenshot.git" height="270px"></IMG>
+
+---
+
+* For Kubernetes/Docker Swarm, ```<hostname>``` is the hostname of the master node.
+* If you see a browser warning of self-signed certificate, please accept it to proceed to the sample UI.    
+  
+---
 
 ### See Also
 
