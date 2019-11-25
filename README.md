@@ -24,7 +24,7 @@ The following diagram illustrates how the sample is constructed: a set of servic
 
 <IMG src="doc/data-centric-design.png" height="400px">
 
-### Prerequisites
+### Install Prerequisites:
 
 - **Time Zone**: Check that the timezone setting of your host machine is correctly configured. Timezone is used during build. If you plan to run the sample on a cluster of machines managed by Docker Swarm or Kubernetes, please make sure to synchronize time among the manager node and worker nodes.    
 
