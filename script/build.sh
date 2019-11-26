@@ -29,10 +29,6 @@ for dep in '.5.*' '.4.*' '.3.*' '.2.*' '.1.*' '.0.*' ''; do
     for dockerfile in `find "${dirs[@]}" -maxdepth 1 -name "Dockerfile${dep}" -print` ; do
         image=$(head -n 1 "$dockerfile" | grep '# ' | cut -d' ' -f2)
         if test -z "$image"; then image="$IMAGE"; fi
-
-        if grep -q 'AS build' "$dockerfile"; then
-            build_docker "$dockerfile" "$image"":build" --target build
-        fi
         build_docker "$dockerfile" "$image"":latest"
     done
 done
