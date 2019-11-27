@@ -40,13 +40,15 @@ class RunVA(object):
                     "lon": office[1],
                 },
             },
+            "destination": {
+                "type": "mqtt",
+                "host": mqtthost,
+                "clientid": algorithm,
+                "topic": topic,
+            },
             "parameters": {
                 "every-nth-frame": every_nth_frame,
                 "recording_prefix": "/tmp/" + sensor,
-                "method": "mqtt",
-                "address": mqtthost,
-                "clientid": algorithm,
-                "topic": topic,
             },
         })
         if pid is None:
@@ -62,7 +64,7 @@ class RunVA(object):
                     print("pineline ended with "+str(state),flush=True)
                     break
 
-                if state == "RUNNING":
+                if pinfo["avg_fps"]>0:
                     if "avg_pipeline_latency" not in pinfo: pinfo["avg_pipeline_latency"]=0
                     self._db.update(algorithm, {
                         "sensor": sensor,
