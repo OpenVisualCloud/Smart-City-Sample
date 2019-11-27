@@ -1,5 +1,5 @@
 
-FROM openvisualcloud/xeon-centos76-media-nginx:19.10.1
+FROM openvisualcloud/xeon-centos76-media-nginx:19.11
 
 RUN yum install -y -q epel-release && yum install -y -q python36-tornado python36-requests python36-ply python36-psutil && rm -rf /var/cache/yum/*
 
