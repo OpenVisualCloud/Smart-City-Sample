@@ -2,9 +2,7 @@
 
 FROM smtc_analytics_common_vcac-a_gst
 
-RUN  apt-get update -qq && apt-get install -qq mosquitto mosquitto-clients python3-pip python3-ply python3-requests python3-watchdog \
-     && pip3 install paho-mqtt \
-     && rm -rf /var/lib/apt/lists/*
+RUN  apt-get update -qq && apt-get install -qq python3-paho-mqtt python3-ply python3-requests python3-watchdog && rm -rf /var/lib/apt/lists/*
 
 COPY --from=smtc_common /home/*.py /home/
 COPY *.py /home/
