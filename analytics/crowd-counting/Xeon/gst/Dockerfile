@@ -1,14 +1,13 @@
-# smtc_analytics_object_detection_vcac-a_gst
+# smtc_analytics_crowd_counting_xeon_gst
 
-FROM smtc_analytics_common_vcac-a_gst
-
+FROM smtc_analytics_common_xeon_gst
 RUN  apt-get update -qq && apt-get install -qq python3-paho-mqtt python3-ply python3-requests python3-watchdog && rm -rf /var/lib/apt/lists/*
 
 COPY --from=smtc_common /home/*.py /home/
 COPY *.py /home/
 COPY models /home/models
-COPY platforms/VCAC-A/pipelines/gstreamer /home/pipelines
-CMD ["/home/detect-object.py"]
+COPY Xeon/gst/pipeline /home/pipelines/crowd_counting
+CMD ["/home/count-crowd.py"]
 
 ####
 ARG  USER
