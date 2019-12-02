@@ -2,6 +2,7 @@ cmake_minimum_required (VERSION 2.8)
 
 Project(smart_city NONE)
 add_custom_target(dist  ${CMAKE_HOME_DIRECTORY}/script/mk-demo.sh)
+set_property(DIRECTORY APPEND PROPERTY ADDITIONAL_MAKE_CLEAN_FILES "${CMAKE_HOME_DIRECTORY}/dist")
 add_custom_target(update  ${CMAKE_HOME_DIRECTORY}/script/update-image.sh)
 add_custom_target(discover ${CMAKE_HOME_DIRECTORY}/sensor/discovery/shell.sh /home/discover.py $ENV{PORT_SCAN})
 
