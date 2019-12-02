@@ -1,4 +1,4 @@
 build/*
 __pycache__
 parser.out
-archive/*
+dist/*
