@@ -9,9 +9,9 @@ ssh-copy-id <worker>
 ```
 ---
 
-### [mk-demo.sh](../script/mk-demo.sh)
+### [mk-dist.sh](../script/mk-dist.sh)
 
-The script creates the sample distribution package that contains the built images, the deployment scripts and media files under the `dist` directory. You can restore the sample with the package on a different machine for demo purpose. Invoke through `make dist`.    
+The script creates a sample distribution package that contains sample (docker) images, deployment scripts and media files under the `dist` directory. You can [distribute the sample](dist.md) to a different system for evaluation and demonstration without the need to rebuild the sample.  
 
 ### [update-image.sh](../script/update-image.sh)
 
