@@ -61,8 +61,8 @@ You can modify or add new entries that represent new simulated cameras or IP cam
 
 The scenario map is currently limited to portion of Hillsboro, Oregon, USA. You can extend it to any location you like as follows:   
 - Download an .osm.pbf extract from [geofabrik.de](https://download.geofabrik.de) for the area you are interested in. It is recommended you download a small regional map to reduce the processing time.     
-- Run the [osm_host.sh](../script/osm_host.sh) script, which will setup a local tile server on your machine ```http://localhost:8080```. The script takes the .osm.pbf file as the input argument. You can check if the map is properly rendered by looking at ```http://localhost:8080```.         
-- Run the [osm_totiles.sh](../script/osm_totiles.sh) script, which will extract the tiles from the local tile server. The script takes a rectangular region as input: ```<lon_min> <lon_max> <lat_min> <lat_max>```. This region will be your observable scenario map. The extracted tiles should be copied under [images/traffic](../cloud/html/images/traffic). You can delete any old tiles under [images/traffic](../cloud/html/images/traffic).   
+- Run the [osm-host.sh](../script/osm-host.sh) script, which will setup a local tile server on your machine ```http://localhost:8080```. The script takes the .osm.pbf file as the input argument. You can check if the map is properly rendered by looking at ```http://localhost:8080```.         
+- Run the [osm-totiles.sh](../script/osm-totiles.sh) script, which will extract the tiles from the local tile server. The script takes a rectangular region as input: ```<lon_min> <lon_max> <lat_min> <lat_max>```. This region will be your observable scenario map. The extracted tiles should be copied under [images/traffic](../cloud/html/images/traffic). You can delete any old tiles under [images/traffic](../cloud/html/images/traffic).   
 - Kill the local tile server: ```docker ps``` and ```docker kill```. We don't need it any more.   
 - Modify [scenario.js](../cloud/html/js/scenario.js) with the new display center location.   
 
@@ -171,10 +171,10 @@ Modify the following files to update or extend office defintions:
 
 A stadium scenario map is a 2D image transformed to the Earth coordinates. First draw a stadium map using any image editor. SVG-type image editor is preferred as we need to scale the image later. See [Stadium Map.vsdx](asset/Stadium%20Map.vsdx) as an example. The image must be a square image and the size not larger than ```12960x12960```. Save it as a PNG file.   
 
-Run the [png_totiles.sh](../script/png_totiles.sh) script as follows:    
+Run the [png-totiles.sh](../script/png-totiles.sh) script as follows:    
 ```
 cd cloud/html/images
-../../../script/png_totiles.sh stadium <lon_min> <lon_max> <lat_min> <lat_max> stadium.png .
+../../../script/png-totiles.sh stadium <lon_min> <lon_max> <lat_min> <lat_max> stadium.png .
 ```
 where ```<lon_min>...<lat_max>``` are the square region coordinates.  
 
