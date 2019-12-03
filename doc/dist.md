@@ -25,7 +25,7 @@ On a system where you plan to run the sample, run the `restore.sh` script to res
 
 ### Run Sample:
 
-Follow the usual [sample build and run procedures](../README.md) to invoke the sample. You can alter the [sample options](cmake.md), provided that any such parameter change does not incur an image build. For example, avoid changing `PLATFORM` and `SCENARIO`.   
+Follow the usual [sample build and run procedures](../README.md) to invoke the sample. You can alter the [sample options](cmake.md), provided that any such parameter change does not incur an image build. For example, avoid changing `PLATFORM`, `SCENARIO` and `FRAMEWORK`.   
 
 ### See Also:
 
