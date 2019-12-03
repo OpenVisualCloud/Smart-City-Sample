@@ -1,5 +1,5 @@
 
-A sample distribution packge provides an easy way to ship the sample to a different system for evaluation or demonstration.  
+The sample distribution package provides an easy way to ship the sample to a different system for evaluation or demonstration.  
 
 ### Build for Distribution:
 
@@ -25,7 +25,7 @@ On a system where you plan to run the sample, run the `restore.sh` script to res
 
 ### Run Sample:
 
-Follow usual [sample build and run procedures](../README.md) to invoke the sample. You can alter [sample options](cmake.md), provided that any such parameter change does not incur an image build. For example, avoid changing `PLATFORM`, `SCENARIO` and `FRAMEWORK`.  
+Follow usual [sample build and run procedures](../README.md) to invoke the sample. You can alter sample [options](cmake.md), provided that any such parameter change does not incur an image build. For example, avoid changing the `PLATFORM`, `SCENARIO` and `FRAMEWORK` parameters.  
 
 ### See Also:
 
