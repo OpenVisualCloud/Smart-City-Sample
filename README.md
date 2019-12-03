@@ -107,4 +107,6 @@ Launch your browser and browse to ```https://<hostname>```. You should see somet
 - [Search Capabilities](doc/search.md)       
 - [Extending Offices, Sensors and Maps](doc/extend.md)  
 - [Utility Scripts](doc/script.md)       
+- [Sample Distribution](doc/dist.md)  
+
 
