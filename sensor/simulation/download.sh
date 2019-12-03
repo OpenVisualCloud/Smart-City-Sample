@@ -4,11 +4,8 @@ DIR=$(dirname $(readlink -f "$0"))
 IFS="," read -r -a SCENARIOS <<< "${2:-traffic}"
 
 FFMPEG_IMAGE="openvisualcloud/xeon-centos76-media-ffmpeg:19.10.1"
-CLIPS_traffic=(https://www.pexels.com/video/1388383/download,1388383_traffic.mp4,https://www.pexels.com/photo-license)
-CLIPS_stadium=(https://www.pexels.com/video/853889/download,853889_people.mp4,https://www.pexels.com/photo-license,
-       https://www.pexels.com/video/855564/download,85564_people.mp4,https://www.pexels.com/photo-license,
-       https://www.pexels.com/video/1677252/download,1677252_crowd.mp4,https://www.pexels.com/photo-license,
-       https://www.pexels.com/video/992599/download,992599_people.mp4,https://www.pexels.com/photo-license)
+CLIPS_traffic=($(grep _traffic "$DIR"/streamlist.txt))
+CLIPS_stadium=($(grep -v _traffic "$DIR"/streamlist.txt))
 
 for scenario in ${SCENARIOS[@]}; do
     clipz="CLIPS_$scenario[@]"
