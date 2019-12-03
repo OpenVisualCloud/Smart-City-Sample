@@ -17,7 +17,7 @@ The generated sample distribution package is under the `dist` directory, which y
 
 ### Restore Sample:
 
-On a system where you plan to run the sample, run the `restore.sh` script to restore the sample directory structurei:  
+On a system where you plan to run the sample, run the `restore.sh` script to restore the sample directory structure:  
 
 ```bash
 ./restore.sh
