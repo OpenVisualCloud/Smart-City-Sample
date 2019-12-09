@@ -3,6 +3,8 @@
 from db_ingest import DBIngest
 from modules.PipelineManager import PipelineManager
 from modules.ModelManager import ModelManager
+from concurrent.futures import ThreadPoolExecutor
+from gi.repository import GObject
 import time
 import os
 
@@ -22,7 +24,7 @@ class RunVA(object):
     def stop(self):
         self._stop=True
 
-    def loop(self, sensor, location, uri, algorithm, topic):
+    def _loop(self, sensor, location, uri, algorithm, topic):
         ModelManager.load_config("/home/models",{})
         PipelineManager.load_config("/home/pipelines",1)
 
@@ -75,3 +77,17 @@ class RunVA(object):
 
         print("exiting va pipeline",flush=True)
         PipelineManager.stop_instance(self._pipeline,self._version,pid)
+
+    def _mainloop(self):
+        try:
+            self._ml=GObject.MainLoop()
+            self._ml.run()
+        except Exception as e:
+            print("Exception: "+str(e), flush=True)
+
+    def loop(self, sensor, location, uri, algorithm, topic):
+        with ThreadPoolExecutor(1) as e:
+            self._ml=None
+            e.submit(self._mainloop)
+            self._loop(sensor, location, uri, algorithm, topic)
+            if self._ml: self._ml.quit()
