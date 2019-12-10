@@ -11,7 +11,7 @@
 				</port>
 			</output>
 		</layer>
-		<layer name="Mul_11991/Fused_Mul_/FusedScaleShift_" type="ScaleShift" precision="FP32" id="1">
+		<layer name="Mul_12463/Fused_Mul_/FusedScaleShift_" type="ScaleShift" precision="FP32" id="1">
 			<data broadcast="0" />
 			<input>
 				<port id="0">
@@ -6027,7 +6027,7 @@
 	</edges>
 	<statistics>
 		<layer>
-			<name>Mul_11991/Fused_Mul_/FusedScaleShift_</name>
+			<name>Mul_12463/Fused_Mul_/FusedScaleShift_</name>
 			<min>-7.544135, -5.847231, -6.092403</min>
 			<max>13.969815, 16.159275, 14.348620</max>
 		</layer>
