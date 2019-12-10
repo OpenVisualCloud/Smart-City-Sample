@@ -558,5 +558,77 @@
             "polygon": [[0,0],[1023,0],[1023,1023],[0,1023],[0,0]]
         }],
         "simsn": "cams2o1w7"
+    },{
+        "address": "North West Restaurant",
+        "location": {
+            "lat": 37.39821,
+            "lon": -121.96969
+        },
+        "algorithm": "queue-counting",
+        "theta": 0.0,
+        "simsn": "cams2o1q0"
+    },{
+        "address": "North East Restaurant",
+        "location": {
+            "lat": 37.39804,
+            "lon": -121.95195
+        },
+        "algorithm": "queue-counting",
+        "theta": 0.0,
+        "simsn": "cams2o1q1"
+    },{
+        "address": "East Restaurant",
+        "location": {
+            "lat": 37.39245,
+            "lon": -121.94811
+        },
+        "algorithm": "queue-counting",
+        "theta": 270.0,
+        "simsn": "cams2o1q2"
+    },{
+        "address": "South Restaurant",
+        "location": {
+            "lat": 37.37813,
+            "lon": -121.96965
+        },
+        "algorithm": "queue-counting",
+        "theta": 180.0,
+        "simsn": "cams2o1q3"
+    },{
+        "address": "West Restaurant",
+        "location": {
+            "lat": 37.38134,
+            "lon": -121.97670
+        },
+        "algorithm": "queue-counting",
+        "theta": 90.0,
+        "simsn": "cams2o1q4"
+    },{
+        "address": "West Telephone Booth",
+        "location": {
+            "lat": 37.39528,
+            "lon": -121.94820
+        },
+        "algorithm": "queue-counting",
+        "theta": 270.0,
+        "simsn": "cams2o1q5"
+    },{
+        "address": "South Telephone Booth",
+        "location": {
+            "lat": 37.37800,
+            "lon": -121.95116
+        },
+        "algorithm": "queue-counting",
+        "theta": 180.0,
+        "simsn": "cams2o1q6"
+    },{
+        "address": "West Elevator",
+        "location": {
+            "lat": 37.39124,
+            "lon": -121.97741
+        },
+        "algorithm": "queue-counting",
+        "theta": 90.0,
+        "simsn": "cams2o1q7"
     }]
 }]

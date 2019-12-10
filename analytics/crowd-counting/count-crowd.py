@@ -10,6 +10,10 @@ from runva import RunVA
 import os
 import time
 import uuid
+import logging
+
+log = logging.getLogger("count-crowd")
+log.setLevel(logging.INFO)
 
 office = list(map(float, os.environ["OFFICE"].split(",")))
 dbhost = os.environ["DBHOST"]
