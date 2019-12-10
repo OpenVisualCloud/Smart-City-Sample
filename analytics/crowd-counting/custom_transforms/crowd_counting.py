@@ -19,10 +19,10 @@ class CrowdCounting:
         crowd_count = 0
         for tensor in frame.tensors():
             data = tensor.data()
-            self.log.debug("============custom transform: data============")
             #1/8 of image resolution, 768x1024 image, data is 1x96x128x1
-            print(data)
             crowd_count = numpy.sum(data)
+            self.log.debug("============custom transform: crowd_count={}============".format(crowd_count))
+            print("data=",data)
 
         if (crowd_count):
             region = frame.add_region("zone0",0,0,100,100)

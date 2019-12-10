@@ -798,49 +798,10 @@
 				</port>
 			</output>
 		</layer>
-		<layer name="y_out/Relu/Transpose" type="Permute" precision="FP32" id="40">
-			<data order="0,2,3,1" />
-			<input>
-				<port id="0">
-					<dim>1</dim>
-					<dim>1</dim>
-					<dim>96</dim>
-					<dim>128</dim>
-				</port>
-			</input>
-			<output>
-				<port id="1" precision="FP32">
-					<dim>1</dim>
-					<dim>96</dim>
-					<dim>128</dim>
-					<dim>1</dim>
-				</port>
-			</output>
-		</layer>
-		<layer name="strided_slice/Squeeze_shrink" type="Squeeze" precision="FP32" id="41">
-			<input>
-				<port id="0">
-					<dim>1</dim>
-					<dim>96</dim>
-					<dim>128</dim>
-					<dim>1</dim>
-				</port>
-				<port id="1">
-					<dim>1</dim>
-				</port>
-			</input>
-			<output>
-				<port id="2" precision="FP32">
-					<dim>96</dim>
-					<dim>128</dim>
-					<dim>1</dim>
-				</port>
-			</output>
-		</layer>
 	</layers>
 	<edges>
-		<edge from-layer="0" from-port="0" to-layer="41" to-port="1" />
-		<edge from-layer="1" from-port="0" to-layer="2" to-port="0" />
+		<edge from-layer="0" from-port="0" to-layer="1" to-port="0" />
+		<edge from-layer="1" from-port="1" to-layer="2" to-port="0" />
 		<edge from-layer="2" from-port="1" to-layer="3" to-port="0" />
 		<edge from-layer="3" from-port="1" to-layer="4" to-port="0" />
 		<edge from-layer="4" from-port="1" to-layer="5" to-port="0" />

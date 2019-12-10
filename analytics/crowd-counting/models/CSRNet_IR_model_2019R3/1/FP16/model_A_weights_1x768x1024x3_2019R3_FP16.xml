@@ -806,36 +806,6 @@
 				</port>
 			</output>
 		</layer>
-		<layer id="40" name="strided_slice/Squeeze_shrink/Indices2366_const" precision="I32" type="Const">
-			<output>
-				<port id="1">
-					<dim>1</dim>
-				</port>
-			</output>
-			<blobs>
-				<custom offset="32526990" size="4"/>
-			</blobs>
-		</layer>
-		<layer id="41" name="strided_slice/Squeeze_shrink" precision="FP16" type="Squeeze">
-			<input>
-				<port id="0">
-					<dim>1</dim>
-					<dim>96</dim>
-					<dim>128</dim>
-					<dim>1</dim>
-				</port>
-				<port id="1">
-					<dim>1</dim>
-				</port>
-			</input>
-			<output>
-				<port id="2">
-					<dim>96</dim>
-					<dim>128</dim>
-					<dim>1</dim>
-				</port>
-			</output>
-		</layer>
 	</layers>
 	<edges>
 		<edge from-layer="0" from-port="0" to-layer="1" to-port="0"/>
@@ -877,8 +847,6 @@
 		<edge from-layer="36" from-port="1" to-layer="37" to-port="0"/>
 		<edge from-layer="37" from-port="3" to-layer="38" to-port="0"/>
 		<edge from-layer="38" from-port="1" to-layer="39" to-port="0"/>
-		<edge from-layer="39" from-port="1" to-layer="41" to-port="0"/>
-		<edge from-layer="40" from-port="1" to-layer="41" to-port="1"/>
 	</edges>
 	<meta_data>
 		<MO_version value="unknown version"/>
