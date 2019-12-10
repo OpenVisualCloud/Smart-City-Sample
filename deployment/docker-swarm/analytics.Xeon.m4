@@ -10,7 +10,6 @@ ifelse(defn(`SCENARIO_NAME'),`traffic',`
             EVERY_NTH_FRAME: 6
             NO_PROXY: "*"
             no_proxy: "*"
-            GST_DEBUG: 3
         volumes:
             - /etc/localtime:/etc/localtime:ro
         deploy:
@@ -30,7 +29,6 @@ ifelse(defn(`SCENARIO_NAME'),`stadium',`
             EVERY_NTH_FRAME: 6
             NO_PROXY: "*"
             no_proxy: "*"
-            GST_DEBUG: 3
         volumes:
             - /etc/localtime:/etc/localtime:ro
         deploy:
@@ -49,7 +47,6 @@ ifelse(defn(`SCENARIO_NAME'),`stadium',`
             EVERY_NTH_FRAME: 6
             NO_PROXY: "*"
             no_proxy: "*"
-            GST_DEBUG: 3
         volumes:
             - /etc/localtime:/etc/localtime:ro
         deploy:
@@ -68,7 +65,6 @@ ifelse(defn(`SCENARIO_NAME'),`stadium',`
             EVERY_NTH_FRAME: 6
             NO_PROXY: "*"
             no_proxy: "*"
-            GST_DEBUG: 3
         volumes:
             - /etc/localtime:/etc/localtime:ro
         deploy:
