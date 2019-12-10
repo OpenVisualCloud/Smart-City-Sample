@@ -10,7 +10,7 @@
 
 import os
 
-LOG_LEVEL = "WARNING"
+LOG_LEVEL = "INFO"
 LOG_ATTRS = ['levelname', 'asctime', 'message', 'name']
 
 def set_log_level(level):

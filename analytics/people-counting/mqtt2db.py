@@ -8,6 +8,7 @@ import json
 import time
 import sys
 import os
+import logging
 
 mqtthost = os.environ["MQTTHOST"]
 dbhost = os.environ["DBHOST"]
@@ -21,7 +22,14 @@ class IntervalTimer(Timer):
         self.finished.set()
 
 class MQTT2DB(object):
+    def init_logging(self):
+        self.log = logging.getLogger("MQTT2DB")
+        self.log.setLevel(logging.WARNING) #NOTEST, DEBUG, INFO, WARNING, ERROR, CRITICAL
+        self.log.addHandler(logging.StreamHandler())
+        
     def __init__(self, algorithm):
+        self.init_logging()
+        self.log.info("============mqtt2db: __init__============")
         super(MQTT2DB,self).__init__()
         self._mqtt=mqtt.Client("feeder_" + algorithm)
 
@@ -39,6 +47,7 @@ class MQTT2DB(object):
         self._timer=IntervalTimer(2.0, self.on_timer)
 
     def loop(self, topic):
+        self.log.info("============mqtt2db: loop============")
         self._mqtt.on_message = self.on_message
         self._mqtt.subscribe(topic)
         self._timer.start()
@@ -49,13 +58,14 @@ class MQTT2DB(object):
         self._mqtt.disconnect()
 
     def on_message(self, client, userdata, message):
+        self.log.info("============mqtt2db: on_message============")
         try:
             r=json.loads(str(message.payload.decode("utf-8", "ignore")))
             r.update(r["tags"])
             del r["tags"]
             if "real_base" not in r: r["real_base"]=0
             r["time"]=int((r["real_base"]+r["timestamp"])/1000000)
-            if "objects" in r: r["nobjects"]=int(len(r["objects"]))
+            self.log.debug("============mqtt2db: on_message: r['time']============")
         except Exception as e:
             print("Exception: "+str(e), flush=True)
         self._lock.acquire()

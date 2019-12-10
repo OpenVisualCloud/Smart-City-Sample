@@ -10,6 +10,10 @@ from runva import RunVA
 import os
 import time
 import uuid
+import logging
+
+log = logging.getLogger("count-people")
+log.setLevel(logging.INFO)
 
 office = list(map(float, os.environ["OFFICE"].split(",")))
 dbhost = os.environ["DBHOST"]
@@ -21,6 +25,7 @@ runva=None
 stop=False
 
 def connect(sensor, location, algorithm, uri):
+    log.info("============count-people: connect============")
     global mqtt2db, rec2db, runva
 
     try:
@@ -46,12 +51,14 @@ def connect(sensor, location, algorithm, uri):
         print("Exception in connect: "+str(e), flush=True)
 
 def quit_service(signum, sigframe):
+    log.info("============count-people: quit_service============")
     global stop
     stop=True
     if mqtt2db: mqtt2db.stop()
     if rec2db: rec2db.stop()
     if runva: runva.stop()
 
+log.info("============count-people: entering============")
 signal(SIGTERM, quit_service)
 dba=DBIngest(host=dbhost, index="algorithms", office=office)
 dbs=DBQuery(host=dbhost, index="sensors", office=office)

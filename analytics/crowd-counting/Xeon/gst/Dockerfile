@@ -7,7 +7,9 @@ COPY --from=smtc_common /home/*.py /home/
 COPY *.py /home/
 COPY models /home/models
 COPY Xeon/gst/pipeline /home/pipelines/crowd_counting
+COPY custom_transforms /home/custom_transforms
 CMD ["/home/count-crowd.py"]
+ENV PATH=${PATH}:/home/custom_transforms
 
 ####
 ARG  USER

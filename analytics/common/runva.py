@@ -7,6 +7,10 @@ from concurrent.futures import ThreadPoolExecutor
 from gi.repository import GObject
 import time
 import os
+import logging
+
+log = logging.getLogger("runva")
+log.setLevel(logging.INFO)
 
 mqtthost = os.environ["MQTTHOST"]
 dbhost = os.environ["DBHOST"]
@@ -15,6 +19,7 @@ office = list(map(float, os.environ["OFFICE"].split(",")))
 
 class RunVA(object):
     def __init__(self, pipeline, version="2"):
+        log.info("============runva: __init__============")
         super(RunVA,self).__init__()
         self._pipeline=pipeline
         self._version=version
@@ -22,6 +27,7 @@ class RunVA(object):
         self._stop=None
 
     def stop(self):
+        log.info("============runva: stop============")
         self._stop=True
 
     def _loop(self, sensor, location, uri, algorithm, topic):
@@ -32,6 +38,12 @@ class RunVA(object):
             "source": {
                 "uri": uri,
                 "type":"uri"
+            },
+            "destination": {
+                "type": "mqtt",
+                "host": mqtthost,
+                "clientid": algorithm,
+                "topic": topic
             },
             "tags": {
                 "sensor": sensor,
