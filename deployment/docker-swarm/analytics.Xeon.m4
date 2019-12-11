@@ -8,6 +8,7 @@ ifelse(defn(`SCENARIO_NAME'),`traffic',`
             MQTTHOST: "defn(`OFFICE_NAME')_mqtt"
             STHOST: "http://defn(`OFFICE_NAME')_storage:8080/api/upload"
             EVERY_NTH_FRAME: 6
+            PIPELINE_VERSION: 2
             NO_PROXY: "*"
             no_proxy: "*"
         volumes:
@@ -27,6 +28,7 @@ ifelse(defn(`SCENARIO_NAME'),`stadium',`
             MQTTHOST: "defn(`OFFICE_NAME')_mqtt"
             STHOST: "http://defn(`OFFICE_NAME')_storage:8080/api/upload"
             EVERY_NTH_FRAME: 6
+            PIPELINE_VERSION: 2
             NO_PROXY: "*"
             no_proxy: "*"
         volumes:
@@ -45,6 +47,7 @@ ifelse(defn(`SCENARIO_NAME'),`stadium',`
             MQTTHOST: "defn(`OFFICE_NAME')_mqtt"
             STHOST: "http://defn(`OFFICE_NAME')_storage:8080/api/upload"
             EVERY_NTH_FRAME: 6
+            PIPELINE_VERSION: 2
             NO_PROXY: "*"
             no_proxy: "*"
         volumes:
@@ -63,6 +66,7 @@ ifelse(defn(`SCENARIO_NAME'),`stadium',`
             MQTTHOST: "defn(`OFFICE_NAME')_mqtt"
             STHOST: "http://defn(`OFFICE_NAME')_storage:8080/api/upload"
             EVERY_NTH_FRAME: 6
+            PIPELINE_VERSION: 1
             NO_PROXY: "*"
             no_proxy: "*"
         volumes:
