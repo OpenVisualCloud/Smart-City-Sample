@@ -8,6 +8,7 @@ ifelse(defn(`SCENARIO_NAME'),`traffic',`
             MQTTHOST: "defn(`OFFICE_NAME')_mqtt"
             STHOST: "http://defn(`OFFICE_NAME')_storage:8080/api/upload"
             EVERY_NTH_FRAME: 6
+            PIPELINE_VERSION: 2
             NO_PROXY: "*"
             no_proxy: "*"
         volumes:
@@ -27,6 +28,7 @@ ifelse(defn(`SCENARIO_NAME'),`stadium',`
             MQTTHOST: "defn(`OFFICE_NAME')_mqtt"
             STHOST: "http://defn(`OFFICE_NAME')_storage:8080/api/upload"
             EVERY_NTH_FRAME: 6
+            PIPELINE_VERSION: 2
             NO_PROXY: "*"
             no_proxy: "*"
         volumes:
@@ -45,6 +47,7 @@ ifelse(defn(`SCENARIO_NAME'),`stadium',`
             MQTTHOST: "defn(`OFFICE_NAME')_mqtt"
             STHOST: "http://defn(`OFFICE_NAME')_storage:8080/api/upload"
             EVERY_NTH_FRAME: 6
+            PIPELINE_VERSION: 2
             NO_PROXY: "*"
             no_proxy: "*"
         volumes:
@@ -56,13 +59,14 @@ ifelse(defn(`SCENARIO_NAME'),`stadium',`
                     - defn(`OFFICE_ZONE')
                     
     defn(`OFFICE_NAME')_analytics_queue:
-        `image: smtc_analytics_queue_counting_xeon_'defn(`FRAMEWORK'):latest
+        `image: smtc_analytics_object_detection_xeon_'defn(`FRAMEWORK'):latest
         environment:
             OFFICE: "defn(`OFFICE_LOCATION')"
             DBHOST: "http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')_db,db):9200"
             MQTTHOST: "defn(`OFFICE_NAME')_mqtt"
             STHOST: "http://defn(`OFFICE_NAME')_storage:8080/api/upload"
             EVERY_NTH_FRAME: 6
+            PIPELINE_VERSION: 1
             NO_PROXY: "*"
             no_proxy: "*"
         volumes:
