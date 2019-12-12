@@ -9,7 +9,7 @@ import json
 import time
 import os
 import copy
-import gstgva # pylint: disable=import-error
+from . import GstGVAJSONMeta
 from modules.Pipeline import Pipeline  # pylint: disable=import-error
 from modules.PipelineManager import PipelineManager  # pylint: disable=import-error
 from modules.ModelManager import ModelManager  # pylint: disable=import-error
@@ -299,7 +299,7 @@ class GStreamerPipeline(Pipeline):
             if meta is None:
                 logger.debug("No GstGVAJSONMeta")
             else:
-                json_string = gstgva.JSONMeta.get_json_message(meta)  # pylint: disable=undefined-variable
+                json_string = GstGVAJSONMeta.get_json_message(meta)
                 json_object = json.loads(json_string)
                 logger.debug(json.dumps(json_object))
                 if self.destination and ("objects" in json_object) and (len(json_object["objects"]) > 0):
