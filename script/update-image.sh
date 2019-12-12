@@ -47,7 +47,7 @@ for id in $(docker node ls -q 2> /dev/null); do
     fi
 done
 
-if test -x /usr/bin/kubectl; then
+if [ -x /usr/bin/kubectl ] || [ -x /usr/local/bin/kubectl ]; then
     for id in $(kubectl get nodes --selector='!node-role.kubernetes.io/master' 2> /dev/null | grep Ready | cut -f1 -d' '); do
         nodeip="$(kubectl describe node $id | grep InternalIP | sed -E 's/[^0-9]+([0-9.]+)$/\1/')"
         labels="$(kubectl describe node $id | awk '/Annotations:/{lf=0}/Labels:/{sub("Labels:","",$0);lf=1}lf==1{sub("=",":",$1);print$1}')"
