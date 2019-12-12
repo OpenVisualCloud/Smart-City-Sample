@@ -11,6 +11,7 @@ import os
 import time
 import uuid
 
+scenario = os.environ["SCENARIO"]
 office = list(map(float, os.environ["OFFICE"].split(",")))
 dbhost = os.environ["DBHOST"]
 every_nth_frame = int(os.environ["EVERY_NTH_FRAME"])
@@ -19,6 +20,8 @@ mqtt2db=None
 rec2db=None
 runva=None
 stop=False
+myAlgorithm=""
+version=0
 
 def connect(sensor, location, algorithm, uri):
     global mqtt2db, rec2db, runva
@@ -26,7 +29,6 @@ def connect(sensor, location, algorithm, uri):
     try:
         mqtt2db=MQTT2DB(algorithm)  # this waits for mqtt
         rec2db=Rec2DB(sensor)
-        version = int(os.environ["PIPELINE_VERSION"])
         runva=RunVA("object_detection", version)
 
         topic=str(uuid.uuid4())   # topic must be different as camera may reconnect
@@ -57,11 +59,18 @@ signal(SIGTERM, quit_service)
 dba=DBIngest(host=dbhost, index="algorithms", office=office)
 dbs=DBQuery(host=dbhost, index="sensors", office=office)
 
+if scenario=="traffic":
+    version = 1
+    myAlgorithm="object-detection"
+if scenario=="stadium":
+    version = 2
+    myAlgorithm="queue-counting"
+
 # register algorithm (while waiting for db to startup)
 while True:
     try:
         algorithm=dba.ingest({
-            "name": "object_detection",
+            "name": myAlgorithm,
             "office": {
                 "lat": office[0],
                 "lon": office[1],
@@ -71,14 +80,16 @@ while True:
         })["_id"]
         break
     except Exception as e:
-        print("Exception: "+str(e), flush=True)
+        print("Exception in detec-object.py1: "+str(e), flush=True)
         time.sleep(10)
 
 # compete for a sensor connection
 while not stop:
     try:
         print("Searching...", flush=True)
-        for sensor in dbs.search("sensor:'camera' and status:'idle' and algorithm='object-detection' and office:["+str(office[0])+","+str(office[1])+"]"):
+        print("sensor:'camera' and status:'idle' and algorithm='queue-counting' and office:["+str(office[0])+","+str(office[1])+"]")
+        print("sensor:'camera' and status:'idle' and algorithm='"+myAlgorithm+"' and office:["+str(office[0])+","+str(office[1])+"]")
+        for sensor in dbs.search("sensor:'camera' and status:'idle' and algorithm='"+myAlgorithm+"' and office:["+str(office[0])+","+str(office[1])+"]"):
             try:
                 # compete (with other va instances) for a sensor
                 r=dbs.update(sensor["_id"],{"status":"streaming"},seq_no=sensor["_seq_no"],primary_term=sensor["_primary_term"])

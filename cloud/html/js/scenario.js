@@ -223,12 +223,15 @@ var scenarios={
                 var stat_layer=page.data('stat').layer;
                 if (map.hasLayer(stat_layer)) {
                     var fields=[], iconloc=null;
+                    if (sensor._source.algorithm=="object-detection") {
+                        fields.push("nobjects");
+                    }
                     if (sensor._source.algorithm=="people-counting") {
                         fields.push("count.people");
                     }
-                    if (sensor._source.algorithm=="object-detection") {
-                        fields.push("nobjects");
-                    }                    
+                    if (sensor._source.algorithm=="queue-counting") {
+                        fields.push("count.queue");
+                    }
                     if (sensor._source.algorithm=="crowd-counting") {
                         iconloc=sensorctx.zonemap.getBounds().getCenter();
                         $.each(sensor._source.zones,function (x,v) {
