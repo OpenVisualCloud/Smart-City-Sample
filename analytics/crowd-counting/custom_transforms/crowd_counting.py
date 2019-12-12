@@ -1,22 +1,13 @@
 import gstgva
 import numpy
 import time
-import logging
 import json
 
 class CrowdCounting:
 
     def __init__(self):
-        self.init_logging()
-        self.log.debug("============custom transform: __init__============")
-        #create bitmask here
         self.bitmask=[]
         self.crowd_count=[0]*8
-        
-    def init_logging(self):
-        self.log = logging.getLogger("crowd_counting")
-        self.log.setLevel(logging.DEBUG) #NOTEST, DEBUG, INFO, WARNING, ERROR, CRITICAL
-        self.log.addHandler(logging.StreamHandler())
 
     def process_frame(self, frame):
         for tensor in frame.tensors():
@@ -27,7 +18,6 @@ class CrowdCounting:
 
         if (self.crowd_count):
             messages = list(frame.messages())
-            #self.log.info("============len(crowd_count)={}============".format(len(self.crowd_count)))
             if len(messages) > 0:
                 json_msg = json.loads(messages[0].get_message())
                 json_msg["count"] = {
@@ -42,6 +32,6 @@ class CrowdCounting:
                 }
                 messages[0].set_message(json.dumps(json_msg))
             else:
-                self.log.debug("No JSON messages in frame")
+                print("No JSON messages in frame")
                 
         return True
