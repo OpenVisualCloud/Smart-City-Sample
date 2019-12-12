@@ -37,8 +37,8 @@ ifelse(defn(`DISCOVER_IP_CAMERA'),`true',`dnl
               value: "http://defn(`OFFICE_NAME')-storage-service:8080/api/upload"
             - name: EVERY_NTH_FRAME
               value: "6"
-            - name: PIPELINE_VERSION
-              value: "2"
+            - name: `SCENARIO'
+              value: "defn(`SCENARIO')"
             - name: NO_PROXY
               value: "*"
             - name: no_proxy
@@ -95,8 +95,8 @@ ifelse(defn(`DISCOVER_IP_CAMERA'),`true',`dnl
               value: "http://defn(`OFFICE_NAME')-storage-service:8080/api/upload"
             - name: EVERY_NTH_FRAME
               value: "6"
-            - name: PIPELINE_VERSION
-              value: "2"
+            - name: `SCENARIO'
+              value: "defn(`SCENARIO')"
             - name: NO_PROXY
               value: "*"
             - name: no_proxy
@@ -153,8 +153,8 @@ ifelse(defn(`DISCOVER_IP_CAMERA'),`true',`dnl
               value: "http://defn(`OFFICE_NAME')-storage-service:8080/api/upload"
             - name: EVERY_NTH_FRAME
               value: "6"
-            - name: PIPELINE_VERSION
-              value: "2"
+            - name: `SCENARIO'
+              value: "defn(`SCENARIO')"
             - name: NO_PROXY
               value: "*"
             - name: no_proxy
@@ -211,8 +211,8 @@ ifelse(defn(`DISCOVER_IP_CAMERA'),`true',`dnl
               value: "http://defn(`OFFICE_NAME')-storage-service:8080/api/upload"
             - name: EVERY_NTH_FRAME
               value: "6"
-            - name: PIPELINE_VERSION
-              value: "1"
+            - name: `SCENARIO'
+              value: "defn(`SCENARIO')"
             - name: NO_PROXY
               value: "*"
             - name: no_proxy

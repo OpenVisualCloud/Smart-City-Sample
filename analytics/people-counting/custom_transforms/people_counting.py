@@ -2,36 +2,26 @@ import gstgva # pylint: disable=import-error
 import numpy as np
 import math
 import copy
-import logging
 import json
 from munkres import Munkres
 
 class PeopleCounting:
 
     def __init__(self):
-        self.init_logging()
-        self.log.info("============custom transform: __init__============")
         self.identities = [] #Array of Gallery Objects - {embeddings(numpy array), timestamp}
         self.reid_threshold = 0.7
         self.matcher = Munkres()
         self.timestamp = 0
 
-    def init_logging(self):
-        self.log = logging.getLogger("people_counting")
-        self.log.setLevel(logging.WARNING) #NOTEST, DEBUG, INFO, WARNING, ERROR, CRITICAL
-        self.log.addHandler(logging.StreamHandler())
-        
     def process_frame(self,frame):
         messages = list(frame.messages())
-        self.log.info("============custom transform: process_frame: #messages {}============".format(len(messages)))
         if len(messages) > 0:
             json_msg = json.loads(messages[0].get_message())
             json_msg["count"] = {"people":len(self.identities)}
-            self.log.debug("timestamp: {}".format(int(json_msg["timestamp"])/1000000000))
             self.timestamp = int(json_msg["timestamp"])/1000000000
             messages[0].set_message(json.dumps(json_msg))
         else:
-            self.log.debug("No JSON messages in frame")
+            print("No JSON messages in frame")
 
         self.get_ids_by_embeddings(frame)
 
@@ -55,10 +45,7 @@ class PeopleCounting:
                     if tensor.name() == "face_feature" and tensor.format() == "cosine_distance":
                         detected_tensors.append(tensor.data())
                         detection_ids.append(i)
-        
-        self.log.debug("Det tensors len: {}".format(len(detected_tensors)))
-        self.log.debug("Identities len: {}".format(len(self.identities)))
-        
+
         if len(detected_tensors) == 0:
             return
         if len(self.identities) == 0:
@@ -88,7 +75,6 @@ class PeopleCounting:
         while i >= 0:
             #overdue if pass the last 5 seconds
             if int(self.timestamp - int(self.identities[i]["timestamp"])) > 5:
-                #self.log.info("identities.length: {} n: {} pop i: {}".format(len(self.identities), n, i))
                 self.identities[i] = self.identities[n-1]
                 self.identities.pop(n-1)
                 n -= 1
