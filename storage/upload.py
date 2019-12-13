@@ -60,8 +60,8 @@ class UploadHandler(web.RequestHandler):
 
             # check disk usage and send alert
             disk_usage=psutil.disk_usage(self._storage)[3]
-            if disk_usage>75 and sensor_index:
-                level="fatal" if disk_uage>85 else "warning"
+            if disk_usage>75:
+                level="fatal" if disk_usage>85 else "warning"
                 db_alt=DBIngest(host=dbhost, index="alerts", office=office)
                 db_alt.ingest({
                     "time": int(time.mktime(datetime.datetime.now().timetuple())*1000),
