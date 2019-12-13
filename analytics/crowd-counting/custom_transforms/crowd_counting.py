@@ -12,6 +12,8 @@ class CrowdCounting:
     def process_frame(self, frame):
         for tensor in frame.tensors():
             data = tensor.data()
+            #no matter what resolution the input video is (currently 720x1280),
+            #it will resize to 1024x768 before sending to model
             #1/8 of image resolution, 768x1024 image, data is 1x96x128x1
             for i in range(8):
                 self.crowd_count[i] = numpy.sum(data)
