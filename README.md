@@ -13,10 +13,12 @@ The E2E sample implements aspects of smart city sensing, analytics and managemen
 
 The sample showcases the following pipeline operations using the Open Visual Cloud software stacks:      
 - **Edge Low-latency Analytics**:   
+  - [See the GStreamer-based media analytics stack](https://github.com/OpenVisualCloud/Dockerfiles/tree/master/Xeon/ubuntu-18.04/analytics/gst), optimized for [Intel VCAC-A](https://github.com/OpenVisualCloud/Dockerfiles/tree/master/VCAC-A/ubuntu-18.04/analytics/gst).  
 
 <IMG src="doc/edge-analytics-arch.png" height="200px">
 
 - **Smart Upload with Transcoding**:
+  - [See the FFmpeg-based media transcoding stack](https://github.com/OpenVisualCloud/Dockerfiles/tree/master/Xeon/centos-7.6/media/ffmpeg), optimized for Intel Scalable Processors.  
 
 <IMG src="doc/smart-upload-arch.png" height="180px">
 
