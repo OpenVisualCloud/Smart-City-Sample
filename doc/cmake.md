@@ -31,3 +31,6 @@ cmake -DNOFFICES=3 -DPLATFORM=Xeon ..
 - **start/stop_kubernetes**: Start/stop the sample orchestrated by Kubernetes.   
 - **discover**: Scan the network specified by `PORT_SCAN` for IP cameras, and print out the IP camera profiles.    
 
+### See Also:
+
+- [Sample Distribution](dist.md)   
