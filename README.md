@@ -11,7 +11,9 @@ The E2E sample implements aspects of smart city sensing, analytics and managemen
 - **Stats**: Calculate statistics for planning/monitoring purpose on analytical data.    
 - **UI**: Present above data to users/administrators/city planners.     
 
-The sample showcases the following pipeline operations using the Open Visual Cloud software stacks:      
+### Software Stacks
+
+The sample is powered by the following Open Visual Cloud software stacks:      
 - **Edge Low-latency Analytics**:   
   - [See the GStreamer-based media analytics stack](https://github.com/OpenVisualCloud/Dockerfiles/tree/master/Xeon/ubuntu-18.04/analytics/gst), optimized for [Intel VCAC-A](https://github.com/OpenVisualCloud/Dockerfiles/tree/master/VCAC-A/ubuntu-18.04/analytics/gst).  
 
@@ -21,10 +23,6 @@ The sample showcases the following pipeline operations using the Open Visual Clo
   - [See the FFmpeg-based media transcoding stack](https://github.com/OpenVisualCloud/Dockerfiles/tree/master/Xeon/centos-7.6/media/ffmpeg), optimized for Intel Scalable Processors.  
 
 <IMG src="doc/smart-upload-arch.png" height="180px">
-
-The following diagram illustrates how the sample is constructed: a set of services each retrieves the work order by querying the database and submits the processing results back into the database. See also: [Content Search](doc/search.md).          
-
-<IMG src="doc/data-centric-design.png" height="400px">
 
 ### Install Prerequisites:
 
@@ -106,9 +104,8 @@ Launch your browser and browse to ```https://<hostname>```. You should see somet
 - [Kubernetes Setup](deployment/kubernetes/README.md)
 - [Intel VCAC-A Setup](doc/vcac-a.md)
 - [Sensor Simulation and Discovery](sensor/README.md)  
-- [Search Capabilities](doc/search.md)       
 - [Extending Offices, Sensors and Maps](doc/extend.md)  
 - [Utility Scripts](doc/script.md)       
 - [Sample Distribution](doc/dist.md)  
-
+- [Database Search](doc/search.md)   
 
