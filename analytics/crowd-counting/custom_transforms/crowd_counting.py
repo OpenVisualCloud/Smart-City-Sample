@@ -11,7 +11,6 @@ class CrowdCounting:
         self.crowd_count=[0]*self.numZone
         self.polygon=[0]*self.numZone
         
-        #print("=================CrowdCounting:__init__================")
         #self._sensor = sensor
         self.polygon[0] = [865,210,933,210,933,227,968,227,968,560,934,560,934,568,865,568,865,210]
         self.polygon[1] = [830,49,861,49,893,56,922,71,946,93,960,122,967,151,967,228,934,228,934,211,899,211,867,209,864,183,854,165,836,149,814,144,759,144,759,114,795,114,795,84,830,83,830,49]
@@ -30,30 +29,22 @@ class CrowdCounting:
         for zone in range(self.numZone):
             for t in range(len(self.polygon[zone])):
                 self.polygon[zone][t] = self.polygon[zone][t]>>3
-            #print("polygon[",zone,"]=",self.polygon[zone])
-            
+
         #convert polygon to mask algorithm
         #https://stackoverflow.com/questions/3654289/scipy-create-2d-polygon-mask
         self.img = Image.new('L', (self.width, self.height), 0)
         for zone in range(self.numZone):
             self.img = Image.new('L', (self.width, self.height), 0)
             ImageDraw.Draw(self.img).polygon(self.polygon[zone], outline=1, fill=1)
-            self.mask[zone] = numpy.array(self.img)
-            # print("mask[",zone,"]=", self.mask[zone], len(self.mask[zone]), len(self.mask[zone][0]))    #96x128
+            self.mask[zone] = numpy.array(self.img).flatten()
 
     def process_frame(self, frame):
         for tensor in frame.tensors():
             data = tensor.data()
             imgData = []
             imgData.append(tensor.data())
-            print("imgData=", imgData, len(imgData), len(imgData[0]))   #1x12288 = 1x(96x128)
-            #calculate crowd number in each zone by implementing bitmask
             for zone in range(self.numZone):
-                self.crowd_count[zone] = 0
-                for h in range(self.height):
-                    for w in range(self.width):
-                        if self.mask[zone][h][w] == 1:
-                            self.crowd_count[zone] += imgData[0][h*128 + w]
+                self.crowd_count[zone] = numpy.sum(self.mask[zone] * imgData)
 
         if (self.crowd_count):
             messages = list(frame.messages())
@@ -70,10 +61,6 @@ class CrowdCounting:
                     "zone7":int(self.crowd_count[7])
                 }
                 messages[0].set_message(json.dumps(json_msg))
-                # print("===============================")
-                # for zone in range(len(self.crowd_count)):
-                    # print("zone[", zone, "]=", int(self.crowd_count[zone]))
-                # print("===============================")
             else:
                 print("No JSON messages in frame")
                 
