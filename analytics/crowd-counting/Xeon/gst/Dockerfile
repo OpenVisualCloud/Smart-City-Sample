@@ -1,7 +1,8 @@
 # smtc_analytics_crowd_counting_xeon_gst
 
 FROM smtc_analytics_common_xeon_gst
-RUN  apt-get update -qq && apt-get install -qq python3-paho-mqtt python3-ply python3-requests python3-watchdog && rm -rf /var/lib/apt/lists/*
+RUN apt-get update -qq && apt-get install -qq python3-paho-mqtt python3-ply python3-requests python3-watchdog python3-pip && rm -rf /var/lib/apt/lists/*
+RUN pip3 install Pillow
 
 COPY --from=smtc_common /home/*.py /home/
 COPY *.py /home/
