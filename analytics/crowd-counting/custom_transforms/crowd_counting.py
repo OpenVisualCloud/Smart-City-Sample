@@ -6,14 +6,13 @@ from PIL import Image, ImageDraw
 
 class CrowdCounting:
     def __init__(self):
-        self.mask=[]
-        self.crowd_count=[0]*8
-        self.polygon=[0]*8
+        self.numZone = 8
+        self.mask=[0]*self.numZone
+        self.crowd_count=[0]*self.numZone
+        self.polygon=[0]*self.numZone
         
         print("=================CrowdCounting:__init__================")
         #self._sensor = sensor
-        self.width = 768
-        self.height = 1024
         self.polygon[0] = [210,865,210,933,227,933,227,968,560,968,560,934,568,934,568,865,210,865]
         self.polygon[1] = [49,830,49,861,56,893,71,922,93,946,122,960,151,967,228,967,228,934,211,934,211,899,209,867,183,864,165,854,149,836,144,814,144,759,114,759,114,795,84,795,83,830,49,830]
         self.polygon[2] = [49,259,82,259,82,277,114,277,114,323,146,323,146,760,114,760,114,796,82,796,82,832,49,831,49,259]
@@ -25,22 +24,30 @@ class CrowdCounting:
 
         #no matter what resolution the input video is (currently 720x1280),
         #it will resize to 1024x768 before sending to model
-        #1/8 of image resolution, 768x1024 image, data is 1x96x128x1
+        #AI data input is 1/8 of image resolution, 768x1024 image, data is 1x96x128x1
+        self.width = 768>>3
+        self.height = 1024>>3
+        for zone in range(self.numZone):
+            for t in range(len(self.polygon[zone])):
+                self.polygon[zone][t] = self.polygon[zone][t]>>3
+
         #convert polygon to mask algorithm
         #https://stackoverflow.com/questions/3654289/scipy-create-2d-polygon-mask
         self.img = Image.new('L', (self.width, self.height), 0)
-        for zone in range(8):
-            ImageDraw.Draw(self.img).polygon(self.polygon[zone], outline=zone+1, fill=zone+1)
-        self.mask = numpy.array(self.img)
+        for zone in range(self.numZone):
+            self.img = Image.new('L', (self.width, self.height), 0)
+            ImageDraw.Draw(self.img).polygon(self.polygon[zone], outline=1, fill=1)
+            self.mask[zone] = numpy.array(self.img)
 
     def process_frame(self, frame):
         for tensor in frame.tensors():
             data = tensor.data()
-            #no matter what resolution the input video is (currently 720x1280),
-            #it will resize to 1024x768 before sending to model
-            #1/8 of image resolution, 768x1024 image, data is 1x96x128x1
-            for i in range(8):
-                self.crowd_count[i] = numpy.sum(data)
+            #calculate crowd number in each zone by implementing bitmask
+            # for w in range(self.width):
+                # for h in range(self.height):
+                    # imgData[w][h] = data[1][w][h][1]
+            for zone in range(self.numZone):
+                self.crowd_count[zone] = numpy.sum(data) #numpy.sum(data & self.mask[zone])
 
         if (self.crowd_count):
             messages = list(frame.messages())
@@ -57,7 +64,10 @@ class CrowdCounting:
                     "zone7":int(self.crowd_count[7])
                 }
                 messages[0].set_message(json.dumps(json_msg))
-                print("=================zone0=", int(self.crowd_count[0]), "================")
+                print("===============================")
+                for zone in range(len(self.crowd_count)):
+                    print("zone[", zone, "]=", int(self.crowd_count[zone]))
+                print("===============================")
             else:
                 print("No JSON messages in frame")
                 
