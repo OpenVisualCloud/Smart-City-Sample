@@ -5,8 +5,8 @@ import json
 from PIL import Image, ImageDraw
 
 class CrowdCounting:
-    def __init__(self):
-        self.numZone = 8
+    def __init__(self,numZone=8,width=1024,height=768):
+        self.numZone = numZone
         self.mask=[0]*self.numZone
         self.crowd_count=[0]*self.numZone
         self.polygon=[0]*self.numZone
@@ -24,8 +24,8 @@ class CrowdCounting:
         #no matter what resolution the input video is (currently 720x1280),
         #it will resize to 1024x768 before sending to model
         #AI data input is 1/8 of image resolution, 768x1024 image, data is 1x96x128x1
-        self.width = 1024>>3
-        self.height = 768>>3
+        self.width = width>>3
+        self.height = height>>3
         for zone in range(self.numZone):
             for t in range(len(self.polygon[zone])):
                 self.polygon[zone][t] = self.polygon[zone][t]>>3
@@ -61,7 +61,5 @@ class CrowdCounting:
                     "zone7":int(self.crowd_count[7])
                 }
                 messages[0].set_message(json.dumps(json_msg))
-            else:
-                print("No JSON messages in frame")
                 
         return True
