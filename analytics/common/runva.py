@@ -27,7 +27,7 @@ class RunVA(object):
     def stop(self):
         self._stop=True
 
-    def loop(self, sensor, location, uri, algorithm, topic, algorithmName, resolution):
+    def loop(self, sensor, location, uri, topic, algorithm, algorithmName, resolution={}):
         if algorithmName=="crowd-counting":
             pid,msg=PipelineManager.create_instance(self._pipeline,self._version,{
                 "source": {
