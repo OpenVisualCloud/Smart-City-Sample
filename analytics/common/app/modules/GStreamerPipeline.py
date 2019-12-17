@@ -9,7 +9,6 @@ import json
 import time
 import os
 import copy
-from . import GstGVAJSONMeta
 from modules.Pipeline import Pipeline  # pylint: disable=import-error
 from modules.PipelineManager import PipelineManager  # pylint: disable=import-error
 from modules.ModelManager import ModelManager  # pylint: disable=import-error
@@ -288,25 +287,6 @@ class GStreamerPipeline(Pipeline):
 
         logger.debug("Received Sample from Pipeline {id}".format(id=self.id))
         sample = sink.emit("pull-sample")
-        try:
-
-            buf = sample.get_buffer()
-            try:
-                meta = buf.get_meta("GstGVAJSONMetaAPI")
-            except:
-                meta = None
-
-            if meta is None:
-                logger.debug("No GstGVAJSONMeta")
-            else:
-                json_string = GstGVAJSONMeta.get_json_message(meta)
-                json_object = json.loads(json_string)
-                logger.debug(json.dumps(json_object))
-                if self.destination and ("objects" in json_object) and (len(json_object["objects"]) > 0):
-                    self.destination.send(json_object)
-        except Exception as error:
-            logger.error("Error on Pipeline {id}: {err}".format(id=self.id, err=error))
-
         self.frame_count += 1
         self.avg_fps = self.frame_count/(time.time()-self.start_time)
         return Gst.FlowReturn.OK

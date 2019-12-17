@@ -20,8 +20,9 @@ class OccupencyTrigger(Trigger):
        objects=("",0)
        seats=("",0)
        people=("",0)
+       queue=("",0)
        try:
-           for q in self._db.search("time>=now-"+str(args[0])+" and (nobjects>"+str(args[1])+" or count.people>"+str(args[2])+" or nseats>"+str(args[3])+")",size=75):
+           for q in self._db.search("time>=now-"+str(args[0])+" and (nobjects>"+str(args[1])+" or count.people>"+str(args[2])+" or nseats>"+str(args[3])+" or count.queue>"+str(args[4])+")",size=75):
 
                if "nobjects" in q["_source"]:
                    if q["_source"]["nobjects"]>objects[1]:
@@ -35,6 +36,10 @@ class OccupencyTrigger(Trigger):
                    if "people" in q["_source"]["count"]:
                        if q["_source"]["count"]["people"]>people[1]:
                            people=(q["_source"]["location"],q["_source"]["count"]["people"])
+
+                   if "queue" in q["_source"]["count"]:
+                       if q["_source"]["count"]["queue"]>queue[1]:
+                           queue=(q["_source"]["location"],q["_source"]["count"]["queue"])
 
        except Exception as e:
            print("Exception: "+str(e), flush=True)
@@ -57,6 +62,16 @@ class OccupencyTrigger(Trigger):
                    "message": "Entrence crowded: #people="+str(people[1]),
                    "args": {
                        "occupency": people[1],
+                   }
+               }],
+           })
+       if queue[1]>0:
+           info.append({
+               "location": queue[0],
+               "warning": [{
+                   "message": "Entrence crowded: #queue="+str(queue[1]),
+                   "args": {
+                       "occupency": queue[1],
                    }
                }],
            })
