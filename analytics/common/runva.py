@@ -28,9 +28,7 @@ class RunVA(object):
         self._stop=True
 
     def loop(self, sensor, location, uri, algorithm, topic, algorithmName, resolution):
-        print("============================runva:loop===========================")
-        if algorithmName=="crowd_counting":
-            print("in crowd_counting: algorithmName=", algorithmName)
+        if algorithmName=="crowd-counting":
             pid,msg=PipelineManager.create_instance(self._pipeline,self._version,{
                 "source": {
                     "uri": uri,
@@ -66,7 +64,6 @@ class RunVA(object):
                 },
             })
         else:
-            print("in others: algorithmName=", algorithmName)
             pid,msg=PipelineManager.create_instance(self._pipeline,self._version,{
                 "source": {
                     "uri": uri,
