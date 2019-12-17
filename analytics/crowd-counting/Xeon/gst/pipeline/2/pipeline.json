@@ -27,6 +27,24 @@
     "parameters": {
 		"type" : "object",
 		"properties" : {
+			"numZone": {
+				"element":"detection",
+				"type": "integer",
+				"minimum": 0,
+				"maximum": 100
+			},
+			"width": {
+				"element":"detection",
+				"type": "integer",
+				"minimum": 0,
+				"maximum": 4096
+			},
+			"height": {
+				"element":"detection",
+				"type": "integer",
+				"minimum": 0,
+				"maximum": 3072
+			},
 			"every-nth-frame": {
 				"element":"detection",
 				"type": "integer",
