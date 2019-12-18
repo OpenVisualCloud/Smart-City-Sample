@@ -28,6 +28,7 @@ def connect(sensor, location, uri, algorithm, algorithmName, resolution, zonemap
     global mqtt2db, rec2db, runva
 
     print("==============count-crowd:connect:zonemap=",zonemap,"========================",flush=True)
+
     try:
         mqtt2db=MQTT2DB(algorithm)  # this waits for mqtt
         rec2db=Rec2DB(sensor)
@@ -40,7 +41,7 @@ def connect(sensor, location, uri, algorithm, algorithmName, resolution, zonemap
 
             # any VA exit indicates a camera disconnect
             with ThreadPoolExecutor(1) as e1:
-                e1.submit(runva.loop, sensor, location, uri, topic, algorithm, algorithmName, resolution)
+                e1.submit(runva.loop, sensor, location, uri, topic, algorithm, algorithmName, resolution, zonemap[0]["zone"])
 
             if not stop:
                 mqtt2db.stop()
