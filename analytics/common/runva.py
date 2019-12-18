@@ -57,7 +57,7 @@ class RunVA(object):
                 },
                 "parameters": {
                     "crowd_count": {
-                        "numZone": 8,
+                        "zone": 8,
                         "width": resolution["width"],
                         "height": resolution["height"]
                     },

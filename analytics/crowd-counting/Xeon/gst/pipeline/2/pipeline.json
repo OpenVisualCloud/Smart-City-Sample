@@ -34,7 +34,7 @@
 				},
 				"type": "object",
 				"properties": {
-					"numZone": {
+					"zone": {
 						"type": "integer"
 					},
 					"width": {

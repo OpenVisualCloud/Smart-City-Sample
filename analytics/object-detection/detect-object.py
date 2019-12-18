@@ -38,7 +38,7 @@ def connect(sensor, location, uri, algorithm, algorithmName):
 
             # any VA exit indicates a camera disconnect
             with ThreadPoolExecutor(1) as e1:
-                e1.submit(runva.loop, sensor, location, uri, topic, algorithm, algorithmName, {})
+                e1.submit(runva.loop, sensor, location, uri, topic, algorithm, algorithmName)
 
             if not stop: 
                 mqtt2db.stop()
