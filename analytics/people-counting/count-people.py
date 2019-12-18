@@ -20,7 +20,7 @@ rec2db=None
 runva=None
 stop=False
 
-def connect(sensor, location, algorithm, uri, algorithmName, resolution):
+def connect(sensor, location, uri, algorithm, algorithmName):
     global mqtt2db, rec2db, runva
 
     try:
@@ -35,7 +35,7 @@ def connect(sensor, location, algorithm, uri, algorithmName, resolution):
 
             # any VA exit indicates a camera disconnect
             with ThreadPoolExecutor(1) as e1:
-                e1.submit(runva.loop, sensor, location, uri, algorithm, topic, algorithmName, resolution)
+                e1.submit(runva.loop, sensor, location, uri, topic, algorithm, algorithmName)
 
             if not stop:
                 mqtt2db.stop()
@@ -84,7 +84,7 @@ while not stop:
 
                 # stream from the sensor
                 print("Connected to "+sensor["_id"]+"...",flush=True)
-                connect(sensor["_id"],sensor["_source"]["location"],algorithm,sensor["_source"]["url"],sensor["_source"]["algorithm"],sensor["_source"]["resolution"])
+                connect(sensor["_id"],sensor["_source"]["location"],sensor["_source"]["url"],algorithm,sensor["_source"]["algorithm"])
 
                 # if exit, there is somehting wrong
                 r=dbs.update(sensor["_id"],{"status":"disconnected"})

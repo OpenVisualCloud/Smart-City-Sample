@@ -1,8 +1,8 @@
 {
-    "name": "crowd_counting",
-    "version": 2,
-    "type": "GStreamer",
-    "template":"rtspsrc udp-buffer-size=212992 name=\"source\" ! queue ! rtph264depay ! h264parse ! video/x-h264 ! tee name=t ! queue ! decodebin ! videoconvert name=\"videoconvert\" ! video/x-raw,format=BGRx ! queue leaky=upstream ! gvainference infer-config=CPU_BIND_THREAD=NO model=\"{models[CSRNet_IR_model_2019R3][1][network]}\" model-proc=\"{models[CSRNet_IR_model_2019R3][1][proc]}\" name=\"detection\" ! queue ! gvametaconvert converter=json method=detection include-no-detections=true name=\"metaconvert\" ! gvapython name=\"crowdcounting\" module=\"crowd_counting\" class=\"CrowdCounting\" package=\"custom_transforms\" ! queue ! gvametapublish name=\"destination\" ! appsink name=appsink t. ! queue ! splitmuxsink max-size-time=60500000000 name=\"splitmuxsink\"",
+	"name": "crowd_counting",
+	"version": 2,
+	"type": "GStreamer",
+	"template":"rtspsrc udp-buffer-size=212992 name=\"source\" ! queue ! rtph264depay ! h264parse ! video/x-h264 ! tee name=t ! queue ! decodebin ! videoconvert name=\"videoconvert\" ! video/x-raw,format=BGRx ! queue leaky=upstream ! gvainference infer-config=CPU_BIND_THREAD=NO model=\"{models[CSRNet_IR_model_2019R3][1][network]}\" model-proc=\"{models[CSRNet_IR_model_2019R3][1][proc]}\" name=\"detection\" ! queue ! gvametaconvert converter=json method=detection include-no-detections=true name=\"metaconvert\" ! gvapython name=\"crowdcounting\" module=\"crowd_counting\" class=\"CrowdCounting\" package=\"custom_transforms\" ! queue ! gvametapublish name=\"destination\" ! appsink name=appsink t. ! queue ! splitmuxsink max-size-time=60500000000 name=\"splitmuxsink\"",
 	"description": "Crowd Counting Pipeline",
 	"source": {
 		"type": "object",
@@ -24,26 +24,32 @@
 			}
 		}
 	},
-    "parameters": {
+	"parameters": {
 		"type" : "object",
 		"properties" : {
-			"numZone": {
-				"element":"detection",
-				"type": "integer",
-				"minimum": 0,
-				"maximum": 100
-			},
-			"width": {
-				"element":"detection",
-				"type": "integer",
-				"minimum": 0,
-				"maximum": 4096
-			},
-			"height": {
-				"element":"detection",
-				"type": "integer",
-				"minimum": 0,
-				"maximum": 3072
+			"crowd_count": {
+				"element": {
+					"name": "crowdcounting",
+					"property": "args"
+				},
+				"type": "object",
+				"properties": {
+					"zone": {
+						"type": "integer"
+					},
+					"width": {
+						"type": "integer"
+					},
+					"height": {
+						"type": "integer"
+					},
+					"polygon": {
+						"type": "array",
+						"items": {
+							"type": "number"
+						}
+					}
+				}
 			},
 			"every-nth-frame": {
 				"element":"detection",
@@ -74,5 +80,5 @@
 				"default":"recording"
 			}
 		}
-    }
+	}
 }

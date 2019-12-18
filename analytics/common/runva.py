@@ -27,7 +27,7 @@ class RunVA(object):
     def stop(self):
         self._stop=True
 
-    def loop(self, sensor, location, uri, algorithm, topic, algorithmName, resolution):
+    def loop(self, sensor, location, uri, topic, algorithm, algorithmName, resolution={}, zone=0, polygon=[]):
         if algorithmName=="crowd-counting":
             pid,msg=PipelineManager.create_instance(self._pipeline,self._version,{
                 "source": {
@@ -56,12 +56,15 @@ class RunVA(object):
                     "topic": topic,
                 },
                 "parameters": {
-                    "numZone": 8,
-                    "width": resolution["width"],
-                    "height": resolution["height"],
+                    "crowd_count": {
+                        "zone": zone,
+                        "width": resolution["width"],
+                        "height": resolution["height"],
+                        "polygon": polygon
+                    },
                     "every-nth-frame": every_nth_frame,
                     "recording_prefix": "/tmp/" + sensor,
-                },
+                }
             })
         else:
             pid,msg=PipelineManager.create_instance(self._pipeline,self._version,{
