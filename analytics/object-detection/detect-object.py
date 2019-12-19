@@ -23,7 +23,7 @@ stop=False
 myAlgorithm=""
 version=0
 
-def connect(sensor, location, algorithm, uri):
+def connect(sensor, location, uri, algorithm, algorithmName):
     global mqtt2db, rec2db, runva
 
     try:
@@ -38,7 +38,7 @@ def connect(sensor, location, algorithm, uri):
 
             # any VA exit indicates a camera disconnect
             with ThreadPoolExecutor(1) as e1:
-                e1.submit(runva.loop, sensor, location, uri, algorithm, topic)
+                e1.submit(runva.loop, sensor, location, uri, topic, algorithm, algorithmName)
 
             if not stop: 
                 mqtt2db.stop()
@@ -87,8 +87,6 @@ while True:
 while not stop:
     try:
         print("Searching...", flush=True)
-        print("sensor:'camera' and status:'idle' and algorithm='queue-counting' and office:["+str(office[0])+","+str(office[1])+"]")
-        print("sensor:'camera' and status:'idle' and algorithm='"+myAlgorithm+"' and office:["+str(office[0])+","+str(office[1])+"]")
         for sensor in dbs.search("sensor:'camera' and status:'idle' and algorithm='"+myAlgorithm+"' and office:["+str(office[0])+","+str(office[1])+"]"):
             try:
                 # compete (with other va instances) for a sensor
@@ -96,7 +94,7 @@ while not stop:
 
                 # stream from the sensor
                 print("Connected to "+sensor["_id"]+"...",flush=True)
-                connect(sensor["_id"],sensor["_source"]["location"],algorithm,sensor["_source"]["url"])
+                connect(sensor["_id"],sensor["_source"]["location"],sensor["_source"]["url"],algorithm,sensor["_source"]["algorithm"])
 
                 # if exit, there is somehting wrong
                 r=dbs.update(sensor["_id"],{"status":"disconnected"})
