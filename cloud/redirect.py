@@ -29,7 +29,7 @@ class RedirectHandler(web.RequestHandler):
                 return offices[office_key]
         try:
             # search database for the office info
-            r=list(db.search("office:["+office_key+"]",1))
+            r=list(db.search("location:["+office_key+"]",1))
             r[0]["time"]=datetime.datetime.now()
             offices[office_key]=r[0]
             return r[0]

@@ -1,12 +1,16 @@
 cmake_minimum_required (VERSION 2.8)
 
 Project(smart_city NONE)
-add_custom_target(backup  ${CMAKE_HOME_DIRECTORY}/script/backup-image.sh)
-add_custom_target(restore ${CMAKE_HOME_DIRECTORY}/script/restore-image.sh)
+add_custom_target(dist  ${CMAKE_HOME_DIRECTORY}/script/mk-dist.sh)
+set_property(DIRECTORY APPEND PROPERTY ADDITIONAL_MAKE_CLEAN_FILES "${CMAKE_HOME_DIRECTORY}/dist")
 add_custom_target(update  ${CMAKE_HOME_DIRECTORY}/script/update-image.sh)
+add_custom_target(discover ${CMAKE_HOME_DIRECTORY}/sensor/discovery/shell.sh /home/discover.py $ENV{PORT_SCAN})
 
 if (NOT DEFINED PLATFORM)
     set(PLATFORM "Xeon")
+endif()
+if (NOT DEFINED FRAMEWORK)
+    set(FRAMEWORK "gst")
 endif()
 if (NOT DEFINED SCENARIO)
     set(SCENARIO "traffic")
@@ -33,4 +37,4 @@ endforeach()
 execute_process(COMMAND printf "\n\nThis script will build third party components licensed under various open source licenses into your container images. The terms under which those components may be used and distributed can be found with the license document that is provided with those components. Please familiarize yourself with those terms to ensure your distribution of those components complies with the terms of those licenses.\n\n")
 
 
-execute_process(COMMAND printf "\n-- Setting: PLATFORM=${PLATFORM}, SCENARIO=${SCENARIO}, NOFFICES=${NOFFICES}, NCAMERAS=${NCAMERAS}, NANALYTICS=${NANALYTICS}\n")
+execute_process(COMMAND printf "\n-- Setting: PLATFORM=${PLATFORM}, SCENARIO=${SCENARIO}, NOFFICES=${NOFFICES}, NCAMERAS=${NCAMERAS}, NANALYTICS=${NANALYTICS}, FRAMEWORK=${FRAMEWORK}\n")

@@ -7,9 +7,15 @@ var apiHost={
         console.log("GET "+url+"?"+$.param(args));
         return $.get(url,args);
     },
-    stats: function (index, queries, field, size, office) {
-        var url="api/stats";
+    histogram: function (index, queries, field, size, office) {
+        var url="api/histogram";
         var args={index:index,queries:queries,field:field,size:size,office:office.lat+","+office.lon};
+        console.log("GET "+url+"?"+$.param(args));
+        return $.get(url,args);
+    },
+    stats: function (index, queries, fields, office) {
+        var url="api/stats";
+        var args={index:index,queries:queries,fields:fields.join(","),office:office.lat+","+office.lon};
         console.log("GET "+url+"?"+$.param(args));
         return $.get(url,args);
     },
@@ -22,6 +28,12 @@ var apiHost={
     hint: function (index, office) {
         var url="api/hint";
         var args={ index:index, office:office?office.lat+","+office.lon:"*" };
+        console.log("GET "+url+"?"+$.param(args));
+        return $.get(url,args);
+    },
+    health: function (zone) {
+        var url="api/health";
+        var args={ zone: zone }
         console.log("GET "+url+"?"+$.param(args));
         return $.get(url,args);
     },

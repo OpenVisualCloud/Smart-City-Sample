@@ -3,7 +3,7 @@ The E2E sample implements aspects of smart city sensing, analytics and managemen
 <IMG src="doc/scope.png" height="250px">
 
 - **Camera Provisioning**: Tag and calibrate cameras for installation locations, calibration parameters and other usage pattern information.   
-- **Camera Discovery**: Discover and register IP cameras on specified IP blocks. Registered cameras automatically participate into the analytics activities. See [Sensor README](sensor/README.md) for additional details.    
+- **Camera Discovery**: Discover and register IP cameras on specified IP blocks. Registered cameras automatically participate into the analytics activities. See [Sensor Simulation and Discovery](sensor/README.md) for additional details.    
 - **Recording**: Record and manage segmented camera footage for preview or review (at a later time) purpose.     
 - **Analytics**: Perform analytics on the live/recorded camera streams. Latency-sensitive analytics are performed on Edge while others are on cloud.     
 - **Triggers and Alerts**: Manage triggers on analytics data. Respond with actions on triggered alerts.   
@@ -11,81 +11,102 @@ The E2E sample implements aspects of smart city sensing, analytics and managemen
 - **Stats**: Calculate statistics for planning/monitoring purpose on analytical data.    
 - **UI**: Present above data to users/administrators/city planners.     
 
-The sample showcases the following pipeline operations using the Open Visual Cloud software stacks:      
-- **Edge Low-latency Analytics**:   
 
+### Software Stacks
+
+The sample is powered by the following Open Visual Cloud software stacks:      
+- **Edge Low-latency Analytics**:   
+  - [The GStreamer-based media analytics stack](https://github.com/OpenVisualCloud/Dockerfiles/tree/master/Xeon/ubuntu-18.04/analytics/gst) is used for object detection, people-counting, queue-counting and crowd-counting on camera streams. The software stack is optimized for [Intel® Xeon® Scalable Processors](https://github.com/OpenVisualCloud/Dockerfiles/tree/master/Xeon/ubuntu-18.04/analytics/gst) and [Intel VCAC-A](https://github.com/OpenVisualCloud/Dockerfiles/tree/master/VCAC-A/ubuntu-18.04/analytics/gst).  
+ 
 <IMG src="doc/edge-analytics-arch.png" height="200px">
 
 - **Smart Upload with Transcoding**:
+  - [The FFmpeg-based media transcoding stack](https://github.com/OpenVisualCloud/Dockerfiles/tree/master/Xeon/centos-7.6/media/ffmpeg) is used to transcode recorded content before uploading to cloud. The software stack is optimized for [Intel Xeon Scalable Processors](https://github.com/OpenVisualCloud/Dockerfiles/tree/master/Xeon/centos-7.6/media/ffmpeg).  
 
 <IMG src="doc/smart-upload-arch.png" height="180px">
 
-The following diagram illustrates how the sample is constructed: a set of services each retrieves the work order by querying the database and submits the processing results back into the database. See also [content search](doc/search.md).          
+### Install Prerequisites:
 
-<IMG src="doc/data-centric-design.png" height="500px">
+- **Time Zone**: Check that the timezone setting of your host machine is correctly configured. Timezone is used during build. If you plan to run the sample on a cluster of machines managed by Docker Swarm or Kubernetes, please make sure to synchronize time among the manager/master node and worker nodes.    
 
-### Install docker engine:        
+- **Build Tools**: Install ```cmake``` and ```m4``` if they are not available on your system.        
 
-(1) Install [docker engine](https://docs.docker.com/install).     
-(2) Install [docker compose](https://docs.docker.com/compose/install), if you plan to deploy through docker compose. Version 1.20+ is required.    
-(3) Setup [docker swarm](https://docs.docker.com/engine/swarm), if you plan to deploy through docker swarm. See [docker swarm setup](deployment/docker-swarm/README.md) for additional setup details.    
-
-### Setup docker proxy:
-
-```bash
-(4) sudo mkdir -p /etc/systemd/system/docker.service.d       
-(5) printf "[Service]\nEnvironment=\"HTTPS_PROXY=$https_proxy\" \"NO_PROXY=$no_proxy\"\n" | sudo tee /etc/systemd/system/docker.service.d/proxy.conf       
-(6) sudo systemctl daemon-reload          
-(7) sudo systemctl restart docker     
-```
-
-### Build docker images: 
+- **Docker Engine**:        
+  - Install [docker engine](https://docs.docker.com/install).     
+  - Install [docker compose](https://docs.docker.com/compose/install), if you plan to deploy through docker compose. Version 1.20+ is required.    
+  - Setup [docker swarm](https://docs.docker.com/engine/swarm), if you plan to deploy through docker swarm. See [Docker Swarm Setup](deployment/docker-swarm/README.md) for additional setup details.  
+  - Setup [Kubernetes](https://kubernetes.io/docs/setup), if you plan to deploy through Kubernetes. See [Kubernetes Setup](deployment/kubernetes/README.md) for additional setup details.     
+  - Setup docker proxy as follows if you are behind a firewall:   
 
 ```bash
-(1) mkdir build    
-(2) cd build     
-(3) cmake ..    
-(4) make     
+sudo mkdir -p /etc/systemd/system/docker.service.d       
+printf "[Service]\nEnvironment=\"HTTPS_PROXY=$https_proxy\" \"NO_PROXY=$no_proxy\"\n" | sudo tee /etc/systemd/system/docker.service.d/proxy.conf       
+sudo systemctl daemon-reload          
+sudo systemctl restart docker     
 ```
-See also how to customize the building process with [cmake options](doc/cmake.md).    
 
-### Start/stop services:
+### Build Sample: 
 
-Use the following commands to start/stop services via docker swarm:    
 ```bash
-(1) make start_docker_swarm      
-(2) make stop_docker_swarm      
+mkdir build    
+cd build     
+cmake ..    
+make     
 ```
-See also how to setup [docker swarm](deployment/docker-swarm/README.md).    
+
+See also: [Customize Build Process](doc/cmake.md).    
+
+### Start/stop Sample: 
 
 Use the following commands to start/stop services via docker-compose:        
+
 ```bash
-(1) make start_docker_compose      
-(2) make stop_docker_compose      
+make start_docker_compose      
+make stop_docker_compose      
 ```
 
-### Launch browser:
+Use the following commands to start/stop services via docker swarm:    
 
-Launch your browser and point to `https://localhost`. Note that if you see a browser warning of self-signed certificate, please accept it to proceed to the sample UI.    
+```bash
+make update
+make start_docker_swarm      
+make stop_docker_swarm      
+```
 
-<IMG src="doc/screenshot.gif" height="270px"></IMG>    
+See also:  [Docker Swarm Setup](deployment/docker-swarm/README.md).    
+
+Use the following commands to start/stop Kubernetes services:
+
+```
+make update
+make start_kubernetes
+make stop_kubernetes
+```
+
+See also: [Kubernetes Setup](deployment/kubernetes/README.md).    
+
+### Launch Sample UI:
+
+Launch your browser and browse to ```https://<hostname>```. You should see something similar to the following UI:   
+
+<IMG src="doc/screenshot.gif" height="270px"></IMG>
+
+---
+
+* For Kubernetes/Docker Swarm, ```<hostname>``` is the hostname of the manager/master node.
+* If you see a browser warning of self-signed certificate, please accept it to proceed to the sample UI.    
   
-### Camera Simulation:
-
-The sample implemented camera simulation to facilitate evalaution. Camera simulation requires that you have a dataset to simulate camera feeds. The build script includes a sample clip (to be downloaded after accepting the license terms.)    
-
-If you plan to use your own dataset, put the files under [sensor/simulation](sensor/simulation). The dataset must be a set of MP4 files, encoded with H.264 (configuration: baseline, closed-GOP and no-B-frames) and AAC.    
-
-If unsure, it is recommended that you transcode your dataset with FFmpeg:   
-
-```
-ffmpeg -i <source>.mp4 -c:v libx264 -profile:v baseline -x264-params keyint=30:bframes=0 -c:a aac -ss 0 <target>.mp4
-```
+---
 
 ### See Also
 
-- [CMake Options](doc/cmake.md)          
-- [Search Capabilities](doc/search.md)       
+- [Configuration Options](doc/cmake.md)          
+- [Docker Swarm Setup](deployment/docker-swarm/README.md)      
+- [Kubernetes Setup](deployment/kubernetes/README.md)
+- [Intel VCAC-A Setup](doc/vcac-a.md)
+- [Sensor Simulation and Discovery](sensor/README.md)  
+- [Extending Offices, Sensors and Maps](doc/extend.md)  
 - [Utility Scripts](doc/script.md)       
-- [Docker Swarm Setup](deployment/docker-swarm/README.md)       
+- [Sample Distribution](doc/dist.md)  
+- [Database Search](doc/search.md)   
 

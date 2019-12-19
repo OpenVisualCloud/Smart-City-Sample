@@ -1,9 +1,17 @@
-The sample UI presents a search box that enables search database content:    
-- On the home page, the users can search cameras properties, for example, the office location (the computing facilities where the cameras are connected to.)    
-- On the office page, the users can search analytics algorithms and see their execution statuses.    
-- On the recording page, the users can search recoded clips and review them.    
 
-The search box implements the following search features:    
+The sample is designed around database ingest and search:
+- The sample UI presents a search box that enables search database content:    
+  - On the home page, the users can search cameras properties, for example, the office location (the computing facilities where the cameras are connected to.)    
+  - On the office page, the users can search analytics algorithms and see their execution statuses.    
+  - On the recording page, the users can search recorded clips and review them.    
+- Internally, a set of services each retrieves the work order by querying the database and submits the processing results back into the database.   
+
+<IMG src="data-centric-design.png" height="400px">
+
+### Search Language  
+
+The sample implements the following search features:    
+
 - Field Existance Search:   
 
 Return records with a non-null or false value of the specified field.    
@@ -50,9 +58,8 @@ Example: ```duration>20 and time>10:10:10```
 Return recordings whose analytics data meet certain criteria.      
 Example: ```time>now-10000 where objects.detection.bounding_box.x_max-objects.detection.bounding_box.x_min>0.1```    
 
-### Database Known Limitations  
+### See Also:
 
-- The database is configured as a development setup: single host and no replication. Usually, a database should be setup on multiple systems for horizonal scaling and high availability.   
-- Each data type, such as recordings and analytics, is saved on a single index. Each index can hold a maximum of 2 billion records.
-- The response of any database search is limited to 10,000 records. Rewrite [script/db_query.py](../script/db_query.py) with the [Scroll](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-request-scroll.html) API to overcome this limitation.   
+- [The Ingest Script](../common/db_ingest.py)  
+- [The Query Script](../common/db_query.py)   
 

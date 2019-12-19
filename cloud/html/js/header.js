@@ -8,10 +8,6 @@ var settings={
         if (typeof(val)!="undefined") $("#sensorUpdate").val(val);
         return parseFloat($("#sensorUpdate").val());
     },
-    analytics_update: function (val) {
-        if (typeof(val)!="undefined") $("#analyticsUpdate").val(val);
-        return parseFloat($("#analyticsUpdate").val());
-    },
     service_update: function (val) {
         if (typeof(val)!="undefined") $("#serviceUpdate").val(val);
         return parseFloat($("#serviceUpdate").val());
@@ -19,6 +15,10 @@ var settings={
     frame_duration: function (val) {
         if (typeof(val)!="undefined") $("#frameDuration").val(val);
         return parseFloat($("#frameDuration").val());
+    },
+    alert_window: function (val) {
+        if (typeof(val)!="undefined") $("#alertWindow").val(val);
+        return parseFloat($("#alertWindow").val());
     },
     preview_query: function (val) {
         if (typeof(val)!="undefined") $("#previewQueries").val(val);
@@ -28,6 +28,10 @@ var settings={
         if (typeof(val)!="undefined") $("#heatmapQueries").val(val);
         return $("#heatmapQueries").val();
     },
+    zonemap_query: function (val) {
+        if (typeof(val)!="undefined") $("#zoneMapQueries").val(val);
+        return $("#zoneMapQueries").val();
+    },
     stats_query: function (val) {
         if (typeof(val)!="undefined") $("#statsQueries").val(val);
         return $("#statsQueries").val();
@@ -35,15 +39,6 @@ var settings={
     stats_histogram: function (val) {
         if (typeof(val)!="undefined") $("#statsHistogram").val(val);
         return $("#statsHistogram").val();
-    },
-    street_center: function () {
-        return [45.536664,-122.960823];
-    },
-    parking_center: function () {
-        return [33.310955,-111.932443];
-    },
-    stadium_center: function () {
-        return [37.388085,-121.963472];
     },
 }
 
@@ -57,12 +52,12 @@ function showHints() {
     var candidates=page.data('candidates');
     var candidateIdx=page.data('candidateIdx');
 
-    var hintText=(desc!="")?'<div style="background-color:lightgrey;margin-bottom:5px">'+desc+"</div>":"";
+    var hintText=(desc!="")?'<div class="header-search-hint-text">'+desc+"</div>":"";
     var s=(candidateIdx>9)?candidateIdx-9:0;
     var e=(s+10>=candidates.length)?candidates.length:s+10;
     for (var i=s;i<e;i++) {
         if (i==candidateIdx) {
-            hintText=hintText+"<span style='background-color:lightblue'>"+candidates[i]+"</span><BR>";
+            hintText=hintText+'<span class="header-search-hint-text-highlight">'+candidates[i]+"</span><BR>";
         } else {
             hintText=hintText+candidates[i]+"<BR>";
         }
@@ -190,7 +185,9 @@ $("[hint-panel]").on(":display", function (e, message) {
     });
     panel.show();
 }).on(":error", function (e, message) {
-    $(this).trigger(":display", ['<p style="color:red">'+message+'</p>']);
+    var panel=$(this);
+    panel.trigger(":display", ['<p class="header-search-hint-error">'+message+'</p>']);
+    setTimeout(function () { panel.hide(); },2000);
 });
 
 $(window).resize(function () {

@@ -1,32 +1,126 @@
-The sample scans the specified IP block for any IP cameras. If found, they will be registered to the database and be invoked by analytic instances for streaming.
+
+The Smart City sample scans the specified IP block for any cameras. If found, they will be registered to the database and be invoked by analytic instances for streaming.
 
 ### Sensor Simulation
 
-The sample will simulate camera feeds if there is any MP4 files under the [../volume/simulated](../volume/simulated) directory. The MP4 files must be encoded with H.264 baseline/main profile and AAC if there is audio. If you change any files under [../volume/simulated](../volume/simulated), please restart the sample services.    
+The sample implemented camera simulation to facilitate evalaution. Camera simulation requires that you have a dataset to simulate camera feeds. The build script includes a sample clip (to be downloaded after accepting the license terms.)
 
-### ONVIF Camera Discovery
+If you plan to use your own dataset, put the files under the [simulation](simulation) directory. Rename them to follow the convention of ```<dataset-name>_<scenario>.mp4```. The dataset must be a set of MP4 files, encoded with H.264 (configuration: baseline, closed-GOP and no-B-frames) and AAC.   
 
-The sample implements the ONVIF protocol to discover IP cameras on the specified IP range and port range. To activate the ONVIF camera discovery, modify the camera discovery service block as follows in [office.m4](../deployment/docker-swarm/office.m4), and restart the sample:     
-
-```
-    defn(`OFFICE_NAME')_camera_discovery:
-        image: smtc_onvif_discovery:latest
-        environment:
-            IP_SCAN_RANGE: "192.168.1.0/24"
-            PORT_SCAN_RANGE: "554-8554"
-            ...
-```
-
-where ```192.168.1.0/24``` is the IP camera subnet, and ```554-8554``` is the IP camera RTSP port range.    
-
-To activate IP camera scanning as well as using simulated cameras, use the following service block declaration:   
+If unsure, it is recommended that you transcode your dataset with FFmpeg:
 
 ```
-    defn(`OFFICE_NAME')_camera_discovery:
-        image: smtc_onvif_discovery:latest
-        environment:
-            IP_SCAN_RANGE: "defn(`OFFICE_NAME')_simulated_cameras 192.168.1.0/24"
-            PORT_SCAN_RANGE: "11000-eval(11000+defn(`NCAMERAS')*100),554-8554"
-            ...
+ffmpeg -i <source>.mp4 -c:v libx264 -profile:v baseline -x264-params keyint=30:bframes=0 -c:a aac -ss 0 <target>.mp4
 ```
+
+### Extending to IP Cameras
+
+The sample implements the ONVIF protocol to discover IP cameras on the specified IP range. Do the following to add IP cameras to the sample:   
+
+#### (1) Finding Camera IDs
+
+To uniquely identify a camera, we need to define a camera ID. This is usually the camera serial number (1st choice) or the MAC address of the network interface (2nd choice if serial number is missing from probing).  
+
+Scan the camera IP range as follows:
+```
+PORT_SCAN='-p T:80-65535 192.168.1.0/24' make discover
+```
+
+where ```PORT_SCAN``` specifies the ```nmap``` command line arguments. The camera network is ```192.168.1.0/24``` and the port range is ```80-65535```. The output is similar to the following lines:    
+
+```
+...
+  "device": {
+    "Manufacturer": "LOREX",
+    "Model": "LNB8973B",
+    "FirmwareVersion": "2.460.0001.5.R, Build Date 2017-08-11",
+    "SerialNumber": "ND021808019141",
+    "HardwareId": "1.00"
+  },
+  "networks": [
+    {
+      "Name": "eth0",
+      "HwAddress": "00:1f:54:2d:3d:1b",
+      "MTU": 1500
+    }
+  ],
+...
+```
+
+Note that the sample uses a predefined username and password for camera authentication. See [```probe_camera_info```](../sensor/discovery/discover.py) for details.  
+
+#### (2) Provisioning Cameras
+
+Provisioning is a process of associating a set of application-specific parameters to a camera, for example, the GPS location, field of view, direction and positioning transformation. Developing provisioning tools is outside the sample scope. As a workaround, the sample stores the provisioning information at [sensor-info.json](../maintenance/db-init/sensor-info.json) and uses it to initialize the database.   
+
+The provisioning information is scenario specific. The ```traffic``` scenario parameters are as follows:
+```
+...
+        "address": "Tendem Way",
+        "location": {
+            "lat": 45.5415,
+            "lon": -122.9227
+        },
+        "algorithm": "object-detection",
+        "mnth": 75.0,
+        "alpha": 45.0,
+        "fovh": 90.0,
+        "fovv": 68.0,
+        "theta": 0.0,
+        "simsn": "cams1o1c7"
+...
+```
+The ```stadium``` scenario parameters are as follows:
+```
+...
+        "address": "South East Wing",
+        "location": {
+            "lat": 37.38369,
+            "lon": -121.95448
+        },
+        "algorithm": "crowd-counting",
+        "theta": 225.0,
+        "zones": [7],
+        "zonemap": [{
+            "zone": 7,
+            "polygon": [[0,0],[1023,0],[1023,1023],[0,1023],[0,0]]
+        }],
+        "simsn": "cams2o1w7"
+...
+```
+
+In above provisioning parameters, the ```simsn``` fields identify simulated cameras. Replace those with the discovered camera IDs. For example, the following parameters associate the ```South East Wing``` or ```zone 7``` with the IP camera, whose serial number is ```ND021808019141```.   
+```
+...
+        "address": "South East Wing",
+        "location": {
+            "lat": 37.38369,
+            "lon": -121.95448
+        },
+        "algorithm": "crowd-counting",
+        "theta": 225.0,
+        "zones": [7],
+        "zonemap": [{
+            "zone": 7,
+            "polygon": [[0,0],[1023,0],[1023,1023],[0,1023],[0,0]]
+        }],
+        "device": { 
+            "SerialNumber": "ND021808019141"
+        }
+...
+```
+
+#### (3) Enabling the Discovering Service
+
+Enable the IP camera discovering service by configuring ```DISCOVER_IP_CAMERA``` to ```true``` in [docker-swarm/office.m4](../deployment/docker-swarm/office.m4) and/or [kubernetes/office.m4](../deployment/kubernetes/office.m4).   
+
+--- 
+
+Due to Kubernetes limitation, if IP camera is enabled, the discovering service and the analytics instances will run on the host network to reliably receive RTP streams.   
+
+---
+
+If you enable more than 1 office, addtionally check the ```IP_CAMERA_NETWORK``` definition. The default value assumes that each office occupies a block in the ```192.168.x.0/24``` network. Modify as necessary. Also, make sure that the worker node that runs the IP camera discovering service can access to the specified network.     
+
+Restart the sample. Your IP camera(s) should show up in the sample UI.      
 

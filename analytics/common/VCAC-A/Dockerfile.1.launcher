@@ -1,0 +1,6 @@
+# vcac-container-launcher
+
+FROM docker:stable
+COPY VCAC-A/run-container.sh /usr/local/bin
+ENTRYPOINT ["/usr/local/bin/run-container.sh"]
+

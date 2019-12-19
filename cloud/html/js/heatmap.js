@@ -59,7 +59,7 @@ class CameraProjection {
     }
 }
 
-var heatmaps={
+var heatmap={
     create: function (ctx, sensor_location) {
         ctx.heatmap=L.heatLayer(sensor_location, {radius: 10, blur: 5} );
     },
@@ -96,9 +96,7 @@ var heatmaps={
                 ctx.heatmap.remove(); 
             } else {
                 ctx.heatmap.setLatLngs(latlngs);
-		if(!layer.hasLayer(ctx.heatmap)) {
-                    ctx.heatmap.addTo(layer);
-		}
+		        if(!layer.hasLayer(ctx.heatmap)) ctx.heatmap.addTo(layer);
             }
         }).catch(function () {
             ctx.heatmap.remove();

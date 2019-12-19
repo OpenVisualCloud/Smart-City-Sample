@@ -14,9 +14,12 @@ docker_compose)
         echo ""
         exit 0
     fi
-    sudo docker-compose -f "$yml" -p smtc --compatibility down
+    docker-compose -f "$yml" -p smtc --compatibility down
     ;;
 *)
-    sudo docker stack rm smtc
+    echo "Shutting down stack smtc..."
+    while test -z "$(docker stack rm smtc 2>&1 | grep 'Nothing found in stack')"; do
+        sleep 2
+    done
     ;;
 esac

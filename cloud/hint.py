@@ -8,11 +8,12 @@ from db_query import DBQuery
 import os
 import json
 
+dbhost=os.environ["DBHOST"]
+
 class HintHandler(web.RequestHandler):
     def __init__(self, app, request, **kwargs):
         super(HintHandler, self).__init__(app, request, **kwargs)
         self.executor= ThreadPoolExecutor(4)
-        self.dbhost=os.environ["DBHOST"]
 
     def check_origin(self, origin):
         return True
@@ -22,7 +23,7 @@ class HintHandler(web.RequestHandler):
         try:
             hints={}
             for index in indexes:
-                db=DBQuery(index=index,office=office,host=self.dbhost)
+                db=DBQuery(index=index,office=office,host=dbhost)
                 hints[index]=db.hints(size=100)
             return hints
         except Exception as e:

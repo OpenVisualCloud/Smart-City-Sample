@@ -1,8 +1,9 @@
 
-FROM xeon-centos76-media-nginx
+FROM openvisualcloud/xeon-centos76-media-nginx:19.11
 
-RUN yum -y install epel-release && yum -y install python36-tornado python36-requests python36-ply python36-psutil && rm -rf /var/cache/yum/*
+RUN yum install -y -q epel-release && yum install -y -q python36-tornado python36-requests python36-ply python36-psutil && rm -rf /var/cache/yum/*
 
+COPY --from=smtc_common /home/*.py /home/
 COPY    *.py /home/
 COPY    *.conf /etc/nginx/
 CMD     ["/home/manage.py"]

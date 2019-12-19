@@ -2,11 +2,21 @@
 
 DIR=$(dirname $(readlink -f "$0"))
 NOFFICES="${4:-1}"
-yml="$DIR/docker-compose.yml"
 
-sudo docker volume rm opnc_cloud_esdata -f; echo
+shift
+. "$DIR/build.sh"
 
-export USER_ID="$(id -u)"
-export GROUP_ID="$(id -g)"
+function create_secret {
+    kubectl create secret generic self-signed-certificate "--from-file=${DIR}/../../certificate/self.crt" "--from-file=${DIR}/../../certificate/self.key"
+}
+
+# create secrets
 "$DIR/../../certificate/self-sign.sh"
-sudo -E docker stack deploy -c "$yml" opnc
+create_secret 2>/dev/null || (kubectl delete secret self-signed-certificate; create_secret)
+
+# create configmap
+kubectl create configmap sensor-info "--from-file=${DIR}/../../../maintenance/db-init/sensor-info.json"
+
+for yaml in $(find "$DIR" -maxdepth 1 -name "*.yaml" -print); do
+    kubectl apply -f "$yaml"
+done

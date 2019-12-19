@@ -8,3 +8,4 @@ for id in $(sudo docker ps | grep smtc_sensor_simulation | cut -f1 -d" "); do
     echo $id
     sudo -E docker kill $id
 done
+

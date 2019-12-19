@@ -1,12 +1,16 @@
 
 volumes:
-    cloud_esdata:
+    ifelse(eval(defn(`NOFFICES')>1),1,cloud_esdata,esdata):
         driver: local
-forloop(`office_idx',1,defn(`NOFFICES'),`dnl
-    `office'defn(`office_idx')_esdata:
+    cloud_stdata:
         driver: local
-    `office'defn(`office_idx')_andata:
+forloop(`SCENARIOIDX',1,defn(`NSCENARIOS'),`dnl
+forloop(`OFFICEIDX',1,defn(`NOFFICES'),`dnl
+include(office.m4)dnl
+ifelse(index(defn(`SCENARIO'),defn(`SCENARIO_NAME')),-1,,`dnl
+ifelse(defn(`OFFICE_LOCATION'),`',,`dnl
+    defn(`OFFICE_NAME')_esdata:
         driver: local
-    `office'defn(`office_idx')_stdata:
+    defn(`OFFICE_NAME')_stdata:
         driver: local
-')dnl
+')')')')

@@ -3,7 +3,7 @@ $("#pg-recording").on(":initpage", function(e, queries, office) {
 
     /* setup the layout button */
     $("#layoutButton").show().unbind('click').click(function () {
-        $(this).find("i").toggleClass("fi-arrows-out").toggleClass("fi-arrows-in");
+        $(this).find("i").toggleClass("fi-zoom-out").toggleClass("fi-zoom-in");
         page.find("[layout1]").toggle();
         page.find("[layout4]").toggle();
     });
@@ -33,7 +33,8 @@ $("#pg-recording").on(":initpage", function(e, queries, office) {
             $.each(data.response, function (k,v) {
                 var time=new Date(v._source.time).toLocaleString();
                 v._source.path="recording/"+v._source.path+'?'+$.param({office:office.lat+","+office.lon});
-                var line=$('<tr><td style="padding:0"><a href="javascript:void(0)"><img src="'+v._source.path.replace('mp4?','mp4.png?')+'" draggable="true" style="width:'+plist.width()+'px"/><figcaption style="font-size:xx-small">'+time+' <pre>'+v._source.path+'</pre></figcaption></a></td></tr>');
+                var line=$('<tr><td class="no-padding"><a href="javascript:void(0)"><img src="'+v._source.path.replace('mp4?','mp4.png?')+'" draggable="true"/><figcaption class="xx-small">'+time+' <pre>'+v._source.path+'</pre></figcaption></a></td></tr>');
+                line.find("img").css({width:plist.width()+"px"});
                 line.on("dragstart",function (e) {
                     e.originalEvent.dataTransfer.setData("application/json",JSON.stringify(v));
                 });
