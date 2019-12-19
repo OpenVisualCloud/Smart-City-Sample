@@ -145,7 +145,7 @@ var stats={
         });
         if (count>0) {
             var pretty=function(value) {
-                if (value<1000) return ((value<10)?value.toFixed(1):Math.floor(value)).toString(10);
+                if (value<1000) return (Math.floor(value)).toString(10);
                 for (var unit of ['K','M','B']) {
                     value=value/1000;
                     if (value<1000) 
