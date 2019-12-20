@@ -19,8 +19,8 @@ spec:
         app: defn(`OFFICE_NAME')-camera-discovery
     spec:
       enableServiceLinks: false
-      hostNetwork: true
-      dnsPolicy: ClusterFirstWithHostNet
+#      hostNetwork: true
+#      dnsPolicy: ClusterFirstWithHostNet
       containers:
         - name: defn(`OFFICE_NAME')-camera-discovery
           image: smtc_onvif_discovery:latest
