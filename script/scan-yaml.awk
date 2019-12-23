@@ -21,11 +21,9 @@ function saveim() {
     im=$2;
 }
 
-/command:\s+\["-/ {
+/VCAC_IMAGE:/ {
     im2=im;
-    n=split($NF,args,",");
-    im=args[n];
-    gsub(/[\"\]]/,"",im);
+    im=$2;
 }
 
 /- node\..*==.*/ && labels!="*" {

@@ -31,4 +31,3 @@ make stop_docker_swarm
 ### Known Limitations
 
 - Support is limited to the docker swarm deployment. Kubernetes support is in development.    
-- ```make stop_docker_swarm``` does not stop cleanly due to the timing of the shutdown sequence. You might see a warning that the sample network is not shutdown. This is expected.  
