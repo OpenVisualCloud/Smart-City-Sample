@@ -14,10 +14,8 @@ ifelse(defn(`DISCOVER_SIMULATED_CAMERA'),`true',`dnl
             no_proxy: "*"
         volumes:
             - /etc/localtime:/etc/localtime:ro
-ifelse(defn(`PLATFORM'),`VCAC-A',`dnl
         networks:
-            - default_net
-')dnl
+            - appnet
         deploy:
             replicas: 1
             placement:
@@ -38,10 +36,8 @@ ifelse(defn(`SCENARIO_NAME'),`stadium',`
             no_proxy: "*"
         volumes:
             - /etc/localtime:/etc/localtime:ro
-ifelse(defn(`PLATFORM'),`VCAC-A',`dnl
         networks:
-            - default_net
-')dnl
+            - appnet
         deploy:
             placement:
                 constraints:
@@ -61,10 +57,8 @@ ifelse(defn(`PLATFORM'),`VCAC-A',`dnl
             no_proxy: "*"
         volumes:
             - /etc/localtime:/etc/localtime:ro
-ifelse(defn(`PLATFORM'),`VCAC-A',`dnl
         networks:
-            - default_net
-')dnl
+            - appnet
         deploy:
             placement:
                 constraints:
@@ -84,10 +78,8 @@ ifelse(defn(`DISCOVER_IP_CAMERA'),`true',`dnl
             no_proxy: "*"
         volumes:
             - /etc/localtime:/etc/localtime:ro
-ifelse(defn(`PLATFORM'),`VCAC-A',`dnl
         networks:
-            - default_net
-')dnl
+            - appnet
         deploy:
             replicas: 1
             placement:

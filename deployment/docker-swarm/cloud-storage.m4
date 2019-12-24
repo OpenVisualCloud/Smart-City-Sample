@@ -12,10 +12,8 @@
         volumes:
             - /etc/localtime:/etc/localtime:ro
             - cloud_stdata:/var/www:rw
-ifelse(defn(`PLATFORM'),`VCAC-A',`dnl
         networks:
-            - default_net
-')dnl
+            - appnet
         deploy:
             placement:
                 constraints:
