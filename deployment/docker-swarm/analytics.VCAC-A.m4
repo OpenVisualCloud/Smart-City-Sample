@@ -17,7 +17,7 @@ ifelse(defn(`SCENARIO_NAME'),`traffic',`
             VCAC_NO_PROXY: "*"
             VCAC_no_proxy: "*"
         networks:
-            - default_net
+            - appnet
         deploy:
             replicas: defn(`NANALYTICS')
             placement:

@@ -13,6 +13,8 @@ ifelse(defn(`SCENARIO_NAME'),`traffic',`
             no_proxy: "*"
         volumes:
             - /etc/localtime:/etc/localtime:ro
+        networks:
+            - appnet
         deploy:
             replicas: defn(`NANALYTICS')
             placement:
@@ -33,6 +35,8 @@ ifelse(defn(`SCENARIO_NAME'),`stadium',`
             no_proxy: "*"
         volumes:
             - /etc/localtime:/etc/localtime:ro
+        networks:
+            - appnet
         deploy:
             replicas: defn(`NANALYTICS')
             placement:
@@ -52,6 +56,8 @@ ifelse(defn(`SCENARIO_NAME'),`stadium',`
             no_proxy: "*"
         volumes:
             - /etc/localtime:/etc/localtime:ro
+        networks:
+            - appnet
         deploy:
             replicas: defn(`NANALYTICS2')
             placement:
@@ -71,6 +77,8 @@ ifelse(defn(`SCENARIO_NAME'),`stadium',`
             no_proxy: "*"
         volumes:
             - /etc/localtime:/etc/localtime:ro
+        networks:
+            - appnet
         deploy:
             replicas: defn(`NANALYTICS3')
             placement:

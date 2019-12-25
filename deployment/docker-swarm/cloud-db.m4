@@ -18,10 +18,8 @@ ifelse(eval(defn(`NOFFICES')>1),1,`dnl
         volumes:
             - /etc/localtime:/etc/localtime:ro
             - ifelse(eval(defn(`NOFFICES')>1),1,cloud_esdata,esdata):/usr/share/elasticsearch/data:rw
-ifelse(defn(`PLATFORM'),`VCAC-A',`dnl
         networks:
-            - default_net
-')dnl
+            - appnet
         deploy:
             placement:
                 constraints:

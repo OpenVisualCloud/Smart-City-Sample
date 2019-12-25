@@ -17,10 +17,8 @@ define(`SERVICE_INTERVAL_SMART_UPLOAD',`120')dnl
             no_proxy: "*"
         volumes:
             - /etc/localtime:/etc/localtime:ro
-ifelse(defn(`PLATFORM'),`VCAC-A',`dnl
         networks:
-            - default_net
-')dnl
+            - appnet
         deploy:
             placement:
                 constraints:

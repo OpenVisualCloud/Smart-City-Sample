@@ -1,9 +1,5 @@
 
-ifelse(defn(`PLATFORM'),`VCAC-A',`
-
 networks:
-    default_net:
+    appnet:
         driver: overlay
         attachable: true
-
-')
