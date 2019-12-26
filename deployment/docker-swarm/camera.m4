@@ -16,10 +16,6 @@ ifelse(defn(`SCENARIO_NAME'),`stadium',`dnl
             - /etc/localtime:/etc/localtime:ro
         networks:
             - appnet
-        deploy:
-            placement:
-                constraints:
-                    - defn(`OFFICE_ZONE')
 
 ifelse(defn(`SCENARIO_NAME'),`stadium',`
     defn(`OFFICE_NAME')_simulated_cameras_crowd:
@@ -34,10 +30,6 @@ ifelse(defn(`SCENARIO_NAME'),`stadium',`
             - /etc/localtime:/etc/localtime:ro
         networks:
             - appnet
-        deploy:
-            placement:
-                constraints:
-                    - defn(`OFFICE_ZONE')
                     
     defn(`OFFICE_NAME')_simulated_cameras_queue:
         image: smtc_sensor_simulation:latest
@@ -51,8 +43,4 @@ ifelse(defn(`SCENARIO_NAME'),`stadium',`
             - /etc/localtime:/etc/localtime:ro
         networks:
             - appnet
-        deploy:
-            placement:
-                constraints:
-                    - defn(`OFFICE_ZONE')                    
 ')

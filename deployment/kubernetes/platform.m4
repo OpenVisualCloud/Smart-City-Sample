@@ -21,11 +21,8 @@ ifelse(defn(`PLATFORM'),`VCAC-A',dnl
               path: /var/tmp/hddl_service_alive.mutex
 ))dnl
 define(`PLATFORM_NODE_SELECTOR',dnl
-`ifelse("$@ifelse(defn(`PLATFORM'),`VCAC-A',emit)","",,dnl
-      nodeSelector:
-)'dnl
 ifelse(defn(`PLATFORM'),`VCAC-A',dnl
+      nodeSelector:
           vcac-zone: "yes"
 )dnl
-$@
 )dnl

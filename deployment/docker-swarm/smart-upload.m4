@@ -20,9 +20,6 @@ define(`SERVICE_INTERVAL_SMART_UPLOAD',`120')dnl
         networks:
             - appnet
         deploy:
-            placement:
-                constraints:
-                    - defn(`OFFICE_ZONE')
             resources:
                 limits:
                     cpus: '0.20'

@@ -17,10 +17,5 @@ ifelse(eval(defn(`NOFFICES')>1),1,`dnl
             - "no_proxy=*"
         volumes:
             - /etc/localtime:/etc/localtime:ro
-            - ifelse(eval(defn(`NOFFICES')>1),1,cloud_esdata,esdata):/usr/share/elasticsearch/data:rw
         networks:
             - appnet
-        deploy:
-            placement:
-                constraints:
-                    - node.role==manager

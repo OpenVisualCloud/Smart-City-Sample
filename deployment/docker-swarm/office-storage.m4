@@ -11,12 +11,5 @@
             no_proxy: "*"
         volumes:
             - /etc/localtime:/etc/localtime:ro
-            - defn(`OFFICE_NAME')_stdata:/var/www:rw
         networks:
             - appnet
-        deploy:
-            placement:
-                constraints:
-                    - defn(`OFFICE_ZONE')
-                    - defn(`STORAGE_ZONE')
-

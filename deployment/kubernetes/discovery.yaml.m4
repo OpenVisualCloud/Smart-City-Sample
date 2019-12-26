@@ -49,10 +49,6 @@ spec:
             hostPath:
                 path: /etc/localtime
                 type: File
-ifelse(eval(defn(`NOFFICES')>1),1,`dnl
-      nodeSelector:
-        defn(`OFFICE_ZONE'): "yes"
-')dnl
 
 ifelse(defn(`SCENARIO_NAME'),`stadium',`
 ---
@@ -103,10 +99,6 @@ spec:
             hostPath:
                 path: /etc/localtime
                 type: File
-ifelse(eval(defn(`NOFFICES')>1),1,`dnl
-      nodeSelector:
-        defn(`OFFICE_ZONE'): "yes"
-')dnl
 ')dnl
 
 ---
@@ -157,10 +149,6 @@ spec:
             hostPath:
                 path: /etc/localtime
                 type: File
-ifelse(eval(defn(`NOFFICES')>1),1,`dnl
-      nodeSelector:
-        defn(`OFFICE_ZONE'): "yes"
-')dnl
 ')dnl
 
 ifelse(defn(`DISCOVER_IP_CAMERA'),`true',`dnl
@@ -210,8 +198,4 @@ spec:
             hostPath:
                 path: /etc/localtime
                 type: File
-ifelse(eval(defn(`NOFFICES')>1),1,`dnl
-      nodeSelector:
-        defn(`OFFICE_ZONE'): "yes"
-')
 ')

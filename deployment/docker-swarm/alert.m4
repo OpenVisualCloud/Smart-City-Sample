@@ -12,7 +12,3 @@
             no_proxy: "*"
         networks:
             - appnet
-        deploy:
-            placement:
-                constraints:
-                    - defn(`OFFICE_ZONE')

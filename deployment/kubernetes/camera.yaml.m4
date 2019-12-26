@@ -71,10 +71,6 @@ ifelse(defn(`SCENARIO_NAME'),`stadium',`dnl
             hostPath:
                 path: /etc/localtime
                 type: File
-ifelse(eval(defn(`NOFFICES')>1),1,`dnl
-      nodeSelector:
-        defn(`OFFICE_ZONE'): "yes"
-')dnl
 
 ifelse(defn(`SCENARIO_NAME'),`stadium',`dnl
 ---
@@ -142,10 +138,6 @@ forloop(`CAMERAIDX',1,defn(`NCAMERAS2'),`dnl
             hostPath:
                 path: /etc/localtime
                 type: File
-ifelse(eval(defn(`NOFFICES')>1),1,`dnl
-      nodeSelector:
-        defn(`OFFICE_ZONE'): "yes"
-')dnl
 
 ---
 
@@ -212,8 +204,4 @@ forloop(`CAMERAIDX',1,defn(`NCAMERAS3'),`dnl
             hostPath:
                 path: /etc/localtime
                 type: File
-ifelse(eval(defn(`NOFFICES')>1),1,`dnl
-      nodeSelector:
-        defn(`OFFICE_ZONE'): "yes"
-')dnl
 ')dnl
