@@ -55,9 +55,7 @@ defn(`PLATFORM_VOLUME_MOUNTS')dnl
               path: /etc/localtime
               type: File
 defn(`PLATFORM_VOLUMES')dnl
-PLATFORM_NODE_SELECTOR(ifelse(eval(defn(`NOFFICES')>1),1,dnl
-          defn(`OFFICE_ZONE'): "yes"
-))dnl
+defn(`PLATFORM_NODE_SELECTOR')dnl
 ')dnl
 
 ifelse(defn(`SCENARIO_NAME'),`stadium',`dnl
@@ -114,9 +112,7 @@ defn(`PLATFORM_VOLUME_MOUNTS')dnl
                 path: /etc/localtime
                 type: File
 defn(`PLATFORM_MOUNTS')dnl
-PLATFORM_NODE_SELECTOR(ifelse(eval(defn(`NOFFICES')>1),1,dnl
-          defn(`OFFICE_ZONE'): "yes"
-))dnl
+defn(`PLATFORM_NODE_SELECTOR')dnl
 
 ---
 
@@ -173,9 +169,7 @@ defn(`PLATFORM_VOLUME_MOUNTS')dnl
                 path: /etc/localtime
                 type: File
 defn(`PLATFORM_VOLUMES')dnl
-PLATFORM_NODE_SELECTOR(ifelse(eval(defn(`NOFFICES')>1),1,dnl
-          defn(`OFFICE_ZONE'): "yes"
-))dnl
+defn(`PLATFORM_NODE_SELECTOR')dnl
 
 ---
 
@@ -232,7 +226,5 @@ defn(`PLATFORM_VOLUME_MOUNTS')dnl
                 path: /etc/localtime
                 type: File
 defn(`PLATFORM_VOLUMES')dnl
-PLATFORM_NODE_SELECTOR(ifelse(eval(defn(`NOFFICES')>1),1,dnl
-          defn(`OFFICE_ZONE'): "yes"
-))dnl
-')dnl
+defn(`PLATFORM_NODE_SELECTOR')dnl
+')

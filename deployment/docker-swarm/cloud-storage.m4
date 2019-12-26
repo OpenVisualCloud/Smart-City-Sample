@@ -11,10 +11,5 @@
             no_proxy: "*"
         volumes:
             - /etc/localtime:/etc/localtime:ro
-            - cloud_stdata:/var/www:rw
         networks:
             - appnet
-        deploy:
-            placement:
-                constraints:
-                    - node.role==manager

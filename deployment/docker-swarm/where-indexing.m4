@@ -15,8 +15,3 @@
             - /etc/localtime:/etc/localtime:ro
         networks:
             - appnet
-        deploy:
-            placement:
-                constraints:
-                    - defn(`OFFICE_ZONE')
-

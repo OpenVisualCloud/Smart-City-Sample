@@ -16,11 +16,6 @@ ifelse(defn(`DISCOVER_SIMULATED_CAMERA'),`true',`dnl
             - /etc/localtime:/etc/localtime:ro
         networks:
             - appnet
-        deploy:
-            replicas: 1
-            placement:
-                constraints:
-                    - defn(`OFFICE_ZONE')
 
 ifelse(defn(`SCENARIO_NAME'),`stadium',`
     defn(`OFFICE_NAME')_camera_discovery_crowd:
@@ -38,10 +33,6 @@ ifelse(defn(`SCENARIO_NAME'),`stadium',`
             - /etc/localtime:/etc/localtime:ro
         networks:
             - appnet
-        deploy:
-            placement:
-                constraints:
-                    - defn(`OFFICE_ZONE')
 ')dnl
 
     defn(`OFFICE_NAME')_camera_discovery_queue:
@@ -59,10 +50,6 @@ ifelse(defn(`SCENARIO_NAME'),`stadium',`
             - /etc/localtime:/etc/localtime:ro
         networks:
             - appnet
-        deploy:
-            placement:
-                constraints:
-                    - defn(`OFFICE_ZONE')
 ')dnl
 
 ifelse(defn(`DISCOVER_IP_CAMERA'),`true',`dnl
@@ -80,10 +67,4 @@ ifelse(defn(`DISCOVER_IP_CAMERA'),`true',`dnl
             - /etc/localtime:/etc/localtime:ro
         networks:
             - appnet
-        deploy:
-            replicas: 1
-            placement:
-                constraints:
-                    - defn(`OFFICE_ZONE')
-
 ')dnl

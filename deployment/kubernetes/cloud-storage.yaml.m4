@@ -75,8 +75,3 @@ spec:
             type: File
         - name: cloud-stdata
           emptyDir: {}
-ifelse(eval(defn(`NOFFICES')>1),1,`dnl
-      nodeSelector:
-        cloud-storage: "yes"  
-        cloud-zone: "yes"
-')dnl
