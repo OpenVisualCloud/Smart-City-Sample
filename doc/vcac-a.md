@@ -3,16 +3,9 @@ This document describes the steps required for the sample to work with the Intel
 
 ### Prerequisites
 
-Please follow the [instructions](https://github.com/OpenVisualCloud/Dockerfiles/tree/master/VCAC-A) to setup the Intel VCAC-A node(s).     
-
-### Docker Swarm Setup
-
-Run the script [setup-vcac-a.sh](../script/setup-vcac-a.sh) to setup a local docker swarm cluster, which includes the following steps:
-- Setup docker swarm master on the host.    
-- Setup password-less access to the Intel VCAC-A node(s).
-- Enroll the Intel VCAC-A worker node(s).   
-- Label the Intel VCAC-A node(s).   
-
+Please follow the [instructions](https://github.com/OpenVisualCloud/Dockerfiles/tree/master/VCAC-A) to:  
+- Setup the Intel VCAC-A node(s).     
+- Setup the Intel VCAC-A as a swarm worker nodes.     
 
 ### Sample Configuration
 
