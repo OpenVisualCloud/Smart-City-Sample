@@ -5,7 +5,7 @@ This document describes the steps required for the sample to work with the Intel
 
 Please follow the [instructions](https://github.com/OpenVisualCloud/Dockerfiles/tree/master/VCAC-A) to:  
 - Setup the Intel VCAC-A node(s).     
-- Setup the Intel VCAC-A as a swarm worker nodes.     
+- Setup the Intel VCAC-A node(s) as swarm worker(s).     
 
 ### Sample Configuration
 
