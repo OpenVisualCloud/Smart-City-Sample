@@ -1,24 +1,29 @@
 define(`PLATFORM_SUFFIX',translit(defn(`PLATFORM'),`A-Z',`a-z'))dnl
 define(`PLATFORM_VOLUME_MOUNTS',dnl
 ifelse(defn(`PLATFORM'),`VCAC-A',dnl
-            - mountPath: /var/tmp/hddl_service.sock
-              name: hddl-sock-mount
-            - mountPath: /var/tmp/hddl_service_ready.mutex
-              name: hddl-ready-mount
-            - mountPath: /var/tmp/hddl_service_alive.mutex
-              name: hddl-alive-mount
+            - mountPath: /var/tmp
+              name: var-tmp
+            - mountPath: /tmp
+              name: tmp
+            - mountPath: /dev/ion
+              name: dev-ion
+          securityContext:
+            privileged: true
 ))dnl
 define(`PLATFORM_VOLUMES',dnl
 ifelse(defn(`PLATFORM'),`VCAC-A',dnl
-          - name: hddl-sock-mount
+          - name: var-tmp
             hostPath:
-              path: /var/tmp/hddl_service.sock
-          - name: hddl-ready-mount
+              path: /var/tmp
+              type: Directory
+          - name: tmp
             hostPath:
-              path: /var/tmp/hddl_service_ready.mutex
-          - name: hddl-alive-mount
+              path: /tmp
+              type: Directory
+          - name: dev-ion
             hostPath:
-              path: /var/tmp/hddl_service_alive.mutex
+              path: /dev/ion
+              type: CharDevice
 ))dnl
 define(`PLATFORM_NODE_SELECTOR',dnl
 ifelse(defn(`PLATFORM'),`VCAC-A',dnl
