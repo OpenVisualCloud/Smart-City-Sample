@@ -7,8 +7,6 @@ ifelse(defn(`PLATFORM'),`VCAC-A',dnl
               name: var-tmp-hddl-service-ready-mutex
             - mountPath: /var/tmp/hddl_service_alive.mutex
               name: var-tmp-hddl-service-alive-mutex
-            - mountPath: /dev/ion
-              name: dev-ion
           securityContext:
             privileged: true
 ))dnl
@@ -26,10 +24,6 @@ ifelse(defn(`PLATFORM'),`VCAC-A',dnl
             hostPath:
               path: /var/tmp/hddl_service_alive.mutex
               type: File
-          - name: dev-ion
-            hostPath:
-              path: /dev/ion
-              type: CharDevice
 ))dnl
 define(`PLATFORM_NODE_SELECTOR',dnl
 ifelse(defn(`PLATFORM'),`VCAC-A',dnl
