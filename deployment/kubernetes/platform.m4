@@ -1,10 +1,12 @@
 define(`PLATFORM_SUFFIX',translit(defn(`PLATFORM'),`A-Z',`a-z'))dnl
 define(`PLATFORM_VOLUME_MOUNTS',dnl
 ifelse(defn(`PLATFORM'),`VCAC-A',dnl
-            - mountPath: /var/tmp
-              name: var-tmp
-            - mountPath: /tmp
-              name: tmp
+            - mountPath: /var/tmp/hddl_service.sock
+              name: var-tmp-hddl-service-sock
+            - mountPath: /var/tmp/hddl_service_ready.mutex
+              name: var-tmp-hddl-service-ready-mutex
+            - mountPath: /var/tmp/hddl_service_alive.mutex
+              name: var-tmp-hddl-service-alive-mutex
             - mountPath: /dev/ion
               name: dev-ion
           securityContext:
@@ -12,14 +14,18 @@ ifelse(defn(`PLATFORM'),`VCAC-A',dnl
 ))dnl
 define(`PLATFORM_VOLUMES',dnl
 ifelse(defn(`PLATFORM'),`VCAC-A',dnl
-          - name: var-tmp
+          - name: var-tmp-hddl-service-sock
             hostPath:
-              path: /var/tmp
-              type: Directory
-          - name: tmp
+              path: /var/tmp/hddl_service.sock
+              type: Socket
+          - name: var-tmp-hddl-service-ready-mutex
             hostPath:
-              path: /tmp
-              type: Directory
+              path: /var/tmp/hddl_service_ready.mutex
+              type: File
+          - name: var-tmp-hddl-service-alive-mutex
+            hostPath:
+              path: /var/tmp/hddl_service_alive.mutex
+              type: File
           - name: dev-ion
             hostPath:
               path: /dev/ion
