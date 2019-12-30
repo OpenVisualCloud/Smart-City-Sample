@@ -7,6 +7,10 @@ ifelse(defn(`PLATFORM'),`VCAC-A',dnl
               name: var-tmp-hddl-service-ready-mutex
             - mountPath: /var/tmp/hddl_service_alive.mutex
               name: var-tmp-hddl-service-alive-mutex
+#          resources:
+#            limits:
+#              vpu.intel.com/hddl: 1
+#              gpu.intel.com/i915: 1
           securityContext:
             privileged: true
 ))dnl
