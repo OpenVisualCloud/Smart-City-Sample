@@ -30,7 +30,8 @@
 			"crowd_count": {
 				"element": {
 					"name": "crowdcounting",
-					"property": "args"
+					"property": "args",
+					"format": "json"
 				},
 				"type": "object",
 				"properties": {
