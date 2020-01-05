@@ -2,10 +2,11 @@
 
 function transfer_image {
     image="$1"
-    nodeip="$2"
+    nodeid="$2"
+    nodeip="$3"
 
     # overwrite vcac username
-    case "$3" in
+    case "$4" in
     *vcac-zone:yes*|*vcac_zone==yes*)
         worker="root@$nodeip";;
     *)
@@ -16,14 +17,30 @@ function transfer_image {
     sig1=$((docker image inspect -f {{.ID}} $image || ((docker pull $image 1>&2) && docker image inspect -f {{.ID}} $image)) | grep .)
     echo " local: $sig1"
 
-    CONNECTION_TIMEOUT=1
-    sig2=$(ssh -o ConnectTimeout=$CONNECTION_TIMEOUT $worker "docker image inspect -f {{.ID}} $image 2> /dev/null || echo" || true)
-    echo "remote: $sig2"
+    hostfile="$HOME/.vcac-hosts"
+    if [ ! -f "$hostfile" ]; then hostfile="/etc/vcac-hosts"; fi
+    host=$(awk -v node="$nodeid/$nodeip" '$1==node{print$2}' "$hostfile" || true)
+    if [ -z "$host" ]; then host=$(hostname); fi
 
-    if test "$sig1" != "$sig2"; then
-        echo "Transfering image..."
-        (docker save $image | ssh -o ConnectTimeout=$CONNECTION_TIMEOUT $worker "docker image rm -f $image 2>/dev/null; docker load") || true
-    fi
+    CONNECTION_TIMEOUT=1
+    case "$(hostname -f)" in
+        $host | $host.*) # direct access
+            sig2=$(ssh -o ConnectTimeout=$CONNECTION_TIMEOUT $worker "docker image inspect -f {{.ID}} $image 2> /dev/null || echo" || true)
+            echo "remote: $sig2"
+
+            if test "$sig1" != "$sig2"; then
+                echo "Transfering image..."
+                (docker save $image | ssh -o ConnectTimeout=$CONNECTION_TIMEOUT $worker "docker image rm -f $image 2>/dev/null; docker load") || true
+            fi;;
+        *) # access via jump host
+            sig2=$(ssh -o ConnectTimeout=$CONNECTION_TIMEOUT $host "ssh -o ConnectTimeout=$CONNECTION_TIMEOUT $worker \"docker image inspect -f {{.ID}} $image 2> /dev/null || echo\"" || true)
+            echo "remote: $sig2"
+
+            if test "$sig1" != "$sig2"; then
+                echo "Transfering image..."
+                (docker save $image | ssh -o ConnectTimeout=$CONNECTION_TIMEOUT $host "ssh -o ConnectTimeout=$CONNECTION_TIMEOUT $worker \"docker image rm -f $image 2>/dev/null; docker load\"") || true
+            fi;;
+    esac
     echo ""
 }
 
@@ -41,7 +58,7 @@ for id in $(docker node ls -q 2> /dev/null); do
             # skip unavailable or manager node
             if test -z "$(hostname -I | grep --fixed-strings $nodeip)"; then
                 for image in $(awk -v labels="$labels node.role=${role}" -f "$DIR/scan-yaml.awk" "$YML"); do
-                    transfer_image $image "$nodeip" "$labels"
+                    transfer_image $image "$id" "$nodeip" "$labels"
                 done
             fi
         fi
@@ -54,7 +71,7 @@ if [ -x /usr/bin/kubectl ] || [ -x /usr/local/bin/kubectl ]; then
         labels="$(kubectl describe node $id | awk '/Annotations:/{lf=0}/Labels:/{sub("Labels:","",$0);lf=1}lf==1{sub("=",":",$1);print$1}')"
 
         for image in $(awk -v labels="$labels" -f "$DIR/scan-yaml.awk" "${DIR}/../deployment/kubernetes"/*.yaml); do
-            transfer_image $image "$nodeip" "$labels"
+            transfer_image $image "$id" "$nodeip" "$labels"
         done
     done
 fi
