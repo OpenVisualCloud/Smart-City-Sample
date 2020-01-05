@@ -5,11 +5,15 @@ import json
 from PIL import Image, ImageDraw
 
 class CrowdCounting:
-    def __init__(self,zone=0,width=0,height=0, polygon=[]):
-        self.zone = zone
+    def __init__(self,width=0,height=0,zonemap=[]):
+        self.zone = 0
         self.mask=[0]
         self.crowd_count=0
-        self.polygon=polygon
+
+        self.polygon = []
+        for sublist in zonemap[0]["polygon"]:
+            for item in sublist:
+                self.polygon.append(item)
 
         self.sensor_width = width
         self.sensor_height = height
