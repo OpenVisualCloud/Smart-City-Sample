@@ -3,17 +3,20 @@
 BEGIN {
     im=im2="";
     ns_space=0;
+    matched=0;
+    vcac=index(labels,"vcac-zone:yes")>0 || index(labels,"vcac_zone==yes")>0;
 }
 
 function saveim() {
-    if (im!="") {
+    if (im!="" && (matched || !vcac)) {
         images[im]=1;
         im="";
     }
-    if (im2!="") {
+    if (im2!="" && (matched || !vcac)) {
         images[im2]=1;
         im2="";
     }
+    matched=0;
 }
 
 /image:/ {
@@ -28,7 +31,7 @@ function saveim() {
 
 /- node\..*==.*/ && labels!="*" {
     gsub(/[\" ]/,"",$2);
-    if (index(labels,$2)==0) im=im2="";
+    if (index(labels,$2)==0) im=im2=""; else matched=1;
 }
 
 /^\s*---\s*$/ {
@@ -41,7 +44,7 @@ function saveim() {
     if (RLENGTH > ns_space) {
         gsub(/[\": ]/,"",$1);
         gsub(/[\": ]/,"",$2);
-        if (index(labels,$1":"$2)==0) im=im2="";
+        if (index(labels,$1":"$2)==0) im=im2=""; else matched=1;
     } else {
        ns_space=0
     }
