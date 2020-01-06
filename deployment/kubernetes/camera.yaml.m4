@@ -1,6 +1,7 @@
 include(office.m4)
 include(../../script/forloop.m4)
 
+ifelse(eval(defn(`NCAMERAS')>0),1,`dnl
 apiVersion: v1
 kind: Service
 metadata:
@@ -71,10 +72,12 @@ ifelse(defn(`SCENARIO_NAME'),`stadium',`dnl
             hostPath:
                 path: /etc/localtime
                 type: File
+')dnl
 
 ifelse(defn(`SCENARIO_NAME'),`stadium',`dnl
 ---
 
+ifelse(eval(defn(`NCAMERAS2')>0),1,`dnl
 apiVersion: v1
 kind: Service
 metadata:
@@ -138,9 +141,11 @@ forloop(`CAMERAIDX',1,defn(`NCAMERAS2'),`dnl
             hostPath:
                 path: /etc/localtime
                 type: File
+')dnl
 
 ---
 
+ifelse(eval(defn(`NCAMERAS3')>0),1,`dnl
 apiVersion: v1
 kind: Service
 metadata:
@@ -204,4 +209,5 @@ forloop(`CAMERAIDX',1,defn(`NCAMERAS3'),`dnl
             hostPath:
                 path: /etc/localtime
                 type: File
+')dnl
 ')dnl
