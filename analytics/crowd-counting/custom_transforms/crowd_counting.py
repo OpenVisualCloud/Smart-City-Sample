@@ -46,10 +46,6 @@ class CrowdCounting:
                     self.img = Image.new('L', (self.model_width, self.model_height), 0)
                     ImageDraw.Draw(self.img).polygon(self.polygon[z], outline=1, fill=1)
                     self.mask[z] = numpy.array(self.img).flatten()
-                # print("===================zone=", self.zone, "===================")
-                # print("===================mask=", self.mask, "===================")
-                # print("===================polygon=", self.polygon, "===================")
-
             else:
                 #zone based crowd counting
                 imgData = []
@@ -57,13 +53,14 @@ class CrowdCounting:
                 
                 for z in range(len(self.mask)):
                     self.crowd_count[z] = numpy.sum(self.mask[z] * imgData)
-                print("===================crowd_count=", self.crowd_count, "===================")
-                
         if (self.crowd_count):
             messages = list(frame.messages())
             if len(messages) > 0:
                 json_msg = json.loads(messages[0].get_message())
-                json_msg["count"] = {"zone"+str(self.zone[0]):int(self.crowd_count[0]), "zone"+str(self.zone[1]):int(self.crowd_count[1])}
+                count_dict = {}
+                for z in range(len(self.zone)):
+                    count_dict["zone"+str(self.zone[z])] = int(self.crowd_count[z])
+                json_msg["count"] = count_dict
                 messages[0].set_message(json.dumps(json_msg))
                 
         return True
