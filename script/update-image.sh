@@ -19,7 +19,7 @@ function transfer_image {
 
     hostfile="$HOME/.vcac-hosts"
     if [ ! -f "$hostfile" ]; then hostfile="/etc/vcac-hosts"; fi
-    host=$(awk -v node="$nodeid/$nodeip" '$1==node{print$2}' "$hostfile" || true)
+    host=$(awk -v node="$nodeid/$nodeip" '$1==node{print$2}' "$hostfile" 2>/dev/null || true)
     if [ -z "$host" ]; then host=$(hostname); fi
 
     CONNECTION_TIMEOUT=1
