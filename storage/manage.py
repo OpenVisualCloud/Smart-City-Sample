@@ -33,7 +33,7 @@ if __name__ == "__main__":
     app.listen(options.port, address=options.ip)
 
     tornado1=ioloop.IOLoop.instance();
-    nginx1=Popen(["/usr/sbin/nginx"])
+    nginx1=Popen(["/usr/local/sbin/nginx"])
     cleanup1=Popen(["/home/cleanup.py"])
     
     tornado1.start()

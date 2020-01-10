@@ -34,8 +34,8 @@ class UploadHandler(web.RequestHandler):
         os.makedirs(mp4path,exist_ok=True)
         mp4file=mp4path+"/"+str(timestamp)+".mp4"
 
-        list(run(["/usr/bin/ffmpeg","-f","mp4","-i",path,"-c","copy",mp4file]))
-        list(run(["/usr/bin/ffmpeg","-i",mp4file,"-vf","scale=640:360","-frames:v","1",mp4file+".png"]))
+        list(run(["/usr/local/bin/ffmpeg","-f","mp4","-i",path,"-c","copy",mp4file]))
+        list(run(["/usr/local/bin/ffmpeg","-i",mp4file,"-vf","scale=640:360","-frames:v","1",mp4file+".png"]))
         sinfo=probe(mp4file)
 
         sinfo.update({

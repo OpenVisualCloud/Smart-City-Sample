@@ -16,7 +16,7 @@ def probe(file1):
     start_time= -1
     streams=[]
     sinfo={}
-    for line in run(["/usr/bin/ffprobe","-v","error","-show_streams",file1]):
+    for line in run(["/usr/local/bin/ffprobe","-v","error","-show_streams",file1]):
         if line=="[STREAM]": sinfo={}
         if line=="[/STREAM]": streams.append(sinfo)
 
