@@ -11,6 +11,13 @@ The E2E sample implements aspects of smart city sensing, analytics and managemen
 - **Stats**: Calculate statistics for planning/monitoring purpose on analytical data.    
 - **UI**: Present above data to users/administrators/city planners.     
 
+### Scenarios
+
+The sample implements the Smart-City `traffic` and `stadium` scenarios. The `traffic` scenario measures vehicle/pedestrain flow for planning purpose. The `stadium` scenario focuses on different counting techniques, including entrence people counting, service-point queue counting, and stadium seating zone crowd counting.   
+
+| Traffic | Stadium |
+|:-------:|:-------:|
+|<IMG src="doc/traffic-ui.gif" width="100%"></IMG>|<IMG src="doc/stadium-ui.gif" width="100%"></IMG>|
 
 ### Software Stacks
 
@@ -47,14 +54,14 @@ sudo systemctl restart docker
 
 ### Build Sample: 
 
+Use the following commands to build the sample. By default, the sample builds to the `traffic` scenario. To enable the `stadium` scenario, use `cmake -DSCENARIO=stadium ..`. See also: [Build Options](doc/cmake.md).    
+
 ```bash
 mkdir build    
 cd build     
 cmake ..    
 make     
 ```
-
-See also: [Customize Build Process](doc/cmake.md).    
 
 ### Start/stop Sample: 
 
@@ -87,9 +94,7 @@ See also: [Kubernetes Setup](deployment/kubernetes/README.md).
 
 ### Launch Sample UI:
 
-Launch your browser and browse to ```https://<hostname>```. You should see something similar to the following UI:   
-
-<IMG src="doc/screenshot.gif" height="270px"></IMG>
+Launch your browser and browse to ```https://<hostname>``` for the sample UI. 
 
 ---
 
