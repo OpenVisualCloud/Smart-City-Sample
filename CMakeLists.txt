@@ -22,7 +22,7 @@ if (NOT DEFINED NCAMERAS)
     set(NCAMERAS "5")
 endif()
 if (NOT DEFINED NANALYTICS)
-    set(NANALYTICS "3")
+    set(NANALYTICS "1")
 endif()
 
 file(GLOB dirs "deployment" "*")
