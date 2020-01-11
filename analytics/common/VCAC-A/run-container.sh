@@ -14,6 +14,6 @@ NETWORKS="$(docker inspect $HOSTNAME --format {{.NetworkSettings.Networks}} | se
 BINDS="$(docker inspect $HOSTNAME --format {{.HostConfig.Mounts}} | sed -e 's/\[\(.*\)]/\1/' -e 's/{\([a-z]*\) \([^ ]*\) \([^ ]*\) \([a-z]*\)[^}]*}/-v \2:\3:\4/g' -e 's/:true/:ro/g' -e 's/:false/:rw/g')"
 
 # docker run
-/usr/local/bin/docker-entrypoint.sh docker run --rm --name $HOSTNAME --user root -v /var/tmp/hddl_service.sock:/var/tmp/hddl_service.sock -v /var/tmp/hddl_service_ready.mutex:/var/tmp/hddl_service_ready.mutex -v /var/tmp/hddl_service_alive.mutex:/var/tmp/hddl_service_alive.mutex --privileged $ENVS $NETWORKS $BINDS "$@" $VCAC_IMAGE &
+/usr/local/bin/docker-entrypoint.sh docker run --rm --name $HOSTNAME --user root -v /var/tmp:/var/tmp --privileged $ENVS $NETWORKS $BINDS "$@" $VCAC_IMAGE &
 
 wait
