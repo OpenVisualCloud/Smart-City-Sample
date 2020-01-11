@@ -13,7 +13,7 @@ The E2E sample implements aspects of smart city sensing, analytics and managemen
 
 ### Scenarios
 
-The sample implements the Smart-City traffic and stadium scenarios. The traffic scenario measures vehicle/pedestrain flow for planning purpose. The stadium scenario focuses on different counting techniques, including entrence people counting, service-point queue counting, and stadium seating zone crowd counting.   
+The sample implements the Smart-City `traffic` and `stadium` scenarios. The `traffic` scenario measures vehicle/pedestrain flow for planning purpose. The `stadium` scenario focuses on different counting techniques, including entrence people counting, service-point queue counting, and stadium seating zone crowd counting.   
 
 | Traffic | Stadium |
 |:-------:|:-------:|
@@ -54,14 +54,14 @@ sudo systemctl restart docker
 
 ### Build Sample: 
 
+Use the following commands to build the sample. By default, the sample builds to the `traffic` scenario. To enable the `stadium` scenario, use `cmake -DSCENARIO=stadium ..`. See also: [Build Options](doc/cmake.md).    
+
 ```bash
 mkdir build    
 cd build     
 cmake ..    
 make     
 ```
-
-By default, the sample builds to the `traffic` scenario. To enable the `stadium` scenario, use `cmake -DSCENARIO=stadium ..`. See also: [Build Options](doc/cmake.md).    
 
 ### Start/stop Sample: 
 
