@@ -17,7 +17,7 @@ The sample implements the Smart-City traffic and stadium scenarios. The traffic 
 
 | Traffic | Stadium |
 |:-------:|:-------:|
-|<IMG src="doc/screenshot.gif" width="100%"></IMG>|<IMG src="doc/screenshot.gif" width="100%"></IMG>|
+|<IMG src="doc/traffic-ui.gif" width="100%"></IMG>|<IMG src="doc/stadium-ui.gif" width="100%"></IMG>|
 
 ### Software Stacks
 
