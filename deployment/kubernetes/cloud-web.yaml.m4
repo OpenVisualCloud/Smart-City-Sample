@@ -66,7 +66,3 @@ spec:
         - name: self-signed-certificate
           secret:
             secretName: self-signed-certificate
-ifelse(eval(defn(`NOFFICES')>1),1,`dnl
-      nodeSelector:
-        cloud-zone: "yes"
-')dnl

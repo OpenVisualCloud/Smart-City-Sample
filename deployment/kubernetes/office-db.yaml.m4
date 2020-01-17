@@ -87,10 +87,6 @@ spec:
                 type: File
           - name: defn(`OFFICE_NAME')-esdata
             emptyDir: {}
-ifelse(eval(defn(`NOFFICES')>1),1,`dnl
-      nodeSelector:
-        defn(`OFFICE_ZONE'): "yes"
-')dnl
 
 ---
 
@@ -139,7 +135,3 @@ spec:
           - name: sensor-info
             configMap:
                 name: sensor-info
-ifelse(eval(defn(`NOFFICES')>1),1,`dnl
-      nodeSelector:
-        defn(`OFFICE_ZONE'): "yes"
-')dnl

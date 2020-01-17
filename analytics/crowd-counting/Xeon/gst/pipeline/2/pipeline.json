@@ -30,23 +30,21 @@
 			"crowd_count": {
 				"element": {
 					"name": "crowdcounting",
-					"property": "args"
+					"property": "args",
+					"format": "json"
 				},
 				"type": "object",
 				"properties": {
-					"zone": {
-						"type": "integer"
-					},
 					"width": {
 						"type": "integer"
 					},
 					"height": {
 						"type": "integer"
 					},
-					"polygon": {
+					"zonemap": {
 						"type": "array",
 						"items": {
-							"type": "number"
+							"type": "object"
 						}
 					}
 				}

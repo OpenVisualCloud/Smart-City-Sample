@@ -109,7 +109,9 @@ class ModelManager:
         models = {}
         ModelManager.network_preference.update(network_preference)
         for key in ModelManager.network_preference:
-            ModelManager.network_preference[key] = ModelManager.network_preference[key].split(',')
+            if not isinstance(ModelManager.network_preference[key],list):
+                ModelManager.network_preference[key] = ModelManager.network_preference[key].split(',')
+
         for model_name in os.listdir(model_dir):
             try:
                 model_path = os.path.join(model_dir,model_name)

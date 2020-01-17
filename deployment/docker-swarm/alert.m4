@@ -10,11 +10,5 @@
             OCCUPENCY_ARGS: "120000,8,200,300"
             NO_PROXY: "*"
             no_proxy: "*"
-ifelse(defn(`PLATFORM'),`VCAC-A',`dnl
         networks:
-            - default_net
-')dnl
-        deploy:
-            placement:
-                constraints:
-                    - defn(`OFFICE_ZONE')
+            - appnet
