@@ -14,7 +14,7 @@ People counting calculates how many people pass through the entrance in the past
 cd build
 cmake -DPLATFORM=Xeon -DSCENARIO=stadium -DNOFFICES=1 -DNCAMERAS=8,0,0 -DNANALYTICS=8,0,0 FRAMEWORK=gst ..
 ```
-[[doc/stadium/smtc_people_counting.png]]
+<IMG src="stadium/smtc_people_counting.png" height="400px">
 
 ### Crowd Counting
 Crowd counting calculates how many people seat in each seating zone in the stadium. We separate the stadium into 8 zones, East Wing, North East Wing, North Wing, North West Wing, West Wing, South West Wing, South Wing and South East Wing. Each zone is currently surveilled by one camera, but one camera can be expanded to surveil multiple zones by configuration.
@@ -28,9 +28,9 @@ cmake -DPLATFORM=Xeon -DSCENARIO=stadium -DNOFFICES=1 -DNCAMERAS=0,8,0 -DNANALYT
 ```
 | Bitmask1| Bitmask2|
 |:-------:|:-------:|
-|<IMG src="doc/stadium/bitmask.png" width="100%"></IMG>|<IMG src="doc/stadium/bitmask2.png" width="100%"></IMG>|
+|<IMG src="stadium/bitmask.png" width="100%"></IMG>|<IMG src="stadium/bitmask2.png" width="100%"></IMG>|
 
-[[doc/stadium/smtc_crowd_counting.png]] 
+<IMG src="stadium/smtc_crowd_counting.png" height="400px">
 
 ### Queue Counting
 Queue counting calculates how many people are in the restaurant, meeting room, phone booth or elevator etc. 
@@ -41,7 +41,7 @@ Queue counting calculates how many people are in the restaurant, meeting room, p
 cd build
 cmake -DPLATFORM=Xeon -DSCENARIO=stadium -DNOFFICES=1 -DNCAMERAS=0,0,8 -DNANALYTICS=0,0,8 FRAMEWORK=gst ..
 ```
-[[doc/stadium/smtc_queue_counting.png]]
+<IMG src="stadium/smtc_queue_counting.png" height="400px">
 
 ### Combined Use Cases
 All three use cases can be combined together. Below is an example of 2 people counting, 2 crowd counting and 2 queue counting running together. You can move around real-time camera display screen, track the statistic window and look into each analytics result. Feel free to explore more.
@@ -49,6 +49,6 @@ All three use cases can be combined together. Below is an example of 2 people co
 cd build
 cmake -DPLATFORM=Xeon -DSCENARIO=stadium -DNOFFICES=1 -DNCAMERAS=2,2,2 -DNANALYTICS=2,2,2 FRAMEWORK=gst ..
 ```
-[[doc/stadium/smart_stadium1.png]]
-[[doc/stadium/smart_stadium2.png]]
-[[doc/stadium/smart_stadium3.png]]
+<IMG src="stadium/smart_stadium1.png" height="400px">
+<IMG src="stadium/smart_stadium2.png" height="400px">
+<IMG src="stadium/smart_stadium3.png" height="400px">
