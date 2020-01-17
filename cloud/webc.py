@@ -55,6 +55,6 @@ if __name__ == "__main__":
     app.listen(options.port, address=options.ip)
 
     tornadoc=ioloop.IOLoop.instance();
-    nginxc=Popen(["/usr/sbin/nginx"])
+    nginxc=Popen(["/usr/local/sbin/nginx"])
     tornadoc.start()
     nginxc.wait()

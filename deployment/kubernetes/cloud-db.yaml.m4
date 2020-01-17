@@ -86,7 +86,3 @@ ifelse(eval(defn(`NOFFICES')>1),1,`dnl
                 type: File
           - name: defn(`DB_NAME')-esdata
             emptyDir: {}
-ifelse(eval(defn(`NOFFICES')>1),1,`dnl
-      nodeSelector:
-        cloud-zone: "yes"
-')dnl

@@ -19,5 +19,5 @@ ARG  GID
 RUN  [ ${GID} -gt 0 ] && groupadd -f -g ${GID} ${GROUP}; \
      [ ${UID} -gt 0 ] && useradd -d /home/${USER} -g ${GID} -K UID_MAX=${UID} -K UID_MIN=${UID} ${USER}; \
      chown -R ${UID}.${GID} /home
-USER ${UID}
+#USER ${UID}
 ####

@@ -1,22 +1,21 @@
 
 This document describes the steps required for the sample to work with the Intel VCAC-A accelerator(s).    
 
-### Prerequisites
+### Prerequisites for Docker Swarm:
 
-Please follow the [instructions](https://github.com/OpenVisualCloud/Dockerfiles/tree/master/VCAC-A) to setup the Intel VCAC-A node(s).     
+Please follow the [instructions](https://github.com/OpenVisualCloud/Dockerfiles/tree/master/VCAC-A) to:  
+- [Setup the Intel VCAC-A node(s).](https://github.com/OpenVisualCloud/Dockerfiles/blob/master/VCAC-A/README.md#setup-the-vcac-a)     
+- [Setup the Intel VCAC-A node(s) as swarm worker(s).](https://github.com/OpenVisualCloud/Dockerfiles/blob/master/VCAC-A/README.md#setup-the-vcac-a-as-swarm-node)     
 
-### Docker Swarm Setup
+### Prerequisites for Kubernetes:
 
-Run the script [setup-vcac-a.sh](../script/setup-vcac-a.sh) to setup a local docker swarm cluster, which includes the following steps:
-- Setup docker swarm master on the host.    
-- Setup password-less access to the Intel VCAC-A node(s).
-- Enroll the Intel VCAC-A worker node(s).   
-- Label the Intel VCAC-A node(s).   
+Please follow the [instructions](https://github.com/OpenVisualCloud/Dockerfiles/tree/master/VCAC-A) to:  
+- [Setup the Intel VCAC-A node(s).](https://github.com/OpenVisualCloud/Dockerfiles/blob/master/VCAC-A/README.md#setup-the-vcac-a)     
+- [Setup the Intel VCAC-A node(s) as Kubernetes worker(s).](https://github.com/OpenVisualCloud/Dockerfiles/tree/master/VCAC-A#setup-the-vcac-a-as-kubernetes-node)     
 
+### Build Sample
 
-### Sample Configuration
-
-Configure the sample to run analytics on Intel VCAC-A as follows:     
+Configure and build the sample to run analytics on Intel VCAC-A as follows:     
 
 ```sh
 mkdir build
@@ -24,11 +23,26 @@ cd build
 cmake -DPLATFORM=VCAC-A ..
 make
 make update
+```
+
+where `make update` transfers the built docker images to the workers nodes. This is optional if you plan to use private docker registry. Replace `make update` with your instructions to upload the images to your private docker registry.   
+
+### Run Sample on Docker Swarm
+
+```sh
 make start_docker_swarm
 make stop_docker_swarm
 ```
 
-### Known Limitations
+### Run Sample on Kubernetes:
 
-- Support is limited to the docker swarm deployment. Kubernetes support is in development.    
-- ```make stop_docker_swarm``` does not stop cleanly due to the timing of the shutdown sequence. You might see a warning that the sample network is not shutdown. This is expected.  
+```sh
+make start_kubernetes
+make stop_kubernetes
+```
+
+### See Also:
+
+- [Setup Docker Swarm](../deployment/docker-swarm/README.md)
+- [Setup Kubernetes](../deployment/kubernetes/README.md)
+

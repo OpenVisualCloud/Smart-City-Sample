@@ -76,8 +76,3 @@ spec:
             type: File
         - name: defn(`OFFICE_NAME')-stdata
           emptyDir: {}
-ifelse(eval(defn(`NOFFICES')>1),1,`dnl
-      nodeSelector:
-        defn(`STORAGE_ZONE'): "yes" 
-        defn(`OFFICE_ZONE'): "yes"
-')dnl
