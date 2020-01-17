@@ -75,11 +75,11 @@ if [ -x /usr/bin/kubectl ] || [ -x /usr/local/bin/kubectl ]; then
         done
 
         for image in $(awk -v labels="$labels" -f "$DIR/scan-yaml.awk" "${DIR}/../deployment/openness/office"/*.yaml); do
-	    transfer_image $image "$nodeip"
+            transfer_image $image "$id" "$nodeip" "$labels"
 	done
 
         for image in $(awk -v labels="$labels" -f "$DIR/scan-yaml.awk" "${DIR}/../deployment/openness/cloud"/*.yaml); do
-            transfer_image $image "$nodeip"
+	    transfer_image $image "$id" "$nodeip" "$labels"
         done
     done
 fi
