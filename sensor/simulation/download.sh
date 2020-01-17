@@ -24,7 +24,7 @@ for scenario in ${SCENARIOS[@]}; do
             if test "$reply" = "accept"; then
                 echo "Downloading..."
                 tmp="tmp_$clip_name"
-                wget -q -O "$DIR/archive/$tmp" "$url"
+                wget -q -U "XXX YYY" -O "$DIR/archive/$tmp" "$url"
                 docker run --rm -u $(id -u):$(id -g) -v "$DIR/archive:/mnt:rw" -it ${FFMPEG_IMAGE} ffmpeg -i /mnt/$tmp -c:v libx264 -profile:v baseline -x264-params keyint=30:bframes=0 -c:a aac -ss 0 -t 00:00:10.0 /mnt/$clip_mp4
                 rm -f "$DIR/archive/$tmp"
             else
