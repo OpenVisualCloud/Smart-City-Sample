@@ -13,7 +13,7 @@ The E2E sample implements aspects of smart city sensing, analytics and managemen
 
 ### Scenarios
 
-The sample implements the Smart-City `traffic` and `stadium` scenarios. The `traffic` scenario measures vehicle/pedestrian flow for planning purpose. The `stadium` scenario focuses on different counting techniques, including entrance people counting, service-point queue counting, and stadium seating zone crowd counting.   
+The sample implements the Smart-City [`traffic`](https://github.com/OpenVisualCloud/Smart-City-Sample/wiki/Smart-City:-Traffic-Scenario) and [`stadium`](https://github.com/OpenVisualCloud/Smart-City-Sample/wiki/Smart-City:-Stadium-Scenario) scenarios. The [`traffic`](https://github.com/OpenVisualCloud/Smart-City-Sample/wiki/Smart-City:-Traffic-Scenario) scenario measures vehicle/pedestrian flow for planning purpose. The [`stadium`](https://github.com/OpenVisualCloud/Smart-City-Sample/wiki/Smart-City:-Stadium-Scenario) scenario focuses on different counting techniques, including entrance people counting, service-point queue counting, and stadium seating zone crowd counting.   
 
 | Traffic | Stadium |
 |:-------:|:-------:|
