@@ -17,11 +17,15 @@ define(`traffic_office2_location',`45.524460,-122.960475')dnl
 define(`traffic_office3_location',`45.543645,-122.984178')dnl
 ```
 
+#### Extending Offices
+
 You can extend to use more offices by defining the office locations, for example:   
 
 ```
 define(`traffic_office4_location',`45.528462,-122.989766')dnl
 ```
+
+#### Extending Sensors (Simulated / IP Cameras)
 
 For each office (and scenario), [sensor-info.json](../maintenance/db-init/sensor-info.json) defines the camera provisioning information. Any detected cameras (whether simulated or IP cameras) will be matched against this provisioning information, format as follows:   
 
@@ -71,6 +75,13 @@ Rebuild the sample. You are good to go.
 ### Stadium Scenario
 
 The stadium scenario includes the following modes: entrance people counting and seating-area crowd counting. The following sub-sections describe extension possibilities.  
+
+#### Extending Offices
+
+Modify the following files to update or extend office defintions:   
+- [sensor-info.m4](../maintenance/db-init/sensor-info.m4)
+- [sensor-info.json](../maintenance/db-init/sensor-info.json)
+- [zonemap-xxx.json](../cloud/html/images/stadium/zonemap-37.39856d-121.94866.json)
 
 #### Extending Entrances/Service Points
 
@@ -159,13 +170,6 @@ Crowd-counting requires the following transformations (and thus parameters that 
   }
 }]
 ```
-
-#### Extending Offices
-
-Modify the following files to update or extend office defintions:   
-- [sensor-info.m4](../maintenance/db-init/sensor-info.m4)
-- [sensor-info.json](../maintenance/db-init/sensor-info.json)
-- [zonemap-xxx.json](../cloud/html/images/stadium/zonemap-37.39856d-121.94866.json)
 
 #### Extending Scenario Map
 
