@@ -6,7 +6,7 @@ function gracefully_exit {
 }
 
 # gracefully exit
-trap gracefully_exit SIGTERM
+trap gracefully_exit INT TERM EXIT
 
 # setting
 ENVS="$(env | grep ^VCAC_ | sed 's/^VCAC_/-e /')"
