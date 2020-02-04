@@ -17,6 +17,9 @@ ifelse(defn(`SCENARIO_NAME'),`traffic',`
             - appnet
         deploy:
             replicas: defn(`NANALYTICS')
+            placement:
+                constraints:
+                    - node.labels.vcac_zone!=yes
 ')
 
 ifelse(defn(`SCENARIO_NAME'),`stadium',`
@@ -37,6 +40,9 @@ ifelse(defn(`SCENARIO_NAME'),`stadium',`
             - appnet
         deploy:
             replicas: defn(`NANALYTICS')
+            placement:
+                constraints:
+                    - node.labels.vcac_zone != yes
 
     defn(`OFFICE_NAME')_analytics_crowd:
         `image: smtc_analytics_crowd_counting_xeon_'defn(`FRAMEWORK'):latest
@@ -55,6 +61,9 @@ ifelse(defn(`SCENARIO_NAME'),`stadium',`
             - appnet
         deploy:
             replicas: defn(`NANALYTICS2')
+            placement:
+                constraints:
+                    - node.labels.vcac_zone!=yes
                     
     defn(`OFFICE_NAME')_analytics_queue:
         `image: smtc_analytics_object_detection_xeon_'defn(`FRAMEWORK'):latest
@@ -73,4 +82,7 @@ ifelse(defn(`SCENARIO_NAME'),`stadium',`
             - appnet
         deploy:
             replicas: defn(`NANALYTICS3')
+            placement:
+                constraints:
+                    - node.labels.vcac_zone!=yes
 ')
