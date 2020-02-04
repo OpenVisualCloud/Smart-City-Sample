@@ -1,4 +1,5 @@
 include(office.m4)
+include(platform.m4)
 include(../../script/forloop.m4)
 
 ifelse(defn(`DISCOVER_SIMULATED_CAMERA'),`true',`
@@ -49,6 +50,7 @@ spec:
             hostPath:
                 path: /etc/localtime
                 type: File
+PLATFORM_NODE_SELECTOR(`Xeon')dnl
 
 ifelse(defn(`SCENARIO_NAME'),`stadium',`
 ---
@@ -99,6 +101,7 @@ spec:
             hostPath:
                 path: /etc/localtime
                 type: File
+PLATFORM_NODE_SELECTOR(`Xeon')dnl
 ')dnl
 
 ---
@@ -149,6 +152,7 @@ spec:
             hostPath:
                 path: /etc/localtime
                 type: File
+PLATFORM_NODE_SELECTOR(`Xeon')dnl
 ')dnl
 
 ifelse(defn(`DISCOVER_IP_CAMERA'),`true',`dnl
@@ -198,4 +202,5 @@ spec:
             hostPath:
                 path: /etc/localtime
                 type: File
+PLATFORM_NODE_SELECTOR(`Xeon')dnl
 ')

@@ -1,4 +1,5 @@
 include(office.m4)
+include(platform.m4)
 
 apiVersion: v1
 kind: Service
@@ -76,3 +77,4 @@ spec:
             type: File
         - name: defn(`OFFICE_NAME')-stdata
           emptyDir: {}
+PLATFORM_NODE_SELECTOR(`Xeon')dnl

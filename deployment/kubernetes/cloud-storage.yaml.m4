@@ -1,3 +1,4 @@
+include(platform.m4)
 
 apiVersion: v1
 kind: Service
@@ -75,3 +76,4 @@ spec:
             type: File
         - name: cloud-stdata
           emptyDir: {}
+PLATFORM_NODE_SELECTOR(`Xeon')dnl
