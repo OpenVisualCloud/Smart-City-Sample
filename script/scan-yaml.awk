@@ -35,6 +35,7 @@ function saveim() {
 
 /- node\..*!=.*/ && labels!="*" {
     gsub(/[\" ]/,"",$2);
+    gsub(/!=/,"==",$2);
     if (index(labels,$2)!=0) im=im2=""; else matched=1;
 }
 
