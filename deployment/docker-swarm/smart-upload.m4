@@ -25,4 +25,8 @@ define(`SERVICE_INTERVAL_SMART_UPLOAD',`120')dnl
                     cpus: '0.20'
                 reservations:
                     cpus: '0.10'
+            placement:
+                constraints:
+                    - node.labels.vcac_zone!=yes
+
 
