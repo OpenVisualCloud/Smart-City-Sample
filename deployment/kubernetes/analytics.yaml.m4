@@ -55,7 +55,7 @@ defn(`PLATFORM_VOLUME_MOUNTS')dnl
               path: /etc/localtime
               type: File
 defn(`PLATFORM_VOLUMES')dnl
-defn(`PLATFORM_NODE_SELECTOR')dnl
+PLATFORM_NODE_SELECTOR(`VCAC-A')dnl
 ')dnl
 
 ifelse(defn(`SCENARIO_NAME'),`stadium',`dnl
@@ -112,7 +112,7 @@ defn(`PLATFORM_VOLUME_MOUNTS')dnl
                 path: /etc/localtime
                 type: File
 defn(`PLATFORM_MOUNTS')dnl
-defn(`PLATFORM_NODE_SELECTOR')dnl
+PLATFORM_NODE_SELECTOR(`VCAC-A')dnl
 
 ---
 
@@ -169,7 +169,7 @@ defn(`PLATFORM_VOLUME_MOUNTS')dnl
                 path: /etc/localtime
                 type: File
 defn(`PLATFORM_VOLUMES')dnl
-defn(`PLATFORM_NODE_SELECTOR')dnl
+PLATFORM_NODE_SELECTOR(`VCAC-A')dnl
 
 ---
 
@@ -226,5 +226,5 @@ defn(`PLATFORM_VOLUME_MOUNTS')dnl
                 path: /etc/localtime
                 type: File
 defn(`PLATFORM_VOLUMES')dnl
-defn(`PLATFORM_NODE_SELECTOR')dnl
+PLATFORM_NODE_SELECTOR(`VCAC-A')dnl
 ')

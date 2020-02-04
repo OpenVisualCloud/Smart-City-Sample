@@ -1,4 +1,5 @@
 include(office.m4)
+include(platform.m4)
 include(../../script/forloop.m4)
 
 ifelse(eval(defn(`NCAMERAS')>0),1,`dnl
@@ -72,6 +73,7 @@ ifelse(defn(`SCENARIO_NAME'),`stadium',`dnl
             hostPath:
                 path: /etc/localtime
                 type: File
+PLATFORM_NODE_SELECTOR(`Xeon')dnl
 ')dnl
 
 ifelse(defn(`SCENARIO_NAME'),`stadium',`dnl
@@ -141,6 +143,7 @@ forloop(`CAMERAIDX',1,defn(`NCAMERAS2'),`dnl
             hostPath:
                 path: /etc/localtime
                 type: File
+PLATFORM_NODE_SELECTOR(`Xeon')dnl
 ')dnl
 
 ---
@@ -209,5 +212,6 @@ forloop(`CAMERAIDX',1,defn(`NCAMERAS3'),`dnl
             hostPath:
                 path: /etc/localtime
                 type: File
+PLATFORM_NODE_SELECTOR(`Xeon')dnl
 ')dnl
 ')dnl

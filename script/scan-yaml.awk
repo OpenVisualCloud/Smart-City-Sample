@@ -4,15 +4,14 @@ BEGIN {
     im=im2="";
     ns_space=0;
     matched=0;
-    vcac=index(labels,"vcac-zone:yes")>0 || index(labels,"vcac_zone==yes")>0;
 }
 
 function saveim() {
-    if (im!="" && (matched || !vcac)) {
+    if (im!="" && matched) {
         images[im]=1;
         im="";
     }
-    if (im2!="" && (matched || !vcac)) {
+    if (im2!="" && matched) {
         images[im2]=1;
         im2="";
     }
@@ -44,19 +43,40 @@ function saveim() {
     saveim();
 }
 
-/:/ && ns_space>0 {
+/- key:/ && ns_space>0 {
     match($0, /^ */);
     if (RLENGTH > ns_space) {
-        gsub(/[\": ]/,"",$1);
-        gsub(/[\": ]/,"",$2);
-        if (index(labels,$1":"$2)==0) im=im2=""; else matched=1;
+       key=$3
     } else {
        ns_space=0
     }
 }
 
-/nodeSelector:/ {
-    ns_space=index($0,"nodeSelector:");
+/operator:/ && ns_space>0 {
+    match($0, /^ */);
+    if (RLENGTH > ns_space) {
+       operator=$2
+    } else {
+       ns_space=0
+    }
+}
+
+/- ".*"/ && ns_space>0 {
+    match($0, /^ */);
+    if (RLENGTH > ns_space) {
+       label_eqn=key":"$2
+       gsub(/[\" ]/,"",label_eqn);
+       if (operator=="In")
+          if (index(labels,label_eqn)==0) im=im2=""; else matched=1;
+       if (operator=="NotIn")
+          if (index(labels,label_eqn)!=0) im=im2=""; else matched=1;
+    } else {
+       ns_space=0
+    }
+}
+
+/nodeAffinity:/ {
+    ns_space=index($0,"nodeAffinity:");
 }
 
 END {
