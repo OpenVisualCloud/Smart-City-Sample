@@ -49,6 +49,12 @@ spec:
               value: "7200"
             - name: SERVICE_INTERVAL
               value: "7200"
+            - name: WARN_DISK
+              value: "75"
+            - name: FATAL_DISK
+              value: "85"
+            - name: HALT_REC
+              value: "95"
             - name: NO_PROXY
               value: "*"
             - name: no_proxy
