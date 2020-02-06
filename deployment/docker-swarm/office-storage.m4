@@ -7,6 +7,9 @@
             INDEXES: "recordings,analytics"
             RETENTION_TIME: "7200"
             SERVICE_INTERVAL: "7200"
+            WARN_DISK: "75"
+            FATAL_DISK: "85"
+            HALT_REC: "95"
             NO_PROXY: "*"
             no_proxy: "*"
         volumes:
