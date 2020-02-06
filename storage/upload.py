@@ -28,6 +28,11 @@ class UploadHandler(web.RequestHandler):
 
     @run_on_executor
     def _rec2db(self, office, sensor, timestamp, path):
+        disk_usage=psutil.disk_usage(self._storage)[3]
+        if disk_usage>90:
+            print("Disk full: recording halted", flush=True)
+            return
+
         dt=datetime.datetime.fromtimestamp(timestamp/1000)
         officestr=(str(office[0])+"c"+str(office[1])).replace("-","n").replace(".","d")
         mp4path=self._storage+"/"+officestr+"/"+sensor+"/"+str(dt.year)+"/"+str(dt.month)+"/"+str(dt.day)
