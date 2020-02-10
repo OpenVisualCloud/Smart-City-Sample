@@ -19,7 +19,7 @@ case "$0" in
                 echo "archiving $image => $imagefile"
                 (docker image save "$image" > "$DIR/../dist/dist/${imagefile}.tar") || (docker pull "$image" && (docker image save "$image" > "$DIR/../dist/dist/${imagefile}.tar"))
             done
-            (cd "$DIR/.."; tar cfz "$DIR/../dist/dist/dirs.tgz" script deployment doc CMakeLists.txt README.md maintenance/db-init/sensor-info.* sensor/simulation/*.mp4 --exclude=doc/asset)
+            (cd "$DIR/.."; tar cfz "$DIR/../dist/dist/dirs.tgz" script deployment doc CMakeLists.txt README.md maintenance/db-init/sensor-info.* sensor/simulation/archive/*.mp4 --exclude=doc/asset)
             cp "$0" "$DIR/../dist/restore.sh"
             cp "$DIR/../LICENSE" "$DIR/../dist"
         else
