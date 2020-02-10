@@ -7,11 +7,11 @@ BEGIN {
 }
 
 function saveim() {
-    if (im!="" && matched) {
+    if (im!="" && (matched || labels=="*")) {
         images[im]=1;
         im="";
     }
-    if (im2!="" && matched) {
+    if (im2!="" && (matched || labels=="*")) {
         images[im2]=1;
         im2="";
     }
