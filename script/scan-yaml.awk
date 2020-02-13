@@ -3,7 +3,7 @@
 BEGIN {
     im=im2="";
     ns_space=0;
-    matched=0;
+    matched=1;
 }
 
 function saveim() {
@@ -15,7 +15,7 @@ function saveim() {
         images[im2]=1;
         im2="";
     }
-    matched=0;
+    matched=1;
 }
 
 /image:/ {
@@ -30,13 +30,19 @@ function saveim() {
 
 /- node\..*==.*/ && labels!="*" {
     gsub(/[\" ]/,"",$2);
-    if (index(labels,$2)==0) im=im2=""; else matched=1;
+    if (index(labels,$2)==0) {
+        im=im2=""; 
+        matched=0;
+    }
 }
 
 /- node\..*!=.*/ && labels!="*" {
     gsub(/[\" ]/,"",$2);
     gsub(/!=/,"==",$2);
-    if (index(labels,$2)!=0) im=im2=""; else matched=1;
+    if (index(labels,$2)!=0) {
+        im=im2=""; 
+        matched=0;
+    }
 }
 
 /^\s*---\s*$/ {
@@ -67,10 +73,11 @@ function saveim() {
     if (RLENGTH > ns_space) {
        label_eqn=key":"$2
        gsub(/[\" ]/,"",label_eqn);
-       if (operator=="In")
-          if (index(labels,label_eqn)==0) im=im2=""; else matched=1;
-       if (operator=="NotIn")
-          if (index(labels,label_eqn)!=0) im=im2=""; else matched=1;
+       i=index(labels,label_eqn);
+       if ((operator=="In" && i==0) || (operator=="NotIn" && i!=0)) {
+           im=im2=""; 
+           matched=0;
+       }
     } else {
        ns_space=0
     }
