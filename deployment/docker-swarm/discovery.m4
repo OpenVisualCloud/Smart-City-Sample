@@ -41,7 +41,6 @@ ifelse(defn(`SCENARIO_NAME'),`stadium',`
             placement:
                 constraints:
                     - node.labels.vcac_zone!=yes
-')dnl
 
     defn(`OFFICE_NAME')_camera_discovery_queue:
         image: smtc_onvif_discovery:latest
@@ -62,7 +61,7 @@ ifelse(defn(`SCENARIO_NAME'),`stadium',`
             placement:
                 constraints:
                     - node.labels.vcac_zone!=yes
-')dnl
+')')
 
 ifelse(defn(`DISCOVER_IP_CAMERA'),`true',`dnl
 
@@ -83,4 +82,5 @@ ifelse(defn(`DISCOVER_IP_CAMERA'),`true',`dnl
             placement:
                 constraints:
                     - node.labels.vcac_zone!=yes
-')dnl
+
+')

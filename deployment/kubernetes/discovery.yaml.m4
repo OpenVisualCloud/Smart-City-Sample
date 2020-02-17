@@ -102,7 +102,6 @@ spec:
                 path: /etc/localtime
                 type: File
 PLATFORM_NODE_SELECTOR(`Xeon')dnl
-')dnl
 
 ---
 
@@ -153,7 +152,7 @@ spec:
                 path: /etc/localtime
                 type: File
 PLATFORM_NODE_SELECTOR(`Xeon')dnl
-')dnl
+')')
 
 ifelse(defn(`DISCOVER_IP_CAMERA'),`true',`dnl
 ---
