@@ -11,4 +11,4 @@
         deploy:
             placement:
                 constraints:
-                    - `node.labels.vcac_zone'ifelse(defn(`PLATFORM'),`VCAC-A',==,!=)yes
+                    - node.labels.vcac_zone!=yes
