@@ -53,4 +53,4 @@ spec:
             hostPath:
                 path: /etc/localtime
                 type: File
-PLATFORM_NODE_SELECTOR(`VCAC-A')dnl
+PLATFORM_NODE_SELECTOR(`Xeon')dnl
