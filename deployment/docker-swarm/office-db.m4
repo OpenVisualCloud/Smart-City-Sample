@@ -17,16 +17,12 @@ ifelse(eval(defn(`NOFFICES')>1),1,`
             - "no_proxy=*"
         volumes:
             - /etc/localtime:/etc/localtime:ro
-            - defn(`OFFICE_NAME')_esdata:/usr/share/elasticsearch/data:rw
-ifelse(defn(`PLATFORM'),`VCAC-A',`dnl
         networks:
-            - default_net
-')dnl
+            - appnet
         deploy:
             placement:
                 constraints:
-                    - defn(`OFFICE_ZONE')
-
+                    - node.labels.vcac_zone!=yes
 ')
 
     defn(`OFFICE_NAME')_db_init:
@@ -47,14 +43,11 @@ ifelse(defn(`PLATFORM'),`VCAC-A',`dnl
               mode: 0444
         volumes:
             - /etc/localtime:/etc/localtime:ro
-ifelse(defn(`PLATFORM'),`VCAC-A',`dnl
         networks:
-            - default_net
-')dnl
+            - appnet
         deploy:
             restart_policy:
                 condition: none
             placement:
                 constraints:
-                    - defn(`OFFICE_ZONE')
-
+                    - node.labels.vcac_zone!=yes

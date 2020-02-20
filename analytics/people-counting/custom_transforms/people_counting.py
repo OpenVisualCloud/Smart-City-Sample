@@ -20,8 +20,6 @@ class PeopleCounting:
             json_msg["count"] = {"people":len(self.identities)}
             self.timestamp = int(json_msg["timestamp"])/1000000000
             messages[0].set_message(json.dumps(json_msg))
-        else:
-            print("No JSON messages in frame")
 
         self.get_ids_by_embeddings(frame)
 

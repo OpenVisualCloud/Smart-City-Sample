@@ -12,5 +12,5 @@ if [ -n "$pid" ] && [ "$#" -le "1" ]; then
 else
     echo "bash into new container...$IMAGE"
     args=("$@")
-    docker run --rm ${OPTIONS[@]} $(env | grep -E '_(proxy)=' | sed 's/^/-e /') --entrypoint ${1:-/bin/bash} -it "${IMAGE}" ${args[@]:1}
+    docker run --rm ${OPTIONS[@]} $(env | cut -f1 -d= | grep -E '_(proxy|REPO|VER)$' | sed 's/^/-e /') --entrypoint ${1:-/bin/bash} -it "${IMAGE}" ${args[@]:1}
 fi

@@ -1,4 +1,5 @@
 include(office.m4)
+include(platform.m4)
 include(../../script/forloop.m4)
 
 ifelse(defn(`DISCOVER_SIMULATED_CAMERA'),`true',`
@@ -27,7 +28,7 @@ spec:
             - name: PORT_SCAN
               value: "-p T:defn(`CAMERA_RTSP_PORT')-eval(defn(`CAMERA_RTSP_PORT')+defn(`NCAMERAS')*defn(`CAMERA_PORT_STEP')) defn(`OFFICE_NAME')-cameras-service -Pn"
             - name: SIM_PORT
-              value: "forloop(`CAMERAIDX',1,defn(`NCAMERAS'),`eval(defn(`CAMERA_RTSP_PORT')+defn(`CAMERAIDX')*defn(`CAMERA_PORT_STEP')-defn(`CAMERA_PORT_STEP'))/')"
+              value: ifelse(eval(defn(`NCAMERAS')>0),1,"forloop(`CAMERAIDX',1,defn(`NCAMERAS'),`eval(defn(`CAMERA_RTSP_PORT')+defn(`CAMERAIDX')*defn(`CAMERA_PORT_STEP')-defn(`CAMERA_PORT_STEP'))/')","0")
             - name: SIM_PREFIX
               value: "`cams'defn(`SCENARIOIDX')`o'defn(`OFFICEIDX')c"
             - name: OFFICE
@@ -49,10 +50,7 @@ spec:
             hostPath:
                 path: /etc/localtime
                 type: File
-ifelse(eval(defn(`NOFFICES')>1),1,`dnl
-      nodeSelector:
-        defn(`OFFICE_ZONE'): "yes"
-')dnl
+PLATFORM_NODE_SELECTOR(`Xeon')dnl
 
 ifelse(defn(`SCENARIO_NAME'),`stadium',`
 ---
@@ -81,7 +79,7 @@ spec:
             - name: PORT_SCAN
               value: "-p T:defn(`CAMERA_RTSP_PORT')-eval(defn(`CAMERA_RTSP_PORT')+defn(`NCAMERAS2')*defn(`CAMERA_PORT_STEP')) defn(`OFFICE_NAME')-cameras-crowd-service -Pn"
             - name: SIM_PORT
-              value: "forloop(`CAMERAIDX',1,defn(`NCAMERAS2'),`eval(defn(`CAMERA_RTSP_PORT')+defn(`CAMERAIDX')*defn(`CAMERA_PORT_STEP')-defn(`CAMERA_PORT_STEP'))/')"
+              value: ifelse(eval(defn(`NCAMERAS2')>0),1,"forloop(`CAMERAIDX',1,defn(`NCAMERAS2'),`eval(defn(`CAMERA_RTSP_PORT')+defn(`CAMERAIDX')*defn(`CAMERA_PORT_STEP')-defn(`CAMERA_PORT_STEP'))/')","0")
             - name: SIM_PREFIX
               value: "`cams'defn(`SCENARIOIDX')`o'defn(`OFFICEIDX')w"
             - name: OFFICE
@@ -103,11 +101,7 @@ spec:
             hostPath:
                 path: /etc/localtime
                 type: File
-ifelse(eval(defn(`NOFFICES')>1),1,`dnl
-      nodeSelector:
-        defn(`OFFICE_ZONE'): "yes"
-')dnl
-')dnl
+PLATFORM_NODE_SELECTOR(`Xeon')dnl
 
 ---
 
@@ -135,7 +129,7 @@ spec:
             - name: PORT_SCAN
               value: "-p T:defn(`CAMERA_RTSP_PORT')-eval(defn(`CAMERA_RTSP_PORT')+defn(`NCAMERAS3')*defn(`CAMERA_PORT_STEP')) defn(`OFFICE_NAME')-cameras-queue-service -Pn"
             - name: SIM_PORT
-              value: "forloop(`CAMERAIDX',1,defn(`NCAMERAS3'),`eval(defn(`CAMERA_RTSP_PORT')+defn(`CAMERAIDX')*defn(`CAMERA_PORT_STEP')-defn(`CAMERA_PORT_STEP'))/')"
+              value: ifelse(eval(defn(`NCAMERAS3')>0),1,"forloop(`CAMERAIDX',1,defn(`NCAMERAS3'),`eval(defn(`CAMERA_RTSP_PORT')+defn(`CAMERAIDX')*defn(`CAMERA_PORT_STEP')-defn(`CAMERA_PORT_STEP'))/')","0")
             - name: SIM_PREFIX
               value: "`cams'defn(`SCENARIOIDX')`o'defn(`OFFICEIDX')q"
             - name: OFFICE
@@ -157,11 +151,8 @@ spec:
             hostPath:
                 path: /etc/localtime
                 type: File
-ifelse(eval(defn(`NOFFICES')>1),1,`dnl
-      nodeSelector:
-        defn(`OFFICE_ZONE'): "yes"
-')dnl
-')dnl
+PLATFORM_NODE_SELECTOR(`Xeon')dnl
+')')
 
 ifelse(defn(`DISCOVER_IP_CAMERA'),`true',`dnl
 ---
@@ -210,8 +201,5 @@ spec:
             hostPath:
                 path: /etc/localtime
                 type: File
-ifelse(eval(defn(`NOFFICES')>1),1,`dnl
-      nodeSelector:
-        defn(`OFFICE_ZONE'): "yes"
-')
+PLATFORM_NODE_SELECTOR(`Xeon')dnl
 ')

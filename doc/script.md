@@ -19,8 +19,3 @@ The script creates a sample distribution package that contains sample (docker) i
 The script updates the worker nodes with the most recent images (on the current host.) The script scans the generated deployment scripts, and checks the worker nodes to ensure that they have the most recent images. If any node got out-dated images, the script updates them.    
 
 To use the script, first perform a normal build `cmake...make...` and then `make update`. The script does not take any command-line argument.    
-
-### [cleanup.sh](../script/cleanup.sh)
-
-The script cleans up unused volumes, containers and networks on each docker swarm node. The script is called everytime you start docker swarm. There is no command line argument.    
-

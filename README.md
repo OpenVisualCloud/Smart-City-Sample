@@ -11,6 +11,13 @@ The E2E sample implements aspects of smart city sensing, analytics and managemen
 - **Stats**: Calculate statistics for planning/monitoring purpose on analytical data.    
 - **UI**: Present above data to users/administrators/city planners.     
 
+### Scenarios
+
+The sample implements the Smart-City [`traffic`](https://github.com/OpenVisualCloud/Smart-City-Sample/wiki/Smart-City:-Traffic-Scenario) and [`stadium`](https://github.com/OpenVisualCloud/Smart-City-Sample/wiki/Smart-City:-Stadium-Scenario) scenarios. The [`traffic`](https://github.com/OpenVisualCloud/Smart-City-Sample/wiki/Smart-City:-Traffic-Scenario) scenario measures vehicle/pedestrian flow for planning purpose. The [`stadium`](https://github.com/OpenVisualCloud/Smart-City-Sample/wiki/Smart-City:-Stadium-Scenario) scenario focuses on different access control techniques, including entrance people counting, service-point queue counting, and stadium seating zone crowd counting.   
+
+| Traffic | Stadium |
+|:-------:|:-------:|
+|<IMG src="doc/traffic-ui.gif" width="100%"></IMG>|<IMG src="doc/stadium-ui.gif" width="100%"></IMG>|
 
 ### Software Stacks
 
@@ -33,7 +40,6 @@ The sample is powered by the following Open Visual Cloud software stacks:
 
 - **Docker Engine**:        
   - Install [docker engine](https://docs.docker.com/install).     
-  - Install [docker compose](https://docs.docker.com/compose/install), if you plan to deploy through docker compose. Version 1.20+ is required.    
   - Setup [docker swarm](https://docs.docker.com/engine/swarm), if you plan to deploy through docker swarm. See [Docker Swarm Setup](deployment/docker-swarm/README.md) for additional setup details.  
   - Setup [Kubernetes](https://kubernetes.io/docs/setup), if you plan to deploy through Kubernetes. See [Kubernetes Setup](deployment/kubernetes/README.md) for additional setup details.     
   - Setup docker proxy as follows if you are behind a firewall:   
@@ -47,6 +53,8 @@ sudo systemctl restart docker
 
 ### Build Sample: 
 
+Use the following commands to build the sample. By default, the sample builds to the `traffic` scenario. To enable the `stadium` scenario, use `cmake -DSCENARIO=stadium ..`. See also: [Build Options](doc/cmake.md).    
+
 ```bash
 mkdir build    
 cd build     
@@ -54,16 +62,7 @@ cmake ..
 make     
 ```
 
-See also: [Customize Build Process](doc/cmake.md).    
-
 ### Start/stop Sample: 
-
-Use the following commands to start/stop services via docker-compose:        
-
-```bash
-make start_docker_compose      
-make stop_docker_compose      
-```
 
 Use the following commands to start/stop services via docker swarm:    
 
@@ -87,9 +86,7 @@ See also: [Kubernetes Setup](deployment/kubernetes/README.md).
 
 ### Launch Sample UI:
 
-Launch your browser and browse to ```https://<hostname>```. You should see something similar to the following UI:   
-
-<IMG src="doc/screenshot.gif" height="270px"></IMG>
+Launch your browser and browse to ```https://<hostname>``` for the sample UI. 
 
 ---
 

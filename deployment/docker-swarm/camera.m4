@@ -14,14 +14,12 @@ ifelse(defn(`SCENARIO_NAME'),`stadium',`dnl
             PORT_STEP: "defn(`CAMERA_PORT_STEP')"
         volumes:
             - /etc/localtime:/etc/localtime:ro
-ifelse(defn(`PLATFORM'),`VCAC-A',`dnl
         networks:
-            - default_net
-')dnl
+            - appnet
         deploy:
             placement:
                 constraints:
-                    - defn(`OFFICE_ZONE')
+                    - node.labels.vcac_zone!=yes
 
 ifelse(defn(`SCENARIO_NAME'),`stadium',`
     defn(`OFFICE_NAME')_simulated_cameras_crowd:
@@ -34,14 +32,12 @@ ifelse(defn(`SCENARIO_NAME'),`stadium',`
             PORT_STEP: "defn(`CAMERA_PORT_STEP')"
         volumes:
             - /etc/localtime:/etc/localtime:ro
-ifelse(defn(`PLATFORM'),`VCAC-A',`dnl
         networks:
-            - default_net
-')dnl
+            - appnet
         deploy:
             placement:
                 constraints:
-                    - defn(`OFFICE_ZONE')
+                    - node.labels.vcac_zone!=yes
                     
     defn(`OFFICE_NAME')_simulated_cameras_queue:
         image: smtc_sensor_simulation:latest
@@ -53,12 +49,10 @@ ifelse(defn(`PLATFORM'),`VCAC-A',`dnl
             PORT_STEP: "defn(`CAMERA_PORT_STEP')"
         volumes:
             - /etc/localtime:/etc/localtime:ro
-ifelse(defn(`PLATFORM'),`VCAC-A',`dnl
         networks:
-            - default_net
-')dnl
+            - appnet
         deploy:
             placement:
                 constraints:
-                    - defn(`OFFICE_ZONE')                    
+                    - node.labels.vcac_zone!=yes
 ')

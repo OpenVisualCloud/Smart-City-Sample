@@ -13,12 +13,10 @@
             no_proxy: "*"
         volumes:
             - /etc/localtime:/etc/localtime:ro
-ifelse(defn(`PLATFORM'),`VCAC-A',`dnl
         networks:
-            - default_net
-')dnl
+            - appnet
         deploy:
             placement:
                 constraints:
-                    - defn(`OFFICE_ZONE')
+                    - node.labels.vcac_zone!=yes
 

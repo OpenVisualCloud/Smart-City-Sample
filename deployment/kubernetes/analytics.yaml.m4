@@ -1,4 +1,5 @@
 include(office.m4)
+include(platform.m4)
 
 ifelse(defn(`SCENARIO_NAME'),`traffic',`dnl
 apiVersion: apps/v1
@@ -24,7 +25,7 @@ ifelse(defn(`DISCOVER_IP_CAMERA'),`true',`dnl
 ')dnl
       containers:
         - name: defn(`OFFICE_NAME')-analytics
-          image: `smtc_analytics_object_detection_xeon_'defn(`FRAMEWORK'):latest
+          image: `smtc_analytics_object_detection_'defn(`PLATFORM_SUFFIX')`_'defn(`FRAMEWORK'):latest
           imagePullPolicy: IfNotPresent
           env:
             - name: OFFICE
@@ -47,15 +48,14 @@ ifelse(defn(`DISCOVER_IP_CAMERA'),`true',`dnl
             - mountPath: /etc/localtime
               name: timezone
               readOnly: true
+defn(`PLATFORM_VOLUME_MOUNTS')dnl
       volumes:
           - name: timezone
             hostPath:
-                path: /etc/localtime
-                type: File
-ifelse(eval(defn(`NOFFICES')>1),1,`dnl
-      nodeSelector:
-        defn(`OFFICE_ZONE'): "yes"
-')dnl
+              path: /etc/localtime
+              type: File
+defn(`PLATFORM_VOLUMES')dnl
+PLATFORM_NODE_SELECTOR(`VCAC-A')dnl
 ')dnl
 
 ifelse(defn(`SCENARIO_NAME'),`stadium',`dnl
@@ -82,7 +82,7 @@ ifelse(defn(`DISCOVER_IP_CAMERA'),`true',`dnl
 ')dnl
       containers:
         - name: defn(`OFFICE_NAME')-analytics-people
-          image: `smtc_analytics_people_counting_xeon_'defn(`FRAMEWORK'):latest
+          image: `smtc_analytics_people_counting_'defn(`PLATFORM_SUFFIX')`_'defn(`FRAMEWORK'):latest
           imagePullPolicy: IfNotPresent
           env:
             - name: OFFICE
@@ -105,15 +105,14 @@ ifelse(defn(`DISCOVER_IP_CAMERA'),`true',`dnl
             - mountPath: /etc/localtime
               name: timezone
               readOnly: true
+defn(`PLATFORM_VOLUME_MOUNTS')dnl
       volumes:
           - name: timezone
             hostPath:
                 path: /etc/localtime
                 type: File
-ifelse(eval(defn(`NOFFICES')>1),1,`dnl
-      nodeSelector:
-        defn(`OFFICE_ZONE'): "yes"
-')dnl
+defn(`PLATFORM_MOUNTS')dnl
+PLATFORM_NODE_SELECTOR(`VCAC-A')dnl
 
 ---
 
@@ -140,7 +139,7 @@ ifelse(defn(`DISCOVER_IP_CAMERA'),`true',`dnl
 ')dnl
       containers:
         - name: defn(`OFFICE_NAME')-analytics-crowd
-          image: `smtc_analytics_crowd_counting_xeon_'defn(`FRAMEWORK'):latest
+          image: `smtc_analytics_crowd_counting_'defn(`PLATFORM_SUFFIX')`_'defn(`FRAMEWORK'):latest
           imagePullPolicy: IfNotPresent
           env:
             - name: OFFICE
@@ -163,15 +162,14 @@ ifelse(defn(`DISCOVER_IP_CAMERA'),`true',`dnl
             - mountPath: /etc/localtime
               name: timezone
               readOnly: true
+defn(`PLATFORM_VOLUME_MOUNTS')dnl
       volumes:
           - name: timezone
             hostPath:
                 path: /etc/localtime
                 type: File
-ifelse(eval(defn(`NOFFICES')>1),1,`dnl
-      nodeSelector:
-        defn(`OFFICE_ZONE'): "yes"
-')dnl
+defn(`PLATFORM_VOLUMES')dnl
+PLATFORM_NODE_SELECTOR(`VCAC-A')dnl
 
 ---
 
@@ -198,7 +196,7 @@ ifelse(defn(`DISCOVER_IP_CAMERA'),`true',`dnl
 ')dnl
       containers:
         - name: defn(`OFFICE_NAME')-analytics-queue
-          image: `smtc_analytics_object_detection_xeon_'defn(`FRAMEWORK'):latest
+          image: `smtc_analytics_object_detection_'defn(`PLATFORM_SUFFIX')`_'defn(`FRAMEWORK'):latest
           imagePullPolicy: IfNotPresent
           env:
             - name: OFFICE
@@ -221,13 +219,12 @@ ifelse(defn(`DISCOVER_IP_CAMERA'),`true',`dnl
             - mountPath: /etc/localtime
               name: timezone
               readOnly: true
+defn(`PLATFORM_VOLUME_MOUNTS')dnl
       volumes:
           - name: timezone
             hostPath:
                 path: /etc/localtime
                 type: File
-ifelse(eval(defn(`NOFFICES')>1),1,`dnl
-      nodeSelector:
-        defn(`OFFICE_ZONE'): "yes"
-')dnl
-')dnl
+defn(`PLATFORM_VOLUMES')dnl
+PLATFORM_NODE_SELECTOR(`VCAC-A')dnl
+')

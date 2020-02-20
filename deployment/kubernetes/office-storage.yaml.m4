@@ -1,4 +1,5 @@
 include(office.m4)
+include(platform.m4)
 
 apiVersion: v1
 kind: Service
@@ -49,6 +50,12 @@ spec:
               value: "7200"
             - name: SERVICE_INTERVAL
               value: "7200"
+            - name: WARN_DISK
+              value: "75"
+            - name: FATAL_DISK
+              value: "85"
+            - name: HALT_REC
+              value: "95"
             - name: NO_PROXY
               value: "*"
             - name: no_proxy
@@ -76,8 +83,4 @@ spec:
             type: File
         - name: defn(`OFFICE_NAME')-stdata
           emptyDir: {}
-ifelse(eval(defn(`NOFFICES')>1),1,`dnl
-      nodeSelector:
-        defn(`STORAGE_ZONE'): "yes" 
-        defn(`OFFICE_ZONE'): "yes"
-')dnl
+PLATFORM_NODE_SELECTOR(`Xeon')dnl

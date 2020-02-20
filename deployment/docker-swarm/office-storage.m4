@@ -7,18 +7,16 @@
             INDEXES: "recordings,analytics"
             RETENTION_TIME: "7200"
             SERVICE_INTERVAL: "7200"
+            WARN_DISK: "75"
+            FATAL_DISK: "85"
+            HALT_REC: "95"
             NO_PROXY: "*"
             no_proxy: "*"
         volumes:
             - /etc/localtime:/etc/localtime:ro
-            - defn(`OFFICE_NAME')_stdata:/var/www:rw
-ifelse(defn(`PLATFORM'),`VCAC-A',`dnl
         networks:
-            - default_net
-')dnl
+            - appnet
         deploy:
             placement:
                 constraints:
-                    - defn(`OFFICE_ZONE')
-                    - defn(`STORAGE_ZONE')
-
+                    - node.labels.vcac_zone!=yes

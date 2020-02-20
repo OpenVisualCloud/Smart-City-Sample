@@ -7,16 +7,16 @@
             PROXYHOST: "http://cloud_storage:8080"
             RETENTION_TIME: "7200"
             SERVICE_INTERVAL: "7200"
+            WARN_DISK: "75"
+            FATAL_DISK: "85"
+            HALT_REC: "95"
             NO_PROXY: "*"
             no_proxy: "*"
         volumes:
             - /etc/localtime:/etc/localtime:ro
-            - cloud_stdata:/var/www:rw
-ifelse(defn(`PLATFORM'),`VCAC-A',`dnl
         networks:
-            - default_net
-')dnl
+            - appnet
         deploy:
             placement:
                 constraints:
-                    - node.role==manager
+                    - node.labels.vcac_zone!=yes

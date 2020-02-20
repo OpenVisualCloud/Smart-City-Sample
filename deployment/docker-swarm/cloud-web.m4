@@ -25,11 +25,10 @@
               uid: ${USER_ID}
               gid: ${GROUP_ID}
               mode: 0440
-ifelse(defn(`PLATFORM'),`VCAC-A',`dnl
         networks:
-            - default_net
-')dnl
+            - appnet
         deploy:
             placement:
                 constraints:
                     - node.role==manager
+                    - node.labels.vcac_zone!=yes
