@@ -39,7 +39,7 @@ The sample is powered by the following Open Visual Cloud software stacks:
 - **Build Tools**: Install ```cmake``` and ```m4``` if they are not available on your system.        
 
 - **Docker Engine**:        
-  - Install [docker engine](https://docs.docker.com/install).     
+  - Install [docker engine](https://docs.docker.com/install). Make sure you [setup](https://docs.docker.com/install/linux/linux-postinstall) docker to run as a regular user.   
   - Setup [docker swarm](https://docs.docker.com/engine/swarm), if you plan to deploy through docker swarm. See [Docker Swarm Setup](deployment/docker-swarm/README.md) for additional setup details.  
   - Setup [Kubernetes](https://kubernetes.io/docs/setup), if you plan to deploy through Kubernetes. See [Kubernetes Setup](deployment/kubernetes/README.md) for additional setup details.     
   - Setup docker proxy as follows if you are behind a firewall:   
@@ -101,9 +101,4 @@ Launch your browser and browse to ```https://<hostname>``` for the sample UI.
 - [Docker Swarm Setup](deployment/docker-swarm/README.md)      
 - [Kubernetes Setup](deployment/kubernetes/README.md)
 - [Intel VCAC-A Setup](doc/vcac-a.md)
-- [Sensor Simulation and Discovery](sensor/README.md)  
-- [Extending Offices, Sensors and Maps](doc/extend.md)  
-- [Utility Scripts](doc/script.md)       
-- [Sample Distribution](doc/dist.md)  
-- [Database Search](doc/search.md)   
 
