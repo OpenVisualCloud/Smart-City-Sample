@@ -18,7 +18,7 @@ make stop_openness_camera
 
 ### Setup Simulated Cameras
 
-The machine used for camera simulation does not need to be in a Kubernetes or docker swarm cluster, it can be a single machine with docker installed. Assuming that we are going to run 3 offices and 5 cameras per office, run the following commands on the machine to simulate cameras, 
+The machine used for camera simulation does not need to be in a Kubernetes or docker swarm cluster, it can be a single machine with docker installed. Assuming that we are going to run 3 offices and 5 cameras per office, run the following commands on each machine to simulate cameras for each office, 
 
 ```
 cmake -DNOFFICES=3 -DNCAMERAS=5 ..
@@ -64,7 +64,7 @@ To start the offices, on master node, run the followings
 ```
 cmake -DNOFFICES=3 -DNCAMERAS=5 -DNANALYTICS=5 ..
 
-export CAMERA_HOST=camera-host-ip
+export CAMERA_HOSTS=ip-of-camera-host1,ip-of-camera-host2,ip-of-camera-host3
 export CLOUD_HOST=cloud-master-node-ip
 make start_openness_office
 ```
