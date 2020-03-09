@@ -1,14 +1,11 @@
 #!/bin/bash -e
 
 DIR=$(dirname $(readlink -f "$0"))
+SCENARIO="${2:-traffic}"
 NOFFICES="${4:-1}"
 
 shift
 . "$DIR/build.sh"
-
-function create_secret {
-    kubectl create secret generic self-signed-certificate "--from-file=${DIR}/../../certificate/self.crt" "--from-file=${DIR}/../../certificate/self.key"
-}
 
 function create_and_deploy_office_db_key_pair {
     # create key pair for ssh to cloud db host machine
@@ -32,15 +29,11 @@ if [[ -z $CLOUD_HOST ]]; then
   exit 0
 fi
 
-if [[ -z $CAMERA_HOST ]]; then
+if [[ -z $CAMERA_HOSTS ]]; then
   echo "Please define environment variable CAMERA_HOST"
   exit 0
 fi
 
-
-# create secrets
-"$DIR/../../certificate/self-sign.sh"
-create_secret 2>/dev/null || (kubectl delete secret self-signed-certificate; create_secret)
 
 # create configmap
 kubectl create configmap sensor-info "--from-file=${DIR}/../../../maintenance/db-init/sensor-info.json"
