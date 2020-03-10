@@ -24,7 +24,7 @@ define(`PLATFORM_NODE_SELECTOR',dnl
               nodeSelectorTerms:
                 - matchExpressions:
                   - key: "vcac-zone"
-                    operator: ifelse(defn(`PLATFORM'),$1,`In',`NotIn')
+                    operator: `ifelse(defn(`PLATFORM'),$1,`In',`NotIn')'
                     values:
                       - "yes"
 )dnl
