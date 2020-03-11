@@ -10,6 +10,7 @@ import sys
 import os
 
 mqtthost = os.environ["MQTTHOST"]
+scenario = os.environ["SCENARIO"]
 dbhost = os.environ["DBHOST"]
 office = list(map(float, os.environ["OFFICE"].split(",")))
 
@@ -55,6 +56,9 @@ class MQTT2DB(object):
             del r["tags"]
             if "real_base" not in r: r["real_base"]=0
             r["time"]=int((r["real_base"]+r["timestamp"])/1000000)
+
+            if "objects" in r and scenario == "traffic": r["nobjects"]=int(len(r["objects"]))
+            if "objects" in r and scenario == "stadium": r["count"]={"queue":len(r["objects"])}
         except Exception as e:
             print("Exception: "+str(e), flush=True)
         self._lock.acquire()
