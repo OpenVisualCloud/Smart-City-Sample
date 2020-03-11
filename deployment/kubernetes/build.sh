@@ -7,7 +7,7 @@ NOFFICES="${3:-1}"
 IFS="," read -r -a NCAMERAS <<< "${4:-5}"
 IFS="," read -r -a NANALYTICS <<< "${5:-3}"
 FRAMEWORK="${6:-gst}"
-HOSTIP=$(ping $(hostname -f) -c 1 |awk '/icmp_seq/{print substr($5,2,length($5)-3)}')
+HOSTIP=$(ip route get 8.8.8.8 | awk '/ src /{split(substr($0,index($0," src ")),f);print f[2];exit}')
 
 echo "Generating templates with PLATFORM=${PLATFORM}, SCENARIO=${SCENARIO}, NOFFICES=${NOFFICES}"
 find "${DIR}" -maxdepth 1 -name "*.yaml" -exec rm -rf "{}" \;
