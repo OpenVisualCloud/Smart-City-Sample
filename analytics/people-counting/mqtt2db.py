@@ -50,7 +50,6 @@ class MQTT2DB(object):
         self._mqtt.disconnect()
 
     def on_message(self, client, userdata, message):
-        print("On Message", flush=True)
         try:
             r=json.loads(str(message.payload.decode("utf-8", "ignore")))
             r.update(r["tags"])
@@ -59,7 +58,7 @@ class MQTT2DB(object):
             r["time"]=int((r["real_base"]+r["timestamp"])/1000000)
 
             if "objects" in r and scenario == "traffic": r["nobjects"]=int(len(r["objects"]))
-            if "objects" in r and scenario == "stadium": r["count"]={"queue":len(r["objects"])}
+            if "objects" in r and scenario == "stadium": r["count"]={"people":len(r["objects"])}
         except Exception as e:
             print("Exception: "+str(e), flush=True)
         self._lock.acquire()

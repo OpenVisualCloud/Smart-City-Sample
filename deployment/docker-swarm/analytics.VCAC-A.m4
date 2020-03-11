@@ -39,7 +39,6 @@ ifelse(defn(`SCENARIO_NAME'),`stadium',`
             VCAC_EVERY_NTH_FRAME: 6
             VCAC_SCENARIO: "defn(`SCENARIO')"
             VCAC_STHOST: "http://defn(`OFFICE_NAME')_storage:8080/api/upload"
-            VCAC_PIPELINE_VERSION: 2
             VCAC_NO_PROXY: "*"
             VCAC_no_proxy: "*"
         networks:
@@ -63,7 +62,6 @@ ifelse(defn(`SCENARIO_NAME'),`stadium',`
             VCAC_EVERY_NTH_FRAME: 6
             VCAC_SCENARIO: "defn(`SCENARIO')"
             VCAC_STHOST: "http://defn(`OFFICE_NAME')_storage:8080/api/upload"
-            VCAC_PIPELINE_VERSION: 2
             VCAC_NO_PROXY: "*"
             VCAC_no_proxy: "*"
         networks:
