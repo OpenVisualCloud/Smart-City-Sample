@@ -58,7 +58,7 @@ class MQTT2DB(object):
             r["time"]=int((r["real_base"]+r["timestamp"])/1000000)
 
             if "objects" in r and scenario == "traffic": r["nobjects"]=int(len(r["objects"]))
-            if "objects" in r and scenario == "stadium": r["count"]={"queue":len(r["objects"])}
+            if "objects" in r and scenario == "stadium": r["count"]={"people":len(r["objects"])}
         except Exception as e:
             print("Exception: "+str(e), flush=True)
         self._lock.acquire()
