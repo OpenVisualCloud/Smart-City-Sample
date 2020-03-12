@@ -50,6 +50,7 @@ class MQTT2DB(object):
         self._mqtt.disconnect()
 
     def on_message(self, client, userdata, message):
+        print("On Message", flush=True)
         try:
             r=json.loads(str(message.payload.decode("utf-8", "ignore")))
             r.update(r["tags"])
