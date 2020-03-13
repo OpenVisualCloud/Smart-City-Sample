@@ -1,7 +1,7 @@
 
 ifelse(defn(`SCENARIO_NAME'),`traffic',`
-    defn(`OFFICE_NAME')_analytics:
-        `image: smtc_analytics_object_detection_xeon_'defn(`FRAMEWORK'):latest
+    defn(`OFFICE_NAME')_analytics_traffic:
+        `image: smtc_analytics_object_xeon_'defn(`FRAMEWORK'):latest
         environment:
             OFFICE: "defn(`OFFICE_LOCATION')"
             DBHOST: "http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')_db,db):9200"
@@ -66,7 +66,7 @@ ifelse(defn(`SCENARIO_NAME'),`stadium',`
                     - node.labels.vcac_zone!=yes
                     
     defn(`OFFICE_NAME')_analytics_queue:
-        `image: smtc_analytics_object_detection_xeon_'defn(`FRAMEWORK'):latest
+        `image: smtc_analytics_object_xeon_'defn(`FRAMEWORK'):latest
         environment:
             OFFICE: "defn(`OFFICE_LOCATION')"
             DBHOST: "http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')_db,db):9200"

@@ -5,18 +5,18 @@ ifelse(defn(`SCENARIO_NAME'),`traffic',`dnl
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: defn(`OFFICE_NAME')-analytics
+  name: defn(`OFFICE_NAME')-analytics-traffic
   labels:
-     app: defn(`OFFICE_NAME')-analytics
+     app: defn(`OFFICE_NAME')-analytics-traffic
 spec:
   replicas: defn(`NANALYTICS')
   selector:
     matchLabels:
-      app: defn(`OFFICE_NAME')-analytics
+      app: defn(`OFFICE_NAME')-analytics-traffic
   template:
     metadata:
       labels:
-        app: defn(`OFFICE_NAME')-analytics
+        app: defn(`OFFICE_NAME')-analytics-traffic
     spec:
       enableServiceLinks: false
 ifelse(defn(`DISCOVER_IP_CAMERA'),`true',`dnl
@@ -24,8 +24,8 @@ ifelse(defn(`DISCOVER_IP_CAMERA'),`true',`dnl
       dnsPolicy: ClusterFirstWithHostNet
 ')dnl
       containers:
-        - name: defn(`OFFICE_NAME')-analytics
-          image: `smtc_analytics_object_detection_'defn(`PLATFORM_SUFFIX')`_'defn(`FRAMEWORK'):latest
+        - name: defn(`OFFICE_NAME')-analytics-traffic
+          image: `smtc_analytics_object_'defn(`PLATFORM_SUFFIX')`_'defn(`FRAMEWORK'):latest
           imagePullPolicy: IfNotPresent
           env:
             - name: OFFICE
@@ -196,7 +196,7 @@ ifelse(defn(`DISCOVER_IP_CAMERA'),`true',`dnl
 ')dnl
       containers:
         - name: defn(`OFFICE_NAME')-analytics-queue
-          image: `smtc_analytics_object_detection_'defn(`PLATFORM_SUFFIX')`_'defn(`FRAMEWORK'):latest
+          image: `smtc_analytics_object_'defn(`PLATFORM_SUFFIX')`_'defn(`FRAMEWORK'):latest
           imagePullPolicy: IfNotPresent
           env:
             - name: OFFICE

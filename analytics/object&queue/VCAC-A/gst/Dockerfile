@@ -1,4 +1,4 @@
-# smtc_analytics_object_detection_vcac-a_gst
+# smtc_analytics_object_vcac-a_gst
 
 FROM smtc_analytics_common_vcac-a_gst
 
