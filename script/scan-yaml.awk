@@ -55,27 +55,19 @@ function saveim() {
     }
 }
 
-/^\s*---\s*$/ {
+/^\s*---\s*$/ || /^\s*$/ {
     n_space=c_space=0;
     saveim();
 }
 
 /- key:/ && n_space>0 {
     match($0, /^ */);
-    if (RLENGTH > n_space) {
-       key=$3
-    } else {
-       n_space=0
-    }
+    if (RLENGTH > n_space) key=$3
 }
 
 /operator:/ && n_space>0 {
     match($0, /^ */);
-    if (RLENGTH > n_space) {
-       operator=$2
-    } else {
-       n_space=0
-    }
+    if (RLENGTH > n_space) operator=$2
 }
 
 /- ".*"/ && n_space>0 {
@@ -88,8 +80,6 @@ function saveim() {
            im=im2=""; 
            matched=0;
        }
-    } else {
-       n_space=0
     }
 }
 
