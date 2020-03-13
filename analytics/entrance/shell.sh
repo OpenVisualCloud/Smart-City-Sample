@@ -6,5 +6,5 @@ shift
 FRAMEWORK="${1:-gst}"
 shift
 
-IMAGE="smtc_analytics_people_counting_$(echo ${PLATFORM} | tr A-Z a-z)_$(echo ${FRAMEWORK} | tr A-Z a-z)"
+IMAGE="smtc_analytics_entrance_$(echo ${PLATFORM} | tr A-Z a-z)_$(echo ${FRAMEWORK} | tr A-Z a-z)"
 . "$DIR/../../script/shell.sh"

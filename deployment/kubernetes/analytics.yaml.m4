@@ -62,18 +62,18 @@ ifelse(defn(`SCENARIO_NAME'),`stadium',`dnl
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: defn(`OFFICE_NAME')-analytics-people
+  name: defn(`OFFICE_NAME')-analytics-entrance
   labels:
-     app: defn(`OFFICE_NAME')-analytics-people
+     app: defn(`OFFICE_NAME')-analytics-entrance
 spec:
   replicas: defn(`NANALYTICS')
   selector:
     matchLabels:
-      app: defn(`OFFICE_NAME')-analytics-people
+      app: defn(`OFFICE_NAME')-analytics-entrance
   template:
     metadata:
       labels:
-        app: defn(`OFFICE_NAME')-analytics-people
+        app: defn(`OFFICE_NAME')-analytics-entrance
     spec:
       enableServiceLinks: false
 ifelse(defn(`DISCOVER_IP_CAMERA'),`true',`dnl
@@ -81,8 +81,8 @@ ifelse(defn(`DISCOVER_IP_CAMERA'),`true',`dnl
       dnsPolicy: ClusterFirstWithHostNet
 ')dnl
       containers:
-        - name: defn(`OFFICE_NAME')-analytics-people
-          image: `smtc_analytics_people_counting_'defn(`PLATFORM_SUFFIX')`_'defn(`FRAMEWORK'):latest
+        - name: defn(`OFFICE_NAME')-analytics-entrance
+          image: `smtc_analytics_entrance_'defn(`PLATFORM_SUFFIX')`_'defn(`FRAMEWORK'):latest
           imagePullPolicy: IfNotPresent
           env:
             - name: OFFICE
