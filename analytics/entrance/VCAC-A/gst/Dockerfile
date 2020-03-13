@@ -1,12 +1,13 @@
-# smtc_analytics_people_counting_xeon_gst
+# smtc_analytics_entrance_vcac-a_gst
 
-FROM smtc_analytics_common_xeon_gst
+FROM smtc_analytics_common_vcac-a_gst
+
 RUN  apt-get update -qq && apt-get install -qq python3-paho-mqtt python3-ply python3-requests python3-watchdog python3-munkres && rm -rf /var/lib/apt/lists/*
 
 COPY --from=smtc_common /home/*.py /home/
 COPY *.py /home/
 COPY models /home/models
-COPY Xeon/gst/pipeline /home/pipelines/people_counting
+COPY VCAC-A/gst/pipeline /home/pipelines/people_counting
 COPY custom_transforms /home/custom_transforms
 CMD ["/home/count-people.py"]
 ENV PATH=${PATH}:/home/custom_transforms
@@ -20,5 +21,5 @@ ARG  GID
 RUN  [ ${GID} -gt 0 ] && groupadd -f -g ${GID} ${GROUP}; \
      [ ${UID} -gt 0 ] && useradd -d /home/${USER} -g ${GID} -K UID_MAX=${UID} -K UID_MIN=${UID} ${USER}; \
      chown -R ${UID}.${GID} /home
-USER ${UID}
+#USER ${UID}
 ####

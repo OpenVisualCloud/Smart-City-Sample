@@ -23,8 +23,8 @@ ifelse(defn(`SCENARIO_NAME'),`traffic',`
 ')
 
 ifelse(defn(`SCENARIO_NAME'),`stadium',`
-    defn(`OFFICE_NAME')_analytics_people:
-        `image: smtc_analytics_people_counting_xeon_'defn(`FRAMEWORK'):latest
+    defn(`OFFICE_NAME')_analytics_entrance:
+        `image: smtc_analytics_entrance_xeon_'defn(`FRAMEWORK'):latest
         environment:
             OFFICE: "defn(`OFFICE_LOCATION')"
             DBHOST: "http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')_db,db):9200"
