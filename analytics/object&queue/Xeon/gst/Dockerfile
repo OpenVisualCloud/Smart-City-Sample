@@ -1,4 +1,4 @@
-# smtc_analytics_object_detection_xeon_gst
+# smtc_analytics_object_xeon_gst
 
 FROM smtc_analytics_common_xeon_gst
 
