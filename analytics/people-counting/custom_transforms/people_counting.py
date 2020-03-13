@@ -4,6 +4,9 @@ import math
 import copy
 import json
 from munkres import Munkres
+import os
+
+every_nth_frame = int(os.environ["EVERY_NTH_FRAME"])
 
 class PeopleCounting:
 
@@ -12,17 +15,20 @@ class PeopleCounting:
         self.reid_threshold = 0.7
         self.matcher = Munkres()
         self.timestamp = 0
+        self.fidx=0
 
     def process_frame(self,frame):
-        messages = list(frame.messages())
-        if len(messages) > 0:
-            json_msg = json.loads(messages[0].get_message())
-            json_msg["count"] = {"people":len(self.identities)}
-            self.timestamp = int(json_msg["timestamp"])/1000000000
-            messages[0].set_message(json.dumps(json_msg))
+        if self.fidx % every_nth_frame == 0:
+            messages = list(frame.messages())
+            if len(messages) > 0:
+                json_msg = json.loads(messages[0].get_message())
+                json_msg["count"] = {"people":len(self.identities)}
+                self.timestamp = int(json_msg["timestamp"])/1000000000
+                messages[0].set_message(json.dumps(json_msg))
 
-        self.get_ids_by_embeddings(frame)
+            self.get_ids_by_embeddings(frame)
 
+        self.fidx=self.fidx+1
         return True
 
     @staticmethod
