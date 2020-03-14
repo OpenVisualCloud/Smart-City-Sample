@@ -55,7 +55,7 @@ ifelse(defn(`SCENARIO_NAME'),`stadium',`
             - /var/run/docker.sock:/var/run/docker.sock
             - /etc/localtime:/etc/localtime:ro
         environment:
-            VCAC_IMAGE: `smtc_analytics_crowd_counting_vcac-a_'defn(`FRAMEWORK'):latest
+            VCAC_IMAGE: `smtc_analytics_crowd_vcac-a_'defn(`FRAMEWORK'):latest
             VCAC_OFFICE: "defn(`OFFICE_LOCATION')"
             VCAC_DBHOST: "http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')_db,db):9200"
             VCAC_MQTTHOST: "defn(`OFFICE_NAME')_mqtt"

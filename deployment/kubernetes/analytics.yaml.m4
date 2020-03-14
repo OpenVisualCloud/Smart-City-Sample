@@ -139,7 +139,7 @@ ifelse(defn(`DISCOVER_IP_CAMERA'),`true',`dnl
 ')dnl
       containers:
         - name: defn(`OFFICE_NAME')-analytics-crowd
-          image: `smtc_analytics_crowd_counting_'defn(`PLATFORM_SUFFIX')`_'defn(`FRAMEWORK'):latest
+          image: `smtc_analytics_crowd_'defn(`PLATFORM_SUFFIX')`_'defn(`FRAMEWORK'):latest
           imagePullPolicy: IfNotPresent
           env:
             - name: OFFICE

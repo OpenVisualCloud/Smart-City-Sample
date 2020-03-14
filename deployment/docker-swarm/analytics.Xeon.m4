@@ -45,7 +45,7 @@ ifelse(defn(`SCENARIO_NAME'),`stadium',`
                     - node.labels.vcac_zone != yes
 
     defn(`OFFICE_NAME')_analytics_crowd:
-        `image: smtc_analytics_crowd_counting_xeon_'defn(`FRAMEWORK'):latest
+        `image: smtc_analytics_crowd_xeon_'defn(`FRAMEWORK'):latest
         environment:
             OFFICE: "defn(`OFFICE_LOCATION')"
             DBHOST: "http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')_db,db):9200"
