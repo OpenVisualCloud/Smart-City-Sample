@@ -6,7 +6,7 @@ The sample is designed around database ingest and search:
   - On the recording page, the users can search recorded clips and review them.    
 - Internally, a set of services each retrieves the work order by querying the database and submits the processing results back into the database.   
 
-<IMG src="data-centric-design.png" height="400px">
+<IMG src="data-centric-design.png">
 
 ### Search Language  
 
