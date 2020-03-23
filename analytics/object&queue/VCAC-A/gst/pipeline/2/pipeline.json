@@ -2,7 +2,7 @@
     "name": "object_detection",
     "version": 2,
     "type": "GStreamer",
-    "template":"rtspsrc udp-buffer-size=212992 name=source ! queue ! rtph264depay ! h264parse ! video/x-h264 ! tee name=t ! queue ! decodebin ! queue leaky=upstream ! vaapipostproc name=\"vaapipostproc\" ! video/x-raw,width=1024,height=1024 ! queue ! gvadetect model=\"{models[person_detection_2019R3][1][network]}\" model-proc=\"{models[person_detection_2019R3][1][proc]}\" name=\"detection\" ! queue ! gvametaconvert converter=json method=detection name=\"metaconvert\" ! queue ! gvametapublish name=\"metapublish\" ! appsink name=appsink t. ! queue ! splitmuxsink max-size-time=60500000000 name=\"splitmuxsink\"",
+    "template":"rtspsrc udp-buffer-size=212992 name=source ! queue ! rtph264depay ! h264parse ! video/x-h264 ! tee name=t ! queue ! decodebin ! queue leaky=upstream ! video/x-raw(memory:VASurface) ! gvadetect pre-proc=vaapi model=\"{models[person_detection_2019R3][1][network]}\" model-proc=\"{models[person_detection_2019R3][1][proc]}\" name=\"detection\" ! queue ! gvametaconvert converter=json method=detection name=\"metaconvert\" ! queue ! gvametapublish name=\"metapublish\" ! appsink name=appsink t. ! queue ! splitmuxsink max-size-time=60500000000 name=\"splitmuxsink\"",
     "description": "Object Detection Pipeline",
     "destination": {
         "type": "object",

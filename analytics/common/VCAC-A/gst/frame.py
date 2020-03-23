@@ -25,7 +25,8 @@ class VideoFrame:
     FORMAT_CHANNELS = {'BGRx': 4,
                        'BGRA': 4,
                        'RGB': 3,
-                       'BGR': 3}
+                       'BGR': 3,
+                       'NV12':3}
 
     def __init__(self, buffer, caps=None):
         self.buffer = buffer
