@@ -1,3 +1,7 @@
+# Copyright (C) 2006, 2010-2012 Free Software Foundation, Inc.
+# This file is free software; the Free Software Foundation
+# gives unlimited permission to copy and/or distribute it,
+# with or without modifications, as long as this notice is preserved.
 divert(`-1')
 # forloop(var, from, to, stmt) - improved version:
 #   works even if VAR is not a strict macro name
