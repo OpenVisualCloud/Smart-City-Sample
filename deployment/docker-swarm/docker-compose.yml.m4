@@ -1,4 +1,4 @@
-include(../../script/forloop.m4)
+include(../../script/loop.m4)
 include(../../maintenance/db-init/sensor-info.m4)
 
 version: "3.7"
@@ -8,8 +8,8 @@ services:
 include(cloud-db.m4)
 include(cloud-web.m4)
 include(cloud-storage.m4)
-forloop(`SCENARIOIDX',1,defn(`NSCENARIOS'),`
-forloop(`OFFICEIDX',1,defn(`NOFFICES'),`
+loop(`SCENARIOIDX',1,defn(`NSCENARIOS'),`
+loop(`OFFICEIDX',1,defn(`NOFFICES'),`
     include(office.m4)
     ifelse(index(defn(`OFFICE_LOCATION'),`,'),-1,,`
         include(camera.m4)

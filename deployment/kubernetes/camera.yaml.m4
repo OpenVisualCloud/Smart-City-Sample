@@ -1,6 +1,6 @@
 include(office.m4)
 include(platform.m4)
-include(../../script/forloop.m4)
+include(../../script/loop.m4)
 
 ifelse(eval(defn(`NCAMERAS')>0),1,`dnl
 apiVersion: v1
@@ -11,7 +11,7 @@ metadata:
     app: defn(`OFFICE_NAME')-cameras
 spec:
   ports:
-forloop(`CAMERAIDX',1,defn(`NCAMERAS'),`dnl
+loop(`CAMERAIDX',1,defn(`NCAMERAS'),`dnl
   - port: eval(defn(`CAMERA_RTSP_PORT')+defn(`CAMERAIDX')*defn(`CAMERA_PORT_STEP')-defn(`CAMERA_PORT_STEP'))
     protocol: TCP
     name: `rtsp'defn(`CAMERAIDX')
@@ -43,7 +43,7 @@ spec:
           image: smtc_sensor_simulation:latest
           imagePullPolicy: IfNotPresent
           ports:
-forloop(`CAMERAIDX',1,defn(`NCAMERAS'),`dnl
+loop(`CAMERAIDX',1,defn(`NCAMERAS'),`dnl
             - containerPort: eval(defn(`CAMERA_RTSP_PORT')+defn(`CAMERAIDX')*defn(`CAMERA_PORT_STEP')-defn(`CAMERA_PORT_STEP'))
               protocol: TCP
 ')dnl
@@ -88,7 +88,7 @@ metadata:
     app: defn(`OFFICE_NAME')-cameras-crowd
 spec:
   ports:
-forloop(`CAMERAIDX',1,defn(`NCAMERAS2'),`dnl
+loop(`CAMERAIDX',1,defn(`NCAMERAS2'),`dnl
   - port: eval(defn(`CAMERA_RTSP_PORT')+defn(`CAMERAIDX')*defn(`CAMERA_PORT_STEP')-defn(`CAMERA_PORT_STEP'))
     protocol: TCP
     name: `rtsp'defn(`CAMERAIDX')
@@ -119,7 +119,7 @@ spec:
           image: smtc_sensor_simulation:latest
           imagePullPolicy: IfNotPresent
           ports:
-forloop(`CAMERAIDX',1,defn(`NCAMERAS2'),`dnl
+loop(`CAMERAIDX',1,defn(`NCAMERAS2'),`dnl
             - containerPort: eval(defn(`CAMERA_RTSP_PORT')+defn(`CAMERAIDX')*defn(`CAMERA_PORT_STEP')-defn(`CAMERA_PORT_STEP'))
               protocol: TCP
 ')dnl
@@ -157,7 +157,7 @@ metadata:
     app: defn(`OFFICE_NAME')-cameras-queue
 spec:
   ports:
-forloop(`CAMERAIDX',1,defn(`NCAMERAS3'),`dnl
+loop(`CAMERAIDX',1,defn(`NCAMERAS3'),`dnl
   - port: eval(defn(`CAMERA_RTSP_PORT')+defn(`CAMERAIDX')*defn(`CAMERA_PORT_STEP')-defn(`CAMERA_PORT_STEP'))
     protocol: TCP
     name: `rtsp'defn(`CAMERAIDX')
@@ -188,7 +188,7 @@ spec:
           image: smtc_sensor_simulation:latest
           imagePullPolicy: IfNotPresent
           ports:
-forloop(`CAMERAIDX',1,defn(`NCAMERAS3'),`dnl
+loop(`CAMERAIDX',1,defn(`NCAMERAS3'),`dnl
             - containerPort: eval(defn(`CAMERA_RTSP_PORT')+defn(`CAMERAIDX')*defn(`CAMERA_PORT_STEP')-defn(`CAMERA_PORT_STEP'))
               protocol: TCP
 ')dnl

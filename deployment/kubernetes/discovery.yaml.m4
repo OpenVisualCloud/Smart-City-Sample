@@ -1,6 +1,6 @@
 include(office.m4)
 include(platform.m4)
-include(../../script/forloop.m4)
+include(../../script/loop.m4)
 
 ifelse(defn(`DISCOVER_SIMULATED_CAMERA'),`true',`
 apiVersion: apps/v1
@@ -28,7 +28,7 @@ spec:
             - name: PORT_SCAN
               value: "-p T:defn(`CAMERA_RTSP_PORT')-eval(defn(`CAMERA_RTSP_PORT')+defn(`NCAMERAS')*defn(`CAMERA_PORT_STEP')) defn(`OFFICE_NAME')-cameras-service -Pn"
             - name: SIM_PORT
-              value: ifelse(eval(defn(`NCAMERAS')>0),1,"forloop(`CAMERAIDX',1,defn(`NCAMERAS'),`eval(defn(`CAMERA_RTSP_PORT')+defn(`CAMERAIDX')*defn(`CAMERA_PORT_STEP')-defn(`CAMERA_PORT_STEP'))/')","0")
+              value: ifelse(eval(defn(`NCAMERAS')>0),1,"loop(`CAMERAIDX',1,defn(`NCAMERAS'),`eval(defn(`CAMERA_RTSP_PORT')+defn(`CAMERAIDX')*defn(`CAMERA_PORT_STEP')-defn(`CAMERA_PORT_STEP'))/')","0")
             - name: SIM_PREFIX
               value: "`cams'defn(`SCENARIOIDX')`o'defn(`OFFICEIDX')c"
             - name: OFFICE
@@ -79,7 +79,7 @@ spec:
             - name: PORT_SCAN
               value: "-p T:defn(`CAMERA_RTSP_PORT')-eval(defn(`CAMERA_RTSP_PORT')+defn(`NCAMERAS2')*defn(`CAMERA_PORT_STEP')) defn(`OFFICE_NAME')-cameras-crowd-service -Pn"
             - name: SIM_PORT
-              value: ifelse(eval(defn(`NCAMERAS2')>0),1,"forloop(`CAMERAIDX',1,defn(`NCAMERAS2'),`eval(defn(`CAMERA_RTSP_PORT')+defn(`CAMERAIDX')*defn(`CAMERA_PORT_STEP')-defn(`CAMERA_PORT_STEP'))/')","0")
+              value: ifelse(eval(defn(`NCAMERAS2')>0),1,"loop(`CAMERAIDX',1,defn(`NCAMERAS2'),`eval(defn(`CAMERA_RTSP_PORT')+defn(`CAMERAIDX')*defn(`CAMERA_PORT_STEP')-defn(`CAMERA_PORT_STEP'))/')","0")
             - name: SIM_PREFIX
               value: "`cams'defn(`SCENARIOIDX')`o'defn(`OFFICEIDX')w"
             - name: OFFICE
@@ -129,7 +129,7 @@ spec:
             - name: PORT_SCAN
               value: "-p T:defn(`CAMERA_RTSP_PORT')-eval(defn(`CAMERA_RTSP_PORT')+defn(`NCAMERAS3')*defn(`CAMERA_PORT_STEP')) defn(`OFFICE_NAME')-cameras-queue-service -Pn"
             - name: SIM_PORT
-              value: ifelse(eval(defn(`NCAMERAS3')>0),1,"forloop(`CAMERAIDX',1,defn(`NCAMERAS3'),`eval(defn(`CAMERA_RTSP_PORT')+defn(`CAMERAIDX')*defn(`CAMERA_PORT_STEP')-defn(`CAMERA_PORT_STEP'))/')","0")
+              value: ifelse(eval(defn(`NCAMERAS3')>0),1,"loop(`CAMERAIDX',1,defn(`NCAMERAS3'),`eval(defn(`CAMERA_RTSP_PORT')+defn(`CAMERAIDX')*defn(`CAMERA_PORT_STEP')-defn(`CAMERA_PORT_STEP'))/')","0")
             - name: SIM_PREFIX
               value: "`cams'defn(`SCENARIOIDX')`o'defn(`OFFICEIDX')q"
             - name: OFFICE
