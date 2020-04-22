@@ -61,7 +61,7 @@ class RunVA(object):
                         "height": resolution["height"],
                         "zonemap": zonemap
                     },
-                    "every-nth-frame": every_nth_frame,
+                    "inference-interval": every_nth_frame,
                     "recording_prefix": "/tmp/" + sensor,
                 }
             })
@@ -93,7 +93,7 @@ class RunVA(object):
                     "topic": topic,
                 },
                 "parameters": {
-                    "every-nth-frame": every_nth_frame,
+                    "inference-interval": every_nth_frame,
                     "recording_prefix": "/tmp/" + sensor,
                 },
             })
