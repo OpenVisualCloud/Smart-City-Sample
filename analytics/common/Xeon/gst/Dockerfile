@@ -14,5 +14,5 @@ FROM openvisualcloud/xeon-ubuntu1804-analytics-gst:20.1
 RUN DEBIAN_FRONTEND=noninteractive apt-get update -qq && apt-get install -qq python3-gst-1.0 python3-jsonschema && rm -rf /var/lib/apt/lists/*
 
 COPY --from=build /home/build/ /usr/lib/python3/dist-packages
-COPY --from=build /home/video-analytics-serving/vaserving /home/video-analytics-serving/vaserving
+COPY --from=build /home/video-analytics-serving/vaserving /home/vaserving
 COPY *.py /home/
