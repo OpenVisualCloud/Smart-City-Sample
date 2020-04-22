@@ -52,8 +52,6 @@ def connect(sensor, location, uri, algorithm, algorithmName, resolution, zonemap
 def quit_service(signum, sigframe):
     global stop
     stop=True
-    if mqtt2db: mqtt2db.stop()
-    if rec2db: rec2db.stop()
     if runva: runva.stop()
 
 signal(SIGTERM, quit_service)
