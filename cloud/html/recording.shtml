@@ -2,20 +2,20 @@
 
   <table class="unstriped"><tbody>
     <tr>
-        <td class="hidden" layout1>
+        <td layout1>
             <video controls="true" autoplay muted>
                 <source type="video/mp4"/>
             </video>
             <div class="page-recording-title"></div>
             <svg class="page-recording-analytics" xmlns="http://www.w3.org/2000/svg" />
         </td>
-        <td layout4>
+        <td class="hidden" layout4>
             <video controls="true" autoplay muted>
                 <source type="video/mp4"/>
             </video>
             <div class="page-recording-title"></div>
         </td>
-        <td layout4>
+        <td class="hidden" layout4>
             <video controls="true" autoplay muted>
                 <source type="video/mp4"/>
             </video>
@@ -28,13 +28,13 @@
         </td>
     </tr>
     <tr>
-        <td layout4>
+        <td class="hidden" layout4>
             <video controls="true" autoplay muted>
                 <source type="video/mp4"/>
             </video>
             <div class="page-recording-title"></div>
         </td>
-        <td layout4>
+        <td class="hidden" layout4>
             <video controls="true" autoplay muted>
                 <source type="video/mp4"/>
             </video>

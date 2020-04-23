@@ -2,7 +2,7 @@
     "name": "people_counting",
     "version": 2,
     "type": "GStreamer",
-    "template":"rtspsrc udp-buffer-size=212992 name=\"source\" ! queue ! rtph264depay ! h264parse ! video/x-h264 ! tee name=t ! queue ! decodebin ! vaapipostproc name=\"vaapipostproc\" format=bgra width=1024 height=1024 ! queue leaky=upstream ! gvadetect model=\"{models[person_detection_2019R3][1][network]}\" model-proc=\"{models[person_detection_2019R3][1][proc]}\" name=\"detection\" ! queue ! gvaclassify model=\"{models[person_reidentification_2019R3][1][network]}\" model-proc=\"{models[person_reidentification_2019R3][1][proc]}\" name=\"reidentification\" ! queue ! gvametaconvert converter=json method=detection name=\"metaconvert\" ! gvapython name=\"peoplecounting\" module=\"people_counting\" class=\"PeopleCounting\" package=\"custom_transforms\" ! queue ! gvametapublish name=\"destination\" ! appsink name=appsink t. ! queue ! splitmuxsink max-size-time=60500000000 name=\"splitmuxsink\"",
+    "template":"rtspsrc udp-buffer-size=212992 name=\"source\" ! queue ! rtph264depay ! h264parse ! video/x-h264 ! tee name=t ! queue ! decodebin ! queue leaky=upstream ! video/x-raw(memory:VASurface) ! gvadetect model=\"{models[person_detection_2019R3][1][network]}\" model-proc=\"{models[person_detection_2019R3][1][proc]}\" name=\"detection\" pre-proc=vaapi ! queue ! gvaclassify model=\"{models[person_reidentification_2019R3][1][network]}\" model-proc=\"{models[person_reidentification_2019R3][1][proc]}\" name=\"reidentification\" pre-proc=vaapi ! queue ! gvametaconvert converter=json method=detection name=\"metaconvert\" ! queue ! gvapython name=\"peoplecounting\" module=\"people_counting\" class=\"PeopleCounting\" package=\"custom_transforms\" ! queue ! gvametapublish name=\"destination\" ! appsink name=appsink t. ! queue ! splitmuxsink max-size-time=60500000000 name=\"splitmuxsink\"",
     "description": "People Counting Pipeline",
     "parameters": {
         "type" : "object",
@@ -26,7 +26,7 @@
                 "type": "integer",
                 "minimum": 1,
                 "maximum": 64,
-                "default": 6
+                "default": 3
             },
             "device": {
                 "element":"detection",

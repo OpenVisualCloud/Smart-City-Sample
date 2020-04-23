@@ -24,7 +24,11 @@ class RunVA(object):
         ModelManager.load_config("/home/models",{})
         PipelineManager.load_config("/home/pipelines",1)
 
+    def _noop(self):
+        pass
+
     def stop(self):
+        GLib.timeout_add(10,self._noop)
         self._stop=True
 
     def loop(self, sensor, location, uri, topic, algorithm, algorithmName, resolution={}, zonemap=[]):

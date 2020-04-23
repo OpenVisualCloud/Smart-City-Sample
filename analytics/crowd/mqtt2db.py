@@ -1,9 +1,8 @@
 #!/usr/bin/python3
 
 from db_ingest import DBIngest
-from signal import signal, SIGTERM
 import paho.mqtt.client as mqtt
-from threading import Lock, Timer
+from threading import Thread, Condition
 import json
 import time
 import sys
@@ -14,17 +13,17 @@ scenario = os.environ["SCENARIO"]
 dbhost = os.environ["DBHOST"]
 office = list(map(float, os.environ["OFFICE"].split(",")))
 
-class IntervalTimer(Timer):
-    def run(self):
-        while not self.finished.is_set():
-            self.finished.wait(self.interval)
-            self.function(*self.args, **self.kwargs)
-        self.finished.set()
-
 class MQTT2DB(object):
     def __init__(self, algorithm):
         super(MQTT2DB,self).__init__()
         self._mqtt=mqtt.Client("feeder_" + algorithm)
+        self._db=DBIngest(host=dbhost, index="analytics", office=office)
+        self._cache=[]
+        self._cond=Condition()
+
+    def loop(self, topic):
+        self._stop=False
+        Thread(target=self.todb).start()
 
         while True:
             try:
@@ -34,20 +33,20 @@ class MQTT2DB(object):
                 print("Exception: "+str(e), flush=True)
                 time.sleep(10)
 
-        self._db=DBIngest(host=dbhost, index="analytics", office=office)
-        self._cache=[]
-        self._lock=Lock()
-        self._timer=IntervalTimer(2.0, self.on_timer)
-
-    def loop(self, topic):
         self._mqtt.on_message = self.on_message
         self._mqtt.subscribe(topic)
-        self._timer.start()
         self._mqtt.loop_forever()
 
+    def _add1(self, item=None):
+        self._cond.acquire()
+        if item: self._cache.append(item)
+        self._cond.notify()
+        self._cond.release()
+
     def stop(self):
-        self._timer.cancel()
         self._mqtt.disconnect()
+        self._stop=True
+        self._add1()
 
     def on_message(self, client, userdata, message):
         try:
@@ -58,24 +57,22 @@ class MQTT2DB(object):
             r["time"]=int((r["real_base"]+r["timestamp"])/1000000)
 
             if "objects" in r and scenario == "traffic": r["nobjects"]=int(len(r["objects"]))
-            if "objects" in r and scenario == "stadium": r["count"]={"queue":len(r["objects"])}
+            if "objects" in r and scenario == "stadium": r["count"]={"people":len(r["objects"])}
         except Exception as e:
             print("Exception: "+str(e), flush=True)
-        self._lock.acquire()
-        self._cache.append(r)
-        self._lock.release()
 
-    def on_timer(self):
-        self._lock.acquire()
-        bulk=self._cache
-        self._cache=[]
-        self._lock.release()
+        self._add1(r)
 
-        bulk_size=500
-        while len(bulk):
-            try: 
-                self._db.ingest_bulk(bulk[:bulk_size])
-                bulk=bulk[bulk_size:]
+    def todb(self):
+        while not self._stop:
+            self._cond.acquire()
+            self._cond.wait()
+            bulk=self._cache
+            self._cache=[]
+            self._cond.release()
+
+            try:
+                self._db.ingest_bulk(bulk)
             except Exception as e:
                 print("Exception: "+str(e), flush=True)
-            time.sleep(0.25)
+
