@@ -31,76 +31,39 @@ class RunVA(object):
         GLib.timeout_add(10,self._noop)
         self._stop=True
 
-    def loop(self, sensor, location, uri, topic, algorithm, algorithmName, resolution={}, zonemap=[]):
-        if algorithmName=="crowd-counting":
-            pid,msg=PipelineManager.create_instance(self._pipeline,self._version,{
-                "source": {
-                    "uri": uri,
-                    "type":"uri"
+    def loop(self, sensor, location, uri, algorithm, algorithmName, resolution={"width":0,"height":0}, zonemap=[], topic="analytics"):
+
+        pid,msg=PipelineManager.create_instance(self._pipeline,self._version,{
+            "source": {
+                "uri": uri,
+                "type":"uri"
+            },
+            "destination": {
+                "type": "mqtt",
+                "host": mqtthost,
+                "clientid": algorithm,
+                "topic": topic,
+            },
+            "tags": {
+                "sensor": sensor,
+                "location": location,
+                "algorithm": algorithm,
+                "office": {
+                    "lat": office[0],
+                    "lon": office[1],
                 },
-                "destination": {
-                    "type": "mqtt",
-                    "host": mqtthost,
-                    "clientid": algorithm,
-                    "topic": topic
+            },
+            "parameters": {
+                "crowd_count": { # crowd-counting only
+                    "width": resolution["width"],
+                    "height": resolution["height"],
+                    "zonemap": zonemap
                 },
-                "tags": {
-                    "sensor": sensor,
-                    "location": location,
-                    "algorithm": algorithm,
-                    "office": {
-                        "lat": office[0],
-                        "lon": office[1],
-                    },
-                },
-                "destination": {
-                    "type": "mqtt",
-                    "host": mqtthost,
-                    "clientid": algorithm,
-                    "topic": topic,
-                },
-                "parameters": {
-                    "crowd_count": {
-                        "width": resolution["width"],
-                        "height": resolution["height"],
-                        "zonemap": zonemap
-                    },
-                    "every-nth-frame": every_nth_frame,
-                    "recording_prefix": "/tmp/" + sensor,
-                }
-            })
-        else:
-            pid,msg=PipelineManager.create_instance(self._pipeline,self._version,{
-                "source": {
-                    "uri": uri,
-                    "type":"uri"
-                },
-                "destination": {
-                    "type": "mqtt",
-                    "host": mqtthost,
-                    "clientid": algorithm,
-                    "topic": topic
-                },
-                "tags": {
-                    "sensor": sensor,
-                    "location": location,
-                    "algorithm": algorithm,
-                    "office": {
-                        "lat": office[0],
-                        "lon": office[1],
-                    },
-                },
-                "destination": {
-                    "type": "mqtt",
-                    "host": mqtthost,
-                    "clientid": algorithm,
-                    "topic": topic,
-                },
-                "parameters": {
-                    "every-nth-frame": every_nth_frame,
-                    "recording_prefix": "/tmp/" + sensor,
-                },
-            })
+                "every-nth-frame": every_nth_frame,
+                "recording_prefix": "/tmp/" + sensor,
+            },
+        })
+
         if pid is None:
             print("Exception: "+str(msg), flush=True)
             return

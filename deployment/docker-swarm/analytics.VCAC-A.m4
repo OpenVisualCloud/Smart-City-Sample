@@ -59,7 +59,7 @@ ifelse(defn(`SCENARIO_NAME'),`stadium',`
             VCAC_OFFICE: "defn(`OFFICE_LOCATION')"
             VCAC_DBHOST: "http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')_db,db):9200"
             VCAC_MQTTHOST: "defn(`OFFICE_NAME')_mqtt"
-            VCAC_EVERY_NTH_FRAME: 6
+            VCAC_EVERY_NTH_FRAME: 30
             VCAC_SCENARIO: "defn(`SCENARIO')"
             VCAC_STHOST: "http://defn(`OFFICE_NAME')_storage:8080/api/upload"
             VCAC_NO_PROXY: "*"
