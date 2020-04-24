@@ -51,7 +51,7 @@ ifelse(defn(`SCENARIO_NAME'),`stadium',`
             DBHOST: "http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')_db,db):9200"
             MQTTHOST: "defn(`OFFICE_NAME')_mqtt"
             STHOST: "http://defn(`OFFICE_NAME')_storage:8080/api/upload"
-            EVERY_NTH_FRAME: 6
+            EVERY_NTH_FRAME: 30
             `SCENARIO': "defn(`SCENARIO')"
             NO_PROXY: "*"
             no_proxy: "*"
