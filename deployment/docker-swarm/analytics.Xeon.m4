@@ -65,7 +65,7 @@ ifelse(defn(`SCENARIO_NAME'),`stadium',`
                 constraints:
                     - node.labels.vcac_zone!=yes
                     
-    defn(`OFFICE_NAME')_analytics_queue:
+    defn(`OFFICE_NAME')_analytics_svcq:
         `image: smtc_analytics_object_xeon_'defn(`FRAMEWORK'):latest
         environment:
             OFFICE: "defn(`OFFICE_LOCATION')"

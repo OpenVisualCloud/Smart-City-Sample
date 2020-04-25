@@ -176,18 +176,18 @@ PLATFORM_NODE_SELECTOR(`VCAC-A')dnl
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: defn(`OFFICE_NAME')-analytics-queue
+  name: defn(`OFFICE_NAME')-analytics-svcq
   labels:
-     app: defn(`OFFICE_NAME')-analytics-queue
+     app: defn(`OFFICE_NAME')-analytics-svcq
 spec:
   replicas: defn(`NANALYTICS3')
   selector:
     matchLabels:
-      app: defn(`OFFICE_NAME')-analytics-queue
+      app: defn(`OFFICE_NAME')-analytics-svcq
   template:
     metadata:
       labels:
-        app: defn(`OFFICE_NAME')-analytics-queue
+        app: defn(`OFFICE_NAME')-analytics-svcq
     spec:
       enableServiceLinks: false
 ifelse(defn(`DISCOVER_IP_CAMERA'),`true',`dnl
@@ -195,7 +195,7 @@ ifelse(defn(`DISCOVER_IP_CAMERA'),`true',`dnl
       dnsPolicy: ClusterFirstWithHostNet
 ')dnl
       containers:
-        - name: defn(`OFFICE_NAME')-analytics-queue
+        - name: defn(`OFFICE_NAME')-analytics-svcq
           image: `smtc_analytics_object_'defn(`PLATFORM_SUFFIX')`_'defn(`FRAMEWORK'):latest
           imagePullPolicy: IfNotPresent
           env:

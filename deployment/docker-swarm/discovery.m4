@@ -42,10 +42,10 @@ ifelse(defn(`SCENARIO_NAME'),`stadium',`
                 constraints:
                     - node.labels.vcac_zone!=yes
 
-    defn(`OFFICE_NAME')_camera_discovery_queue:
+    defn(`OFFICE_NAME')_camera_discovery_entrance:
         image: smtc_onvif_discovery:latest
         environment:
-            PORT_SCAN: "-p T:defn(`CAMERA_RTSP_PORT')-eval(defn(`CAMERA_RTSP_PORT')+defn(`NCAMERAS3')*defn(`CAMERA_PORT_STEP')) defn(`OFFICE_NAME')_simulated_cameras_queue"
+            PORT_SCAN: "-p T:defn(`CAMERA_RTSP_PORT')-eval(defn(`CAMERA_RTSP_PORT')+defn(`NCAMERAS3')*defn(`CAMERA_PORT_STEP')) defn(`OFFICE_NAME')_simulated_cameras_entrance"
             SIM_PORT: ifelse(eval(defn(`NCAMERAS3')>0),1,"loop(`CAMERAIDX',1,defn(`NCAMERAS3'),`eval(defn(`CAMERA_RTSP_PORT')+defn(`CAMERAIDX')*defn(`CAMERA_PORT_STEP')-defn(`CAMERA_PORT_STEP'))/')","0")
             SIM_PREFIX: "`cams'defn(`SCENARIOIDX')`o'defn(`OFFICEIDX')q"
             OFFICE: "defn(`OFFICE_LOCATION')"
