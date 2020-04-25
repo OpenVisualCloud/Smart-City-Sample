@@ -16,7 +16,10 @@ var preview={
             sensorctx.marker.closeTooltip();
             preview.play(div,sensor);
 
+            var offset={x:0,y:0};
             div.attr('draggable','true').bind('dragstart',function (e) {
+                var divoffset=$(this).offset();
+                offset={x:e.pageX-divoffset.left,y:e.pageY-divoffset.top};
                 e.originalEvent.dataTransfer.setData("application/json",JSON.stringify(sensor));
                 page.find("#mapCanvas").unbind('dragover').on('dragover', function (e) {
                     e.preventDefault();
@@ -24,7 +27,8 @@ var preview={
                     e.preventDefault();
                     var div=$("[template] [preview-template]").clone().addClass("max-size");
                     var icon=L.divIcon({html:div[0],iconSize:[300,200],iconAnchor:[0,0]});
-                    var marker=L.marker(map.mouseEventToLatLng(e),{icon:icon,draggable:true}).addTo(page.data('preview').layer);
+                    var e1={clientX:e.clientX-offset.x,clientY:e.clientY-offset.y};
+                    var marker=L.marker(map.mouseEventToLatLng(e1),{icon:icon,draggable:true}).addTo(page.data('preview').layer);
                     marker._zoomargs={zoom:map.getZoom(),width:300,height:200};
                     $(marker._icon).addClass("page-home-preview-screen");
                     var sensor1=JSON.parse(e.originalEvent.dataTransfer.getData("application/json"));
