@@ -225,7 +225,7 @@ var scenarios={
                     var fields=[], iconloc=null;
                     if (sensor._source.algorithm=="object-detection") {
                         fields.push("nobjects");
-                    } else if (sensor._source.algorithm=="people-counting" || sensor._source.algorithm=="queue-counting") {
+                    } else if (sensor._source.algorithm=="entrance-counting" || sensor._source.algorithm=="svcq-counting") {
                         fields.push("count.people");
                     } else if (sensor._source.algorithm=="crowd-counting") {
                         iconloc=sensorctx.zonemap.getBounds().getCenter();
