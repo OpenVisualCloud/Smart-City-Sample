@@ -23,7 +23,7 @@ def connect(sensor, location, uri, algorithm, algorithmName):
 
     try:
         rec2db=Rec2DB(sensor)
-        runva=RunVA("people_counting")
+        runva=RunVA("entrance_counting")
 
         with ThreadPoolExecutor(2) as e:
             e.submit(rec2db.loop)
@@ -52,7 +52,7 @@ dbs=DBQuery(host=dbhost, index="sensors", office=office)
 while not stop:
     try:
         algorithm=dba.ingest({
-            "name": "people-counting",
+            "name": "entrance-counting",
             "office": {
                 "lat": office[0],
                 "lon": office[1],
@@ -62,14 +62,14 @@ while not stop:
         })["_id"]
         break
     except Exception as e:
-        print("Exception in count-people register algorithm: "+str(e), flush=True)
+        print("Exception in count-entrance register algorithm: "+str(e), flush=True)
         time.sleep(10)
 
 # compete for a sensor connection
 while not stop:
     try:
         print("Searching...", flush=True)
-        for sensor in dbs.search("sensor:'camera' and status:'idle' and algorithm='people-counting' and office:["+str(office[0])+","+str(office[1])+"]"):
+        for sensor in dbs.search("sensor:'camera' and status:'idle' and algorithm='entrance-counting' and office:["+str(office[0])+","+str(office[1])+"]"):
             try:
                 # compete (with other va instances) for a sensor
                 r=dbs.update(sensor["_id"],{"status":"streaming"},seq_no=sensor["_seq_no"],primary_term=sensor["_primary_term"])
@@ -83,10 +83,10 @@ while not stop:
                 if stop: break
 
             except Exception as e:
-                print("Exception in count-people search sensor: "+str(e), flush=True)
+                print("Exception in count-entrance search sensor: "+str(e), flush=True)
 
     except Exception as e:
-        print("Exception in count-people sensor connection: "+str(e), flush=True)
+        print("Exception in count-entrance sensor connection: "+str(e), flush=True)
 
     time.sleep(10)
 

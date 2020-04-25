@@ -6,9 +6,9 @@ RUN  apt-get update -qq && apt-get install -qq python3-paho-mqtt python3-ply pyt
 COPY --from=smtc_common /home/*.py /home/
 COPY *.py /home/
 COPY models /home/models
-COPY Xeon/gst/pipeline /home/pipelines/people_counting
+COPY Xeon/gst/pipeline /home/pipelines/entrance_counting
 COPY custom_transforms /home/custom_transforms
-CMD ["/home/count-people.py"]
+CMD ["/home/count-entrance.py"]
 ENV PATH=${PATH}:/home/custom_transforms
 
 ####

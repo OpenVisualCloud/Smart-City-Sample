@@ -25,7 +25,7 @@ for scenario in ${SCENARIOS[@]}; do
                 echo "Downloading..."
                 tmp="tmp_$clip_name"
                 wget -q -U "XXX YYY" -O "$DIR/archive/$tmp" "$url"
-                docker run --rm -u $(id -u):$(id -g) -v "$DIR/archive:/mnt:rw" -it ${FFMPEG_IMAGE} ffmpeg -i /mnt/$tmp -c:v libx264 -profile:v baseline -x264-params keyint=30:bframes=0 -c:a aac -ss 0 -t 00:00:10.0 /mnt/$clip_mp4
+                docker run --rm -u $(id -u):$(id -g) -v "$DIR/archive:/mnt:rw" -it ${FFMPEG_IMAGE} ffmpeg -i /mnt/$tmp -vf scale=1280:720 -pix_fmt yuv420p -c:v libx264 -profile:v baseline -x264-params keyint=30:bframes=0 -c:a aac -ss 0 -t 00:00:10.0 -f mp4 /mnt/$clip_mp4
                 rm -f "$DIR/archive/$tmp"
             else
                 echo "Skipping..."

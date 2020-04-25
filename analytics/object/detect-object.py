@@ -56,7 +56,7 @@ if scenario=="traffic":
     myAlgorithm="object-detection"
 if scenario=="stadium":
     version = 2
-    myAlgorithm="queue-counting"
+    myAlgorithm="svcq-counting"
 
 # register algorithm (while waiting for db to startup)
 while True:

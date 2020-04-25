@@ -50,11 +50,11 @@ loop(`CAMERAIDX',1,defn(`NCAMERAS'),`dnl
           env:
 ifelse(defn(`SCENARIO_NAME'),`traffic',`dnl
             - name: FILES
-              value: "traffic.mp4$$"
+              value: "_traffic.mp4$$"
 ')dnl
 ifelse(defn(`SCENARIO_NAME'),`stadium',`dnl
             - name: FILES
-              value: "people.mp4$$"
+              value: "_svcq.mp4$$"
 ')dnl
             - name: `NCAMERAS'
               value: "defn(`NCAMERAS')"
@@ -152,9 +152,9 @@ ifelse(eval(defn(`NCAMERAS3')>0),1,`dnl
 apiVersion: v1
 kind: Service
 metadata:
-  name: defn(`OFFICE_NAME')-cameras-queue-service
+  name: defn(`OFFICE_NAME')-cameras-entrance-service
   labels:
-    app: defn(`OFFICE_NAME')-cameras-queue
+    app: defn(`OFFICE_NAME')-cameras-entrance
 spec:
   ports:
 loop(`CAMERAIDX',1,defn(`NCAMERAS3'),`dnl
@@ -163,28 +163,28 @@ loop(`CAMERAIDX',1,defn(`NCAMERAS3'),`dnl
     name: `rtsp'defn(`CAMERAIDX')
 ')dnl
   selector:
-    app: defn(`OFFICE_NAME')-cameras-queue
+    app: defn(`OFFICE_NAME')-cameras-entrance
 
 ---
 
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: defn(`OFFICE_NAME')-cameras-queue
+  name: defn(`OFFICE_NAME')-cameras-entrance
   labels:
-     app: defn(`OFFICE_NAME')-cameras-queue
+     app: defn(`OFFICE_NAME')-cameras-entrance
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: defn(`OFFICE_NAME')-cameras-queue
+      app: defn(`OFFICE_NAME')-cameras-entrance
   template:
     metadata:
       labels:
-        app: defn(`OFFICE_NAME')-cameras-queue
+        app: defn(`OFFICE_NAME')-cameras-entrance
     spec:
       containers:
-        - name: defn(`OFFICE_NAME')-cameras-queue
+        - name: defn(`OFFICE_NAME')-cameras-entrance
           image: smtc_sensor_simulation:latest
           imagePullPolicy: IfNotPresent
           ports:
@@ -194,7 +194,7 @@ loop(`CAMERAIDX',1,defn(`NCAMERAS3'),`dnl
 ')dnl
           env:
             - name: FILES
-              value: "queue.mp4$$"
+              value: "_entrance.mp4$$"
             - name: `NCAMERAS'
               value: "defn(`NCAMERAS3')"
             - name: RTSP_PORT
