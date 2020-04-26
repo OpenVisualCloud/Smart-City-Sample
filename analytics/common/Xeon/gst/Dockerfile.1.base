@@ -188,7 +188,7 @@ RUN git clone ${SVT_HEVC_REPO} && \
     cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local -DCMAKE_INSTALL_LIBDIR=lib/x86_64-linux-gnu -DCMAKE_ASM_NASM_COMPILER=yasm ../.. && \
     make -j8 && \
     make install DESTDIR=/home/build && \
-    make install 
+    make install
 
 
 # Fetch SVT-AV1
@@ -209,7 +209,7 @@ RUN git clone ${SVT_AV1_REPO} && \
     cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local -DCMAKE_INSTALL_LIBDIR=lib/x86_64-linux-gnu -DCMAKE_ASM_NASM_COMPILER=yasm ../.. && \
     make -j8 && \
     make install DESTDIR=/home/build && \
-    make install 
+    make install
 
 #Remove build residue from SVT-AV1 build -- temp fix for bug
 RUN if [ -d "build/home/" ]; then rm -rf build/home/; fi
@@ -226,7 +226,7 @@ RUN git clone ${SVT_VP9_REPO} && \
     cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local -DCMAKE_INSTALL_LIBDIR=lib/x86_64-linux-gnu -DCMAKE_ASM_NASM_COMPILER=yasm ../.. && \
     make -j8 && \
     make install DESTDIR=/home/build && \
-    make install 
+    make install
 
 # Build the gstreamer core
 ARG GST_VER=1.16.0
@@ -327,7 +327,7 @@ RUN  wget -O - ${GST_PLUGIN_BAD_REPO} | tar xJ && \
         --libexecdir=/usr/local/lib/x86_64-linux-gnu \
         --enable-shared \
         --disable-examples --disable-debug \
-        --disable-gtk-doc \ 
+        --disable-gtk-doc \
         --disable-shm \
         --disable-mxf && \
      make -j $(nproc) && \
@@ -535,10 +535,8 @@ RUN wget -O - ${LIBRDKAFKA_REPO} | tar xz && \
     make install;
 
 
-
 #Install va gstreamer plugins
-
-ARG VA_GSTREAMER_PLUGINS_VER=v1.0.0 
+ARG VA_GSTREAMER_PLUGINS_VER=v1.0.0
 ARG VA_GSTREAMER_PLUGINS_REPO=https://github.com/opencv/gst-video-analytics
 
 RUN git clone ${VA_GSTREAMER_PLUGINS_REPO} && \
@@ -553,7 +551,6 @@ RUN git clone ${VA_GSTREAMER_PLUGINS_REPO} && \
     -DVERSION_PATCH=$(echo "$(git rev-list --count --first-parent HEAD)") \
     -DGIT_INFO=$(echo "git_$(git rev-parse --short HEAD)") \
     -DCMAKE_BUILD_TYPE=Release \
-    -DDISABLE_SAMPLES=ON \
     -DENABLE_PAHO_INSTALLATION=1 \
     -DENABLE_RDKAFKA_INSTALLATION=1 \
     -DHAVE_VAAPI=OFF  \
@@ -563,10 +560,12 @@ RUN mkdir -p build/usr/local/lib/x86_64-linux-gnu/gstreamer-1.0 && \
     cp -r gst-video-analytics/build/intel64/Release/lib/* build/usr/local/lib/x86_64-linux-gnu/gstreamer-1.0
 RUN mkdir -p /usr/local/lib/x86_64-linux-gnu/gstreamer-1.0 && \
     cp -r gst-video-analytics/build/intel64/Release/lib/* /usr/local/lib/x86_64-linux-gnu/gstreamer-1.0
-RUN mkdir -p build/usr/local/lib/python3.6/site-packages && \
-    cp -r gst-video-analytics/python/* build/usr/local/lib/python3.6/site-packages
-
+RUN mkdir -p build/opt/intel/dl_streamer/python && \
+    cp -r gst-video-analytics/python/* build/opt/intel/dl_streamer/python && \
+    mkdir -p /opt/intel/dl_streamer/python && \
+    cp -r gst-video-analytics/python/* /opt/intel/dl_streamer/python
 ENV GST_PLUGIN_PATH=${GST_PLUGIN_PATH}:/usr/local/lib/x86_64-linux-gnu/gstreamer-1.0
+
 
 
 
@@ -605,4 +604,4 @@ ENV PKG_CONFIG_PATH=/usr/local/lib/x86_64-linux-gnu/pkgconfig
 ENV LIBRARY_PATH=${LIBRARY_PATH}:/usr/local/lib:/usr/lib
 ENV PATH=/usr/bin:${PATH}:/usr/local/bin
 ENV GST_PLUGIN_PATH=${GST_PLUGIN_PATH}:/usr/local/lib/x86_64-linux-gnu/gstreamer-1.0
-ENV PYTHONPATH=${PYTHONPATH}:/usr/local/lib/python3.6/site-packages
+ENV PYTHONPATH=${PYTHONPATH}:/opt/intel/dl_streamer/python
