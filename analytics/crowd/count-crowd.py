@@ -4,7 +4,6 @@ from db_ingest import DBIngest
 from db_query import DBQuery
 from signal import signal, SIGTERM
 from concurrent.futures import ThreadPoolExecutor
-from mqtt2db import MQTT2DB
 from rec2db import Rec2DB
 from runva import RunVA
 import os
@@ -19,30 +18,25 @@ office = list(map(float, os.environ["OFFICE"].split(",")))
 dbhost = os.environ["DBHOST"]
 every_nth_frame = int(os.environ["EVERY_NTH_FRAME"])
 
-mqtt2db=None
 rec2db=None
 runva=None
 stop=False
 
 def connect(sensor, location, uri, algorithm, algorithmName, resolution, zonemap):
-    global mqtt2db, rec2db, runva
+    global rec2db, runva
 
     try:
-        mqtt2db=MQTT2DB(algorithm)  # this waits for mqtt
         rec2db=Rec2DB(sensor)
         runva=RunVA("crowd_counting")
 
-        topic=str(uuid.uuid4())   # topic must be different as camera may reconnect
         with ThreadPoolExecutor(2) as e:
-            e.submit(mqtt2db.loop, topic)
             e.submit(rec2db.loop)
 
             # any VA exit indicates a camera disconnect
             with ThreadPoolExecutor(1) as e1:
-                e1.submit(runva.loop, sensor, location, uri, topic, algorithm, algorithmName, resolution, zonemap)
+                e1.submit(runva.loop, sensor, location, uri, algorithm, algorithmName, resolution, zonemap)
 
             if not stop:
-                mqtt2db.stop()
                 rec2db.stop()
                 raise Exception("VA exited. This should not happen.")
 
@@ -52,8 +46,6 @@ def connect(sensor, location, uri, algorithm, algorithmName, resolution, zonemap
 def quit_service(signum, sigframe):
     global stop
     stop=True
-    if mqtt2db: mqtt2db.stop()
-    if rec2db: rec2db.stop()
     if runva: runva.stop()
 
 signal(SIGTERM, quit_service)

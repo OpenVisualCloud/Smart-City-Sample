@@ -70,7 +70,10 @@ var stats={
     },
     create: function (sensorctx, sensor, page, map, create_chart_icon) {
 	    sensorctx.text=L.tooltip({permanent:true,direction:'center',className:'tooltip_text'});
+        var offset={x:0,y:0};
         var div=$('<div class="page-stats" draggable="true"><canvas class="max-size"></canvas></div>').on('dragstart', function (e) {
+            var divoffset=$(this).offset();
+            offset={x:e.pageX-divoffset.left,y:e.pageY-divoffset.top};
             e.originalEvent.dataTransfer.setData('application/json',JSON.stringify(sensor));
             page.find("#mapCanvas").unbind('dragover').on('dragover', function (e) {
                 e.preventDefault();
@@ -78,7 +81,8 @@ var stats={
                 e.preventDefault();
                 var div1=div.clone().removeAttr('draggable').css({width:'100%',height:'100%'});
                 var icon1=L.divIcon({html:div1[0],iconSize:[350,200],iconAnchor:[0,0]});
-                var marker1=L.marker(map.mouseEventToLatLng(e),{icon:icon1,draggable:true}).addTo(page.data('stat').layer);
+                var e1={clientX:e.clientX-offset.x,clientY:e.clientY-offset.y};
+                var marker1=L.marker(map.mouseEventToLatLng(e1),{icon:icon1,draggable:true}).addTo(page.data('stat').layer);
                 marker1._sensor=JSON.parse(e.originalEvent.dataTransfer.getData('application/json'));
                 marker1._chart=stats.create_chart(div1.find('canvas'));
                 marker1._zoomargs={zoom:map.getZoom(),width:350,height:200};
