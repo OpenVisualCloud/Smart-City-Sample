@@ -2,10 +2,12 @@
 
 import os
 from db_ingest import DBIngest
+from threading import Timer
 from vaserving.vaserving import VAServing
 from vaserving.pipeline import Pipeline
 import time
 import traceback
+import paho.mqtt.client as mqtt
 
 mqtthost = os.environ["MQTTHOST"]
 dbhost = os.environ["DBHOST"]
@@ -14,6 +16,27 @@ office = list(map(float, os.environ["OFFICE"].split(",")))
 
 
 class RunVA(object):
+
+
+    def _connect_watchdog(self):
+        print("quit due to mqtt timeout", flush=True)
+        exit(-1)
+    
+    def test_mqtt_connection(self):
+        print("testing mqtt connection", flush=True)
+        timer = Timer(10, self._connect_watchdog)
+        timer.start()
+        _mqtt = mqtt.Client()
+        while True:
+            try:
+                _mqtt.connect(mqtthost)
+                break
+            except:
+                print(trackback.format_exc(), flush=True)
+        timer.cancel()
+        print("mqtt connected", flush=True)
+        _mqtt.disconnect()
+    
     def __init__(self, pipeline, version="2"):
         super(RunVA, self).__init__()
         self._pipeline = pipeline
@@ -27,6 +50,7 @@ class RunVA(object):
                           'max_running_pipelines': 1,
                           'log_level': "INFO"}
         try:
+            self.test_mqtt_connection()
             VAServing.start(vaserving_args)
         except Exception as error:
             print(traceback.format_exc(), flush=True)
