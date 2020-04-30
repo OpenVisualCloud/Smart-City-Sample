@@ -1,9 +1,22 @@
 # smtc_analytics_common_vcac-a_gst
+FROM openvisualcloud/vcaca-ubuntu1804-analytics-gst:20.4 as build
+RUN DEBIAN_FRONTEND=noninteractive apt-get update -qq && apt-get install -qq git ca-certificates python3 python3-pip && rm -rf /var/lib/apt/lists/*
+ARG VA_SERVING_REPO=https://github.com/intel/video-analytics-serving.git
+ARG VA_SERVING_BRANCH="v0.3_preview"
+ARG VA_SERVING_TAG="1b342051b85682beadb1ec173f848697fa2f02b2"
 
-FROM smtc_analytics_common_vcac-a_gst_base
+RUN  git clone ${VA_SERVING_REPO} -b ${VA_SERVING_BRANCH} --depth 1
+RUN  cd video-analytics-serving; git checkout ${VA_SERVING_TAG}
+#RUN pip3 install --force-reinstall --target /home/build -r video-analytics-serving/requirements.txt
+RUN rm -rf /home/video-analytics-serving/vaserving/__main__.py
+RUN rm -rf /home/video-analytics-serving/vaserving/rest_api
 
-# Fetch python3 and Install python3
-RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y -q --no-install-recommends libjson-c3 python3-gst-1.0 python3-jsonschema &&  rm -rf /var/lib/apt/lists/*;
-COPY VCAC-A/gst/frame.py /usr/lib/python3.6/gstgva/
-COPY app /home/
+FROM openvisualcloud/vcaca-ubuntu1804-analytics-gst:20.4
+
+RUN DEBIAN_FRONTEND=noninteractive apt-get update -qq && apt-get install -qq python3-gst-1.0 python3-jsonschema && rm -rf /var/lib/apt/lists/*
+
+#COPY --from=build /home/build/ /usr/lib/python3/dist-packages
+COPY --from=build /home/video-analytics-serving/vaserving /home/vaserving
+ENV LOG_LEVEL="INFO"
+ENV FRAMEWORK=gstreamer
 COPY *.py /home/

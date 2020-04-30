@@ -2,66 +2,75 @@
     "name": "crowd_counting",
     "version": 2,
     "type": "GStreamer",
-    "template":"rtspsrc udp-buffer-size=212992 name=\"source\" ! queue ! rtph264depay ! h264parse ! video/x-h264 ! tee name=t ! queue ! decodebin ! queue leaky=upstream ! video/x-raw(memory:VASurface) ! gvainference pre-proc=vaapi model=\"{models[CSRNet_IR_model_2019R3][2][network]}\" model-proc=\"{models[CSRNet_IR_model_2019R3][2][proc]}\" name=\"detection\" ! queue ! gvametaconvert converter=json method=detection include-no-detections=true name=\"metaconvert\" ! queue ! gvapython name=\"crowdcounting\" module=\"crowd_counting\" class=\"CrowdCounting\" package=\"custom_transforms\" ! queue ! gvametapublish name=\"destination\" ! appsink name=appsink t. ! queue ! splitmuxsink max-size-time=60500000000 name=\"splitmuxsink\"",
+    "template": [
+        "rtspsrc udp-buffer-size=212992 name=\"source\" ",
+        "! queue ! rtph264depay ! h264parse ! video/x-h264 ",
+        "! tee name=t ! queue ! decodebin ! queue leaky=upstream ",
+        "! video/x-raw(memory:VASurface) ",
+        "! gvainference pre-process-backend=vaapi model=\"{models[CSRNet_IR_model_2019R3][2][network]}\" model-proc=\"{models[CSRNet_IR_model_2019R3][2][proc]}\" name=\"detection\" ",
+        "! queue ! gvametaconvert name=\"metaconvert\" add-empty-results=true ",
+        "! queue ! gvapython name=\"crowdcounting\" module=\"custom_transforms/crowd_counting\" class=\"CrowdCounting\" ! queue ! gvametapublish name=\"destination\" ",
+        "! appsink name=appsink t. ! queue ! splitmuxsink max-size-time=60500000000 name=\"splitmuxsink\""
+    ],
     "description": "Crowd Counting Pipeline",
     "parameters": {
-        "type" : "object",
-        "properties" : {
+        "type": "object",
+        "properties": {
             "crowd_count": {
                 "element": {
                     "name": "crowdcounting",
                     "property": "args",
                     "format": "json"
-                    },
+                },
                 "type": "object",
                 "properties": {
                     "width": {
                         "type": "integer"
                     },
-                "height": {
-                    "type": "integer"
+                    "height": {
+                        "type": "integer"
                     },
                     "zonemap": {
-                    "type": "array",
+                        "type": "array",
                         "items": {
                             "type": "object"
                         }
                     }
                 }
             },
-            "every-nth-frame": {
-                "element":"detection",
+            "inference-interval": {
+                "element": "detection",
                 "type": "integer",
                 "minimum": 0,
                 "maximum": 4294967295
             },
-            "cpu-streams": {
-                "element":"detection",
+            "cpu-throughput-streams": {
+                "element": "detection",
                 "type": "string"
             },
             "n-threads": {
-                "element":"videoconvert",
+                "element": "videoconvert",
                 "type": "integer"
             },
             "nireq": {
-                "element":"detection",
+                "element": "detection",
                 "type": "integer",
                 "minimum": 1,
                 "maximum": 64,
                 "default": 6
             },
             "device": {
-                "element":"detection",
-                "default":"HDDL",
-                "type":"string"
+                "element": "detection",
+                "default": "HDDL",
+                "type": "string"
             },
             "recording_prefix": {
-                "type":"string",
+                "type": "string",
                 "element": {
                     "name": "splitmuxsink",
                     "property": "location"
                 },
-                "default":"recording"
+                "default": "recording"
             }
         }
     }
