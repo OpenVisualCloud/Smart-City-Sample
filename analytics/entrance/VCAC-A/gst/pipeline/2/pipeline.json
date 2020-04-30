@@ -7,9 +7,9 @@
         "! h264parse ! video/x-h264 ! tee name=t ! queue ! decodebin ! queue leaky=upstream ",
         "! video/x-raw(memory:VASurface) ! gvadetect model=\"{models[person_detection_2019R3][1][network]}\" model-proc=\"{models[person_detection_2019R3][1][proc]}\" name=\"detection\" pre-process-backend=vaapi ",
         "! queue ! gvaclassify model=\"{models[person_reidentification_2019R3][1][network]}\" model-proc=\"{models[person_reidentification_2019R3][1][proc]}\" name=\"reidentification\" pre-process-backend=vaapi ",
-        "! queue ! gvametaconvert converter=json method=detection name=\"metaconvert\" ! queue ! gvapython name=\"peoplecounting\" module=\"people_counting\" class=\"PeopleCounting\" package=\"custom_transforms\" ",
+        "! queue ! gvametaconvert name=\"metaconvert\" ! queue ! gvapython name=\"peoplecounting\" module=\"custom_transforms/people_counting\" class=\"PeopleCounting\" ",
         "! queue ! gvametapublish name=\"destination\" ",
-        "! appsink name=appsink t. ! queue ! splitmuxsink max-size-time=60500000000 name=\"splitmuxsink\"",
+        "! appsink name=appsink t. ! queue ! splitmuxsink max-size-time=60500000000 name=\"splitmuxsink\""
     ],
     "description": "People Counting Pipeline",
     "parameters": {

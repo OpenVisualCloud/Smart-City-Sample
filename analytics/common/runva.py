@@ -5,6 +5,7 @@ from db_ingest import DBIngest
 from vaserving.vaserving import VAServing
 from vaserving.pipeline import Pipeline
 import time
+import traceback
 
 mqtthost = os.environ["MQTTHOST"]
 dbhost = os.environ["DBHOST"]
@@ -25,8 +26,13 @@ class RunVA(object):
                           'pipeline_dir': '/home/pipelines',
                           'max_running_pipelines': 1,
                           'log_level': "INFO"}
-
-        VAServing.start(vaserving_args)
+        try:
+            VAServing.start(vaserving_args)
+        except Exception as error:
+            print(traceback.format_exc(), flush=True)
+            print(error, flush=True)
+            print("error starting VA Serving", flush=True)
+            raise
 
     def stop(self):
         self._stop = True

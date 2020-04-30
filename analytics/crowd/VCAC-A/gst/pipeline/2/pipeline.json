@@ -7,10 +7,10 @@
         "! queue ! rtph264depay ! h264parse ! video/x-h264 ",
         "! tee name=t ! queue ! decodebin ! queue leaky=upstream ",
         "! video/x-raw(memory:VASurface) ",
-        "! gvainference pre-processing-backend=vaapi model=\"{models[CSRNet_IR_model_2019R3][2][network]}\" model-proc=\"{models[CSRNet_IR_model_2019R3][2][proc]}\" name=\"detection\" ",
-        "! queue ! gvametaconvert converter=json method=detection include-no-detections=true name=\"metaconvert\" ",
+        "! gvainference pre-process-backend=vaapi model=\"{models[CSRNet_IR_model_2019R3][2][network]}\" model-proc=\"{models[CSRNet_IR_model_2019R3][2][proc]}\" name=\"detection\" ",
+        "! queue ! gvametaconvert name=\"metaconvert\" add-empty-results=true ",
         "! queue ! gvapython name=\"crowdcounting\" module=\"custom_transforms/crowd_counting\" class=\"CrowdCounting\" ! queue ! gvametapublish name=\"destination\" ",
-        "! appsink name=appsink t. ! queue ! splitmuxsink max-size-time=60500000000 name=\"splitmuxsink\"",
+        "! appsink name=appsink t. ! queue ! splitmuxsink max-size-time=60500000000 name=\"splitmuxsink\""
     ],
     "description": "Crowd Counting Pipeline",
     "parameters": {
