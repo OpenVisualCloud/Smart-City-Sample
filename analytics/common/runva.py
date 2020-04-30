@@ -38,16 +38,6 @@ class RunVA(object):
         self._db = DBIngest(host=dbhost, index="algorithms", office=office)
         self._stop=None
 
-        try:
-            VAServing.start({
-                'model_dir': '/home/models',
-                'pipeline_dir': '/home/pipelines',
-                'max_running_pipelines': 1,
-                'log_level': "INFO",
-            })
-        except:
-            print(traceback.format_exc(), flush=True)
-            raise
 
     def stop(self):
         if self._stop: 
@@ -57,62 +47,84 @@ class RunVA(object):
     def loop(self, sensor, location, uri, algorithm, algorithmName,
              resolution={"width": 0, "height": 0}, zonemap=[], topic="analytics"):
         try:
-            source = {"uri": uri, "type": "uri"}
+            VAServing.start({
+                'model_dir': '/home/models',
+                'pipeline_dir': '/home/pipelines',
+                'max_running_pipelines': 1,
+                'log_level': "INFO",
+            })
 
-            destination = {"type": "mqtt", "host": mqtthost,
-                           "clientid": algorithm, "topic": topic}
+            try:
+                source={
+                    "type": "uri",
+                    "uri": uri,
+                }
+                destination={
+                    "type": "mqtt",
+                    "host": mqtthost,
+                    "clientid": algorithm,
+                    "topic": topic
+                }
+                tags={
+                    "sensor": sensor, 
+                    "location": location, 
+                    "algorithm": algorithm,
+                    "office": {
+                        "lat": office[0], 
+                        "lon": office[1]
+                    }
+                }
+                parameters = {
+                    "inference-interval": every_nth_frame,
+                    "recording_prefix": "/tmp/" + sensor
+                }
 
-            tags = {"sensor": sensor, "location": location, "algorithm": algorithm,
-                    "office": {"lat": office[0], "lon": office[1]}}
+                if algorithmName == "crowd-counting":
+                    parameters.update({
+                        "crowd_count": {
+                            "width": resolution["width"],
+                            "height": resolution["height"],
+                            "zonemap": zonemap,
+                        }
+                    })
 
-            parameters = {"inference-interval": every_nth_frame,
-                          "recording_prefix": "/tmp/" + sensor}
-
-            if algorithmName == "crowd-counting":
-                parameters.update({"crowd_count": {
-                    "width": resolution["width"],
-                    "height": resolution["height"],
-                    "zonemap": zonemap}})
-
-            pipeline = VAServing.pipeline(self._pipeline, self._version)
-            instance_id = pipeline.start(source=source,
+                pipeline = VAServing.pipeline(self._pipeline, self._version)
+                instance_id = pipeline.start(source=source,
                                          destination=destination,
                                          tags=tags,
                                          parameters=parameters)
 
-            if instance_id is None:
-                print("Pipeline {} version {} Failed to Start".format(
-                    self._pipeline, self._version), flush=True)
-                return
+                if instance_id is None:
+                    raise Exception("Pipeline {} version {} Failed to Start".format(
+                        self._pipeline, self._version))
 
-            self._stop=Event()
-            while not self._stop.is_set():
-                status = pipeline.status()
-                print(status, flush=True)
+                self._stop=Event()
+                while not self._stop.is_set():
+                    status = pipeline.status()
+                    print(status, flush=True)
 
-                if status.state.stopped():
-                    print("Pipeline {} Version {} Instance {} Ended with {}".format(
-                        self._pipeline, self._version, instance_id, status.state.name), flush=True)
-                    break
+                    if status.state.stopped():
+                        print("Pipeline {} Version {} Instance {} Ended with {}".format(
+                            self._pipeline, self._version, instance_id, status.state.name), 
+                            flush=True)
+                        break
 
-                if status.avg_fps > 0 and status.state is Pipeline.State.RUNNING:
-                    avg_pipeline_latency = status.avg_pipeline_latency
-                    if not avg_pipeline_latency:
-                        avg_pipeline_latency = 0
+                    if status.avg_fps > 0 and status.state is Pipeline.State.RUNNING:
+                        avg_pipeline_latency = status.avg_pipeline_latency
+                        if not avg_pipeline_latency: avg_pipeline_latency = 0
 
-                    self._db.update(algorithm, {
-                        "sensor": sensor,
-                        "performance": status.avg_fps,
-                        "latency": avg_pipeline_latency * 1000})
+                        self._db.update(algorithm, {
+                            "sensor": sensor,
+                            "performance": status.avg_fps,
+                            "latency": avg_pipeline_latency * 1000})
 
-                self._stop.wait(1)
+                    self._stop.wait(1)
 
-            self._stop=None
-            print("exiting va pipeline", flush=True)
-            pipeline.stop()
-            print("pipeline stopped", flush=True)
-        except Exception as error:
-            print("EXIT VA LOOP:{}".format(error), flush=True)
+                self._stop=None
+                pipeline.stop()
+            except:
+                print(traceback.format_exc(), flush=True)
 
-    def close(self):
-        VAServing.stop()
+            VAServing.stop()
+        except:
+            print(traceback.format_exc(), flush=True)
