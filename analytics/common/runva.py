@@ -1,13 +1,13 @@
 #!/usr/bin/python3
 
 import os
+from paho.mqtt.client import Client
 from db_ingest import DBIngest
-from threading import Timer
+from threading import Event
 from vaserving.vaserving import VAServing
 from vaserving.pipeline import Pipeline
 import time
 import traceback
-import paho.mqtt.client as mqtt
 
 mqtthost = os.environ["MQTTHOST"]
 dbhost = os.environ["DBHOST"]
@@ -16,50 +16,43 @@ office = list(map(float, os.environ["OFFICE"].split(",")))
 
 
 class RunVA(object):
-
-
-    def _connect_watchdog(self):
-        print("quit due to mqtt timeout", flush=True)
-        exit(-1)
-    
-    def test_mqtt_connection(self):
+    def _test_mqtt_connection(self):
         print("testing mqtt connection", flush=True)
-        timer = Timer(10, self._connect_watchdog)
-        timer.start()
-        _mqtt = mqtt.Client()
+        mqtt = Client()
         while True:
             try:
-                _mqtt.connect(mqtthost)
+                mqtt.connect(mqtthost)
                 break
             except:
                 print(trackback.format_exc(), flush=True)
-        timer.cancel()
+                time.sleep(5)
         print("mqtt connected", flush=True)
-        _mqtt.disconnect()
+        mqtt.disconnect()
     
     def __init__(self, pipeline, version="2"):
         super(RunVA, self).__init__()
+        self._test_mqtt_connection()
+
         self._pipeline = pipeline
         self._version = version
         self._db = DBIngest(host=dbhost, index="algorithms", office=office)
-        self._stop = None
-        self._pause = 0.5
+        self._stop=None
 
-        vaserving_args = {'model_dir': '/home/models',
-                          'pipeline_dir': '/home/pipelines',
-                          'max_running_pipelines': 1,
-                          'log_level': "INFO"}
         try:
-            self.test_mqtt_connection()
-            VAServing.start(vaserving_args)
-        except Exception as error:
+            VAServing.start({
+                'model_dir': '/home/models',
+                'pipeline_dir': '/home/pipelines',
+                'max_running_pipelines': 1,
+                'log_level': "INFO",
+            })
+        except:
             print(traceback.format_exc(), flush=True)
-            print(error, flush=True)
-            print("error starting VA Serving", flush=True)
             raise
 
     def stop(self):
-        self._stop = True
+        if self._stop: 
+            print("stopping", flush=True)
+            self._stop.set()
 
     def loop(self, sensor, location, uri, algorithm, algorithmName,
              resolution={"width": 0, "height": 0}, zonemap=[], topic="analytics"):
@@ -92,13 +85,12 @@ class RunVA(object):
                     self._pipeline, self._version), flush=True)
                 return
 
-            while not self._stop:
-
+            self._stop=Event()
+            while not self._stop.is_set():
                 status = pipeline.status()
-
                 print(status, flush=True)
 
-                if (status.state.stopped()):
+                if status.state.stopped():
                     print("Pipeline {} Version {} Instance {} Ended with {}".format(
                         self._pipeline, self._version, instance_id, status.state.name), flush=True)
                     break
@@ -113,10 +105,14 @@ class RunVA(object):
                         "performance": status.avg_fps,
                         "latency": avg_pipeline_latency * 1000})
 
-                time.sleep(self._pause)
+                self._stop.wait(1)
 
+            self._stop=None
             print("exiting va pipeline", flush=True)
             pipeline.stop()
-            VAServing.stop()
+            print("pipeline stopped", flush=True)
         except Exception as error:
             print("EXIT VA LOOP:{}".format(error), flush=True)
+
+    def close(self):
+        VAServing.stop()
