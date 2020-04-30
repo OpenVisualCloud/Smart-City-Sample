@@ -2,9 +2,9 @@
 FROM openvisualcloud/xeon-ubuntu1804-analytics-gst:20.4 as build
 #FROM smtc_analytics_common_xeon_gst_base as vaserving_build
 RUN DEBIAN_FRONTEND=noninteractive apt-get update -qq && apt-get install -qq git ca-certificates python3 python3-pip && rm -rf /var/lib/apt/lists/*
-ARG VA_SERVING_REPO=https://gitlab.devtools.intel.com/video-analytics/video-analytics-serving.git
-ARG VA_SERVING_BRANCH="ovc_integration"
-ARG VA_SERVING_TAG="a73d641de1f26c4c7b3f3fbcf805b2427347d994"
+ARG VA_SERVING_REPO=https://github.com/intel/video-analytics-serving.git
+ARG VA_SERVING_BRANCH="v0.3_preview"
+ARG VA_SERVING_TAG="1b342051b85682beadb1ec173f848697fa2f02b2"
 
 RUN  git clone ${VA_SERVING_REPO} -b ${VA_SERVING_BRANCH} --depth 1
 RUN  cd video-analytics-serving; git checkout ${VA_SERVING_TAG}

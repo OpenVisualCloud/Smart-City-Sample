@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-
+import traceback
 from db_ingest import DBIngest
 import paho.mqtt.client as mqtt
 from threading import Thread, Condition, Timer
@@ -15,32 +15,33 @@ scenario = os.environ["SCENARIO"]
 dbhost = os.environ["DBHOST"]
 office = list(map(float, os.environ["OFFICE"].split(",")))
 
+
 class MQTT2DB(object):
     def __init__(self):
-        super(MQTT2DB,self).__init__()
+        super(MQTT2DB, self).__init__()
 
-        self._db=DBIngest(host=dbhost, index="analytics", office=office)
-        self._cache=[]
-        self._cond=Condition()
+        self._db = DBIngest(host=dbhost, index="analytics", office=office)
+        self._cache = []
+        self._cond = Condition()
 
-        self._mqtt=mqtt.Client()
+        self._mqtt = mqtt.Client()
         self._mqtt.on_message = self.on_message
         self._mqtt.on_disconnect = self.on_disconnect
 
     def loop(self, topic="analytics"):
         print("connecting mqtt", flush=True)
-        timer=Timer(10,self._connect_watchdog)
+        timer = Timer(10, self._connect_watchdog)
         timer.start()
         while True:
             try:
                 self._mqtt.connect(mqtthost)
                 break
             except:
-                print(trackback.format_exc(),flush=True)
+                print(trackback.format_exc(), flush=True)
         timer.cancel()
         print("mqtt connected", flush=True)
 
-        self._stop=False
+        self._stop = False
         Thread(target=self.todb).start()
 
         self._mqtt.subscribe(topic)
@@ -52,7 +53,8 @@ class MQTT2DB(object):
 
     def _add1(self, item=None):
         self._cond.acquire()
-        if item: self._cache.append(item)
+        if item:
+            self._cache.append(item)
         self._cond.notify()
         self._cond.release()
 
@@ -60,41 +62,47 @@ class MQTT2DB(object):
         self._mqtt.disconnect()
 
     def on_disconnect(self, client, userdata, rc):
-        self._stop=True
+        self._stop = True
         self._add1()
 
     def on_message(self, client, userdata, message):
         try:
-            r=json.loads(str(message.payload.decode("utf-8", "ignore")))
+            r = json.loads(str(message.payload.decode("utf-8", "ignore")))
             r.update(r["tags"])
             del r["tags"]
-            if "real_base" not in r: r["real_base"]=0
-            r["time"]=int((r["real_base"]+r["timestamp"])/1000000)
+            if "real_base" not in r:
+                r["real_base"] = 0
+            r["time"] = int((r["real_base"] + r["timestamp"]) / 1000000)
 
-            if "objects" in r and scenario == "traffic": r["nobjects"]=int(len(r["objects"]))
-            if "objects" in r and scenario == "stadium": r["count"]={"people":len(r["objects"])}
+            if "objects" in r and scenario == "traffic":
+                r["nobjects"] = int(len(r["objects"]))
+            if "objects" in r and scenario == "stadium":
+                r["count"] = {"people": len(r["objects"])}
         except:
-            print(trackback.format_exc(),flush=True)
+            print(trackback.format_exc(), flush=True)
 
         self._add1(r)
 
     def todb(self):
-        while not self._stop: 
+        while not self._stop:
             self._cond.acquire()
             self._cond.wait()
-            bulk=self._cache
-            self._cache=[]
+            bulk = self._cache
+            self._cache = []
             self._cond.release()
 
-            try: 
+            try:
                 self._db.ingest_bulk(bulk)
             except:
-                print(trackback.format_exc(),flush=True)
+                print(trackback.format_exc(), flush=True)
 
-mqtt2db=MQTT2DB()
+
+mqtt2db = MQTT2DB()
+
 
 def quit_service(signum, sigframe):
     mqtt2db.stop()
+
 
 signal(SIGTERM, quit_service)
 mqtt2db.loop()
