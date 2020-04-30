@@ -32,7 +32,6 @@ def connect(sensor, location, uri, algorithm, algorithmName):
                 e1.submit(runva.loop, sensor, location, uri, algorithm, algorithmName)
 
             if stop: rec2db.stop()
-            runva.close()
             raise Exception("VA exited. This should not happen.")
 
     except Exception as e:
