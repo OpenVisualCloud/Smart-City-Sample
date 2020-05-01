@@ -19,7 +19,7 @@
             "crowd_count": {
                 "element": {
                     "name": "crowdcounting",
-                    "property": "args",
+                    "property": "kwarg",
                     "format": "json"
                 },
                 "type": "object",
