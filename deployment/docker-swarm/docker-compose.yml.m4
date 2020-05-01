@@ -19,7 +19,7 @@ loop(`OFFICEIDX',1,defn(`NOFFICES'),`
         include(where-indexing.m4)
         include(office-storage.m4)
         include(smart-upload.m4)
-        include(analytics.defn(`PLATFORM').m4)
+        include(analytics.m4)
         include(mqtt.m4)
         include(mqtt2db.m4)
     ')
