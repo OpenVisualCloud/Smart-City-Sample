@@ -40,6 +40,8 @@ ifelse(defn(`DISCOVER_IP_CAMERA'),`true',`dnl
               value: "6"
             - name: `SCENARIO'
               value: "defn(`SCENARIO')"
+            - name: `NETWORK_PREFERENCE'
+              value: "{\"defn(`PLATFORM_DEVICE')\":\"defn(`NETWORK_PREFERENCE')\"}"
             - name: NO_PROXY
               value: "*"
             - name: no_proxy
@@ -97,6 +99,8 @@ ifelse(defn(`DISCOVER_IP_CAMERA'),`true',`dnl
               value: "6"
             - name: `SCENARIO'
               value: "defn(`SCENARIO')"
+            - name: `NETWORK_PREFERENCE'
+              value: "{\"defn(`PLATFORM_DEVICE')\":\"defn(`NETWORK_PREFERENCE')\"}"
             - name: NO_PROXY
               value: "*"
             - name: no_proxy
@@ -154,6 +158,8 @@ ifelse(defn(`DISCOVER_IP_CAMERA'),`true',`dnl
               value: "30"
             - name: `SCENARIO'
               value: "defn(`SCENARIO')"
+            - name: `NETWORK_PREFERENCE'
+              value: "{\"defn(`PLATFORM_DEVICE')\":\"defn(`NETWORK_PREFERENCE')\"}"
             - name: NO_PROXY
               value: "*"
             - name: no_proxy
@@ -211,6 +217,8 @@ ifelse(defn(`DISCOVER_IP_CAMERA'),`true',`dnl
               value: "6"
             - name: `SCENARIO'
               value: "defn(`SCENARIO')"
+            - name: `NETWORK_PREFERENCE'
+              value: "{\"defn(`PLATFORM_DEVICE')\":\"defn(`NETWORK_PREFERENCE')\"}"
             - name: NO_PROXY
               value: "*"
             - name: no_proxy
