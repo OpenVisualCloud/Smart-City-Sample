@@ -14,6 +14,7 @@ PLATFORM_VOLUME_EXTRA()dnl
             PLATFORM_ENV()`SCENARIO': "defn(`SCENARIO')"
             PLATFORM_ENV()STHOST: "http://defn(`OFFICE_NAME')_storage:8080/api/upload"
             PLATFORM_ENV()PIPELINE_VERSION: 2
+            PLATFORM_ENV()`NETWORK_PREFERENCE': "{\"defn(`PLATFORM_DEVICE')\":\"defn(`NETWORK_PREFERENCE')\"}"
             PLATFORM_ENV()NO_PROXY: "*"
             PLATFORM_ENV()no_proxy: "*"
 PLATFORM_ENV_EXTRA()dnl
@@ -39,6 +40,7 @@ PLATFORM_VOLUME_EXTRA()dnl
             PLATFORM_ENV()EVERY_NTH_FRAME: 6
             PLATFORM_ENV()`SCENARIO': "defn(`SCENARIO')"
             PLATFORM_ENV()STHOST: "http://defn(`OFFICE_NAME')_storage:8080/api/upload"
+            PLATFORM_ENV()`NETWORK_PREFERENCE': "{\"defn(`PLATFORM_DEVICE')\":\"defn(`NETWORK_PREFERENCE')\"}"
             PLATFORM_ENV()NO_PROXY: "*"
             PLATFORM_ENV()no_proxy: "*"
 PLATFORM_ENV_EXTRA()dnl
@@ -62,6 +64,7 @@ PLATFORM_VOLUME_EXTRA()dnl
             PLATFORM_ENV()EVERY_NTH_FRAME: 30
             PLATFORM_ENV()`SCENARIO': "defn(`SCENARIO')"
             PLATFORM_ENV()STHOST: "http://defn(`OFFICE_NAME')_storage:8080/api/upload"
+            PLATFORM_ENV()`NETWORK_PREFERENCE': "{\"defn(`PLATFORM_DEVICE')\":\"defn(`NETWORK_PREFERENCE')\"}"
             PLATFORM_ENV()NO_PROXY: "*"
             PLATFORM_ENV()no_proxy: "*"
 PLATFORM_ENV_EXTRA()dnl
@@ -86,6 +89,7 @@ PLATFORM_VOLUME_EXTRA()dnl
             PLATFORM_ENV()`SCENARIO': "defn(`SCENARIO')"
             PLATFORM_ENV()STHOST: "http://defn(`OFFICE_NAME')_storage:8080/api/upload"
             PLATFORM_ENV()PIPELINE_VERSION: 2
+            PLATFORM_ENV()`NETWORK_PREFERENCE': "{\"defn(`PLATFORM_DEVICE')\":\"defn(`NETWORK_PREFERENCE')\"}"
             PLATFORM_ENV()NO_PROXY: "*"
             PLATFORM_ENV()no_proxy: "*"
         networks:

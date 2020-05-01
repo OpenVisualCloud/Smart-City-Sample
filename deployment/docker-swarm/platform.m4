@@ -8,3 +8,4 @@ define(`PLATFORM_ENV_EXTRA',`ifelse(defn(`PLATFORM'),`VCAC-A',`dnl
 ')')dnl
 define(`PLATFORM_ENV',ifelse(defn(`PLATFORM'),`VCAC-A',`VCAC_'))dnl
 define(`PLATFORM_ZONE',`node.labels.vcac-zone ifelse(defn(`PLATFORM'),`VCAC-A',`==',`!=') yes')dnl
+define(`PLATFORM_DEVICE',ifelse(defn(`PLATFORM'),`VCAC-A',`HDDL',`CPU'))dnl

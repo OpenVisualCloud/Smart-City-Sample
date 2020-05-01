@@ -28,3 +28,4 @@ define(`PLATFORM_NODE_SELECTOR',dnl
                     values:
                       - "yes"
 )dnl
+define(`PLATFORM_DEVICE',ifelse(defn(`PLATFORM'),`VCAC-A',`HDDL',`CPU'))dnl

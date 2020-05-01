@@ -13,7 +13,7 @@ mqtthost = os.environ["MQTTHOST"]
 dbhost = os.environ["DBHOST"]
 every_nth_frame = int(os.environ["EVERY_NTH_FRAME"])
 office = list(map(float, os.environ["OFFICE"].split(",")))
-
+network_preference = os.environ["NETWORK_PREFERENCE"]
 
 class RunVA(object):
     def _test_mqtt_connection(self):
@@ -48,6 +48,7 @@ class RunVA(object):
              resolution={"width": 0, "height": 0}, zonemap=[], topic="analytics"):
         try:
             VAServing.start({
+                'network_preference': network_preference,
                 'model_dir': '/home/models',
                 'pipeline_dir': '/home/pipelines',
                 'max_running_pipelines': 1,
