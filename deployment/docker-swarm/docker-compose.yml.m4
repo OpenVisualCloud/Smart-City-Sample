@@ -21,6 +21,7 @@ loop(`OFFICEIDX',1,defn(`NOFFICES'),`
         include(smart-upload.m4)
         include(analytics.defn(`PLATFORM').m4)
         include(mqtt.m4)
+        include(mqtt2db.m4)
     ')
 ')')
 include(secret.m4)

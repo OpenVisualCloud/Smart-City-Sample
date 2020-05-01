@@ -51,7 +51,7 @@ ifelse(defn(`SCENARIO_NAME'),`stadium',`
             DBHOST: "http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')_db,db):9200"
             MQTTHOST: "defn(`OFFICE_NAME')_mqtt"
             STHOST: "http://defn(`OFFICE_NAME')_storage:8080/api/upload"
-            EVERY_NTH_FRAME: 6
+            EVERY_NTH_FRAME: 30
             `SCENARIO': "defn(`SCENARIO')"
             NO_PROXY: "*"
             no_proxy: "*"
@@ -65,7 +65,7 @@ ifelse(defn(`SCENARIO_NAME'),`stadium',`
                 constraints:
                     - node.labels.vcac_zone!=yes
                     
-    defn(`OFFICE_NAME')_analytics_queue:
+    defn(`OFFICE_NAME')_analytics_svcq:
         `image: smtc_analytics_object_xeon_'defn(`FRAMEWORK'):latest
         environment:
             OFFICE: "defn(`OFFICE_LOCATION')"

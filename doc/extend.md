@@ -74,7 +74,7 @@ Rebuild the sample. You are good to go.
 
 ### Stadium Scenario
 
-The stadium scenario includes the following modes: entrance people counting and seating-area crowd counting. The following sub-sections describe extension possibilities.  
+The stadium scenario includes the following modes: entrance and service-point people counting and seating-area crowd counting. The following sub-sections describe extension possibilities.  
 
 #### Extending Offices
 
@@ -102,7 +102,7 @@ The sensor provisioning information is described in [sensor-info.json](../mainte
             "lat": 37.38813,        # Sensor location
             "lon": -121.94370       # Sensor location
         },
-        "algorithm": "people-counting",  # Analytic algorithm to associate with
+        "algorithm": "entrance-counting",  # Analytic algorithm to associate with
         "theta": 90.0,              # The rotation angle with 0 degree facing North
         "simsn": "cams2o1c0"        # Camera identifier
     },{

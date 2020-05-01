@@ -2,7 +2,9 @@
 
 from db_ingest import DBIngest
 import paho.mqtt.client as mqtt
-from threading import Thread, Condition
+from threading import Thread, Condition, Timer
+from signal import signal, SIGTERM
+import traceback
 import json
 import time
 import sys
@@ -14,28 +16,39 @@ dbhost = os.environ["DBHOST"]
 office = list(map(float, os.environ["OFFICE"].split(",")))
 
 class MQTT2DB(object):
-    def __init__(self, algorithm):
+    def __init__(self):
         super(MQTT2DB,self).__init__()
-        self._mqtt=mqtt.Client("feeder_" + algorithm)
+
         self._db=DBIngest(host=dbhost, index="analytics", office=office)
         self._cache=[]
         self._cond=Condition()
 
-    def loop(self, topic):
-        self._stop=False
-        Thread(target=self.todb).start()
+        self._mqtt=mqtt.Client()
+        self._mqtt.on_message = self.on_message
+        self._mqtt.on_disconnect = self.on_disconnect
 
+    def loop(self, topic="analytics"):
+        print("connecting mqtt", flush=True)
+        timer=Timer(10,self._connect_watchdog)
+        timer.start()
         while True:
             try:
                 self._mqtt.connect(mqtthost)
                 break
-            except Exception as e:
-                print("Exception: "+str(e), flush=True)
-                time.sleep(10)
+            except:
+                print(trackback.format_exc(),flush=True)
+        timer.cancel()
+        print("mqtt connected", flush=True)
 
-        self._mqtt.on_message = self.on_message
+        self._stop=False
+        Thread(target=self.todb).start()
+
         self._mqtt.subscribe(topic)
         self._mqtt.loop_forever()
+
+    def _connect_watchdog(self):
+        print("quit due to mqtt timeout", flush=True)
+        exit(-1)
 
     def _add1(self, item=None):
         self._cond.acquire()
@@ -45,6 +58,8 @@ class MQTT2DB(object):
 
     def stop(self):
         self._mqtt.disconnect()
+
+    def on_disconnect(self, client, userdata, rc):
         self._stop=True
         self._add1()
 
@@ -57,9 +72,9 @@ class MQTT2DB(object):
             r["time"]=int((r["real_base"]+r["timestamp"])/1000000)
 
             if "objects" in r and scenario == "traffic": r["nobjects"]=int(len(r["objects"]))
-            if "objects" in r and scenario == "stadium": r["count"]={"queue":len(r["objects"])}
-        except Exception as e:
-            print("Exception: "+str(e), flush=True)
+            if "objects" in r and scenario == "stadium": r["count"]={"people":len(r["objects"])}
+        except:
+            print(trackback.format_exc(),flush=True)
 
         self._add1(r)
 
@@ -73,5 +88,13 @@ class MQTT2DB(object):
 
             try: 
                 self._db.ingest_bulk(bulk)
-            except Exception as e:
-                print("Exception: "+str(e), flush=True)
+            except:
+                print(trackback.format_exc(),flush=True)
+
+mqtt2db=MQTT2DB()
+
+def quit_service(signum, sigframe):
+    mqtt2db.stop()
+
+signal(SIGTERM, quit_service)
+mqtt2db.loop()
