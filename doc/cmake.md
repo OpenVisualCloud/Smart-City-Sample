@@ -8,7 +8,7 @@ Use the following definitions to customize the building process:
 - **NOFFICES**: Specify the number of offices in the deployment. Support 1-3 offices in the traffic scenario and 1 office in the stadium scenario.       
 - **NCAMERAS**: Specify the number of cameras served in each office. Currently support 1-8 cameras. In the **stadium** scenario, you can specify the camera numbers as `<#entrance_counting>,[#crowd_counting],[#service_queue_counting]`. 
 - **NANALYTICS**: Specify the number of analytics instances running in each office. In the **stadium** scenario, you can specify different analytics instances with an additional number as `<#entrance_counting>,[#crowd_counting],[#service_queue_counting]`.  
-- **NETWORK**: Specify the model network preference: `FP32`, `FP16`, or `INT8`.   
+- **NETWORK**: Specify the model network preference: `FP32`, `FP16`, `INT8`, or the combination of them.    
 
 ### Examples:   
 
