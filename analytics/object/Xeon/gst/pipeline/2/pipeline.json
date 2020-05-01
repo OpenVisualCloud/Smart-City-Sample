@@ -2,7 +2,7 @@
     "name": "queue_counting",
     "version": 2,
     "type": "GStreamer",
-    "template":"rtspsrc udp-buffer-size=212992 name=source ! queue ! rtph264depay ! h264parse ! video/x-h264 ! tee name=t ! queue ! decodebin ! videoconvert name=\"videoconvert\" ! video/x-raw,format=BGRx ! queue leaky=upstream ! gvadetect ie-config=CPU_BIND_THREAD=NO model=\"{models[person_detection_2019R3][1][network]}\" model-proc=\"{models[person_detection_2019R3][1][proc]}\" name=\"detection\" ! gvametaconvert name=\"metaconvert\" ! queue ! gvametapublish name=\"destination\" ! appsink name=appsink t. ! queue ! splitmuxsink max-size-time=60500000000 name=\"splitmuxsink\"",
+    "template":"rtspsrc udp-buffer-size=212992 name=source ! queue ! rtph264depay ! h264parse ! video/x-h264 ! tee name=t ! queue ! decodebin ! videoconvert name=\"videoconvert\" ! video/x-raw,format=BGRx ! queue leaky=upstream ! gvadetect ie-config=CPU_BIND_THREAD=NO model=\"{models[person_detection_2020R2][1][network]}\" model-proc=\"{models[person_detection_2020R2][1][proc]}\" name=\"detection\" ! gvametaconvert name=\"metaconvert\" ! queue ! gvametapublish name=\"destination\" ! appsink name=appsink t. ! queue ! splitmuxsink max-size-time=60500000000 name=\"splitmuxsink\"",
     "description": "Queue Counting Pipeline",
     "parameters": {
         "type" : "object",
