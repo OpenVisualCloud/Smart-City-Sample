@@ -1,5 +1,6 @@
 include(office.m4)
-include(../../script/forloop.m4)
+include(platform.m4)
+include(../../script/loop.m4)
 
 ifelse(eval(defn(`NCAMERAS')>0),1,`dnl
 apiVersion: v1
@@ -10,7 +11,7 @@ metadata:
     app: defn(`OFFICE_NAME')-cameras
 spec:
   ports:
-forloop(`CAMERAIDX',1,defn(`NCAMERAS'),`dnl
+loop(`CAMERAIDX',1,defn(`NCAMERAS'),`dnl
   - port: eval(defn(`CAMERA_RTSP_PORT')+defn(`CAMERAIDX')*defn(`CAMERA_PORT_STEP')-defn(`CAMERA_PORT_STEP'))
     protocol: TCP
     name: `rtsp'defn(`CAMERAIDX')
@@ -42,18 +43,18 @@ spec:
           image: smtc_sensor_simulation:latest
           imagePullPolicy: IfNotPresent
           ports:
-forloop(`CAMERAIDX',1,defn(`NCAMERAS'),`dnl
+loop(`CAMERAIDX',1,defn(`NCAMERAS'),`dnl
             - containerPort: eval(defn(`CAMERA_RTSP_PORT')+defn(`CAMERAIDX')*defn(`CAMERA_PORT_STEP')-defn(`CAMERA_PORT_STEP'))
               protocol: TCP
 ')dnl
           env:
 ifelse(defn(`SCENARIO_NAME'),`traffic',`dnl
             - name: FILES
-              value: "traffic.mp4$$"
+              value: "_traffic.mp4$$"
 ')dnl
 ifelse(defn(`SCENARIO_NAME'),`stadium',`dnl
             - name: FILES
-              value: "people.mp4$$"
+              value: "_svcq.mp4$$"
 ')dnl
             - name: `NCAMERAS'
               value: "defn(`NCAMERAS')"
@@ -72,6 +73,7 @@ ifelse(defn(`SCENARIO_NAME'),`stadium',`dnl
             hostPath:
                 path: /etc/localtime
                 type: File
+PLATFORM_NODE_SELECTOR(`Xeon')dnl
 ')dnl
 
 ifelse(defn(`SCENARIO_NAME'),`stadium',`dnl
@@ -86,7 +88,7 @@ metadata:
     app: defn(`OFFICE_NAME')-cameras-crowd
 spec:
   ports:
-forloop(`CAMERAIDX',1,defn(`NCAMERAS2'),`dnl
+loop(`CAMERAIDX',1,defn(`NCAMERAS2'),`dnl
   - port: eval(defn(`CAMERA_RTSP_PORT')+defn(`CAMERAIDX')*defn(`CAMERA_PORT_STEP')-defn(`CAMERA_PORT_STEP'))
     protocol: TCP
     name: `rtsp'defn(`CAMERAIDX')
@@ -117,7 +119,7 @@ spec:
           image: smtc_sensor_simulation:latest
           imagePullPolicy: IfNotPresent
           ports:
-forloop(`CAMERAIDX',1,defn(`NCAMERAS2'),`dnl
+loop(`CAMERAIDX',1,defn(`NCAMERAS2'),`dnl
             - containerPort: eval(defn(`CAMERA_RTSP_PORT')+defn(`CAMERAIDX')*defn(`CAMERA_PORT_STEP')-defn(`CAMERA_PORT_STEP'))
               protocol: TCP
 ')dnl
@@ -141,6 +143,7 @@ forloop(`CAMERAIDX',1,defn(`NCAMERAS2'),`dnl
             hostPath:
                 path: /etc/localtime
                 type: File
+PLATFORM_NODE_SELECTOR(`Xeon')dnl
 ')dnl
 
 ---
@@ -149,49 +152,49 @@ ifelse(eval(defn(`NCAMERAS3')>0),1,`dnl
 apiVersion: v1
 kind: Service
 metadata:
-  name: defn(`OFFICE_NAME')-cameras-queue-service
+  name: defn(`OFFICE_NAME')-cameras-entrance-service
   labels:
-    app: defn(`OFFICE_NAME')-cameras-queue
+    app: defn(`OFFICE_NAME')-cameras-entrance
 spec:
   ports:
-forloop(`CAMERAIDX',1,defn(`NCAMERAS3'),`dnl
+loop(`CAMERAIDX',1,defn(`NCAMERAS3'),`dnl
   - port: eval(defn(`CAMERA_RTSP_PORT')+defn(`CAMERAIDX')*defn(`CAMERA_PORT_STEP')-defn(`CAMERA_PORT_STEP'))
     protocol: TCP
     name: `rtsp'defn(`CAMERAIDX')
 ')dnl
   selector:
-    app: defn(`OFFICE_NAME')-cameras-queue
+    app: defn(`OFFICE_NAME')-cameras-entrance
 
 ---
 
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: defn(`OFFICE_NAME')-cameras-queue
+  name: defn(`OFFICE_NAME')-cameras-entrance
   labels:
-     app: defn(`OFFICE_NAME')-cameras-queue
+     app: defn(`OFFICE_NAME')-cameras-entrance
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: defn(`OFFICE_NAME')-cameras-queue
+      app: defn(`OFFICE_NAME')-cameras-entrance
   template:
     metadata:
       labels:
-        app: defn(`OFFICE_NAME')-cameras-queue
+        app: defn(`OFFICE_NAME')-cameras-entrance
     spec:
       containers:
-        - name: defn(`OFFICE_NAME')-cameras-queue
+        - name: defn(`OFFICE_NAME')-cameras-entrance
           image: smtc_sensor_simulation:latest
           imagePullPolicy: IfNotPresent
           ports:
-forloop(`CAMERAIDX',1,defn(`NCAMERAS3'),`dnl
+loop(`CAMERAIDX',1,defn(`NCAMERAS3'),`dnl
             - containerPort: eval(defn(`CAMERA_RTSP_PORT')+defn(`CAMERAIDX')*defn(`CAMERA_PORT_STEP')-defn(`CAMERA_PORT_STEP'))
               protocol: TCP
 ')dnl
           env:
             - name: FILES
-              value: "queue.mp4$$"
+              value: "_entrance.mp4$$"
             - name: `NCAMERAS'
               value: "defn(`NCAMERAS3')"
             - name: RTSP_PORT
@@ -209,5 +212,6 @@ forloop(`CAMERAIDX',1,defn(`NCAMERAS3'),`dnl
             hostPath:
                 path: /etc/localtime
                 type: File
+PLATFORM_NODE_SELECTOR(`Xeon')dnl
 ')dnl
 ')dnl

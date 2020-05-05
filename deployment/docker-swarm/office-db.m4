@@ -19,6 +19,10 @@ ifelse(eval(defn(`NOFFICES')>1),1,`
             - /etc/localtime:/etc/localtime:ro
         networks:
             - appnet
+        deploy:
+            placement:
+                constraints:
+                    - node.labels.vcac_zone!=yes
 ')
 
     defn(`OFFICE_NAME')_db_init:
@@ -44,3 +48,6 @@ ifelse(eval(defn(`NOFFICES')>1),1,`
         deploy:
             restart_policy:
                 condition: none
+            placement:
+                constraints:
+                    - node.labels.vcac_zone!=yes

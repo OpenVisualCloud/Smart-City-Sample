@@ -8,3 +8,7 @@
             - /etc/localtime:/etc/localtime:ro
         networks:
             - appnet
+        deploy:
+            placement:
+                constraints:
+                    - node.labels.vcac_zone!=yes

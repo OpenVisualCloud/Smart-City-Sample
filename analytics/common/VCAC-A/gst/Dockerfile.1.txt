@@ -1,0 +1,38 @@
+# smtc_analytics_common_vcac-a_gst_base
+FROM openvisualcloud/vcaca-ubuntu1804-analytics-dev:20.2 as build
+ARG GST_VER=1.16.0
+# Build gstremaer plugin vaapi
+ARG GST_PLUGIN_VAAPI_REPO=https://gstreamer.freedesktop.org/src/gstreamer-vaapi/gstreamer-vaapi-${GST_VER}.tar.xz
+
+# https://gitlab.freedesktop.org/gstreamer/gstreamer-vaapi/merge_requests/45
+ARG GST_PLUGIN_VAAPI_REPO_DISPLAY_LOCK_PATCH_HASH=b219f6095f3014041896714dd88e7d90ee3d72dd
+ARG GST_PLUGIN_VAAPI_REPO_GIT=https://gitlab.freedesktop.org/gstreamer/gstreamer-vaapi.git
+
+RUN  apt-get update && apt-get install -y -q --no-install-recommends git wget autoconf pkg-config libtool automake libxrandr-dev libegl1-mesa-dev autopoint bison flex libudev-dev
+
+COPY ./VCAC-A/gst/patches/gstreamer-vaapi /patches/gstreamer-vaapi
+#RUN  git clone https://gitlab.freedesktop.org/gstreamer/gstreamer-vaapi.git -b 1.14 --depth 10 && \
+#     cd gstreamer-vaapi && git reset --hard ${GST_PLUGIN_VAAPI_REPO_DISPLAY_LOCK_PATCH_HASH} && \
+#   cd gstreamer-vaapi-${GST_VER} && git apply /patches/gstreamer-vaapi/vasurface_qdata.patch && \
+
+RUN  wget --no-check-certificate -O - ${GST_PLUGIN_VAAPI_REPO} | tar xJ && \
+     cd gstreamer-vaapi-${GST_VER} && git apply /patches/gstreamer-vaapi/vasurface_qdata.patch && \
+     export PKG_CONFIG_PATH="/usr/local/lib/x86_64-linux-gnu/pkgconfig" && \
+     ./autogen.sh \
+        --prefix=/usr/local \
+        --libdir=/usr/local/lib/x86_64-linux-gnu \
+        --libexecdir=/usr/local/lib/x86_64-linux-gnu \
+        --enable-shared \
+        --disable-examples \
+        --disable-gtk-doc --disable-debug && \
+     make -j $(nproc) && \
+     make install DESTDIR=/home/build && \
+     make install
+
+FROM openvisualcloud/vcaca-ubuntu1804-analytics-gst:20.1
+LABEL Description="This is the image for DLDT and GST on Ubuntu 18.04"
+LABEL Vendor="Intel Corporation"
+
+
+# Install
+COPY --from=build /home/build /
