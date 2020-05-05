@@ -1,57 +1,90 @@
 #!/usr/bin/awk
 
 BEGIN {
-    im=im2="";
-    ns_space=0;
-    matched=0;
-    vcac=index(labels,"vcac-zone:yes")>0 || index(labels,"vcac_zone==yes")>0;
+    im="";
+    n_space=c_space=0;
+    matched=1;
 }
 
 function saveim() {
-    if (im!="" && (matched || !vcac)) {
-        images[im]=1;
-        im="";
+    split(im,ims,",");
+    for (i in ims) {
+        if (ims[i]!="" && (matched || labels=="*")) {
+            images[ims[i]]=1;
+        }
     }
-    if (im2!="" && (matched || !vcac)) {
-        images[im2]=1;
-        im2="";
-    }
-    matched=0;
+    im="";
+    matched=1;
 }
 
-/image:/ {
+/containers:/ {
+    c_space=index($0,"containers:");
+}
+
+/initContainers:/ {
+    c_space=index($0,"initContainers:");
+}
+    
+/image:/ && c_space==0 {
     saveim();
     im=$2;
 }
 
+/image:/ && c_space>0 {
+    im=im","$2
+}
+
 /VCAC_IMAGE:/ {
-    im2=im;
-    im=$2;
+    im=im","$2
 }
 
 /- node\..*==.*/ && labels!="*" {
     gsub(/[\" ]/,"",$2);
-    if (index(labels,$2)==0) im=im2=""; else matched=1;
-}
-
-/^\s*---\s*$/ {
-    ns_space=0;
-    saveim();
-}
-
-/:/ && ns_space>0 {
-    match($0, /^ */);
-    if (RLENGTH > ns_space) {
-        gsub(/[\": ]/,"",$1);
-        gsub(/[\": ]/,"",$2);
-        if (index(labels,$1":"$2)==0) im=im2=""; else matched=1;
-    } else {
-       ns_space=0
+    if (index(labels,$2)==0) {
+        im=""; 
+        matched=0;
     }
 }
 
-/nodeSelector:/ {
-    ns_space=index($0,"nodeSelector:");
+/- node\..*!=.*/ && labels!="*" {
+    gsub(/[\" ]/,"",$2);
+    gsub(/!=/,"==",$2);
+    if (index(labels,$2)!=0) {
+        im=""; 
+        matched=0;
+    }
+}
+
+/^\s*---\s*$/ || /^\s*$/ {
+    n_space=c_space=0;
+    saveim();
+}
+
+/- key:/ && n_space>0 {
+    match($0, /^ */);
+    if (RLENGTH > n_space) key=$3
+}
+
+/operator:/ && n_space>0 {
+    match($0, /^ */);
+    if (RLENGTH > n_space) operator=$2
+}
+
+/- ".*"/ && n_space>0 {
+    match($0, /^ */);
+    if (RLENGTH > n_space) {
+       label_eqn=key":"$2
+       gsub(/[\" ]/,"",label_eqn);
+       i=index(labels,label_eqn);
+       if ((operator=="In" && i==0) || (operator=="NotIn" && i!=0)) {
+           im=im2=""; 
+           matched=0;
+       }
+    }
+}
+
+/nodeAffinity:/ {
+    n_space=index($0,"nodeAffinity:");
 }
 
 END {

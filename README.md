@@ -13,7 +13,7 @@ The E2E sample implements aspects of smart city sensing, analytics and managemen
 
 ### Scenarios
 
-The sample implements the Smart-City `traffic` and `stadium` scenarios. The `traffic` scenario measures vehicle/pedestrain flow for planning purpose. The `stadium` scenario focuses on different counting techniques, including entrance people counting, service-point queue counting, and stadium seating zone crowd counting.   
+The sample implements the Smart-City [`traffic`](https://github.com/OpenVisualCloud/Smart-City-Sample/wiki/Smart-City:-Traffic-Scenario) and [`stadium`](https://github.com/OpenVisualCloud/Smart-City-Sample/wiki/Smart-City:-Stadium-Scenario) scenarios. The [`traffic`](https://github.com/OpenVisualCloud/Smart-City-Sample/wiki/Smart-City:-Traffic-Scenario) scenario measures vehicle/pedestrian flow for planning purpose. The [`stadium`](https://github.com/OpenVisualCloud/Smart-City-Sample/wiki/Smart-City:-Stadium-Scenario) scenario focuses on different access control techniques, including entrance people counting, service-point queue counting, and stadium seating zone crowd counting.   
 
 | Traffic | Stadium |
 |:-------:|:-------:|
@@ -39,8 +39,7 @@ The sample is powered by the following Open Visual Cloud software stacks:
 - **Build Tools**: Install ```cmake``` and ```m4``` if they are not available on your system.        
 
 - **Docker Engine**:        
-  - Install [docker engine](https://docs.docker.com/install).     
-  - Install [docker compose](https://docs.docker.com/compose/install), if you plan to deploy through docker compose. Version 1.20+ is required.    
+  - Install [docker engine](https://docs.docker.com/install). Make sure you [setup](https://docs.docker.com/install/linux/linux-postinstall) docker to run as a regular user.   
   - Setup [docker swarm](https://docs.docker.com/engine/swarm), if you plan to deploy through docker swarm. See [Docker Swarm Setup](deployment/docker-swarm/README.md) for additional setup details.  
   - Setup [Kubernetes](https://kubernetes.io/docs/setup), if you plan to deploy through Kubernetes. See [Kubernetes Setup](deployment/kubernetes/README.md) for additional setup details.     
   - Setup docker proxy as follows if you are behind a firewall:   
@@ -64,13 +63,6 @@ make
 ```
 
 ### Start/stop Sample: 
-
-Use the following commands to start/stop services via docker-compose:        
-
-```bash
-make start_docker_compose      
-make stop_docker_compose      
-```
 
 Use the following commands to start/stop services via docker swarm:    
 
@@ -109,9 +101,4 @@ Launch your browser and browse to ```https://<hostname>``` for the sample UI.
 - [Docker Swarm Setup](deployment/docker-swarm/README.md)      
 - [Kubernetes Setup](deployment/kubernetes/README.md)
 - [Intel VCAC-A Setup](doc/vcac-a.md)
-- [Sensor Simulation and Discovery](sensor/README.md)  
-- [Extending Offices, Sensors and Maps](doc/extend.md)  
-- [Utility Scripts](doc/script.md)       
-- [Sample Distribution](doc/dist.md)  
-- [Database Search](doc/search.md)   
 

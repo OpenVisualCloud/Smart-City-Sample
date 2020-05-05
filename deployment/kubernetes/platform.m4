@@ -18,8 +18,13 @@ ifelse(defn(`PLATFORM'),`VCAC-A',dnl
               type: Directory
 ))dnl
 define(`PLATFORM_NODE_SELECTOR',dnl
-ifelse(defn(`PLATFORM'),`VCAC-A',dnl
-      nodeSelector:
-          vcac-zone: "yes"
-)dnl
+      affinity:
+          nodeAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+                - matchExpressions:
+                  - key: "vcac-zone"
+                    operator: `ifelse(defn(`PLATFORM'),`VCAC-A',ifelse($1,`VCAC-A',`In',`NotIn'),`NotIn')'
+                    values:
+                      - "yes"
 )dnl

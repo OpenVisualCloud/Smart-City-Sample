@@ -1,4 +1,5 @@
 include(office.m4)
+include(platform.m4)
 define(`SERVICE_INTERVAL_SMART_UPLOAD',120)dnl
 
 apiVersion: apps/v1
@@ -61,3 +62,4 @@ spec:
             hostPath:
                 path: /etc/localtime
                 type: File
+PLATFORM_NODE_SELECTOR(`Xeon')dnl

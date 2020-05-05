@@ -1,4 +1,5 @@
 include(office.m4)
+include(platform.m4)
 
 apiVersion: v1
 kind: Service
@@ -52,3 +53,4 @@ spec:
             hostPath:
                 path: /etc/localtime
                 type: File
+PLATFORM_NODE_SELECTOR(`Xeon')dnl

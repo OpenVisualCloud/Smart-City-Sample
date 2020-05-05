@@ -1,15 +1,3 @@
-The sample can be deployed with either docker-compose (v1.20+ required) or docker swarm. The deployment uses the same configuration script.   
-
-### Docker-Compose Deployment
-
-This is as simple as 
-
-```
-make start_docker_compose
-make stop_docker_compose
-```
-
-If you setup more than 1 office, please follow the [instructions](https://www.elastic.co/guide/en/elasticsearch/reference/6.8/vm-max-map-count.html) to increase the VM mapping threshold.
 
 ### Docker Swam Single Office Deployment
 
@@ -51,5 +39,4 @@ make stop_docker_swarm
 - [Utility Scripts](../../doc/script.md)   
 - [CMake Options](../../doc/cmake.md)   
 - [Intel VCAC-A Setup](../../doc/vcac-a.md)    
-
 
