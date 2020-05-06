@@ -6,7 +6,7 @@ RUN  apt-get update -qq && apt-get install -qq python3-paho-mqtt python3-ply pyt
 
 COPY --from=smtc_common /home/*.py /home/
 COPY *.py /home/
-COPY models /home/models
+COPY models/CSRNet_IR_model_2020R2/2 /home/models/CSRNet_IR_model_2020R2/2
 COPY VCAC-A/gst/pipeline /home/pipelines/crowd_counting
 COPY custom_transforms /home/custom_transforms
 CMD ["/home/count-crowd.py"]
