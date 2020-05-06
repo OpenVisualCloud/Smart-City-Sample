@@ -2,44 +2,52 @@
     "name": "people_counting",
     "version": 2,
     "type": "GStreamer",
-    "template":"rtspsrc udp-buffer-size=212992 name=\"source\" ! queue ! rtph264depay ! h264parse ! video/x-h264 ! tee name=t ! queue ! decodebin ! queue leaky=upstream ! video/x-raw(memory:VASurface) ! gvadetect model=\"{models[person_detection_2019R3][1][network]}\" model-proc=\"{models[person_detection_2019R3][1][proc]}\" name=\"detection\" pre-proc=vaapi ! queue ! gvaclassify model=\"{models[person_reidentification_2019R3][1][network]}\" model-proc=\"{models[person_reidentification_2019R3][1][proc]}\" name=\"reidentification\" pre-proc=vaapi ! queue ! gvametaconvert converter=json method=detection name=\"metaconvert\" ! queue ! gvapython name=\"peoplecounting\" module=\"people_counting\" class=\"PeopleCounting\" package=\"custom_transforms\" ! queue ! gvametapublish name=\"destination\" ! appsink name=appsink t. ! queue ! splitmuxsink max-size-time=60500000000 name=\"splitmuxsink\"",
+    "template": [
+        "rtspsrc udp-buffer-size=212992 name=\"source\" ! queue ! rtph264depay ",
+        "! h264parse ! video/x-h264 ! tee name=t ! queue ! decodebin ! queue leaky=upstream ",
+        "! video/x-raw(memory:VASurface) ! gvadetect model=\"{models[person_detection_2020R2][1][network]}\" model-proc=\"{models[person_detection_2020R2][1][proc]}\" name=\"detection\" pre-process-backend=vaapi ",
+        "! queue ! gvaclassify model=\"{models[person_reidentification_2020R2][1][network]}\" model-proc=\"{models[person_reidentification_2020R2][1][proc]}\" name=\"reidentification\" pre-process-backend=vaapi ",
+        "! queue ! gvametaconvert name=\"metaconvert\" ! queue ! gvapython name=\"peoplecounting\" module=\"custom_transforms/people_counting\" class=\"PeopleCounting\" ",
+        "! queue ! gvametapublish name=\"destination\" ",
+        "! appsink name=appsink t. ! queue ! splitmuxsink max-size-time=60500000000 name=\"splitmuxsink\""
+    ],
     "description": "People Counting Pipeline",
     "parameters": {
-        "type" : "object",
-        "properties" : {
-            "every-nth-frame": {
-                "element":"detection",
+        "type": "object",
+        "properties": {
+            "inference-interval": {
+                "element": "detection",
                 "type": "integer",
                 "minimum": 0,
                 "maximum": 4294967295
             },
-            "cpu-streams": {
-                "element":"detection",
+            "cpu-throughput-streams": {
+                "element": "detection",
                 "type": "string"
             },
             "n-threads": {
-                "element":"videoconvert",
+                "element": "videoconvert",
                 "type": "integer"
             },
             "nireq": {
-                "element":"detection",
+                "element": "detection",
                 "type": "integer",
                 "minimum": 1,
                 "maximum": 64,
                 "default": 3
             },
             "device": {
-                "element":"detection",
-                "default":"HDDL",
-                "type":"string"
+                "element": "detection",
+                "default": "HDDL",
+                "type": "string"
             },
             "recording_prefix": {
-                "type":"string",
+                "type": "string",
                 "element": {
                     "name": "splitmuxsink",
                     "property": "location"
                 },
-                "default":"recording"
+                "default": "recording"
             }
         }
     }

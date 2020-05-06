@@ -162,7 +162,7 @@ for index in settings:
             break
         except Exception as e:
             print("Exception: "+str(e),flush=True)
-            time.sleep(10)
+            time.sleep(2)
 
 # populate db with simulated offices and provisions
 with open("/run/secrets/sensor-info.json","rt") as fd:

@@ -1,12 +1,13 @@
 #!/usr/bin/python3
 
-from db_ingest import DBIngest
-from modules.PipelineManager import PipelineManager
-from modules.ModelManager import ModelManager
-from concurrent.futures import ThreadPoolExecutor
-from gi.repository import GLib
-import time
 import os
+from paho.mqtt.client import Client
+from db_ingest import DBIngest
+from threading import Event
+from vaserving.vaserving import VAServing
+from vaserving.pipeline import Pipeline
+import time
+import traceback
 
 mqtthost = os.environ["MQTTHOST"]
 dbhost = os.environ["DBHOST"]
@@ -14,77 +15,114 @@ every_nth_frame = int(os.environ["EVERY_NTH_FRAME"])
 office = list(map(float, os.environ["OFFICE"].split(",")))
 
 class RunVA(object):
+    def _test_mqtt_connection(self):
+        print("testing mqtt connection", flush=True)
+        mqtt = Client()
+        while True:
+            try:
+                mqtt.connect(mqtthost)
+                break
+            except:
+                print(traceback.format_exc(), flush=True)
+                time.sleep(5)
+        print("mqtt connected", flush=True)
+        mqtt.disconnect()
+    
     def __init__(self, pipeline, version="2"):
-        super(RunVA,self).__init__()
-        self._pipeline=pipeline
-        self._version=version
-        self._db=DBIngest(host=dbhost, index="algorithms", office=office)
-        self._maincontext=GLib.MainLoop().get_context()
-        self._stop=None
-        ModelManager.load_config("/home/models",{})
-        PipelineManager.load_config("/home/pipelines",1)
+        super(RunVA, self).__init__()
+        self._test_mqtt_connection()
 
-    def _noop(self):
-        pass
+        self._pipeline = pipeline
+        self._version = version
+        self._db = DBIngest(host=dbhost, index="algorithms", office=office)
+        self._stop=None
+
 
     def stop(self):
-        GLib.timeout_add(10,self._noop)
-        self._stop=True
+        if self._stop: 
+            print("stopping", flush=True)
+            self._stop.set()
 
-    def loop(self, sensor, location, uri, algorithm, algorithmName, resolution={"width":0,"height":0}, zonemap=[], topic="analytics"):
+    def loop(self, sensor, location, uri, algorithm, algorithmName,
+             resolution={"width": 0, "height": 0}, zonemap=[], topic="analytics"):
+        try:
+            VAServing.start({
+                'model_dir': '/home/models',
+                'pipeline_dir': '/home/pipelines',
+                'max_running_pipelines': 1,
+            })
 
-        pid,msg=PipelineManager.create_instance(self._pipeline,self._version,{
-            "source": {
-                "uri": uri,
-                "type":"uri"
-            },
-            "destination": {
-                "type": "mqtt",
-                "host": mqtthost,
-                "clientid": algorithm,
-                "topic": topic,
-            },
-            "tags": {
-                "sensor": sensor,
-                "location": location,
-                "algorithm": algorithm,
-                "office": {
-                    "lat": office[0],
-                    "lon": office[1],
-                },
-            },
-            "parameters": {
-                "crowd_count": { # crowd-counting only
-                    "width": resolution["width"],
-                    "height": resolution["height"],
-                    "zonemap": zonemap
-                },
-                "every-nth-frame": every_nth_frame,
-                "recording_prefix": "/tmp/" + sensor,
-            },
-        })
+            try:
+                source={
+                    "type": "uri",
+                    "uri": uri,
+                }
+                destination={
+                    "type": "mqtt",
+                    "host": mqtthost,
+                    "clientid": algorithm,
+                    "topic": topic
+                }
+                tags={
+                    "sensor": sensor, 
+                    "location": location, 
+                    "algorithm": algorithm,
+                    "office": {
+                        "lat": office[0], 
+                        "lon": office[1]
+                    }
+                }
+                parameters = {
+                    "inference-interval": every_nth_frame,
+                    "recording_prefix": "/tmp/" + sensor
+                }
 
-        if pid is None:
-            print("Exception: "+str(msg), flush=True)
-            return
-
-        while not self._stop:
-            self._maincontext.iteration()
-            pinfo=PipelineManager.get_instance_status(self._pipeline,self._version,pid)
-            if pinfo is not None: 
-                print(pinfo, flush=True)
-                state = pinfo["state"]
-                if state == "COMPLETED" or state == "ABORTED" or state == "ERROR":
-                    print("pineline ended with "+str(state),flush=True)
-                    break
-
-                if pinfo["avg_fps"]>0 and state=="RUNNING":
-                    if "avg_pipeline_latency" not in pinfo: pinfo["avg_pipeline_latency"]=0
-                    self._db.update(algorithm, {
-                        "sensor": sensor,
-                        "performance": pinfo["avg_fps"], 
-                        "latency": pinfo["avg_pipeline_latency"]*1000,
+                if algorithmName == "crowd-counting":
+                    parameters.update({
+                        "crowd_count": {
+                            "width": resolution["width"],
+                            "height": resolution["height"],
+                            "zonemap": zonemap,
+                        }
                     })
 
-        print("exiting va pipeline",flush=True)
-        PipelineManager.stop_instance(self._pipeline,self._version,pid)
+                pipeline = VAServing.pipeline(self._pipeline, self._version)
+                instance_id = pipeline.start(source=source,
+                                         destination=destination,
+                                         tags=tags,
+                                         parameters=parameters)
+
+                if instance_id is None:
+                    raise Exception("Pipeline {} version {} Failed to Start".format(
+                        self._pipeline, self._version))
+
+                self._stop=Event()
+                while not self._stop.is_set():
+                    status = pipeline.status()
+                    print(status, flush=True)
+
+                    if status.state.stopped():
+                        print("Pipeline {} Version {} Instance {} Ended with {}".format(
+                            self._pipeline, self._version, instance_id, status.state.name), 
+                            flush=True)
+                        break
+
+                    if status.avg_fps > 0 and status.state is Pipeline.State.RUNNING:
+                        avg_pipeline_latency = status.avg_pipeline_latency
+                        if not avg_pipeline_latency: avg_pipeline_latency = 0
+
+                        self._db.update(algorithm, {
+                            "sensor": sensor,
+                            "performance": status.avg_fps,
+                            "latency": avg_pipeline_latency * 1000})
+
+                    self._stop.wait(1)
+
+                self._stop=None
+                pipeline.stop()
+            except:
+                print(traceback.format_exc(), flush=True)
+
+            VAServing.stop()
+        except:
+            print(traceback.format_exc(), flush=True)
