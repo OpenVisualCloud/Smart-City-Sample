@@ -4087,6 +4087,14 @@
 					<dim>1</dim>
 				</port>
 			</input>
+            <output>
+                <port id="1" precision="FP32">
+                    <dim>1</dim>
+                    <dim>96</dim>
+                    <dim>128</dim>
+                    <dim>1</dim>
+                </port>
+             </output>
 		</layer>
 	</layers>
 	<edges>
