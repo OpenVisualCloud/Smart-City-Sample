@@ -1,3 +1,4 @@
+include(platform.m4)
 
 apiVersion: v1
 kind: Service
@@ -66,7 +67,4 @@ spec:
         - name: self-signed-certificate
           secret:
             secretName: self-signed-certificate
-ifelse(eval(defn(`NOFFICES')>1),1,`dnl
-      nodeSelector:
-        cloud-zone: "yes"
-')dnl
+PLATFORM_NODE_SELECTOR(`Xeon')dnl

@@ -1,4 +1,5 @@
 include(office.m4)
+include(platform.m4)
 
 apiVersion: v1
 kind: Service
@@ -82,8 +83,4 @@ spec:
             type: File
         - name: defn(`OFFICE_NAME')-stdata
           emptyDir: {}
-ifelse(eval(defn(`NOFFICES')>1),1,`dnl
-      nodeSelector:
-        defn(`STORAGE_ZONE'): "yes" 
-        defn(`OFFICE_ZONE'): "yes"
-')dnl
+PLATFORM_NODE_SELECTOR(`Xeon')dnl

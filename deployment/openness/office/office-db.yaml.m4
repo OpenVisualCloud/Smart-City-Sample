@@ -1,4 +1,5 @@
 include(office.m4)
+include(platform.m4)
 
 ifelse(eval(defn(`NOFFICES')>1),1,`dnl
 
@@ -95,10 +96,7 @@ spec:
                 type: File
           - name: defn(`OFFICE_NAME')-esdata
             emptyDir: {}
-ifelse(eval(defn(`NOFFICES')>1),1,`dnl
-      nodeSelector:
-        defn(`OFFICE_ZONE'): "yes"
-')dnl
+PLATFORM_NODE_SELECTOR(`Xeon')dnl
 
 ---
 
@@ -147,7 +145,4 @@ spec:
           - name: sensor-info
             configMap:
                 name: sensor-info
-ifelse(eval(defn(`NOFFICES')>1),1,`dnl
-      nodeSelector:
-        defn(`OFFICE_ZONE'): "yes"
-')dnl
+PLATFORM_NODE_SELECTOR(`Xeon')dnl

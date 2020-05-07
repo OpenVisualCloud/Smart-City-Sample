@@ -7,13 +7,7 @@ NOFFICES="${3:-1}"
 IFS="," read -r -a NCAMERAS <<< "${4:-5}"
 IFS="," read -r -a NANALYTICS <<< "${5:-3}"
 FRAMEWORK="${6:-gst}"
-HOSTIP=$(kubectl get nodes -o jsonpath='{.items[*].status.addresses[?(@.type=="InternalIP")].address}' --selector='node-role.kubernetes.io/master' | cut -f1 -d' ')
-
-IFS=',' read -a camera_host_array <<< $CAMERA_HOSTS
-if [ ${#camera_host_array[@]} -ne ${NOFFICES} ];then
-  echo "The number of camera hosts shall be the same number of offices!"
-  exit 0
-fi
+HOSTIP=$(ip route get 8.8.8.8 | awk '/ src /{split(substr($0,index($0," src ")),f);print f[2];exit}')
 
 echo "Generating templates with PLATFORM=${PLATFORM}, SCENARIO=${SCENARIO}, NOFFICES=${NOFFICES}"
 find "${DIR}" -maxdepth 1 -name "*.yaml" -exec rm -rf "{}" \;
