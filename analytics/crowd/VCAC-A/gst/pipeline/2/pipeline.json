@@ -57,7 +57,7 @@
                 "type": "integer",
                 "minimum": 1,
                 "maximum": 64,
-                "default": 6
+                "default": 12
             },
             "device": {
                 "element": "detection",
