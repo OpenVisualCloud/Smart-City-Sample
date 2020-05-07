@@ -11,7 +11,7 @@
         <th>Status</th>
         <th>Latency (ms)</th>
         <th>Performance (fps)</th>
-        <th>Skip (f)</th>
+        <th>Skip (frames)</th>
         <th>CPU (%)</th>
         <th>Mem (%)</th>
       </thead>
