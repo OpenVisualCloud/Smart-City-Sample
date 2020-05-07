@@ -159,6 +159,7 @@ div[sensor-info-template] table {
 
 .page-office-algorithm-table [algorithm-table] {
     position: relative;
+    text-align: center;
 }
 
 .page-office-workload {

@@ -9,9 +9,11 @@
         <th>Instance</th>
         <th>Sensor</th>
         <th>Status</th>
-        <th>Latency</th>
-        <th>Performance</th>
-        <th>Skip Frames</th>
+        <th>Latency (ms)</th>
+        <th>Performance (fps)</th>
+        <th>Skip (frames)</th>
+        <th>CPU (%)</th>
+        <th>Mem (%)</th>
       </thead>
       <tbody>
       </tbody>
