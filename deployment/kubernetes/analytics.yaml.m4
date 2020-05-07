@@ -155,7 +155,7 @@ ifelse(defn(`DISCOVER_IP_CAMERA'),`true',`dnl
             - name: STHOST
               value: "http://defn(`OFFICE_NAME')-storage-service:8080/api/upload"
             - name: EVERY_NTH_FRAME
-              value: "30"
+              value: "6"
             - name: `SCENARIO'
               value: "defn(`SCENARIO')"
             - name: `NETWORK_PREFERENCE'

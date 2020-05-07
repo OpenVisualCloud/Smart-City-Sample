@@ -61,7 +61,7 @@ PLATFORM_VOLUME_EXTRA()dnl
             PLATFORM_ENV(OFFICE): "defn(`OFFICE_LOCATION')"
             PLATFORM_ENV(DBHOST): "http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')_db,db):9200"
             PLATFORM_ENV(MQTTHOST): "defn(`OFFICE_NAME')_mqtt"
-            PLATFORM_ENV(EVERY_NTH_FRAME): 30
+            PLATFORM_ENV(EVERY_NTH_FRAME): "6"
             PLATFORM_ENV(``SCENARIO''): "defn(`SCENARIO')"
             PLATFORM_ENV(STHOST): "http://defn(`OFFICE_NAME')_storage:8080/api/upload"
             PLATFORM_ENV(``NETWORK_PREFERENCE''): "{\"defn(`PLATFORM_DEVICE')\":\"defn(`NETWORK_PREFERENCE')\"}"
