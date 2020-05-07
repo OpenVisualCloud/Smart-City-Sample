@@ -7,7 +7,7 @@
   ],
   "output_postproc": [
     {
-      "layer_name": "y_out/Relu/Transpose"
+      "layer_name": "output_1/sink_port_0"
     }
   ]
 }

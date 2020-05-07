@@ -1681,7 +1681,25 @@
 				</port>
 			</output>
 		</layer>
-	</layers>
+		<layer id="95" name="output_1/sink_port_0" type="Result" version="opset1">
+			<input>
+				<port id="0">
+					<dim>1</dim>
+					<dim>48</dim>
+					<dim>64</dim>
+					<dim>1</dim>
+				</port>
+			</input>
+			<output>
+				<port id="1" precision="FP16">
+					<dim>1</dim>
+					<dim>48</dim>
+					<dim>64</dim>
+					<dim>1</dim>
+				</port>
+			</output>
+		</layer>
+        </layers>
 	<edges>
 		<edge from-layer="0" from-port="0" to-layer="2" to-port="0"/>
 		<edge from-layer="1" from-port="1" to-layer="2" to-port="1"/>
@@ -1777,6 +1795,7 @@
 		<edge from-layer="91" from-port="2" to-layer="92" to-port="0"/>
 		<edge from-layer="92" from-port="1" to-layer="94" to-port="0"/>
 		<edge from-layer="93" from-port="1" to-layer="94" to-port="1"/>
+		<edge from-layer="94" from-port="2" to-layer="95" to-port="0"/>
 	</edges>
 	<meta_data>
 		<MO_version value="2020.2.0-60-g0bc66e26ff"/>
