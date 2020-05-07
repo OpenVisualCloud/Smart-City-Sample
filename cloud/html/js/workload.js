@@ -76,8 +76,8 @@ var workload={
 
             var datasets=ctx.workload.config.data.datasets;
             datasets[0].data.push({t:time,y:data.cpu.toFixed(0)});
-            datasets[1].data.push({t:time,y:((data.memory[0]-data.memory[1])/data.memory[0]*100).toFixed(0)});
-            datasets[2].data.push({t:time,y:data.disk[3].toFixed(0)});
+            datasets[1].data.push({t:time,y:data.memory.toFixed(0)});
+            datasets[2].data.push({t:time,y:data.disk.toFixed(0)});
 
             if (labels.length>20) {
                 labels.shift();
