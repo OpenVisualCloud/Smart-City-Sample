@@ -1,3 +1,4 @@
+include(platform.m4)
 
 apiVersion: v1
 kind: Service
@@ -66,3 +67,4 @@ spec:
         - name: self-signed-certificate
           secret:
             secretName: self-signed-certificate
+PLATFORM_NODE_SELECTOR(`Xeon')dnl

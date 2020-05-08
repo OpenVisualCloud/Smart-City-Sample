@@ -1,3 +1,4 @@
+include(platform.m4)
 define(`DB_NAME',ifelse(eval(defn(`NOFFICES')>1),1,cloud-db,db))dnl
 
 apiVersion: v1
@@ -86,3 +87,4 @@ ifelse(eval(defn(`NOFFICES')>1),1,`dnl
                 type: File
           - name: defn(`DB_NAME')-esdata
             emptyDir: {}
+PLATFORM_NODE_SELECTOR(`Xeon')dnl

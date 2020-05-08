@@ -30,7 +30,7 @@ if [[ -z $CLOUD_HOST ]]; then
 fi
 
 if [[ -z $CAMERA_HOSTS ]]; then
-  echo "Please define environment variable CAMERA_HOST"
+  echo "Please define environment variable CAMERA_HOSTS"
   exit 0
 fi
 

@@ -7,9 +7,16 @@
             PROXYHOST: "http://cloud_storage:8080"
             RETENTION_TIME: "7200"
             SERVICE_INTERVAL: "7200"
+            WARN_DISK: "75"
+            FATAL_DISK: "85"
+            HALT_REC: "95"
             NO_PROXY: "*"
             no_proxy: "*"
         volumes:
             - /etc/localtime:/etc/localtime:ro
         networks:
             - appnet
+        deploy:
+            placement:
+                constraints:
+                    - node.labels.vcac_zone!=yes
