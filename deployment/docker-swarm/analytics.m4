@@ -92,6 +92,7 @@ PLATFORM_VOLUME_EXTRA()dnl
             PLATFORM_ENV(``NETWORK_PREFERENCE''): "{\"defn(`PLATFORM_DEVICE')\":\"defn(`NETWORK_PREFERENCE')\"}"
             PLATFORM_ENV(NO_PROXY): "*"
             PLATFORM_ENV(no_proxy): "*"
+PLATFORM_ENV_EXTRA()dnl
         networks:
             - appnet
         deploy:
