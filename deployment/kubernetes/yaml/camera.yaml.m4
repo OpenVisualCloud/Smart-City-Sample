@@ -1,6 +1,6 @@
 include(office.m4)
 include(platform.m4)
-include(../../script/loop.m4)
+include(../../../script/loop.m4)
 
 ifelse(eval(defn(`NCAMERAS')>0),1,`dnl
 apiVersion: v1

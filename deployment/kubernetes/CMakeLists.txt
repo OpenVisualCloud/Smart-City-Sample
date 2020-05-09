@@ -1,17 +1,1 @@
-set(service "kubernetes")
-include("${CMAKE_SOURCE_DIR}/script/service.cmake")
-include("${CMAKE_SOURCE_DIR}/script/deployment.cmake")
-
-# add cleanup files
-execute_process(COMMAND /bin/bash -c "echo \"include(${CMAKE_SOURCE_DIR}/maintenance/db-init/sensor-info.m4)NSCENARIOS\" | m4 -I \"${CMAKE_CURRENT_SOURCE_DIR}\"" OUTPUT_VARIABLE NSCENARIOS)
-file(GLOB m4files "${CMAKE_CURRENT_SOURCE_DIR}/*.yaml.m4")
-foreach(m4file ${m4files})
-    foreach(s RANGE 1 ${NSCENARIOS})
-        foreach(o RANGE 1 ${NOFFICES})
-            string(REPLACE ".yaml.m4" "-s${s}o${o}.yaml" yamlfile "${m4file}")
-            set_property(DIRECTORY APPEND PROPERTY ADDITIONAL_MAKE_CLEAN_FILES "${yamlfile}")
-        endforeach(o)
-    endforeach(s)
-    string(REPLACE ".yaml.m4" ".yaml" yamlfile "${m4file}")
-    set_property(DIRECTORY APPEND PROPERTY ADDITIONAL_MAKE_CLEAN_FILES "${yamlfile}")
-endforeach(m4file)
+include("${CMAKE_SOURCE_DIR}/script/scan-all.cmake")
