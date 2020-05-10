@@ -8,6 +8,7 @@ from vaserving.vaserving import VAServing
 from vaserving.pipeline import Pipeline
 import time
 import traceback
+import psutil
 
 mqtthost = os.environ["MQTTHOST"]
 dbhost = os.environ["DBHOST"]
@@ -114,7 +115,10 @@ class RunVA(object):
                         self._db.update(algorithm, {
                             "sensor": sensor,
                             "performance": status.avg_fps,
-                            "latency": avg_pipeline_latency * 1000})
+                            "latency": avg_pipeline_latency * 1000,
+                            "cpu": psutil.cpu_percent(),
+                            "memory": psutil.virtual_memory().percent,
+                        })
 
                     self._stop.wait(1)
 

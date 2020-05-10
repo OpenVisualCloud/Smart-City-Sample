@@ -12,9 +12,11 @@ $("#office").on("open.zf.reveal", function(e) {
             tbody.empty();
             $.each(data.response,function (i,v) {
                 var sensor=("sensor" in v._source)?'<a href="javascript:void(0)">'+v._source.sensor+"</a>":"N/A";
-                var latency=("latency" in v._source)?v._source.latency.toFixed(2)+" ms":"N/A";
-                var performance=("performance" in v._source)?v._source.performance.toFixed(2)+" fps":"N/A";
-                var line=$("<tr><td>"+v._source.name+"</td><td>"+v._id+"</td><td>"+sensor+"</td><td>"+v._source.status+"</td><td>"+latency+"</td><td>"+performance+"</td><td>"+v._source.skip+" frame(s)</td></tr>");
+                var latency=("latency" in v._source)?v._source.latency.toFixed(2):"N/A";
+                var performance=("performance" in v._source)?v._source.performance.toFixed(2):"N/A";
+                var cpu=("cpu" in v._source)?v._source.cpu.toFixed(1):"N/A";
+                var mem=("memory" in v._source)?v._source.memory.toFixed(1):"N/A";
+                var line=$("<tr><td>"+v._source.name+"</td><td>"+v._id+"</td><td>"+sensor+"</td><td>"+v._source.status+"</td><td>"+latency+"</td><td>"+performance+"</td><td>"+v._source.skip+"</td><td>"+cpu+"</td><td>"+mem+"</td></tr>");
                 tbody.append(line);
                 line.find("a").click(function () {
                     page.foundation("close");
