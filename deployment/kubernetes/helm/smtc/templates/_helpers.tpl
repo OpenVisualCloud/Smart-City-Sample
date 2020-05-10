@@ -32,39 +32,13 @@ Expand to the office db name
 {{- end }}
 
 {{/*
-Expand the analytics replicas.
+Expand to either .Values.ncameras.traffic or .Values.ncameras.svcq
 */}}
-{{- define "smtc.analytics" -}}
-{{- (split "," (toString .Values.nAnalytics))._0 }}
-{{- end }}
-
-{{/*
-Expand the analytics replicas.
-*/}}
-{{- define "smtc.analytics2" -}}
-{{- $a0 := (split "," (toString .Values.nAnalytics))._0 }}
-{{- $a1 := (split "," (toString .Values.nAnalytics))._1 }}
-{{- $a2 := (split "," (toString .Values.nAnalytics))._2 }}
-{{- if $a1 }}
-{{- $a1 }}
+{{- define "smtc.ncameras" }}
+{{- if eq .scenarioName "traffic" }}
+{{- .Values.ncameras.traffic }}
 {{- else }}
-{{- $a0 }}
-{{- end }}
-{{- end }}
-
-{{/*
-Expand the analytics replicas.
-*/}}
-{{- define "smtc.analytics3" -}}
-{{- $a0 := (split "," (toString .Values.nAnalytics))._0 }}
-{{- $a1 := (split "," (toString .Values.nAnalytics))._1 }}
-{{- $a2 := (split "," (toString .Values.nAnalytics))._2 }}
-{{- if $a2 }}
-{{- $a2 }}
-{{- else if $a1 }}
-{{- $a1 }}
-{{- else }}
-{{- $a0 }}
+{{- .Values.ncameras.svcq }}
 {{- end }}
 {{- end }}
 

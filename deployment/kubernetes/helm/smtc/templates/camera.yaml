@@ -7,11 +7,8 @@
 {{- range $officeIdx := until ( int ( include "smtc.noffices" $args ) ) }}
 {{- $officeName := printf "%s-office%d" $scenarioName $officeIdx }}
 
-{{- if eq $scenarioName "traffic" }}
-{{- $ncameras := int ( $.Values.cameras.traffic ) }}
-{{- else }}
-{{- $ncameras := int ( $.Values.cameras.svcq ) }}
-{{- end }}
+{{- $args := dict "scenarioName" $scenarioName "Values" $.Values }}
+{{- $ncameras := int ( include "smtc.ncameras" $args ) }}
 
 {{- if gt $ncameras 0 }}
 
