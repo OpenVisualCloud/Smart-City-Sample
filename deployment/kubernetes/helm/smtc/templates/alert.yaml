@@ -1,0 +1,58 @@
+
+{{- range $scenarioIdx, $scenarioName := $.Values.scenario }}
+{{- $args := dict "scenarioName" $scenarioName "nOffices" $.Values.nOffices }}
+{{- range $officeIdx := until ( int ( include "smtc.nOffices" $args ) ) }}
+{{- $officeName := printf "%s-office%d" $scenarioName $officeIdx }}
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $officeName }}-alert
+  labels:
+     app: {{ $officeName }}-alert
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ $officeName }}-alert
+  template:
+    metadata:
+      labels:
+        app: {{ $officeName }}-alert
+    spec:
+      enableServiceLinks: false
+      containers:
+        - name: {{ $officeName }}-alert
+          image: smtc_alert:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: OFFICE
+              {{- $args := dict "scenarioName" $scenarioName "locations" $.Values.officeLocations "officeIdx" $officeIdx }}
+              {{- include "smtc.office.location" $args }}
+            - name: DBHOST
+              {{- if gt (int $.Values.nOffices) 1 }}
+              value: {{ ( printf "%s-office%d" $scenarioName $officeIdx ) | printf "http://%s-db-service:9200" | quote }}
+              {{- else }}
+              value: "http://db-service:9200"
+              {{- end }}
+            - name: SERVICE_INTERVAL
+              value: "3,5,15"
+            - name: OCCUPENCY_ARGS
+              value: "120000,8,200,300"
+            - name: NO_PROXY
+              value: "*"
+            - name: no_proxy
+              value: "*"
+          volumeMounts:
+            - mountPath: /etc/localtime
+              name: timezone
+              readOnly: true
+      volumes:
+          - name: timezone
+            hostPath:
+                path: /etc/localtime
+                type: File
+      {{ include "smtc.platform.node-selector" $ }}
+---
+{{- end }}
+{{- end }}

@@ -1,11 +1,11 @@
 {{/*
 Expand the number of offices.
 */}}
-{{- define "smtc.nOffices" -}}
-{{- if eq .Values.scenario "stadium" }}
+{{- define "smtc.nOffices" }}
+{{- if eq .scenarioName "stadium" }}
 {{- 1 }}
 {{- else }}
-{{- .Values.nOffices }}
+{{- .nOffices }}
 {{- end }}
 {{- end }}
 
@@ -126,6 +126,17 @@ Expand the platform volumes.
             hostPath:
               path: /var/tmp
               type: Directory
+{{- end }}
+{{- end }}
+
+{{/*
+Office location
+*/}}
+{{- define "smtc.office.location" -}}
+{{- if eq .scenarioName "traffic" }}
+              value: {{ index .locations.traffic .officeIdx | quote }}
+{{- else if eq .scenarioName "stadium" }}
+              value: {{ index .locations.stadium .officeIdx | quote }}
 {{- end }}
 {{- end }}
 
