@@ -14,26 +14,24 @@ looplist(`SCENARIO',defn(`SCENARIO'),`dnl
   - "defn(`SCENARIO')"
 ')dnl
 
-# nOffices specifies the number of offices in the deployment. Support 1-3
+# noffices specifies the number of offices in the deployment. Support 1-3
 # offices in the traffic scenario and 1 office in the stadium scenario.
-nOffices: defn(`NOFFICES')
+noffices: defn(`NOFFICES')
 
 # nCameras specifies the number of cameras served in each office. Currently
-# support 1-8 cameras. In stadium scenario, you can specify each camera numbers 
-# as a list: <#entrance_counting>,<#crowd_counting>,<#service_queue_counting>,
-# e.g. 5,1,3.
-nCameras: 
-looplist(`NCAMERA1',defn(`NCAMERAS'),`dnl
-  - defn(`NCAMERA1')
-')dnl
+# support 1-8 cameras. 
+ncameras: 
+  traffic: defn(`NCAMERAS')
+  svcq: defn(`NCAMERAS')
+  crowd: defn(`NCAMERAS2')
+  entrance: defn(`NCAMERAS3')
 
 # nAnalytics specifies the number of analytics instances running in each office.
-# In the stadium scenario, you can specify different analytics instances as a list
-# for <#people_counting>,<#crowd_counting>,<#queue_counting>.
-nAnalytics: 
-looplist(`NANALYTICS1',defn(`NANALYTICS'),`dnl
-  - defn(`NANALYTICS1')
-')dnl
+nanalytics: 
+  traffic: defn(`NANALYTICS')
+  svcq: defn(`NANALYTICS')
+  crowd: defn(`NANALYTICS2')
+  entrance: defn(`NANALYTICS3')
 
 # cloudWebExternalIP specifies the external IP to access the Smart City or
 # Stadium Sample web-cloud GUI
@@ -65,5 +63,5 @@ cameraPortStep: 10
 # optional: provide Linux user id & group permissioned to access cloud storage
 # userID is obtained using command: `$ id -u`
 # groupID is obtained using command: `$ id -g`
-userID: defn(`USERID')
-groupID: defn(`GROUPID')
+userId: defn(`USERID')
+groupId: defn(`GROUPID')

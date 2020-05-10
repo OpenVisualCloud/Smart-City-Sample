@@ -1,0 +1,85 @@
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: cloud-storage-service
+  labels:
+    app: cloud-storage
+spec:
+  ports:
+  - port: 8080
+    protocol: TCP
+  selector:
+    app: cloud-storage
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cloud-storage
+  labels:
+     app: cloud-storage
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cloud-storage
+  template:
+    metadata:
+      labels:
+        app: cloud-storage
+    spec:
+      enableServiceLinks: false
+      containers:
+        - name: cloud-storage
+          image: smtc_storage_manager:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          env:
+            - name: DBHOST
+              value: "http://{{ include "smtc.db.name" . }}-service:9200"
+            - name: PROXYHOST
+              value: "http://cloud-storage-service.default.svc.cluster.local:8080"
+            - name: INDEXES
+              value: "recordings_c"
+            - name: RETENTION_TIME
+              value: "1800"
+            - name: SERVICE_INTERVAL
+              value: "1800"
+            - name: WARN_DISK
+              value: "75"
+            - name: FATAL_DISK
+              value: "85"
+            - name: HALT_REC
+              value: "95"
+            - name: NO_PROXY
+              value: "*"
+            - name: no_proxy
+              value: "*"
+          volumeMounts:
+            - mountPath: /etc/localtime
+              name: timezone
+              readOnly: true
+            - mountPath: /var/www
+              name: cloud-stdata
+      initContainers:
+        - name: cloud-storage-init
+          image: centos:7.6.1810
+          command: ["sh","-c", {{ printf "mkdir -p /var/www/log /var/www/tmp /var/www/cache /var/www/upload /var/www/mp4 && chown -R %d.%d /var/www" (int $.Values.userId) (int $.Values.groupId) | quote }}]
+          volumeMounts:
+            - mountPath: /etc/localtime
+              name: timezone
+              readOnly: true
+            - mountPath: /var/www
+              name: cloud-stdata
+      volumes:
+        - name: timezone
+          hostPath:
+            path: /etc/localtime
+            type: File
+        - name: cloud-stdata
+          emptyDir: {}
+      {{ include "smtc.platform.node-selector" . }}
+

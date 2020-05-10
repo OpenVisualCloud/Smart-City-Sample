@@ -7,23 +7,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ $officeName }}-alert
+  name: {{ $officeName }}-mqtt2db
   labels:
-     app: {{ $officeName }}-alert
+     app: {{ $officeName }}-mqtt2db
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: {{ $officeName }}-alert
+      app: {{ $officeName }}-mqtt2db
   template:
     metadata:
       labels:
-        app: {{ $officeName }}-alert
+        app: {{ $officeName }}-mqtt2db
     spec:
       enableServiceLinks: false
       containers:
-        - name: {{ $officeName }}-alert
-          image: smtc_alert:latest
+        - name: {{ $officeName }}-mqtt2db
+          image: smtc_mqtt2db:latest
           imagePullPolicy: IfNotPresent
           env:
             - name: OFFICE
@@ -32,10 +32,10 @@ spec:
             - name: DBHOST
               {{- $args := dict "officeName" $officeName "Values" $.Values }}
               {{- include "smtc.env.dbhost" $args }}
-            - name: SERVICE_INTERVAL
-              value: "3,5,15"
-            - name: OCCUPENCY_ARGS
-              value: "120000,8,200,300"
+            - name: MQTTHOST
+              value: "{{ $officeName }}-mqtt-service"
+            - name: SCENARIO
+              value: {{ $scenarioName | quote }}
             - name: NO_PROXY
               value: "*"
             - name: no_proxy
@@ -51,5 +51,6 @@ spec:
                 type: File
       {{ include "smtc.platform.node-selector" $ }}
 ---
+
 {{- end }}
 {{- end }}

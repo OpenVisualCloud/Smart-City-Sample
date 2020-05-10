@@ -1,22 +1,33 @@
 {{/*
 Expand the number of offices.
 */}}
-{{- define "smtc.nOffices" }}
-{{- if eq .scenarioName "stadium" }}
-{{- 1 }}
+{{- define "smtc.noffices" }}
+{{- if eq .scenarioName "traffic" }}
+{{- min (len .Values.officeLocations.traffic) .Values.nOffices }}
 {{- else }}
-{{- .nOffices }}
+{{- min (len .Values.officeLocations.stadium) .Values.nOffices }}
 {{- end }}
 {{- end }}
 
 {{/*
 Expand the database name.
 */}}
-{{- define "smtc.db.name" -}}
+{{- define "smtc.db.name" }}
 {{- if gt (int .Values.nOffices) 1 }}
 {{- "cloud-db" }}
 {{- else }}
 {{- "db" }}
+{{- end }}
+{{- end }}
+
+{{/*
+Expand to the office db name 
+*/}}
+{{- define "smtc.env.dbhost" }}
+{{- if gt (int .Values.nOffices) 1 }}
+              value: {{ ( .officeName ) | printf "http://%s-db-service:9200" | quote }}
+{{- else }}
+              value: "http://db-service:9200"
 {{- end }}
 {{- end }}
 
@@ -132,11 +143,11 @@ Expand the platform volumes.
 {{/*
 Office location
 */}}
-{{- define "smtc.office.location" -}}
+{{- define "smtc.env.office" -}}
 {{- if eq .scenarioName "traffic" }}
-              value: {{ index .locations.traffic .officeIdx | quote }}
+              value: {{ index .Values.officeLocations.traffic .officeIdx | quote }}
 {{- else if eq .scenarioName "stadium" }}
-              value: {{ index .locations.stadium .officeIdx | quote }}
+              value: {{ index .Values.officeLocations.stadium .officeIdx | quote }}
 {{- end }}
 {{- end }}
 
@@ -157,26 +168,4 @@ Expand the platform nodeSelector.
                   {{- end }}
                   values:
                     - "yes"
-{{- end }}
-
-{{/*
-Expand Linux user id, if provided.
-*/}}
-{{- define "smtc.user.id" -}}
-{{- if $.Values.userID }}
-{{- .Values.userID }}
-{{- else }}
-{{- 0 }}
-{{- end }}
-{{- end }}
-
-{{/*
-Expand Linux user group, if provided.
-*/}}
-{{- define "smtc.user.group" -}}
-{{- if $.Values.userID }}
-{{- .Values.groupID }}
-{{- else }}
-{{- 0 }}
-{{- end }}
 {{- end }}

@@ -4,38 +4,43 @@
 {{- range $officeIdx := until ( int ( include "smtc.noffices" $args ) ) }}
 {{- $officeName := printf "%s-office%d" $scenarioName $officeIdx }}
 
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ $officeName }}-mqtt-service
+  labels:
+    app: {{ $officeName }}-mqtt
+spec:
+  ports:
+  - port: 1883
+    protocol: TCP
+  selector:
+    app: {{ $officeName }}-mqtt
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ $officeName }}-alert
+  name: {{ $officeName }}-mqtt
   labels:
-     app: {{ $officeName }}-alert
+     app: {{ $officeName }}-mqtt
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: {{ $officeName }}-alert
+      app: {{ $officeName }}-mqtt
   template:
     metadata:
       labels:
-        app: {{ $officeName }}-alert
+        app: {{ $officeName }}-mqtt
     spec:
       enableServiceLinks: false
       containers:
-        - name: {{ $officeName }}-alert
-          image: smtc_alert:latest
+        - name: {{ $officeName }}-mqtt
+          image: eclipse-mosquitto:1.5.8
           imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 1883
           env:
-            - name: OFFICE
-              {{- $args := dict "scenarioName" $scenarioName "Values" $.Values "officeIdx" $officeIdx }}
-              {{- include "smtc.env.office" $args }}
-            - name: DBHOST
-              {{- $args := dict "officeName" $officeName "Values" $.Values }}
-              {{- include "smtc.env.dbhost" $args }}
-            - name: SERVICE_INTERVAL
-              value: "3,5,15"
-            - name: OCCUPENCY_ARGS
-              value: "120000,8,200,300"
             - name: NO_PROXY
               value: "*"
             - name: no_proxy
@@ -51,5 +56,6 @@ spec:
                 type: File
       {{ include "smtc.platform.node-selector" $ }}
 ---
+
 {{- end }}
 {{- end }}

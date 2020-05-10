@@ -1,0 +1,86 @@
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "smtc.db.name" . }}-service
+  labels:
+    app: {{ include "smtc.db.name" . }}
+spec:
+  ports:
+  - port: 9200
+    protocol: TCP
+    name: dsl
+  - port: 9300
+    protocol: TCP
+    name: transport
+  selector:
+    app: {{ include "smtc.db.name" . }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "smtc.db.name" . }}
+  labels:
+     app: {{ include "smtc.db.name" . }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ include "smtc.db.name" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "smtc.db.name" . }}
+    spec:
+      enableServiceLinks: false
+      containers:
+        - name: {{ include "smtc.db.name" . }}
+          image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.8.1
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 9200
+            - containerPort: 9300
+          env:
+            {{- if gt (int .Values.nOffices) 1 }}
+            - name: "cluster.name"
+              value: "db-cluster"
+            - name: "node.name"
+              value: "cloud-db"
+            - name: "node.master"
+              value: "true"
+            - name: "node.data"
+              value: "true"
+            - name: "node.attr.zone"
+              value: "cloud"
+            - name: "ES_JAVA_OPTS"
+              value: "-Xms2048m -Xmx2048m"
+            {{- else }}
+            - name: "discovery.type"
+              value: "single-node"
+            {{- end }}
+            - name: "action.auto_create_index"
+              value: "0"
+            - name: NO_PROXY
+              value: "*"
+            - name: no_proxy
+              value: "*"
+          volumeMounts:
+            - mountPath: /etc/localtime
+              name: timezone
+              readOnly: true
+            - mountPath: /usr/share/elasticsearch/data
+              name: {{ include "smtc.db.name" . }}-esdata
+      initContainers:
+        - name: init-volume-sysctl
+          image: busybox:latest
+          command: ["sh","-c","sysctl -w vm.max_map_count=262144"]
+          securityContext:
+            privileged: true
+      volumes:
+          - name: timezone
+            hostPath:
+                path: /etc/localtime
+                type: File
+          - name: {{ include "smtc.db.name" . }}-esdata
+            emptyDir: {}
+      {{ include "smtc.platform.node-selector" . }}
