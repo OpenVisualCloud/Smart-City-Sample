@@ -34,18 +34,14 @@ spec:
           imagePullPolicy: IfNotPresent
           env:
             - name: PORT_SCAN
-              value: "-p T:{{ $port }}-{{ mul $nCam $step | add $port }} {{ $officeName }}-cameras-service -Pn"
+              value: "-p T:{{ $port }}-{{ mul $ncameras $step | add $port }} {{ $officeName }}-cameras-service -Pn"
             - name: SIM_PORT
-            {{- if gt $ncameras 0 }}
               value: "{{- range $i := until $ncameras }}{{ mul $i $step | add $port }}/{{- end }}"
-            {{- else }}
-              value: "0"
-            {{- end }}
             - name: SIM_PREFIX
               {{- if eq $scenarioName "traffic" }}
-              value: "cams{{ add $scenarioIdx 1 }}o{{ add $officeIdx 1 }}c"
+              value: "cams1o{{ add $officeIdx 1 }}c"
               {{- else if eq $scenarioName "stadium" }}
-              value: "cams{{ add $scenarioIdx 1 }}o{{ add $officeIdx 1 }}q"
+              value: "cams2o{{ add $officeIdx 1 }}q"
               {{- end }}
             - name: OFFICE
               {{- $args := dict "scenarioName" $scenarioName "Values" $.Values "officeIdx" $officeIdx }}
@@ -94,15 +90,11 @@ spec:
           imagePullPolicy: IfNotPresent
           env:
             - name: PORT_SCAN
-              value: "-p T:{{ $port }}-{{ mul $nCam2 $step | add $port }} {{ $officeName }}-cameras-crowd-service -Pn"
+              value: "-p T:{{ $port }}-{{ mul $.Values.ncameras.crowd $step | add $port }} {{ $officeName }}-cameras-crowd-service -Pn"
             - name: SIM_PORT
-            {{- if gt $.Values.ncameras.crowd 0 }}
               value: "{{- range $i := until (int $.Values.ncameras.crowd) }}{{ mul $i $step | add $port }}/{{- end }}"
-            {{- else }}
-              value: "0"
-            {{- end }}
             - name: SIM_PREFIX
-              value: "cams{{ add $scenarioIdx 1 }}o{{ add $officeIdx 1 }}w"
+              value: "cams2o{{ add $officeIdx 1 }}w"
             - name: OFFICE
               {{- $args := dict "scenarioName" $scenarioName "Values" $.Values "officeIdx" $officeIdx }}
               {{- include "smtc.env.office" $args }}
@@ -148,28 +140,17 @@ spec:
           imagePullPolicy: IfNotPresent
           env:
             - name: PORT_SCAN
-              value: "-p T:{{ $port }}-{{ mul $nCam3 $step | add $port }} {{ $officeName }}-cameras-entrance-service -Pn"
+              value: "-p T:{{ $port }}-{{ mul $.Values.ncameras.entrance $step | add $port }} {{ $officeName }}-cameras-entrance-service -Pn"
             - name: SIM_PORT
-            {{- if gt $nCam3 0 }}
               value: "{{- range $i := until (int $.Values.ncameras.entrance) }}{{ mul $i $step | add $port }}/{{- end }}"
-            {{- else }}
-              value: "0"
-            {{- end }}
-            - name: SIM_PREFIX
-              value: "cams2o{{ add $officeIdx 1 }}c"
-              {{- end }}
             - name: OFFICE
-              {{- if eq $.Values.scenario "traffic" }}
-              value: {{ index $.Values.officeLocations.traffic $officeIdx | quote }}
-              {{- else if eq $.Values.scenario "stadium" }}
-              value: {{ index $.Values.officeLocations.stadium $officeIdx | quote }}
-              {{- end }}
+              {{- $args := dict "scenarioName" $scenarioName "Values" $.Values "officeIdx" $officeIdx }}
+              {{- include "smtc.env.office" $args }}
             - name: DBHOST
-              {{- if gt (int $.Values.nOffices) 1 }}
-              value: {{ ( printf "%s-office%d" $.Values.scenario $officeIdx ) | printf "http://%s-db-service:9200" | quote }}
-              {{- else }}
-              value: "http://db-service:9200"
-              {{- end }}
+              {{- $args := dict "officeName" $officeName "Values" $.Values }}
+              {{- include "smtc.env.dbhost" $args }}
+            - name: SIM_PREFIX
+              value: "cams2o{{ add $officeIdx 1 }}e"
             - name: SERVICE_INTERVAL
               value: "30"
             - name: NO_PROXY
@@ -194,41 +175,35 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ printf "%s-office%d" $.Values.scenario $officeIdx }}-ipcamera-discovery
+  name: {{ $officeName }}-ipcamera-discovery
   labels:
-     app: {{ printf "%s-office%d" $.Values.scenario $officeIdx }}-ipcamera-discovery
+     app: {{ $officeName }}-ipcamera-discovery
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: {{ printf "%s-office%d" $.Values.scenario $officeIdx }}-ipcamera-discovery
+      app: {{ $officeName }}-ipcamera-discovery
   template:
     metadata:
       labels:
-        app: {{ printf "%s-office%d" $.Values.scenario $officeIdx }}-ipcamera-discovery
+        app: {{ $officeName }}-ipcamera-discovery
     spec:
       enableServiceLinks: false
       hostNetwork: true
       dnsPolicy: ClusterFirstWithHostNet
       containers:
-        - name: {{ printf "%s-office%d" $.Values.scenario $officeIdx }}-ipcamera-discovery
+        - name: {{ $officeName }}-ipcamera-discovery
           image: smtc_onvif_discovery:latest
           imagePullPolicy: IfNotPresent
           env:
             - name: PORT_SCAN
               value: "-p T:80-65535 192.168.{{ add $officeIdx 1 }}.0/24"
             - name: OFFICE
-              {{- if eq $.Values.scenario "traffic" }}
-              value: {{ index $.Values.officeLocations.traffic $officeIdx | quote }}
-              {{- else if eq $.Values.scenario "stadium" }}
-              value: {{ index $.Values.officeLocations.stadium $officeIdx | quote }}
-              {{- end }}
+              {{- $args := dict "scenarioName" $scenarioName "Values" $.Values "officeIdx" $officeIdx }}
+              {{- include "smtc.env.office" $args }}
             - name: DBHOST
-              {{- if gt (int $.Values.nOffices) 1 }}
-              value: {{ ( printf "%s-office%d" $.Values.scenario $officeIdx ) | printf "http://%s-db-service:9200" | quote }}
-              {{- else }}
-              value: "http://db-service:9200"
-              {{- end }}
+              {{- $args := dict "officeName" $officeName "Values" $.Values }}
+              {{- include "smtc.env.dbhost" $args }}
             - name: SERVICE_INTERVAL
               value: "30"
             - name: NO_PROXY

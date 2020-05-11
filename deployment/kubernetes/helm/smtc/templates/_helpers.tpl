@@ -43,39 +43,13 @@ Expand to either .Values.ncameras.traffic or .Values.ncameras.svcq
 {{- end }}
 
 {{/*
-Expand the camera replicas.
+Expand to either .Values.nanalytics.traffic or .Values.nanalytics.svcq
 */}}
-{{- define "smtc.cameras" -}}
-{{- int (split "," (toString .Values.nCameras))._0 }}
-{{- end }}
-
-{{/*
-Expand the camera replicas.
-*/}}
-{{- define "smtc.cameras2" -}}
-{{- $a0 := (split "," (toString .Values.nCameras))._0 }}
-{{- $a1 := (split "," (toString .Values.nCameras))._1 }}
-{{- $a2 := (split "," (toString .Values.nCameras))._2 }}
-{{- if $a1 }}
-{{- int $a1 }}
+{{- define "smtc.nanalytics" }}
+{{- if eq .scenarioName "traffic" }}
+{{- .Values.nanalytics.traffic }}
 {{- else }}
-{{- int $a0 }}
-{{- end }}
-{{- end }}
-
-{{/*
-Expand the camera replicas.
-*/}}
-{{- define "smtc.cameras3" -}}
-{{- $a0 := (split "," (toString .Values.nCameras))._0 }}
-{{- $a1 := (split "," (toString .Values.nCameras))._1 }}
-{{- $a2 := (split "," (toString .Values.nCameras))._2 }}
-{{- if $a2 }}
-{{- int $a2 }}
-{{- else if $a1 }}
-{{- int $a1 }}
-{{- else }}
-{{- int $a0 }}
+{{- .Values.nanalytics.svcq }}
 {{- end }}
 {{- end }}
 
