@@ -17,6 +17,4 @@ create_secret 2>/dev/null || (kubectl delete secret self-signed-certificate; cre
 # create configmap
 kubectl create configmap sensor-info "--from-file=${DIR}/../../../maintenance/db-init/sensor-info.json"
 
-for yaml in $(find "$DIR" -maxdepth 1 -name "*.yaml" -print); do
-    kubectl apply -f "$yaml"
-done
+helm install smtc "$DIR/smtc"
