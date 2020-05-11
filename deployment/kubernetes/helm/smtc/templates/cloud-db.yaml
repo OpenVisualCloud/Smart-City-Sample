@@ -41,7 +41,7 @@ spec:
             - containerPort: 9200
             - containerPort: 9300
           env:
-            {{- if gt (int .Values.nOffices) 1 }}
+            {{- if gt (int .Values.noffices) 1 }}
             - name: "cluster.name"
               value: "db-cluster"
             - name: "node.name"

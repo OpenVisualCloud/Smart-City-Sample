@@ -44,7 +44,7 @@ spec:
             - name: SCENARIO
               value: {{ join "," $.Values.scenario | quote }}
             - name: HEALTH_CHECK
-              {{- if gt (int .Values.nOffices) 1 }}
+              {{- if gt (int .Values.noffices) 1 }}
               value: "enabled"
               {{- else }}
               value: "disabled"
