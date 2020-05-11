@@ -89,7 +89,7 @@ spec:
 
 ---
 
-{{- if gt $.Values.ncameras.crowd 0 }}
+{{- if gt $.Values.ncameras.crowd 0.0 }}
 
 apiVersion: v1
 kind: Service
@@ -156,7 +156,7 @@ spec:
 
 {{- end }}
 
-{{- if gt $.Values.ncameras.entrance 0 }}
+{{- if gt $.Values.ncameras.entrance 0.0 }}
 ---
 
 apiVersion: v1
@@ -167,7 +167,7 @@ metadata:
     app: {{ $officeName }}-cameras-entrance
 spec:
   ports:
-  {{- range $i := until ( int $.Values.ncameras.entrane ) }}
+  {{- range $i := until ( int $.Values.ncameras.entrance ) }}
   - port: {{ mul $i $step | add $port }}
     protocol: TCP
     name: {{ printf "rtsp%d" $i }}
