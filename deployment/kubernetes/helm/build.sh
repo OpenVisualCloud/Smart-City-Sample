@@ -7,7 +7,7 @@ NOFFICES="${3:-1}"
 IFS="," read -r -a NCAMERAS <<< "${4:-5}"
 IFS="," read -r -a NANALYTICS <<< "${5:-3}"
 FRAMEWORK="${6:-gst}"
-NETWORK="$(echo ${7:-FP32} | tr ',' '/')"
+NETWORK="${7:-FP32}"
 HOSTIP=$(ip route get 8.8.8.8 | awk '/ src /{split(substr($0,index($0," src ")),f);print f[2];exit}')
 
 echo "Generating helm chart with PLATFORM=${PLATFORM}, SCENARIO=${SCENARIO}, NOFFICES=${NOFFICES}"

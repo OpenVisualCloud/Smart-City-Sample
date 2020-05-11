@@ -1,5 +1,5 @@
 
-{{- range $scenarioIdx, $scenarioName := $.Values.scenario }}
+{{- range $scenarioIdx,$scenarioName := $.Values.scenario }}
 {{- $args := dict "scenarioName" $scenarioName "Values" $.Values }}
 {{- range $officeIdx := until ( int ( include "smtc.noffices" $args ) ) }}
 {{- $officeName := printf "%s-office%d" $scenarioName $officeIdx }}

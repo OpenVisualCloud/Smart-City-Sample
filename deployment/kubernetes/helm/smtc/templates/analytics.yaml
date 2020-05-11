@@ -4,6 +4,9 @@
 {{- range $officeIdx := until ( int ( include "smtc.noffices" $args ) ) }}
 {{- $officeName := printf "%s-office%d" $scenarioName $officeIdx }}
 
+{{- $args := dict "scenarioName" $scenarioName "Values" $.Values }}
+{{- $nanalytics := include "smtc.nanalytics" $args }}
+
 {{- if eq $scenarioName "traffic" }}
 
 apiVersion: apps/v1
@@ -13,7 +16,7 @@ metadata:
   labels:
     app: {{ $officeName }}-analytics-traffic
 spec:
-  replicas: {{ include "smtc.nanalytics" $ }}
+  replicas: {{ $nanalytics }}
   selector:
     matchLabels:
       app: {{ $officeName }}-analytics-traffic
@@ -64,6 +67,7 @@ spec:
       {{ include "smtc.platform.node-selector" $ }}
 
 {{- else if eq $scenarioName "stadium" }}
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:

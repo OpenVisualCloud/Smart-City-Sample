@@ -3,9 +3,9 @@ Expand the number of offices.
 */}}
 {{- define "smtc.noffices" }}
 {{- if eq .scenarioName "traffic" }}
-{{- min (len .Values.officeLocations.traffic) .Values.nOffices }}
-{{- else }}
-{{- min (len .Values.officeLocations.stadium) .Values.nOffices }}
+{{- min (len .Values.officeLocations.traffic) .Values.noffices }}
+{{- else if eq .scenarioName "stadium" }}
+{{- min (len .Values.officeLocations.stadium) .Values.noffices }}
 {{- end }}
 {{- end }}
 
@@ -13,7 +13,7 @@ Expand the number of offices.
 Expand the database name.
 */}}
 {{- define "smtc.db.name" }}
-{{- if gt (int .Values.nOffices) 1 }}
+{{- if gt (int .Values.noffices) 1 }}
 {{- "cloud-db" }}
 {{- else }}
 {{- "db" }}
@@ -24,7 +24,7 @@ Expand the database name.
 Expand to the office db name 
 */}}
 {{- define "smtc.env.dbhost" }}
-{{- if gt (int .Values.nOffices) 1 }}
+{{- if gt (int .Values.noffices) 1 }}
               value: {{ ( .officeName ) | printf "http://%s-db-service:9200" | quote }}
 {{- else }}
               value: "http://db-service:9200"
@@ -37,7 +37,7 @@ Expand to either .Values.ncameras.traffic or .Values.ncameras.svcq
 {{- define "smtc.ncameras" }}
 {{- if eq .scenarioName "traffic" }}
 {{- .Values.ncameras.traffic }}
-{{- else }}
+{{- else if eq .scenarioName "stadium" }}
 {{- .Values.ncameras.svcq }}
 {{- end }}
 {{- end }}
@@ -48,7 +48,7 @@ Expand to either .Values.nanalytics.traffic or .Values.nanalytics.svcq
 {{- define "smtc.nanalytics" }}
 {{- if eq .scenarioName "traffic" }}
 {{- .Values.nanalytics.traffic }}
-{{- else }}
+{{- else if eq .scenarioName "stadium" }}
 {{- .Values.nanalytics.svcq }}
 {{- end }}
 {{- end }}
