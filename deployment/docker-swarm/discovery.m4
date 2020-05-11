@@ -6,7 +6,7 @@ ifelse(defn(`DISCOVER_SIMULATED_CAMERA'),`true',`dnl
         environment:
             PORT_SCAN: "-p T:defn(`CAMERA_RTSP_PORT')-eval(defn(`CAMERA_RTSP_PORT')+defn(`NCAMERAS')*defn(`CAMERA_PORT_STEP')) defn(`OFFICE_NAME')_simulated_cameras"
             SIM_PORT: ifelse(eval(defn(`NCAMERAS')>0),1,"loop(`CAMERAIDX',1,defn(`NCAMERAS'),`eval(defn(`CAMERA_RTSP_PORT')+defn(`CAMERAIDX')*defn(`CAMERA_PORT_STEP')-defn(`CAMERA_PORT_STEP'))/')","0")
-            SIM_PREFIX: "`cams'defn(`SCENARIOIDX')`o'defn(`OFFICEIDX')c"
+            SIM_PREFIX: "`cams'ifelse(defn(`SCENARIO_NAME'),`traffic',1,2)`o'defn(`OFFICEIDX')ifelse(defn(`SCENARIO_NAME'),`traffic',c,q)"
             OFFICE: "defn(`OFFICE_LOCATION')"
             DBHOST: "http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')_db,db):9200"
             SERVICE_INTERVAL: "30"
@@ -27,7 +27,7 @@ ifelse(defn(`SCENARIO_NAME'),`stadium',`
         environment:
             PORT_SCAN: "-p T:defn(`CAMERA_RTSP_PORT')-eval(defn(`CAMERA_RTSP_PORT')+defn(`NCAMERAS2')*defn(`CAMERA_PORT_STEP')) defn(`OFFICE_NAME')_simulated_cameras_crowd"
             SIM_PORT: ifelse(eval(defn(`NCAMERAS2')>0),1,"loop(`CAMERAIDX',1,defn(`NCAMERAS2'),`eval(defn(`CAMERA_RTSP_PORT')+defn(`CAMERAIDX')*defn(`CAMERA_PORT_STEP')-defn(`CAMERA_PORT_STEP'))/')","0")
-            SIM_PREFIX: "`cams'defn(`SCENARIOIDX')`o'defn(`OFFICEIDX')w"
+            SIM_PREFIX: "`cams2o'defn(`OFFICEIDX')w"
             OFFICE: "defn(`OFFICE_LOCATION')"
             DBHOST: "http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')_db,db):9200"
             SERVICE_INTERVAL: "30"
@@ -47,7 +47,7 @@ ifelse(defn(`SCENARIO_NAME'),`stadium',`
         environment:
             PORT_SCAN: "-p T:defn(`CAMERA_RTSP_PORT')-eval(defn(`CAMERA_RTSP_PORT')+defn(`NCAMERAS3')*defn(`CAMERA_PORT_STEP')) defn(`OFFICE_NAME')_simulated_cameras_entrance"
             SIM_PORT: ifelse(eval(defn(`NCAMERAS3')>0),1,"loop(`CAMERAIDX',1,defn(`NCAMERAS3'),`eval(defn(`CAMERA_RTSP_PORT')+defn(`CAMERAIDX')*defn(`CAMERA_PORT_STEP')-defn(`CAMERA_PORT_STEP'))/')","0")
-            SIM_PREFIX: "`cams'defn(`SCENARIOIDX')`o'defn(`OFFICEIDX')q"
+            SIM_PREFIX: "`cams2o'defn(`OFFICEIDX')e"
             OFFICE: "defn(`OFFICE_LOCATION')"
             DBHOST: "http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')_db,db):9200"
             SERVICE_INTERVAL: "30"

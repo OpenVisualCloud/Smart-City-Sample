@@ -11,7 +11,7 @@ PLATFORM_VOLUME_EXTRA()dnl
             PLATFORM_ENV(DBHOST): "http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')_db,db):9200"
             PLATFORM_ENV(MQTTHOST): "defn(`OFFICE_NAME')_mqtt"
             PLATFORM_ENV(EVERY_NTH_FRAME): 6
-            PLATFORM_ENV(``SCENARIO''): "defn(`SCENARIO')"
+            PLATFORM_ENV(``SCENARIO''): "defn(`SCENARIO_NAME')"
             PLATFORM_ENV(STHOST): "http://defn(`OFFICE_NAME')_storage:8080/api/upload"
             PLATFORM_ENV(PIPELINE_VERSION): 2
             PLATFORM_ENV(``NETWORK_PREFERENCE''): "{\"defn(`PLATFORM_DEVICE')\":\"defn(`NETWORK_PREFERENCE')\"}"
@@ -38,7 +38,7 @@ PLATFORM_VOLUME_EXTRA()dnl
             PLATFORM_ENV(DBHOST): "http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')_db,db):9200"
             PLATFORM_ENV(MQTTHOST): "defn(`OFFICE_NAME')_mqtt"
             PLATFORM_ENV(EVERY_NTH_FRAME): 6
-            PLATFORM_ENV(``SCENARIO''): "defn(`SCENARIO')"
+            PLATFORM_ENV(``SCENARIO''): "defn(`SCENARIO_NAME')"
             PLATFORM_ENV(STHOST): "http://defn(`OFFICE_NAME')_storage:8080/api/upload"
             PLATFORM_ENV(``NETWORK_PREFERENCE''): "{\"defn(`PLATFORM_DEVICE')\":\"defn(`NETWORK_PREFERENCE')\"}"
             PLATFORM_ENV(NO_PROXY): "*"
@@ -47,7 +47,7 @@ PLATFORM_ENV_EXTRA()dnl
         networks:
             - appnet
         deploy:
-            replicas: defn(`NANALYTICS')
+            replicas: defn(`NANALYTICS3')
             placement:
                 constraints:
                     - PLATFORM_ZONE()
@@ -62,7 +62,7 @@ PLATFORM_VOLUME_EXTRA()dnl
             PLATFORM_ENV(DBHOST): "http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')_db,db):9200"
             PLATFORM_ENV(MQTTHOST): "defn(`OFFICE_NAME')_mqtt"
             PLATFORM_ENV(EVERY_NTH_FRAME): "6"
-            PLATFORM_ENV(``SCENARIO''): "defn(`SCENARIO')"
+            PLATFORM_ENV(``SCENARIO''): "defn(`SCENARIO_NAME')"
             PLATFORM_ENV(STHOST): "http://defn(`OFFICE_NAME')_storage:8080/api/upload"
             PLATFORM_ENV(``NETWORK_PREFERENCE''): "{\"defn(`PLATFORM_DEVICE')\":\"defn(`NETWORK_PREFERENCE')\"}"
             PLATFORM_ENV(NO_PROXY): "*"
@@ -86,7 +86,7 @@ PLATFORM_VOLUME_EXTRA()dnl
             PLATFORM_ENV(DBHOST): "http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')_db,db):9200"
             PLATFORM_ENV(MQTTHOST): "defn(`OFFICE_NAME')_mqtt"
             PLATFORM_ENV(EVERY_NTH_FRAME): 6
-            PLATFORM_ENV(``SCENARIO''): "defn(`SCENARIO')"
+            PLATFORM_ENV(``SCENARIO''): "defn(`SCENARIO_NAME')"
             PLATFORM_ENV(STHOST): "http://defn(`OFFICE_NAME')_storage:8080/api/upload"
             PLATFORM_ENV(PIPELINE_VERSION): 2
             PLATFORM_ENV(``NETWORK_PREFERENCE''): "{\"defn(`PLATFORM_DEVICE')\":\"defn(`NETWORK_PREFERENCE')\"}"
@@ -96,7 +96,7 @@ PLATFORM_ENV_EXTRA()dnl
         networks:
             - appnet
         deploy:
-            replicas: defn(`NANALYTICS3')
+            replicas: defn(`NANALYTICS')
             placement:
                 constraints:
                     - PLATFORM_ZONE()
