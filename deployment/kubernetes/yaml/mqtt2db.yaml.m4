@@ -30,7 +30,7 @@ spec:
             - name: MQTTHOST
               value: "defn(`OFFICE_NAME')-mqtt-service"
             - name: `SCENARIO'
-              value: "defn(`SCENARIO')"
+              value: "defn(`SCENARIO_NAME')"
             - name: NO_PROXY
               value: "*"
             - name: no_proxy
