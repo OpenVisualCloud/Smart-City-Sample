@@ -10,8 +10,8 @@ framework: "defn(`FRAMEWORK')"
 # scenario runs its own set of services and databases, it is recommended that you
 # run multiple scenarios only on a multiple-node deployment.
 scenario: 
-looplist(`SCENARIO',defn(`SCENARIO'),`dnl
-  - "defn(`SCENARIO')"
+looplist(`SCENARIO_NAME',defn(`SCENARIO'),`dnl
+  - "defn(`SCENARIO_NAME')"
 ')dnl
 
 # noffices specifies the number of offices in the deployment. Support 1-3
