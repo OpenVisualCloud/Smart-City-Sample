@@ -30,7 +30,7 @@ spec:
             - name: SIM_PORT
               value: ifelse(eval(defn(`NCAMERAS')>0),1,"loop(`CAMERAIDX',1,defn(`NCAMERAS'),`eval(defn(`CAMERA_RTSP_PORT')+defn(`CAMERAIDX')*defn(`CAMERA_PORT_STEP')-defn(`CAMERA_PORT_STEP'))/')","0")
             - name: SIM_PREFIX
-              value: "`cams'defn(`SCENARIOIDX')`o'defn(`OFFICEIDX')c"
+              value: "`cams'ifelse(defn(`SCENARIO_NAME'),`traffic',1,2)`o'defn(`OFFICEIDX')ifelse(defn(`SCENARIO_NAME'),`traffic',c,q)"
             - name: OFFICE
               value: "defn(`OFFICE_LOCATION')"
             - name: DBHOST
@@ -81,7 +81,7 @@ spec:
             - name: SIM_PORT
               value: ifelse(eval(defn(`NCAMERAS2')>0),1,"loop(`CAMERAIDX',1,defn(`NCAMERAS2'),`eval(defn(`CAMERA_RTSP_PORT')+defn(`CAMERAIDX')*defn(`CAMERA_PORT_STEP')-defn(`CAMERA_PORT_STEP'))/')","0")
             - name: SIM_PREFIX
-              value: "`cams'defn(`SCENARIOIDX')`o'defn(`OFFICEIDX')w"
+              value: "`cams2o'defn(`OFFICEIDX')w"
             - name: OFFICE
               value: "defn(`OFFICE_LOCATION')"
             - name: DBHOST
@@ -131,7 +131,7 @@ spec:
             - name: SIM_PORT
               value: ifelse(eval(defn(`NCAMERAS3')>0),1,"loop(`CAMERAIDX',1,defn(`NCAMERAS3'),`eval(defn(`CAMERA_RTSP_PORT')+defn(`CAMERAIDX')*defn(`CAMERA_PORT_STEP')-defn(`CAMERA_PORT_STEP'))/')","0")
             - name: SIM_PREFIX
-              value: "`cams'defn(`SCENARIOIDX')`o'defn(`OFFICEIDX')q"
+              value: "`cams2o'defn(`OFFICEIDX')e"
             - name: OFFICE
               value: "defn(`OFFICE_LOCATION')"
             - name: DBHOST
