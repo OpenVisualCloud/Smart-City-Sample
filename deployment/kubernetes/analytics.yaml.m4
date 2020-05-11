@@ -39,7 +39,7 @@ ifelse(defn(`DISCOVER_IP_CAMERA'),`true',`dnl
             - name: EVERY_NTH_FRAME
               value: "6"
             - name: `SCENARIO'
-              value: "defn(`SCENARIO')"
+              value: "defn(`SCENARIO_NAME')"
             - name: `NETWORK_PREFERENCE'
               value: "{\"defn(`PLATFORM_DEVICE')\":\"defn(`NETWORK_PREFERENCE')\"}"
             - name: NO_PROXY
@@ -68,7 +68,7 @@ metadata:
   labels:
      app: defn(`OFFICE_NAME')-analytics-entrance
 spec:
-  replicas: defn(`NANALYTICS')
+  replicas: defn(`NANALYTICS3')
   selector:
     matchLabels:
       app: defn(`OFFICE_NAME')-analytics-entrance
@@ -98,7 +98,7 @@ ifelse(defn(`DISCOVER_IP_CAMERA'),`true',`dnl
             - name: EVERY_NTH_FRAME
               value: "6"
             - name: `SCENARIO'
-              value: "defn(`SCENARIO')"
+              value: "defn(`SCENARIO_NAME')"
             - name: `NETWORK_PREFERENCE'
               value: "{\"defn(`PLATFORM_DEVICE')\":\"defn(`NETWORK_PREFERENCE')\"}"
             - name: NO_PROXY
@@ -157,7 +157,7 @@ ifelse(defn(`DISCOVER_IP_CAMERA'),`true',`dnl
             - name: EVERY_NTH_FRAME
               value: "6"
             - name: `SCENARIO'
-              value: "defn(`SCENARIO')"
+              value: "defn(`SCENARIO_NAME')"
             - name: `NETWORK_PREFERENCE'
               value: "{\"defn(`PLATFORM_DEVICE')\":\"defn(`NETWORK_PREFERENCE')\"}"
             - name: NO_PROXY
@@ -186,7 +186,7 @@ metadata:
   labels:
      app: defn(`OFFICE_NAME')-analytics-svcq
 spec:
-  replicas: defn(`NANALYTICS3')
+  replicas: defn(`NANALYTICS')
   selector:
     matchLabels:
       app: defn(`OFFICE_NAME')-analytics-svcq
@@ -216,7 +216,7 @@ ifelse(defn(`DISCOVER_IP_CAMERA'),`true',`dnl
             - name: EVERY_NTH_FRAME
               value: "6"
             - name: `SCENARIO'
-              value: "defn(`SCENARIO')"
+              value: "defn(`SCENARIO_NAME')"
             - name: `NETWORK_PREFERENCE'
               value: "{\"defn(`PLATFORM_DEVICE')\":\"defn(`NETWORK_PREFERENCE')\"}"
             - name: NO_PROXY
