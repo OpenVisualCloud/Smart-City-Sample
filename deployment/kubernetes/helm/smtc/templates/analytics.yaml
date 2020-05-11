@@ -62,22 +62,23 @@ spec:
                 type: File
           {{- include "smtc.platform.volumes" $ }}
       {{ include "smtc.platform.node-selector" $ }}
-{{- else if eq $.Values.scenario "stadium" }}
+
+{{- else if eq $scenarioName "stadium" }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ printf "%s-office%d" $.Values.scenario $officeIdx }}-analytics-entrance
+  name: {{ $officeName }}-analytics-entrance
   labels:
-     app: {{ printf "%s-office%d" $.Values.scenario $officeIdx }}-analytics-entrance
+     app: {{ $officeName }}-analytics-entrance
 spec:
-  replicas: {{ include "smtc.analytics" $ }}
+  replicas: {{ $.Values.nanalytics.entrance }}
   selector:
     matchLabels:
-      app: {{ printf "%s-office%d" $.Values.scenario $officeIdx }}-analytics-entrance
+      app: {{ $officeName }}-analytics-entrance
   template:
     metadata:
       labels:
-        app: {{ printf "%s-office%d" $.Values.scenario $officeIdx }}-analytics-entrance
+        app: {{ $officeName }}-analytics-entrance
     spec:
       enableServiceLinks: false
       {{- if $.Values.discoverIPCamera }}
@@ -85,30 +86,24 @@ spec:
       dnsPolicy: ClusterFirstWithHostNet
       {{- end }}
       containers:
-        - name: {{ printf "%s-office%d" $.Values.scenario $officeIdx }}-analytics-entrance
+        - name: {{ $officeName }}-analytics-entrance
           image: smtc_analytics_entrance_{{ include "smtc.platform.suffix" $ }}_{{ $.Values.framework }}:latest
           imagePullPolicy: IfNotPresent
           env:
             - name: OFFICE
-              {{- if eq $.Values.scenario "traffic" }}
-              value: {{ index $.Values.officeLocations.traffic $officeIdx | quote }}
-              {{- else if eq $.Values.scenario "stadium" }}
-              value: {{ index $.Values.officeLocations.stadium $officeIdx | quote }}
-              {{- end }}
+              {{- $args := dict "scenarioName" $scenarioName "Values" $.Values "officeIdx" $officeIdx }}
+              {{- include "smtc.env.office" $args }}
             - name: DBHOST
-              {{- if gt (int $.Values.nOffices) 1 }}
-              value: {{ ( printf "%s-office%d" $.Values.scenario $officeIdx ) | printf "http://%s-db-service:9200" | quote }}
-              {{- else }}
-              value: "http://db-service:9200"
-              {{- end }}
+              {{- $args := dict "officeName" $officeName "Values" $.Values }}
+              {{- include "smtc.env.dbhost" $args }}
             - name: MQTTHOST
-              value: "{{ printf "%s-office%d" $.Values.scenario $officeIdx }}-mqtt-service"
+              value: "{{ $officeName }}-mqtt-service"
             - name: STHOST
-              value: "http://{{ printf "%s-office%d" $.Values.scenario $officeIdx }}-storage-service:8080/api/upload"
+              value: "http://{{ $officeName }}-storage-service:8080/api/upload"
             - name: EVERY_NTH_FRAME
               value: "6"
             - name: SCENARIO
-              value: {{ $.Values.scenario | quote }}
+              value: {{ $scenarioName | quote }}
             - name: NO_PROXY
               value: "*"
             - name: no_proxy
@@ -129,18 +124,18 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ printf "%s-office%d" $.Values.scenario $officeIdx }}-analytics-crowd
+  name: {{ $officeName }}-analytics-crowd
   labels:
-     app: {{ printf "%s-office%d" $.Values.scenario $officeIdx }}-analytics-crowd
+     app: {{ $officeName }}-analytics-crowd
 spec:
-  replicas: {{ include "smtc.analytics2" $ }}
+  replicas: {{ $.Values.nanalytics.crowd }}
   selector:
     matchLabels:
-      app: {{ printf "%s-office%d" $.Values.scenario $officeIdx }}-analytics-crowd
+      app: {{ $officeName }}-analytics-crowd
   template:
     metadata:
       labels:
-        app: {{ printf "%s-office%d" $.Values.scenario $officeIdx }}-analytics-crowd
+        app: {{ $officeName }}-analytics-crowd
     spec:
       enableServiceLinks: false
       {{- if $.Values.discoverIPCamera }}
@@ -148,30 +143,24 @@ spec:
       dnsPolicy: ClusterFirstWithHostNet
       {{- end }}
       containers:
-        - name: {{ printf "%s-office%d" $.Values.scenario $officeIdx }}-analytics-crowd
+        - name: {{ $officeName }}-analytics-crowd
           image: smtc_analytics_crowd_{{ include "smtc.platform.suffix" $ }}_{{ $.Values.framework }}:latest
           imagePullPolicy: IfNotPresent
           env:
             - name: OFFICE
-              {{- if eq $.Values.scenario "traffic" }}
-              value: {{ index $.Values.officeLocations.traffic $officeIdx | quote }}
-              {{- else if eq $.Values.scenario "stadium" }}
-              value: {{ index $.Values.officeLocations.stadium $officeIdx | quote }}
-              {{- end }}
+              {{- $args := dict "scenarioName" $scenarioName "Values" $.Values "officeIdx" $officeIdx }}
+              {{- include "smtc.env.office" $args }}
             - name: DBHOST
-              {{- if gt (int $.Values.nOffices) 1 }}
-              value: {{ ( printf "%s-office%d" $.Values.scenario $officeIdx ) | printf "http://%s-db-service:9200" | quote }}
-              {{- else }}
-              value: "http://db-service:9200"
-              {{- end }}
+              {{- $args := dict "officeName" $officeName "Values" $.Values }}
+              {{- include "smtc.env.dbhost" $args }}
             - name: MQTTHOST
-              value: "{{ printf "%s-office%d" $.Values.scenario $officeIdx }}-mqtt-service"
+              value: "{{ $officeName }}-mqtt-service"
             - name: STHOST
-              value: "http://{{ printf "%s-office%d" $.Values.scenario $officeIdx }}-storage-service:8080/api/upload"
+              value: "http://{{ $officeName }}-storage-service:8080/api/upload"
             - name: EVERY_NTH_FRAME
               value: "30"
             - name: SCENARIO
-              value: {{ $.Values.scenario | quote }}
+              value: {{ $scenarioName | quote }}
             - name: NO_PROXY
               value: "*"
             - name: no_proxy
@@ -192,18 +181,18 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ printf "%s-office%d" $.Values.scenario $officeIdx }}-analytics-svcq
+  name: {{ $officeName }}-analytics-svcq
   labels:
-     app: {{ printf "%s-office%d" $.Values.scenario $officeIdx }}-analytics-svcq
+     app: {{ $officeName }}-analytics-svcq
 spec:
-  replicas: {{ include "smtc.analytics3" $ }}
+  replicas: {{ $.Values.nanalytics.svcq }}
   selector:
     matchLabels:
-      app: {{ printf "%s-office%d" $.Values.scenario $officeIdx }}-analytics-svcq
+      app: {{ $officeName }}-analytics-svcq
   template:
     metadata:
       labels:
-        app: {{ printf "%s-office%d" $.Values.scenario $officeIdx }}-analytics-svcq
+        app: {{ $officeName }}-analytics-svcq
     spec:
       enableServiceLinks: false
       {{- if $.Values.discoverIPCamera }}
@@ -211,30 +200,24 @@ spec:
       dnsPolicy: ClusterFirstWithHostNet
       {{- end }}
       containers:
-        - name: {{ printf "%s-office%d" $.Values.scenario $officeIdx }}-analytics-svcq
+        - name: {{ $officeName }}-analytics-svcq
           image: smtc_analytics_object_{{ include "smtc.platform.suffix" $ }}_{{ $.Values.framework }}:latest
           imagePullPolicy: IfNotPresent
           env:
             - name: OFFICE
-              {{- if eq $.Values.scenario "traffic" }}
-              value: {{ index $.Values.officeLocations.traffic $officeIdx | quote }}
-              {{- else if eq $.Values.scenario "stadium" }}
-              value: {{ index $.Values.officeLocations.stadium $officeIdx | quote }}
-              {{- end }}
+              {{- $args := dict "scenarioName" $scenarioName "Values" $.Values "officeIdx" $officeIdx }}
+              {{- include "smtc.env.office" $args }}
             - name: DBHOST
-              {{- if gt (int $.Values.nOffices) 1 }}
-              value: {{ ( printf "%s-office%d" $.Values.scenario $officeIdx ) | printf "http://%s-db-service:9200" | quote }}
-              {{- else }}
-              value: "http://db-service:9200"
-              {{- end }}
+              {{- $args := dict "officeName" $officeName "Values" $.Values }}
+              {{- include "smtc.env.dbhost" $args }}
             - name: MQTTHOST
-              value: "{{ printf "%s-office%d" $.Values.scenario $officeIdx }}-mqtt-service"
+              value: "{{ $officeName }}-mqtt-service"
             - name: STHOST
-              value: "http://{{ printf "%s-office%d" $.Values.scenario $officeIdx }}-storage-service:8080/api/upload"
+              value: "http://{{ $officeName }}-storage-service:8080/api/upload"
             - name: EVERY_NTH_FRAME
               value: "6"
             - name: SCENARIO
-              value: {{ $.Values.scenario | quote }}
+              value: {{ $scenarioName | quote }}
             - name: NO_PROXY
               value: "*"
             - name: no_proxy
