@@ -22,8 +22,8 @@ class WorkloadHandler(web.RequestHandler):
         return {
             "time": int(time.mktime(datetime.datetime.now().timetuple())*1000),
             "cpu": psutil.cpu_percent(),
-            "memory": psutil.virtual_memory(),
-            "disk": psutil.disk_usage("/var/www/mp4"),
+            "memory": psutil.virtual_memory().percent,
+            "disk": psutil.disk_usage("/var/www/mp4").percent,
         }
 
     @gen.coroutine

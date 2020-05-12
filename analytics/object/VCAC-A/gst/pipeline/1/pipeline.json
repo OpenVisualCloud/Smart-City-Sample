@@ -2,72 +2,46 @@
     "name": "object_detection",
     "version": 2,
     "type": "GStreamer",
-    "template":"rtspsrc udp-buffer-size=212992 name=source ! queue ! rtph264depay ! h264parse ! video/x-h264 ! tee name=t ! queue ! decodebin ! video/x-raw(memory:VASurface) ! queue leaky=upstream ! gvadetect pre-proc=vaapi model=\"{models[object_detection_2019R3][1][network]}\" model-proc=\"{models[object_detection_2019R3][1][proc]}\" name=\"detection\" ! gvametaconvert converter=json method=detection name=\"metaconvert\" ! queue ! gvametapublish name=\"metapublish\" ! appsink name=appsink t. ! queue ! splitmuxsink max-size-time=60500000000 name=\"splitmuxsink\"",
+    "template": [
+        "rtspsrc udp-buffer-size=212992 name=source ! queue ! rtph264depay ! h264parse ",
+        "! video/x-h264 ! tee name=t ! queue ! decodebin ! video/x-raw(memory:VASurface) ! vaapipostproc brightness=0.0001 ",
+        "! queue leaky=upstream ",
+        "! gvadetect pre-process-backend=vaapi model=\"{models[object_detection_2020R2][1][network]}\" model-proc=\"{models[object_detection_2020R2][1][proc]}\" name=\"detection\" ",
+        "! gvametaconvert name=\"metaconvert\" ! queue ! gvametapublish name=\"destination\" ! appsink name=appsink t. ! queue ! splitmuxsink max-size-time=60500000000 name=\"splitmuxsink\""
+    ],
     "description": "Object Detection Pipeline",
-    "destination": {
+    "parameters": {
         "type": "object",
         "properties": {
-            "type": {
-                "type": "string",
-                "element": {
-                    "name": "metapublish",
-                    "property": "method"
-                }
-            },
-            "host": {
-                "type": "string",
-                "element": {
-                    "name": "metapublish",
-                    "property": "address"
-                }
-            },
-            "clientid": {
-                "type": "string",
-                "element": "metapublish"
-            },
-            "topic": {
-                "type": "string",
-                "element": "metapublish"
-            },
-            "timeout": {
-                "type": "integer",
-                "element": "metapublish",
-                "default": 1000
-            }
-        }
-    },
-    "parameters": {
-        "type" : "object",
-        "properties" : {
-            "every-nth-frame": {
-                "element":"detection",
+            "inference-interval": {
+                "element": "detection",
                 "type": "integer",
                 "minimum": 0,
                 "maximum": 4294967295
             },
-            "cpu-streams": {
-                "element":"detection",
+            "cpu-throughput-streams": {
+                "element": "detection",
                 "type": "string"
             },
             "n-threads": {
-                "element":"videoconvert",
+                "element": "videoconvert",
                 "type": "integer"
             },
             "nireq": {
-                "element":"detection",
+                "element": "detection",
                 "type": "integer",
                 "minimum": 1,
                 "maximum": 64,
                 "default": 6
             },
             "device": {
-                "element":"detection",
-                "default":"HDDL",
-                "type":"string"
+                "element": "detection",
+                "default": "HDDL",
+                "type": "string"
             },
             "recording_prefix": {
-                "type":"string",
-                "default":"recording"
+                "type": "string",
+                "default": "recording"
             }
         }
     }

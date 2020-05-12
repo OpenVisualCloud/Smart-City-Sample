@@ -382,7 +382,7 @@
         },
         "algorithm": "entrance-counting",
         "theta": 90.0,
-        "simsn": "cams2o1c0"
+        "simsn": "cams2o1e0"
     },{
         "address": "North Gate",
         "location": {
@@ -391,7 +391,7 @@
         },
         "algorithm": "entrance-counting",
         "theta": 180,
-        "simsn": "cams2o1c1"
+        "simsn": "cams2o1e1"
     },{
         "address": "West Gate",
         "location": {
@@ -400,7 +400,7 @@
         },
         "algorithm": "entrance-counting",
         "theta": 270.0,
-        "simsn": "cams2o1c2"
+        "simsn": "cams2o1e2"
     },{
         "address": "South Gate",
         "location": {
@@ -409,7 +409,7 @@
         },
         "algorithm": "entrance-counting",
         "theta": 0.0,
-        "simsn": "cams2o1c3"
+        "simsn": "cams2o1e3"
     },{
         "address": "South East Exit",
         "location": {
@@ -418,7 +418,7 @@
         },
         "algorithm": "entrance-counting",
         "theta": 45.0,
-        "simsn": "cams2o1c4"
+        "simsn": "cams2o1e4"
     },{
         "address": "North East Exit",
         "location": {
@@ -427,7 +427,7 @@
         },
         "algorithm": "entrance-counting",
         "theta": 135.0,
-        "simsn": "cams2o1c5"
+        "simsn": "cams2o1e5"
     },{
         "address": "North West Exit",
         "location": {
@@ -436,7 +436,7 @@
         },
         "algorithm": "entrance-counting",
         "theta": 225.0,
-        "simsn": "cams2o1c6"
+        "simsn": "cams2o1e6"
     },{
         "address": "South West Exit",
         "location": {
@@ -445,7 +445,7 @@
         },
         "algorithm": "entrance-counting",
         "theta": 315.0,
-        "simsn": "cams2o1c7"
+        "simsn": "cams2o1e7"
     },{
         "address": "East Wing",
         "location": {

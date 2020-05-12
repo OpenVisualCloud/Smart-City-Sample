@@ -18,12 +18,11 @@ office = list(map(float, os.environ["OFFICE"].split(",")))
 dbhost = os.environ["DBHOST"]
 every_nth_frame = int(os.environ["EVERY_NTH_FRAME"])
 
-rec2db=None
 runva=None
 stop=False
 
 def connect(sensor, location, uri, algorithm, algorithmName, resolution, zonemap):
-    global rec2db, runva
+    global runva
 
     try:
         rec2db=Rec2DB(sensor)
@@ -36,9 +35,8 @@ def connect(sensor, location, uri, algorithm, algorithmName, resolution, zonemap
             with ThreadPoolExecutor(1) as e1:
                 e1.submit(runva.loop, sensor, location, uri, algorithm, algorithmName, resolution, zonemap)
 
-            if not stop:
-                rec2db.stop()
-                raise Exception("VA exited. This should not happen.")
+            if stop: rec2db.stop()
+            raise Exception("VA exited. This should not happen.")
 
     except Exception as e:
         print("Exception in connect: "+str(e), flush=True)
