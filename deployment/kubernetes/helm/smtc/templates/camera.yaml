@@ -1,0 +1,233 @@
+
+{{- $port := (int .Values.cameraRTSPPort) }}
+{{- $step := (int .Values.cameraPortStep) }}
+
+{{- range $scenarioIdx, $scenarioName := $.Values.scenario }}
+{{- $args := dict "scenarioName" $scenarioName "Values" $.Values }}
+{{- range $officeIdx := until ( int ( include "smtc.noffices" $args ) ) }}
+{{- $officeName := printf "%s-office%d" $scenarioName $officeIdx }}
+
+{{- $args := dict "scenarioName" $scenarioName "Values" $.Values }}
+{{- $ncameras := int ( include "smtc.ncameras" $args ) }}
+
+{{- if gt $ncameras 0 }}
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ $officeName }}-cameras-service
+  labels:
+    app: {{ $officeName }}-cameras
+spec:
+  ports:
+  {{- range $i := until ( $ncameras ) }}
+  - port: {{ mul $i $step | add $port }}
+    protocol: TCP
+    name: {{ printf "rtsp%d" $i }}
+  {{- end }}
+  selector:
+    app: {{ $officeName }}-cameras
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $officeName }}-cameras
+  labels:
+     app: {{ $officeName }}-cameras
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ $officeName }}-cameras
+  template:
+    metadata:
+      labels:
+        app: {{ $officeName }}-cameras
+    spec:
+      enableServiceLinks: false
+      containers:
+        - name: {{ $officeName }}-cameras
+          image: smtc_sensor_simulation:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            {{- range $i := until ( $ncameras ) }}
+            - containerPort: {{ mul $i $step | add $port }}
+              protocol: TCP
+            {{- end }}
+          env:
+            {{- if eq $scenarioName "traffic" }}
+            - name: FILES
+              value: "_traffic.mp4$$"
+            {{- else if eq $scenarioName "stadium" }}
+            - name: FILES
+              value: "_svcq.mp4$$"
+            {{- end }}
+            - name: NCAMERAS
+              value: {{ $ncameras | quote}}
+            - name: RTSP_PORT
+              value: {{ $.Values.cameraRTSPPort | quote }}
+            - name: RTP_PORT
+              value: {{ $.Values.cameraRTPPort | quote }}
+            - name: PORT_STEP
+              value: {{ $.Values.cameraPortStep | quote }}
+          volumeMounts:
+            - mountPath: /etc/localtime
+              name: timezone
+              readOnly: true
+      volumes:
+          - name: timezone
+            hostPath:
+                path: /etc/localtime
+                type: File
+      {{ include "smtc.platform.node-selector" $ }}
+
+{{- end }}
+
+{{- if eq $scenarioName "stadium" }}
+
+---
+
+{{- if gt $.Values.ncameras.crowd 0.0 }}
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ $officeName }}-cameras-crowd-service
+  labels:
+    app: {{ $officeName }}-cameras-crowd
+spec:
+  ports:
+  {{- range $i := until ( int $.Values.ncameras.crowd ) }}
+  - port: {{ mul $i $step | add $port }}
+    protocol: TCP
+    name: {{ printf "rtsp%d" $i }}
+  {{- end }}
+  selector:
+    app: {{ $officeName }}-cameras-crowd
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $officeName }}-cameras-crowd
+  labels:
+     app: {{ $officeName }}-cameras-crowd
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ $officeName }}-cameras-crowd
+  template:
+    metadata:
+      labels:
+        app: {{ $officeName }}-cameras-crowd
+    spec:
+      containers:
+        - name: {{ $officeName }}-cameras-crowd
+          image: smtc_sensor_simulation:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            {{- range $i := until ( int $.Values.ncameras.crowd ) }}
+            - containerPort: {{ mul $i $step | add $port }}
+              protocol: TCP
+            {{- end }}
+          env:
+            - name: FILES
+              value: "crowd.mp4$$"
+            - name: NCAMERAS
+              value: {{ $.Values.ncameras.crowd | quote }}
+            - name: RTSP_PORT
+              value: {{ $.Values.cameraRTSPPort | quote }}
+            - name: RTP_PORT
+              value: {{ $.Values.cameraRTPPort | quote }}
+            - name: PORT_STEP
+              value: {{ $.Values.cameraPortStep | quote }}
+          volumeMounts:
+            - mountPath: /etc/localtime
+              name: timezone
+              readOnly: true
+      volumes:
+          - name: timezone
+            hostPath:
+                path: /etc/localtime
+                type: File
+      {{ include "smtc.platform.node-selector" $ }}
+
+{{- end }}
+
+{{- if gt $.Values.ncameras.entrance 0.0 }}
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ $officeName }}-cameras-entrance-service
+  labels:
+    app: {{ $officeName }}-cameras-entrance
+spec:
+  ports:
+  {{- range $i := until ( int $.Values.ncameras.entrance ) }}
+  - port: {{ mul $i $step | add $port }}
+    protocol: TCP
+    name: {{ printf "rtsp%d" $i }}
+  {{- end }}
+  selector:
+    app: {{ $officeName }}-cameras-entrance
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $officeName }}-cameras-entrance
+  labels:
+     app: {{ $officeName }}-cameras-entrance
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ $officeName }}-cameras-entrance
+  template:
+    metadata:
+      labels:
+        app: {{ $officeName }}-cameras-entrance
+    spec:
+      containers:
+        - name: {{ $officeName }}-cameras-entrance
+          image: smtc_sensor_simulation:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            {{- range $i := until ( int $.Values.ncameras.entrance ) }}
+            - containerPort: {{ mul $i $step | add $port }}
+              protocol: TCP
+            {{- end }}
+          env:
+            - name: FILES
+              value: "_entrance.mp4$$"
+            - name: NCAMERAS
+              value: {{ $.Values.ncameras.entrance | quote }}
+            - name: RTSP_PORT
+              value: {{ $.Values.cameraRTSPPort | quote }}
+            - name: RTP_PORT
+              value: {{ $.Values.cameraRTPPort | quote }}
+            - name: PORT_STEP
+              value: {{ $.Values.cameraPortStep | quote }}
+          volumeMounts:
+            - mountPath: /etc/localtime
+              name: timezone
+              readOnly: true
+      volumes:
+          - name: timezone
+            hostPath:
+                path: /etc/localtime
+                type: File
+      {{ include "smtc.platform.node-selector" $ }}
+
+{{- end }}
+{{- end }}
+
+---
+
+{{- end }}
+{{- end }}

@@ -1,0 +1,228 @@
+
+{{- $port := (int .Values.cameraRTSPPort) }}
+{{- $step := (int .Values.cameraPortStep) }}
+
+{{- range $scenarioIdx,$scenarioName := $.Values.scenario }}
+{{- $args := dict "scenarioName" $scenarioName "Values" $.Values }}
+{{- range $officeIdx := until ( int ( include "smtc.noffices" $args ) ) }}
+{{- $officeName := printf "%s-office%d" $scenarioName $officeIdx }}
+
+{{- $args := dict "scenarioName" $scenarioName "Values" $.Values }}
+{{- $ncameras := int ( include "smtc.ncameras" $args ) }}
+
+{{- if (int $.Values.discoverSimulatedCamera) }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $officeName }}-camera-discovery
+  labels:
+     app: {{ $officeName }}-camera-discovery
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ $officeName }}-camera-discovery
+  template:
+    metadata:
+      labels:
+        app: {{ $officeName }}-camera-discovery
+    spec:
+      enableServiceLinks: false
+      containers:
+        - name: {{ $officeName }}-camera-discovery
+          image: smtc_onvif_discovery:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: PORT_SCAN
+              value: "-p T:{{ $port }}-{{ mul $ncameras $step | add $port }} {{ $officeName }}-cameras-service -Pn"
+            - name: SIM_PORT
+              value: "{{- range $i := until $ncameras }}{{ mul $i $step | add $port }}/{{- end }}"
+            - name: SIM_PREFIX
+              {{- if eq $scenarioName "traffic" }}
+              value: "cams1o{{ add $officeIdx 1 }}c"
+              {{- else if eq $scenarioName "stadium" }}
+              value: "cams2o{{ add $officeIdx 1 }}q"
+              {{- end }}
+            - name: OFFICE
+              {{- $args := dict "scenarioName" $scenarioName "Values" $.Values "officeIdx" $officeIdx }}
+              {{- include "smtc.env.office" $args }}
+            - name: DBHOST
+              {{- $args := dict "officeName" $officeName "Values" $.Values }}
+              {{- include "smtc.env.dbhost" $args }}
+            - name: SERVICE_INTERVAL
+              value: "30"
+            - name: NO_PROXY
+              value: "*"
+            - name: no_proxy
+              value: "*"
+          volumeMounts:
+            - mountPath: /etc/localtime
+              name: timezone
+              readOnly: true
+      volumes:
+          - name: timezone
+            hostPath:
+                path: /etc/localtime
+                type: File
+      {{ include "smtc.platform.node-selector" $ }}
+
+{{- if eq $scenarioName "stadium" }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $officeName }}-camera-discovery-crowd
+  labels:
+     app: {{ $officeName }}-camera-discovery-crowd
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ $officeName }}-camera-discovery-crowd
+  template:
+    metadata:
+      labels:
+        app: {{ $officeName }}-camera-discovery-crowd
+    spec:
+      containers:
+        - name: {{ $officeName }}-camera-discovery-crowd
+          image: smtc_onvif_discovery:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: PORT_SCAN
+              value: "-p T:{{ $port }}-{{ mul $.Values.ncameras.crowd $step | add $port }} {{ $officeName }}-cameras-crowd-service -Pn"
+            - name: SIM_PORT
+              value: "{{- range $i := until (int $.Values.ncameras.crowd) }}{{ mul $i $step | add $port }}/{{- end }}"
+            - name: SIM_PREFIX
+              value: "cams2o{{ add $officeIdx 1 }}w"
+            - name: OFFICE
+              {{- $args := dict "scenarioName" $scenarioName "Values" $.Values "officeIdx" $officeIdx }}
+              {{- include "smtc.env.office" $args }}
+            - name: DBHOST
+              {{- $args := dict "officeName" $officeName "Values" $.Values }}
+              {{- include "smtc.env.dbhost" $args }}
+            - name: SERVICE_INTERVAL
+              value: "30"
+            - name: NO_PROXY
+              value: "*"
+            - name: no_proxy
+              value: "*"
+          volumeMounts:
+            - mountPath: /etc/localtime
+              name: timezone
+              readOnly: true
+      volumes:
+          - name: timezone
+            hostPath:
+                path: /etc/localtime
+                type: File
+      {{ include "smtc.platform.node-selector" $ }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $officeName }}-camera-discovery-entrance
+  labels:
+     app: {{ $officeName }}-camera-discovery-entrance
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ $officeName }}-camera-discovery-entrance
+  template:
+    metadata:
+      labels:
+        app: {{ $officeName }}-camera-discovery-entrance
+    spec:
+      containers:
+        - name: {{ $officeName }}-camera-discovery-entrance
+          image: smtc_onvif_discovery:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: PORT_SCAN
+              value: "-p T:{{ $port }}-{{ mul $.Values.ncameras.entrance $step | add $port }} {{ $officeName }}-cameras-entrance-service -Pn"
+            - name: SIM_PORT
+              value: "{{- range $i := until (int $.Values.ncameras.entrance) }}{{ mul $i $step | add $port }}/{{- end }}"
+            - name: OFFICE
+              {{- $args := dict "scenarioName" $scenarioName "Values" $.Values "officeIdx" $officeIdx }}
+              {{- include "smtc.env.office" $args }}
+            - name: DBHOST
+              {{- $args := dict "officeName" $officeName "Values" $.Values }}
+              {{- include "smtc.env.dbhost" $args }}
+            - name: SIM_PREFIX
+              value: "cams2o{{ add $officeIdx 1 }}e"
+            - name: SERVICE_INTERVAL
+              value: "30"
+            - name: NO_PROXY
+              value: "*"
+            - name: no_proxy
+              value: "*"
+          volumeMounts:
+            - mountPath: /etc/localtime
+              name: timezone
+              readOnly: true
+      volumes:
+          - name: timezone
+            hostPath:
+                path: /etc/localtime
+                type: File
+      {{ include "smtc.platform.node-selector" $ }}
+{{- end }}
+{{- end }}
+
+{{- if int ( $.Values.discoverIPCamera) }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $officeName }}-ipcamera-discovery
+  labels:
+     app: {{ $officeName }}-ipcamera-discovery
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ $officeName }}-ipcamera-discovery
+  template:
+    metadata:
+      labels:
+        app: {{ $officeName }}-ipcamera-discovery
+    spec:
+      enableServiceLinks: false
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
+      containers:
+        - name: {{ $officeName }}-ipcamera-discovery
+          image: smtc_onvif_discovery:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: PORT_SCAN
+              value: "-p T:80-65535 192.168.{{ add $officeIdx 1 }}.0/24"
+            - name: OFFICE
+              {{- $args := dict "scenarioName" $scenarioName "Values" $.Values "officeIdx" $officeIdx }}
+              {{- include "smtc.env.office" $args }}
+            - name: DBHOST
+              {{- $args := dict "officeName" $officeName "Values" $.Values }}
+              {{- include "smtc.env.dbhost" $args }}
+            - name: SERVICE_INTERVAL
+              value: "30"
+            - name: NO_PROXY
+              value: "*"
+            - name: no_proxy
+              value: "*"
+          volumeMounts:
+            - mountPath: /etc/localtime
+              name: timezone
+              readOnly: true
+      volumes:
+          - name: timezone
+            hostPath:
+                path: /etc/localtime
+                type: File
+      {{ include "smtc.platform.node-selector" $ }}
+
+{{- end }}
+
+---
+{{- end }}
+{{- end }}

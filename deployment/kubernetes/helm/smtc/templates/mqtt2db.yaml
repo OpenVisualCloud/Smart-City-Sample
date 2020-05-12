@@ -1,0 +1,56 @@
+
+{{- range $scenarioIdx, $scenarioName := $.Values.scenario }}
+{{- $args := dict "scenarioName" $scenarioName "Values" $.Values }}
+{{- range $officeIdx := until ( int ( include "smtc.noffices" $args ) ) }}
+{{- $officeName := printf "%s-office%d" $scenarioName $officeIdx }}
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $officeName }}-mqtt2db
+  labels:
+     app: {{ $officeName }}-mqtt2db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ $officeName }}-mqtt2db
+  template:
+    metadata:
+      labels:
+        app: {{ $officeName }}-mqtt2db
+    spec:
+      enableServiceLinks: false
+      containers:
+        - name: {{ $officeName }}-mqtt2db
+          image: smtc_mqtt2db:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: OFFICE
+              {{- $args := dict "scenarioName" $scenarioName "Values" $.Values "officeIdx" $officeIdx }}
+              {{- include "smtc.env.office" $args }}
+            - name: DBHOST
+              {{- $args := dict "officeName" $officeName "Values" $.Values }}
+              {{- include "smtc.env.dbhost" $args }}
+            - name: MQTTHOST
+              value: "{{ $officeName }}-mqtt-service"
+            - name: SCENARIO
+              value: {{ $scenarioName | quote }}
+            - name: NO_PROXY
+              value: "*"
+            - name: no_proxy
+              value: "*"
+          volumeMounts:
+            - mountPath: /etc/localtime
+              name: timezone
+              readOnly: true
+      volumes:
+          - name: timezone
+            hostPath:
+                path: /etc/localtime
+                type: File
+      {{ include "smtc.platform.node-selector" $ }}
+---
+
+{{- end }}
+{{- end }}

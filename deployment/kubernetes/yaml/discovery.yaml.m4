@@ -1,6 +1,6 @@
 include(office.m4)
 include(platform.m4)
-include(../../script/loop.m4)
+include(../../../script/loop.m4)
 
 ifelse(defn(`DISCOVER_SIMULATED_CAMERA'),`true',`
 apiVersion: apps/v1

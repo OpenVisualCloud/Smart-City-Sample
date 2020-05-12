@@ -1,0 +1,10 @@
+apiVersion: v2
+appVersion: 0.1.0
+description: A Helm chart for the Smart City sample
+home: https://github.com/OpenVisualCloud/Smart-City-Sample
+icon: https://raw.githubusercontent.com/OpenVisualCloud/Smart-City-Sample/master/cloud/html/favicon.ico
+name: Smart-City-Sample
+sources:
+- https://github.com/OpenVisualCloud/Smart-City-Sample
+type: application
+version: 0.1.0

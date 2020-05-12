@@ -1,0 +1,71 @@
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: cloud-web-service
+  labels:
+    app: cloud-web
+spec:
+  ports:
+    - port: 443
+      targetPort: 8443
+      name: https
+  externalIPs:
+    - {{ .Values.cloudWebExternalIP }}
+  selector:
+    app: cloud-web
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cloud-web
+  labels:
+     app: cloud-web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cloud-web
+  template:
+    metadata:
+      labels:
+        app: cloud-web
+    spec:
+      enableServiceLinks: false
+      containers:
+        - name: cloud-web
+          image: smtc_web_cloud:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8443
+          env:
+            - name: DBHOST
+              value: "http://{{ include "smtc.db.name" . }}-service:9200"
+            - name: SCENARIO
+              value: {{ join "," $.Values.scenario | quote }}
+            - name: HEALTH_CHECK
+              {{- if gt (int .Values.noffices) 1 }}
+              value: "enabled"
+              {{- else }}
+              value: "disabled"
+              {{- end }}
+            - name: NO_PROXY
+              value: "*"
+            - name: no_proxy
+              value: "*"
+          volumeMounts:
+            - mountPath: /etc/localtime
+              name: timezone
+              readOnly: true
+            - mountPath: /var/run/secrets
+              name: self-signed-certificate
+              readOnly: true
+      volumes:
+        - name: timezone
+          hostPath:
+            path: /etc/localtime
+            type: File
+        - name: self-signed-certificate
+          secret:
+            secretName: self-signed-certificate
+      {{ include "smtc.platform.node-selector" . }}

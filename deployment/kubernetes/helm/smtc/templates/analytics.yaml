@@ -1,0 +1,244 @@
+
+{{- range $scenarioIdx, $scenarioName := $.Values.scenario }}
+{{- $args := dict "scenarioName" $scenarioName "Values" $.Values }}
+{{- range $officeIdx := until ( int ( include "smtc.noffices" $args ) ) }}
+{{- $officeName := printf "%s-office%d" $scenarioName $officeIdx }}
+
+{{- $args := dict "scenarioName" $scenarioName "Values" $.Values }}
+{{- $nanalytics := include "smtc.nanalytics" $args }}
+
+{{- if eq $scenarioName "traffic" }}
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $officeName }}-analytics-traffic
+  labels:
+    app: {{ $officeName }}-analytics-traffic
+spec:
+  replicas: {{ $nanalytics }}
+  selector:
+    matchLabels:
+      app: {{ $officeName }}-analytics-traffic
+  template:
+    metadata:
+      labels:
+        app: {{ $officeName }}-analytics-traffic
+    spec:
+      enableServiceLinks: false
+      {{- if $.Values.discoverIPCamera }}
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
+      {{- end }}
+      containers:
+        - name: {{ $officeName }}-analytics-traffic
+          image: smtc_analytics_object_{{ include "smtc.platform.suffix" $ }}_{{ $.Values.framework }}:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: OFFICE
+              {{- $args := dict "scenarioName" $scenarioName "Values" $.Values "officeIdx" $officeIdx }}
+              {{- include "smtc.env.office" $args }}
+            - name: DBHOST
+              {{- $args := dict "officeName" $officeName "Values" $.Values }}
+              {{- include "smtc.env.dbhost" $args }}
+            - name: MQTTHOST
+              value: "{{ $officeName }}-mqtt-service"
+            - name: STHOST
+              value: "http://{{ $officeName }}-storage-service:8080/api/upload"
+            - name: EVERY_NTH_FRAME
+              value: "6"
+            - name: SCENARIO
+              value: {{ $scenarioName | quote }}
+            - name: NO_PROXY
+              value: "*"
+            - name: no_proxy
+              value: "*"
+          volumeMounts:
+            - mountPath: /etc/localtime
+              name: timezone
+              readOnly: true
+            {{- include "smtc.platform.mounts" $ }}
+      volumes:
+          - name: timezone
+            hostPath:
+                path: /etc/localtime
+                type: File
+          {{- include "smtc.platform.volumes" $ }}
+      {{ include "smtc.platform.node-selector" $ }}
+
+{{- else if eq $scenarioName "stadium" }}
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $officeName }}-analytics-entrance
+  labels:
+     app: {{ $officeName }}-analytics-entrance
+spec:
+  replicas: {{ $.Values.nanalytics.entrance }}
+  selector:
+    matchLabels:
+      app: {{ $officeName }}-analytics-entrance
+  template:
+    metadata:
+      labels:
+        app: {{ $officeName }}-analytics-entrance
+    spec:
+      enableServiceLinks: false
+      {{- if $.Values.discoverIPCamera }}
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
+      {{- end }}
+      containers:
+        - name: {{ $officeName }}-analytics-entrance
+          image: smtc_analytics_entrance_{{ include "smtc.platform.suffix" $ }}_{{ $.Values.framework }}:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: OFFICE
+              {{- $args := dict "scenarioName" $scenarioName "Values" $.Values "officeIdx" $officeIdx }}
+              {{- include "smtc.env.office" $args }}
+            - name: DBHOST
+              {{- $args := dict "officeName" $officeName "Values" $.Values }}
+              {{- include "smtc.env.dbhost" $args }}
+            - name: MQTTHOST
+              value: "{{ $officeName }}-mqtt-service"
+            - name: STHOST
+              value: "http://{{ $officeName }}-storage-service:8080/api/upload"
+            - name: EVERY_NTH_FRAME
+              value: "6"
+            - name: SCENARIO
+              value: {{ $scenarioName | quote }}
+            - name: NO_PROXY
+              value: "*"
+            - name: no_proxy
+              value: "*"
+          volumeMounts:
+            - mountPath: /etc/localtime
+              name: timezone
+              readOnly: true
+            {{- include "smtc.platform.mounts" $ }}
+      volumes:
+          - name: timezone
+            hostPath:
+                path: /etc/localtime
+                type: File
+          {{- include "smtc.platform.volumes" $ }}
+      {{ include "smtc.platform.node-selector" $ }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $officeName }}-analytics-crowd
+  labels:
+     app: {{ $officeName }}-analytics-crowd
+spec:
+  replicas: {{ $.Values.nanalytics.crowd }}
+  selector:
+    matchLabels:
+      app: {{ $officeName }}-analytics-crowd
+  template:
+    metadata:
+      labels:
+        app: {{ $officeName }}-analytics-crowd
+    spec:
+      enableServiceLinks: false
+      {{- if $.Values.discoverIPCamera }}
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
+      {{- end }}
+      containers:
+        - name: {{ $officeName }}-analytics-crowd
+          image: smtc_analytics_crowd_{{ include "smtc.platform.suffix" $ }}_{{ $.Values.framework }}:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: OFFICE
+              {{- $args := dict "scenarioName" $scenarioName "Values" $.Values "officeIdx" $officeIdx }}
+              {{- include "smtc.env.office" $args }}
+            - name: DBHOST
+              {{- $args := dict "officeName" $officeName "Values" $.Values }}
+              {{- include "smtc.env.dbhost" $args }}
+            - name: MQTTHOST
+              value: "{{ $officeName }}-mqtt-service"
+            - name: STHOST
+              value: "http://{{ $officeName }}-storage-service:8080/api/upload"
+            - name: EVERY_NTH_FRAME
+              value: "30"
+            - name: SCENARIO
+              value: {{ $scenarioName | quote }}
+            - name: NO_PROXY
+              value: "*"
+            - name: no_proxy
+              value: "*"
+          volumeMounts:
+            - mountPath: /etc/localtime
+              name: timezone
+              readOnly: true
+            {{- include "smtc.platform.mounts" $ }}
+      volumes:
+          - name: timezone
+            hostPath:
+                path: /etc/localtime
+                type: File
+          {{- include "smtc.platform.volumes" $ }}
+      {{ include "smtc.platform.node-selector" $ }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $officeName }}-analytics-svcq
+  labels:
+     app: {{ $officeName }}-analytics-svcq
+spec:
+  replicas: {{ $.Values.nanalytics.svcq }}
+  selector:
+    matchLabels:
+      app: {{ $officeName }}-analytics-svcq
+  template:
+    metadata:
+      labels:
+        app: {{ $officeName }}-analytics-svcq
+    spec:
+      enableServiceLinks: false
+      {{- if $.Values.discoverIPCamera }}
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
+      {{- end }}
+      containers:
+        - name: {{ $officeName }}-analytics-svcq
+          image: smtc_analytics_object_{{ include "smtc.platform.suffix" $ }}_{{ $.Values.framework }}:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: OFFICE
+              {{- $args := dict "scenarioName" $scenarioName "Values" $.Values "officeIdx" $officeIdx }}
+              {{- include "smtc.env.office" $args }}
+            - name: DBHOST
+              {{- $args := dict "officeName" $officeName "Values" $.Values }}
+              {{- include "smtc.env.dbhost" $args }}
+            - name: MQTTHOST
+              value: "{{ $officeName }}-mqtt-service"
+            - name: STHOST
+              value: "http://{{ $officeName }}-storage-service:8080/api/upload"
+            - name: EVERY_NTH_FRAME
+              value: "6"
+            - name: SCENARIO
+              value: {{ $scenarioName | quote }}
+            - name: NO_PROXY
+              value: "*"
+            - name: no_proxy
+              value: "*"
+          volumeMounts:
+            - mountPath: /etc/localtime
+              name: timezone
+              readOnly: true
+            {{- include "smtc.platform.mounts" $ }}
+      volumes:
+          - name: timezone
+            hostPath:
+                path: /etc/localtime
+                type: File
+          {{- include "smtc.platform.volumes" $ }}
+      {{ include "smtc.platform.node-selector" $ }}
+{{- end }}
+---
+{{- end }}
+{{- end }}

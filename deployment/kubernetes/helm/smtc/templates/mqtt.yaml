@@ -1,0 +1,61 @@
+
+{{- range $scenarioIdx, $scenarioName := $.Values.scenario }}
+{{- $args := dict "scenarioName" $scenarioName "Values" $.Values }}
+{{- range $officeIdx := until ( int ( include "smtc.noffices" $args ) ) }}
+{{- $officeName := printf "%s-office%d" $scenarioName $officeIdx }}
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ $officeName }}-mqtt-service
+  labels:
+    app: {{ $officeName }}-mqtt
+spec:
+  ports:
+  - port: 1883
+    protocol: TCP
+  selector:
+    app: {{ $officeName }}-mqtt
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $officeName }}-mqtt
+  labels:
+     app: {{ $officeName }}-mqtt
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ $officeName }}-mqtt
+  template:
+    metadata:
+      labels:
+        app: {{ $officeName }}-mqtt
+    spec:
+      enableServiceLinks: false
+      containers:
+        - name: {{ $officeName }}-mqtt
+          image: eclipse-mosquitto:1.5.8
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 1883
+          env:
+            - name: NO_PROXY
+              value: "*"
+            - name: no_proxy
+              value: "*"
+          volumeMounts:
+            - mountPath: /etc/localtime
+              name: timezone
+              readOnly: true
+      volumes:
+          - name: timezone
+            hostPath:
+                path: /etc/localtime
+                type: File
+      {{ include "smtc.platform.node-selector" $ }}
+---
+
+{{- end }}
+{{- end }}

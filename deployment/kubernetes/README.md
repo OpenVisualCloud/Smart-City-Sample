@@ -34,4 +34,5 @@ The command ```make update``` uploads the sample images to each worker node. If 
 
 - [Utility Scripts](../../doc/script.md)   
 - [CMake Options](../../doc/cmake.md)
+- [Helm Charts](helm/smtc/README.md)
 
