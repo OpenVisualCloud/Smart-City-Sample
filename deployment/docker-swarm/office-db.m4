@@ -26,7 +26,7 @@ ifelse(eval(defn(`NOFFICES')>1),1,`
 ')
 
     defn(`OFFICE_NAME')_db_init:
-        image: smtc_db_init:latest
+        image: defn(`DOCKER_REGISTRY')smtc_db_init:latest
         environment:
             DBHOST: "http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')_db,db):9200"
             OFFICE: "defn(`OFFICE_LOCATION')"

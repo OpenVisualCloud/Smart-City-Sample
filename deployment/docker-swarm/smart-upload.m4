@@ -1,7 +1,7 @@
 define(`SERVICE_INTERVAL_SMART_UPLOAD',`120')dnl
 
     defn(`OFFICE_NAME')_smart_upload:
-        image: smtc_smart_upload:latest
+        image: defn(`DOCKER_REGISTRY')smtc_smart_upload:latest
         environment:
             QUERY: "time>=now-eval(defn(`SERVICE_INTERVAL_SMART_UPLOAD')*1000) where objects.detection.bounding_box.x_max-objects.detection.bounding_box.x_min>0.01"
             INDEXES: "recordings,analytics"

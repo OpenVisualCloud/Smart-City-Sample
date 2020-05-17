@@ -6,6 +6,11 @@ set_property(DIRECTORY APPEND PROPERTY ADDITIONAL_MAKE_CLEAN_FILES "${CMAKE_HOME
 add_custom_target(update  ${CMAKE_HOME_DIRECTORY}/script/update-image.sh)
 add_custom_target(discover ${CMAKE_HOME_DIRECTORY}/sensor/discovery/shell.sh /home/discover.py $ENV{PORT_SCAN})
 
+if (NOT DEFINED REGISTRY)
+    set(REGISTRY "")
+elseif (NOT ${REGISTRY} MATCHES "/$")
+    set(REGISTRY "${REGISTRY}/")
+endif()
 if (NOT DEFINED PLATFORM)
     set(PLATFORM "Xeon")
 endif()
@@ -72,3 +77,4 @@ execute_process(COMMAND printf "\n\nThis script will build third party component
 
 
 execute_process(COMMAND printf "\n-- Setting: PLATFORM=${PLATFORM}, SCENARIO=${SCENARIO}, NOFFICES=${NOFFICES}, NCAMERAS=${NCAMERAS}, NANALYTICS=${NANALYTICS}, FRAMEWORK=${FRAMEWORK}, NETWORK=${NETWORK}\n")
+execute_process(COMMAND printf "-- Setting: REGISTRY=${REGISTRY}\n")
