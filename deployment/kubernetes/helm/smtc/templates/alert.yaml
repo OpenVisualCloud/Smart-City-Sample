@@ -23,7 +23,7 @@ spec:
       enableServiceLinks: false
       containers:
         - name: {{ $officeName }}-alert
-          image: smtc_alert:latest
+          image: {{ $.Values.registryPrefix }}smtc_alert:latest
           imagePullPolicy: IfNotPresent
           env:
             - name: OFFICE

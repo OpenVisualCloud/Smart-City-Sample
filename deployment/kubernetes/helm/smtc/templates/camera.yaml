@@ -49,7 +49,7 @@ spec:
       enableServiceLinks: false
       containers:
         - name: {{ $officeName }}-cameras
-          image: smtc_sensor_simulation:latest
+          image: {{ $.Values.registryPrefix }}smtc_sensor_simulation:latest
           imagePullPolicy: IfNotPresent
           ports:
             {{- range $i := until ( $ncameras ) }}
@@ -125,7 +125,7 @@ spec:
     spec:
       containers:
         - name: {{ $officeName }}-cameras-crowd
-          image: smtc_sensor_simulation:latest
+          image: {{ $.Values.registryPrefix }}smtc_sensor_simulation:latest
           imagePullPolicy: IfNotPresent
           ports:
             {{- range $i := until ( int $.Values.ncameras.crowd ) }}
@@ -195,7 +195,7 @@ spec:
     spec:
       containers:
         - name: {{ $officeName }}-cameras-entrance
-          image: smtc_sensor_simulation:latest
+          image: {{ $.Values.registryPrefix }}smtc_sensor_simulation:latest
           imagePullPolicy: IfNotPresent
           ports:
             {{- range $i := until ( int $.Values.ncameras.entrance ) }}

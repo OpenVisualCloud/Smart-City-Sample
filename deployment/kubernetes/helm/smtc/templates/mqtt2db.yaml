@@ -23,7 +23,7 @@ spec:
       enableServiceLinks: false
       containers:
         - name: {{ $officeName }}-mqtt2db
-          image: smtc_mqtt2db:latest
+          image: {{ $.Values.registryPrefix }}smtc_mqtt2db:latest
           imagePullPolicy: IfNotPresent
           env:
             - name: OFFICE

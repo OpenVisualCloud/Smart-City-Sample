@@ -32,7 +32,7 @@ spec:
       {{- end }}
       containers:
         - name: {{ $officeName }}-analytics-traffic
-          image: smtc_analytics_object_{{ include "smtc.platform.suffix" $ }}_{{ $.Values.framework }}:latest
+          image: {{ $.Values.registryPrefix }}smtc_analytics_object_{{ include "smtc.platform.suffix" $ }}_{{ $.Values.framework }}:latest
           imagePullPolicy: IfNotPresent
           env:
             - name: OFFICE
@@ -93,7 +93,7 @@ spec:
       {{- end }}
       containers:
         - name: {{ $officeName }}-analytics-entrance
-          image: smtc_analytics_entrance_{{ include "smtc.platform.suffix" $ }}_{{ $.Values.framework }}:latest
+          image: {{ $.Values.registryPrefix }}smtc_analytics_entrance_{{ include "smtc.platform.suffix" $ }}_{{ $.Values.framework }}:latest
           imagePullPolicy: IfNotPresent
           env:
             - name: OFFICE
@@ -152,7 +152,7 @@ spec:
       {{- end }}
       containers:
         - name: {{ $officeName }}-analytics-crowd
-          image: smtc_analytics_crowd_{{ include "smtc.platform.suffix" $ }}_{{ $.Values.framework }}:latest
+          image: {{ $.Values.registryPrefix }}smtc_analytics_crowd_{{ include "smtc.platform.suffix" $ }}_{{ $.Values.framework }}:latest
           imagePullPolicy: IfNotPresent
           env:
             - name: OFFICE
@@ -211,7 +211,7 @@ spec:
       {{- end }}
       containers:
         - name: {{ $officeName }}-analytics-svcq
-          image: smtc_analytics_object_{{ include "smtc.platform.suffix" $ }}_{{ $.Values.framework }}:latest
+          image: {{ $.Values.registryPrefix }}smtc_analytics_object_{{ include "smtc.platform.suffix" $ }}_{{ $.Values.framework }}:latest
           imagePullPolicy: IfNotPresent
           env:
             - name: OFFICE

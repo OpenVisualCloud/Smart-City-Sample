@@ -1,5 +1,8 @@
 include(../../../../script/loop.m4)
 
+# docker registry prefix
+registryPrefix: "defn(`REGISTRY_PREFIX')"
+
 # platform specifies the target platform: Xeon or VCAC-A.
 platform: "defn(`PLATFORM')"
 

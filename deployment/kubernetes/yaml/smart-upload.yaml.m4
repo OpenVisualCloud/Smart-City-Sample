@@ -21,7 +21,7 @@ spec:
       enableServiceLinks: false
       containers:
         - name: defn(`OFFICE_NAME')-smart-upload
-          image: smtc_smart_upload:latest
+          image: defn(`REGISTRY_PREFIX')smtc_smart_upload:latest
           imagePullPolicy: IfNotPresent
           resources:
             requests:

@@ -37,7 +37,7 @@ spec:
       enableServiceLinks: false
       containers:
         - name: cloud-web
-          image: smtc_web_cloud:latest
+          image: defn(`REGISTRY_PREFIX')smtc_web_cloud:latest
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8443

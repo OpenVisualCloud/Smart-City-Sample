@@ -20,7 +20,7 @@ spec:
       enableServiceLinks: false
       containers:
         - name: defn(`OFFICE_NAME')-mqtt2db
-          image: smtc_mqtt2db:latest
+          image: defn(`REGISTRY_PREFIX')smtc_mqtt2db:latest
           imagePullPolicy: IfNotPresent
           env:
             - name: OFFICE

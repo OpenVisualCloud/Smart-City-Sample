@@ -1,6 +1,6 @@
 
     defn(`OFFICE_NAME')_alert:
-        image: defn(`DOCKER_REGISTRY')smtc_alert:latest
+        image: defn(`REGISTRY_PREFIX')smtc_alert:latest
         volumes:
             - /etc/localtime:/etc/localtime:ro
         environment:

@@ -30,7 +30,7 @@ spec:
       enableServiceLinks: false
       containers:
         - name: {{ $officeName }}-camera-discovery
-          image: smtc_onvif_discovery:latest
+          image: {{ $.Values.registryPrefix }}smtc_onvif_discovery:latest
           imagePullPolicy: IfNotPresent
           env:
             - name: PORT_SCAN
@@ -86,7 +86,7 @@ spec:
     spec:
       containers:
         - name: {{ $officeName }}-camera-discovery-crowd
-          image: smtc_onvif_discovery:latest
+          image: {{ $.Values.registryPrefix }}smtc_onvif_discovery:latest
           imagePullPolicy: IfNotPresent
           env:
             - name: PORT_SCAN
@@ -136,7 +136,7 @@ spec:
     spec:
       containers:
         - name: {{ $officeName }}-camera-discovery-entrance
-          image: smtc_onvif_discovery:latest
+          image: {{ $.Values.registryPrefix }}smtc_onvif_discovery:latest
           imagePullPolicy: IfNotPresent
           env:
             - name: PORT_SCAN
@@ -193,7 +193,7 @@ spec:
       dnsPolicy: ClusterFirstWithHostNet
       containers:
         - name: {{ $officeName }}-ipcamera-discovery
-          image: smtc_onvif_discovery:latest
+          image: {{ $.Values.registryPrefix }}smtc_onvif_discovery:latest
           imagePullPolicy: IfNotPresent
           env:
             - name: PORT_SCAN

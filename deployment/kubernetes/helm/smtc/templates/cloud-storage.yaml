@@ -33,7 +33,7 @@ spec:
       enableServiceLinks: false
       containers:
         - name: cloud-storage
-          image: smtc_storage_manager:latest
+          image: {{ $.Values.registryPrefix }}smtc_storage_manager:latest
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
@@ -66,7 +66,7 @@ spec:
               name: cloud-stdata
       initContainers:
         - name: cloud-storage-init
-          image: centos:7.6.1810
+          image: busybox:latest
           command: ["sh","-c", {{ printf "mkdir -p /var/www/log /var/www/tmp /var/www/cache /var/www/upload /var/www/mp4 && chown -R %d.%d /var/www" (int $.Values.userId) (int $.Values.groupId) | quote }}]
           volumeMounts:
             - mountPath: /etc/localtime
