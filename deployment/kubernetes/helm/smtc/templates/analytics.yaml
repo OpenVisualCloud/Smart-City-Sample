@@ -49,6 +49,8 @@ spec:
               value: "6"
             - name: SCENARIO
               value: {{ $scenarioName | quote }}
+            - name: NETWORK_PREFERENCE
+              value: "{\"{{ include "smtc.platform.device" $ }}\":\"{{ $.Values.networkPreference }}\"}"
             - name: NO_PROXY
               value: "*"
             - name: no_proxy
@@ -108,6 +110,8 @@ spec:
               value: "6"
             - name: SCENARIO
               value: {{ $scenarioName | quote }}
+            - name: NETWORK_PREFERENCE
+              value: "{\"{{ include "smtc.platform.device" $ }}\":\"{{ $.Values.networkPreference }}\"}"
             - name: NO_PROXY
               value: "*"
             - name: no_proxy
@@ -165,6 +169,8 @@ spec:
               value: "30"
             - name: SCENARIO
               value: {{ $scenarioName | quote }}
+            - name: NETWORK_PREFERENCE
+              value: "{\"{{ include "smtc.platform.device" $ }}\":\"{{ $.Values.networkPreference }}\"}"
             - name: NO_PROXY
               value: "*"
             - name: no_proxy
@@ -222,6 +228,8 @@ spec:
               value: "6"
             - name: SCENARIO
               value: {{ $scenarioName | quote }}
+            - name: NETWORK_PREFERENCE
+              value: "{\"{{ include "smtc.platform.device" $ }}\":\"{{ $.Values.networkPreference }}\"}"
             - name: NO_PROXY
               value: "*"
             - name: no_proxy
