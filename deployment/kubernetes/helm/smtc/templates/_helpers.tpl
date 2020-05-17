@@ -109,6 +109,21 @@ Expand the platform nodeSelector.
             nodeSelectorTerms:
               - matchExpressions:
                 - key: "vcac-zone"
+                  operator: NotIn
+                  values:
+                    - "yes"
+{{- end }}
+
+{{/*
+Expand the platform accel-selector.
+*/}}
+{{- define "smtc.platform.accel-selector" -}}
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                - key: "vcac-zone"
                   {{- if eq "vcac-a" ( include "smtc.platform.suffix" . ) }}
                   operator: In
                   {{- else }}

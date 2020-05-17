@@ -64,7 +64,7 @@ spec:
                 path: /etc/localtime
                 type: File
           {{- include "smtc.platform.volumes" $ }}
-      {{ include "smtc.platform.node-selector" $ }}
+      {{ include "smtc.platform.accel-selector" $ }}
 
 {{- else if eq $scenarioName "stadium" }}
 
@@ -123,7 +123,7 @@ spec:
                 path: /etc/localtime
                 type: File
           {{- include "smtc.platform.volumes" $ }}
-      {{ include "smtc.platform.node-selector" $ }}
+      {{ include "smtc.platform.accel-selector" $ }}
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -180,7 +180,7 @@ spec:
                 path: /etc/localtime
                 type: File
           {{- include "smtc.platform.volumes" $ }}
-      {{ include "smtc.platform.node-selector" $ }}
+      {{ include "smtc.platform.accel-selector" $ }}
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -237,7 +237,7 @@ spec:
                 path: /etc/localtime
                 type: File
           {{- include "smtc.platform.volumes" $ }}
-      {{ include "smtc.platform.node-selector" $ }}
+      {{ include "smtc.platform.accel-selector" $ }}
 {{- end }}
 ---
 {{- end }}
