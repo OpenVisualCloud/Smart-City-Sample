@@ -57,10 +57,20 @@ make
 Use the following commands to start/stop Kubernetes services:
 
 ```
-make update
+make update # optional for private registry
 make start_helm
 make stop_helm
 ```
+
+---
+
+The command ```make update``` uploads the sample images to each worker node. If you prefer to use a private docker registry, configure the sample to push images to the private registry during the build:
+
+```
+cmake -DREGISTRY=<registry-url> ..
+```
+
+---
 
 ### Launch Sample UI:
 
