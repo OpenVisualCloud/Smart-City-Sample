@@ -26,11 +26,7 @@ make stop_kubernetes
 
 ---
 
-The command ```make update``` uploads the sample images to each worker node. If you prefer to use a private docker registry, configure the sample to push images to the private registry after each build:  
-
-```
-cmake -DREGISTRY=<registry-url> ..
-```
+The command ```make update``` uploads the sample images to each worker node. If you prefer to use a private docker registry, configure the sample, `cmake -DREGISTRY=<registry-url> ..`, to push images to the private registry after each build.  
 
 ---
 
