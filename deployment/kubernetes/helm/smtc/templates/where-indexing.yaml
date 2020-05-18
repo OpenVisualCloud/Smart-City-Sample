@@ -23,7 +23,7 @@ spec:
       enableServiceLinks: false
       containers:
         - name: {{ $officeName }}-where-indexing
-          image: smtc_where_indexing:latest
+          image: {{ $.Values.registryPrefix }}smtc_where_indexing:latest
           imagePullPolicy: IfNotPresent
           env:
             - name: INDEXES

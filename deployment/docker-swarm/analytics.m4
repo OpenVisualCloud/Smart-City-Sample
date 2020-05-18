@@ -2,7 +2,7 @@ include(platform.m4)
 
 ifelse(defn(`SCENARIO_NAME'),`traffic',`
     defn(`OFFICE_NAME')_analytics_traffic:
-        image: PLATFORM_IMAGE(`smtc_analytics_object_'defn(`PLATFORM_SUFFIX')`_'defn(`FRAMEWORK'):latest)
+        image: PLATFORM_IMAGE(defn(`REGISTRY_PREFIX')`smtc_analytics_object_'defn(`PLATFORM_SUFFIX')`_'defn(`FRAMEWORK'):latest)
         volumes:
             - /etc/localtime:/etc/localtime:ro
 PLATFORM_VOLUME_EXTRA()dnl
@@ -29,7 +29,7 @@ PLATFORM_ENV_EXTRA()dnl
 
 ifelse(defn(`SCENARIO_NAME'),`stadium',`
     defn(`OFFICE_NAME')_analytics_entrance:
-        image: PLATFORM_IMAGE(`smtc_analytics_entrance_'defn(`PLATFORM_SUFFIX')`_'defn(`FRAMEWORK'):latest)
+        image: PLATFORM_IMAGE(defn(`REGISTRY_PREFIX')`smtc_analytics_entrance_'defn(`PLATFORM_SUFFIX')`_'defn(`FRAMEWORK'):latest)
         volumes:
             - /etc/localtime:/etc/localtime:ro
 PLATFORM_VOLUME_EXTRA()dnl
@@ -53,7 +53,7 @@ PLATFORM_ENV_EXTRA()dnl
                     - PLATFORM_ZONE()
 
     defn(`OFFICE_NAME')_analytics_crowd:
-        image: PLATFORM_IMAGE(`smtc_analytics_crowd_'defn(`PLATFORM_SUFFIX')`_'defn(`FRAMEWORK'):latest)
+        image: PLATFORM_IMAGE(defn(`REGISTRY_PREFIX')`smtc_analytics_crowd_'defn(`PLATFORM_SUFFIX')`_'defn(`FRAMEWORK'):latest)
         volumes:
             - /etc/localtime:/etc/localtime:ro
 PLATFORM_VOLUME_EXTRA()dnl
@@ -77,7 +77,7 @@ PLATFORM_ENV_EXTRA()dnl
                     - PLATFORM_ZONE()
 
     defn(`OFFICE_NAME')_analytics_svcq:
-        image: PLATFORM_IMAGE(`smtc_analytics_object_'defn(`PLATFORM_SUFFIX')`_'defn(`FRAMEWORK'):latest)
+        image: PLATFORM_IMAGE(defn(`REGISTRY_PREFIX')`smtc_analytics_object_'defn(`PLATFORM_SUFFIX')`_'defn(`FRAMEWORK'):latest)
         volumes:
             - /etc/localtime:/etc/localtime:ro
 PLATFORM_VOLUME_EXTRA()dnl

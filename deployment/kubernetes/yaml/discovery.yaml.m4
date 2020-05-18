@@ -22,7 +22,7 @@ spec:
       enableServiceLinks: false
       containers:
         - name: defn(`OFFICE_NAME')-camera-discovery
-          image: smtc_onvif_discovery:latest
+          image: defn(`REGISTRY_PREFIX')smtc_onvif_discovery:latest
           imagePullPolicy: IfNotPresent
           env:
             - name: PORT_SCAN
@@ -73,7 +73,7 @@ spec:
     spec:
       containers:
         - name: defn(`OFFICE_NAME')-camera-discovery-crowd
-          image: smtc_onvif_discovery:latest
+          image: defn(`REGISTRY_PREFIX')smtc_onvif_discovery:latest
           imagePullPolicy: IfNotPresent
           env:
             - name: PORT_SCAN
@@ -123,7 +123,7 @@ spec:
     spec:
       containers:
         - name: defn(`OFFICE_NAME')-camera-discovery-entrance
-          image: smtc_onvif_discovery:latest
+          image: defn(`REGISTRY_PREFIX')smtc_onvif_discovery:latest
           imagePullPolicy: IfNotPresent
           env:
             - name: PORT_SCAN
@@ -177,7 +177,7 @@ spec:
       dnsPolicy: ClusterFirstWithHostNet
       containers:
         - name: defn(`OFFICE_NAME')-ipcamera-discovery
-          image: smtc_onvif_discovery:latest
+          image: defn(`REGISTRY_PREFIX')smtc_onvif_discovery:latest
           imagePullPolicy: IfNotPresent
           env:
             - name: PORT_SCAN

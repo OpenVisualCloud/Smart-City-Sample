@@ -1,6 +1,6 @@
 
     defn(`OFFICE_NAME')_simulated_cameras:
-        image: smtc_sensor_simulation:latest
+        image: defn(`REGISTRY_PREFIX')smtc_sensor_simulation:latest
         environment:
 ifelse(defn(`SCENARIO_NAME'),`traffic',`dnl
             FILES: "_traffic.mp4$$"
@@ -23,7 +23,7 @@ ifelse(defn(`SCENARIO_NAME'),`stadium',`dnl
 
 ifelse(defn(`SCENARIO_NAME'),`stadium',`
     defn(`OFFICE_NAME')_simulated_cameras_crowd:
-        image: smtc_sensor_simulation:latest
+        image: defn(`REGISTRY_PREFIX')smtc_sensor_simulation:latest
         environment:
             FILES: "crowd.mp4$$"
             `NCAMERAS': "defn(`NCAMERAS2')"
@@ -40,7 +40,7 @@ ifelse(defn(`SCENARIO_NAME'),`stadium',`
                     - node.labels.vcac_zone!=yes
                     
     defn(`OFFICE_NAME')_simulated_cameras_entrance:
-        image: smtc_sensor_simulation:latest
+        image: defn(`REGISTRY_PREFIX')smtc_sensor_simulation:latest
         environment:
             FILES: "_entrance.mp4$$"
             `NCAMERAS': "defn(`NCAMERAS3')"

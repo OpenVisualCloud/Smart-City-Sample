@@ -20,7 +20,7 @@ spec:
       enableServiceLinks: false
       containers:
         - name: defn(`OFFICE_NAME')-where-indexing
-          image: smtc_where_indexing:latest
+          image: defn(`REGISTRY_PREFIX')smtc_where_indexing:latest
           imagePullPolicy: IfNotPresent
           env:
             - name: INDEXES

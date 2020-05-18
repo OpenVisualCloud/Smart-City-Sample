@@ -1,6 +1,6 @@
 
     defn(`OFFICE_NAME')_mqtt2db:
-        image: smtc_mqtt2db:latest
+        image: defn(`REGISTRY_PREFIX')smtc_mqtt2db:latest
         volumes:
             - /etc/localtime:/etc/localtime:ro
         environment:

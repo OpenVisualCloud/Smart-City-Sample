@@ -40,7 +40,7 @@ spec:
       enableServiceLinks: false
       containers:
         - name: defn(`OFFICE_NAME')-cameras
-          image: smtc_sensor_simulation:latest
+          image: defn(`REGISTRY_PREFIX')smtc_sensor_simulation:latest
           imagePullPolicy: IfNotPresent
           ports:
 loop(`CAMERAIDX',1,defn(`NCAMERAS'),`dnl
@@ -116,7 +116,7 @@ spec:
     spec:
       containers:
         - name: defn(`OFFICE_NAME')-cameras-crowd
-          image: smtc_sensor_simulation:latest
+          image: defn(`REGISTRY_PREFIX')smtc_sensor_simulation:latest
           imagePullPolicy: IfNotPresent
           ports:
 loop(`CAMERAIDX',1,defn(`NCAMERAS2'),`dnl
@@ -185,7 +185,7 @@ spec:
     spec:
       containers:
         - name: defn(`OFFICE_NAME')-cameras-entrance
-          image: smtc_sensor_simulation:latest
+          image: defn(`REGISTRY_PREFIX')smtc_sensor_simulation:latest
           imagePullPolicy: IfNotPresent
           ports:
 loop(`CAMERAIDX',1,defn(`NCAMERAS3'),`dnl

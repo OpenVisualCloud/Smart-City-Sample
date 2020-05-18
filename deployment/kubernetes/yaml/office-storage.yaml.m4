@@ -35,7 +35,7 @@ spec:
       enableServiceLinks: false
       containers:
         - name: defn(`OFFICE_NAME')-storage
-          image: smtc_storage_manager:latest
+          image: defn(`REGISTRY_PREFIX')smtc_storage_manager:latest
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080

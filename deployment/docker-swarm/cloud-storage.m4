@@ -1,6 +1,6 @@
 
     cloud_storage:
-        image: smtc_storage_manager:latest
+        image: defn(`REGISTRY_PREFIX')smtc_storage_manager:latest
         environment:
             DBHOST: "http://ifelse(eval(defn(`NOFFICES')>1),1,cloud_db,db):9200"
             INDEXES: "recordings_c"

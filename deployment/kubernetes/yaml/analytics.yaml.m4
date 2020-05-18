@@ -25,7 +25,7 @@ ifelse(defn(`DISCOVER_IP_CAMERA'),`true',`dnl
 ')dnl
       containers:
         - name: defn(`OFFICE_NAME')-analytics-traffic
-          image: `smtc_analytics_object_'defn(`PLATFORM_SUFFIX')`_'defn(`FRAMEWORK'):latest
+          image: defn(`REGISTRY_PREFIX')`smtc_analytics_object_'defn(`PLATFORM_SUFFIX')`_'defn(`FRAMEWORK'):latest
           imagePullPolicy: IfNotPresent
           env:
             - name: OFFICE
@@ -84,7 +84,7 @@ ifelse(defn(`DISCOVER_IP_CAMERA'),`true',`dnl
 ')dnl
       containers:
         - name: defn(`OFFICE_NAME')-analytics-entrance
-          image: `smtc_analytics_entrance_'defn(`PLATFORM_SUFFIX')`_'defn(`FRAMEWORK'):latest
+          image: defn(`REGISTRY_PREFIX')`smtc_analytics_entrance_'defn(`PLATFORM_SUFFIX')`_'defn(`FRAMEWORK'):latest
           imagePullPolicy: IfNotPresent
           env:
             - name: OFFICE
@@ -143,7 +143,7 @@ ifelse(defn(`DISCOVER_IP_CAMERA'),`true',`dnl
 ')dnl
       containers:
         - name: defn(`OFFICE_NAME')-analytics-crowd
-          image: `smtc_analytics_crowd_'defn(`PLATFORM_SUFFIX')`_'defn(`FRAMEWORK'):latest
+          image: defn(`REGISTRY_PREFIX')`smtc_analytics_crowd_'defn(`PLATFORM_SUFFIX')`_'defn(`FRAMEWORK'):latest
           imagePullPolicy: IfNotPresent
           env:
             - name: OFFICE
@@ -202,7 +202,7 @@ ifelse(defn(`DISCOVER_IP_CAMERA'),`true',`dnl
 ')dnl
       containers:
         - name: defn(`OFFICE_NAME')-analytics-svcq
-          image: `smtc_analytics_object_'defn(`PLATFORM_SUFFIX')`_'defn(`FRAMEWORK'):latest
+          image: defn(`REGISTRY_PREFIX')`smtc_analytics_object_'defn(`PLATFORM_SUFFIX')`_'defn(`FRAMEWORK'):latest
           imagePullPolicy: IfNotPresent
           env:
             - name: OFFICE

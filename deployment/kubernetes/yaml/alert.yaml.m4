@@ -20,7 +20,7 @@ spec:
       enableServiceLinks: false
       containers:
         - name: defn(`OFFICE_NAME')-alert
-          image: smtc_alert:latest
+          image: defn(`REGISTRY_PREFIX')smtc_alert:latest
           imagePullPolicy: IfNotPresent
           env:
             - name: OFFICE

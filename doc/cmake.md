@@ -2,6 +2,7 @@
 ### CMake Options:
 
 Use the following definitions to customize the building process:   
+- **REGISTRY**: Specify the URL of the privcay docker registry. All built images will be pushed to the registry.   
 - **PLATFORM**: Specify the target platform: `Xeon` or [`VCAC-A`](vcac-a.md).   
 - **FRAMEWORK**: Specify the target framework: `gst` or `ffmpeg` , Now `gst` is enabled.   
 - **SCENARIO**: Specify the sample scenario(s): `traffic`, `stadium`, or their combination `traffic,stadium`. As each scenario runs its own set of services and databases, it is recommended that you run multiple scenarios only on a multiple-node deployment setting.     

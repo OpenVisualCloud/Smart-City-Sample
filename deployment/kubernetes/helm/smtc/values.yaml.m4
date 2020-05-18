@@ -1,5 +1,8 @@
 include(../../../../script/loop.m4)
 
+# docker registry prefix
+registryPrefix: "defn(`REGISTRY_PREFIX')"
+
 # platform specifies the target platform: Xeon or VCAC-A.
 platform: "defn(`PLATFORM')"
 
@@ -48,9 +51,9 @@ loopifdef(OFFICEIDX,1,`defn(`scenario'defn(`SCENARIOIDX'))`_office'defn(`OFFICEI
   - "defn(defn(`scenario'defn(`SCENARIOIDX'))`_office'defn(`OFFICEIDX')`_location')"
 ')')')
 
-# network specifies the analytics model precision: FP32, INT8 or FP16, or their 
+# networkPreference specifies the analytics model precision: FP32, INT8 or FP16, or their 
 # combination as a comma delimited string. 
-network_preference: "defn(`NETWORK_PREFERENCE')"
+networkPreference: "defn(`NETWORK_PREFERENCE')"
 
 # default settings for IP camera simulation & discovery.
 # IP cameras are assumed being deployed on 192.168.x.0/24 subnets.

@@ -103,7 +103,7 @@ spec:
       enableServiceLinks: false
       containers:
         - name: {{ $officeName }}-db-init
-          image: smtc_db_init:latest
+          image: {{ $.Values.registryPrefix }}smtc_db_init:latest
           imagePullPolicy: IfNotPresent
           env:
             - name: OFFICE

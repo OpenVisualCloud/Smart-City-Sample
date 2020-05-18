@@ -19,7 +19,7 @@ Follow the [instructions](https://docs.docker.com/engine/swarm/swarm-tutorial/cr
   - Create a user of the same user id (uid) and group id (gid) as the current user of the manager node.      
   - Follow the [instructions](https://www.elastic.co/guide/en/elasticsearch/reference/6.8/vm-max-map-count.html) to increase the VM mapping threshold.    
 
-- On the swarm manager, setup password-less acess from the swarm manager to each swarm node:   
+- Optional: on the swarm manager, setup password-less acess from the swarm manager to each swarm node (required by `make update`):   
 
 ```
 ssh-keygen
@@ -29,10 +29,20 @@ ssh-copy-id <worker>
 Finally, start/stop services as follows:   
 
 ```
-make update      # distribute images to swarm nodes
+make update # optional for private registry
 make start_docker_swarm
 make stop_docker_swarm
 ```
+
+---
+
+The command ```make update``` uploads the sample images to each worker node. If you prefer to use a private docker registry, configure the sample to push images to the private registry after each build:
+
+```
+cmake -DREGISTRY=<registry-url> ..
+```
+
+---
 
 ### See Also 
 

@@ -1,6 +1,6 @@
 
     defn(`OFFICE_NAME')_where_indexing:
-        image: smtc_where_indexing:latest
+        image: defn(`REGISTRY_PREFIX')smtc_where_indexing:latest
         environment:
             INDEXES: "recordings,analytics"
             OFFICE: "defn(`OFFICE_LOCATION')"

@@ -67,10 +67,20 @@ make
 Use the following commands to start/stop services via docker swarm:    
 
 ```bash
-make update
+make update # optional for private registry
 make start_docker_swarm      
 make stop_docker_swarm      
 ```
+
+---
+
+The command ```make update``` uploads the sample images to each worker node. If you prefer to use a private docker registry, configure the sample to push images to the private registry after each build:
+
+```
+cmake -DREGISTRY=<registry-url> ..
+```
+
+---
 
 See also:  [Docker Swarm Setup](deployment/docker-swarm/README.md).    
 
