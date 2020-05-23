@@ -6,14 +6,14 @@ COPY archive/*.mp4 /mnt/simulated/
 CMD ["/home/simulate.py"]
 
 ####
-ARG  USER
-ARG  GROUP
+ARG  USER=docker
+ARG  GROUP=docker
 ARG  UID
 ARG  GID
 ## VLC must run as nonroot
 ## must use ; here to ignore user exist status code
 RUN  groupadd ${GROUP}; \
      useradd -d /home/${USER} -g ${GROUP} ${USER}; \
-     chown -R ${USER}.${GROUP} /home
+     chown -R ${USER}:${GROUP} /home
 USER ${USER}
 ####

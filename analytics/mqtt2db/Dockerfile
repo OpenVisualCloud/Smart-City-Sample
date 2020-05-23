@@ -5,8 +5,8 @@ COPY *.py /home/
 CMD  ["/home/mqtt2db.py"]
 
 ####
-ARG  USER
-ARG  GROUP
+ARG  USER=docker
+ARG  GROUP=docker
 ARG  UID
 ARG  GID
 ## must use ; here to ignore user exist status code
