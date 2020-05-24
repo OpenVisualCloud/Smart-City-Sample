@@ -3,8 +3,8 @@ FROM centos:7.6.1810
 RUN  yum install -y -q openssl && rm -rf /var/cache/yum/*
 
 ####
-ARG  USER
-ARG  GROUP
+ARG  USER=docker
+ARG  GROUP=docker
 ARG  UID
 ARG  GID
 ## must use ; here to ignore user exist status code
