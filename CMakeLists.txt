@@ -1,10 +1,7 @@
 cmake_minimum_required (VERSION 2.8)
 
 Project(smart_city NONE)
-add_custom_target(dist  ${CMAKE_HOME_DIRECTORY}/script/mk-dist.sh)
 set_property(DIRECTORY APPEND PROPERTY ADDITIONAL_MAKE_CLEAN_FILES "${CMAKE_HOME_DIRECTORY}/dist")
-add_custom_target(update  ${CMAKE_HOME_DIRECTORY}/script/update-image.sh)
-add_custom_target(discover ${CMAKE_HOME_DIRECTORY}/sensor/discovery/shell.sh /home/discover.py $ENV{PORT_SCAN})
 
 if (NOT DEFINED REGISTRY)
     set(REGISTRY "")
@@ -63,6 +60,12 @@ if(PLATFORM STREQUAL "VCAC-A")
     endif()
 endif()
 string(REGEX REPLACE ",$" "" NETWORK ${NETWORK})
+
+add_custom_target(dist  ${CMAKE_HOME_DIRECTORY}/script/mk-dist.sh)
+if(NOT REGISTRY)
+    add_custom_target(update ${CMAKE_HOME_DIRECTORY}/script/update-image.sh)
+endif()
+add_custom_target(discover ${CMAKE_HOME_DIRECTORY}/sensor/discovery/shell.sh /home/discover.py $ENV{PORT_SCAN})
 
 file(GLOB dirs "deployment" "*")
 list(REMOVE_DUPLICATES dirs)
