@@ -1,6 +1,11 @@
-include(office.m4)
 include(platform.m4)
 include(../../../script/loop.m4)
+include(../../../maintenance/db-init/sensor-info.m4)
+
+looplist(SCENARIO_NAME,defn(`SCENARIOS'),`
+loop(OFFICEIDX,1,defn(`NOFFICES'),`
+include(office.m4)
+ifelse(len(defn(`OFFICE_LOCATION')),0,,`
 
 ifelse(eval(defn(`NCAMERAS')>0),1,`dnl
 apiVersion: v1
@@ -215,3 +220,6 @@ loop(`CAMERAIDX',1,defn(`NCAMERAS3'),`dnl
 PLATFORM_NODE_SELECTOR(`Xeon')dnl
 ')dnl
 ')dnl
+
+---
+')')')
