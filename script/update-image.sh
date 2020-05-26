@@ -46,6 +46,7 @@ function transfer_image {
 
 DIR=$(dirname $(readlink -f "$0"))
 docker node ls > /dev/null 2> /dev/null && (
+    echo "Updating docker-swarm nodes..."
     for id in $(docker node ls -q 2> /dev/null); do
         ready="$(docker node inspect -f {{.Status.State}} $id)"
         active="$(docker node inspect -f {{.Spec.Availability}} $id)"
@@ -64,9 +65,10 @@ docker node ls > /dev/null 2> /dev/null && (
             fi
         fi
     done
-)
+) || echo -n ""
 
 kubectl get node >/dev/null 2>/dev/null && (
+    echo "Updating Kubernetes nodes..."
     for id in $(kubectl get nodes --selector='!node-role.kubernetes.io/master' 2> /dev/null | grep ' Ready ' | cut -f1 -d' '); do
         nodeip="$(kubectl describe node $id | grep InternalIP | sed -E 's/[^0-9]+([0-9.]+)$/\1/')"
         labels="$(kubectl describe node $id | awk '/Annotations:/{lf=0}/Labels:/{sub("Labels:","",$0);lf=1}lf==1{sub("=",":",$1);print$1}')"
@@ -75,4 +77,4 @@ kubectl get node >/dev/null 2>/dev/null && (
             transfer_image $image "$id" "$nodeip" "$labels"
         done
     done
-)
+) || echo -n ""
