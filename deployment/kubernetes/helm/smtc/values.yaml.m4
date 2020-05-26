@@ -44,12 +44,11 @@ cloudWebExternalIP: "defn(`HOSTIP')"
 # offices
 officeLocations:
 include(../../../../maintenance/db-init/sensor-info.m4)dnl
-loop(SCENARIOIDX,1,defn(`NSCENARIOS'),`dnl
-ifdef(`scenario'defn(`SCENARIOIDX'),`dnl
-  defn(`scenario'defn(`SCENARIOIDX')):
-loopifdef(OFFICEIDX,1,`defn(`scenario'defn(`SCENARIOIDX'))`_office'defn(`OFFICEIDX')`_location'',`dnl
-  - "defn(defn(`scenario'defn(`SCENARIOIDX'))`_office'defn(`OFFICEIDX')`_location')"
-')')')
+looplist(SCENARIO_NAME,defn(`SCENARIOS'),`dnl
+  defn(`SCENARIO_NAME'):
+loopifdef(OFFICEIDX,1,`defn(`SCENARIO_NAME')`_office'defn(`OFFICEIDX')`_location'',`dnl
+  - "defn(defn(`SCENARIO_NAME')`_office'defn(`OFFICEIDX')`_location')"
+')')
 
 # networkPreference specifies the analytics model precision: FP32, INT8 or FP16, or their 
 # combination as a comma delimited string. 
