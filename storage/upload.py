@@ -68,7 +68,7 @@ class UploadHandler(web.RequestHandler):
                     db_cam.update(sensor, {"bandwidth": bandwidth})
 
             # check disk usage and send alert
-            disk_usage=psutil.disk_usage(self._storage)[3]
+            disk_usage=psutil.disk_usage(self._storage).percent
             if disk_usage>=warn_disk_th:
                 level="fatal" if disk_usage>=fatal_disk_th else "warning"
                 db_alt=DBIngest(host=dbhost, index="alerts", office=office)
