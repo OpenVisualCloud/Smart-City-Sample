@@ -75,7 +75,7 @@ class RunVA(object):
                 }
                 parameters = {
                     "inference-interval": every_nth_frame,
-                    "recording_prefix": "/tmp/" + sensor
+                    "recording_prefix": "/tmp/rec/" + sensor
                 }
 
                 if algorithmName == "crowd-counting":

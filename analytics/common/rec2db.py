@@ -48,7 +48,7 @@ class Rec2DB(object):
     def loop(self):
         self._observer.start()
 
-        folder="/tmp/"+self._sensor
+        folder="/tmp/rec/"+self._sensor
         os.makedirs(folder, exist_ok=True)
         self._watcher=self._observer.schedule(self._handler, folder, recursive=True)
         self._observer.join()
