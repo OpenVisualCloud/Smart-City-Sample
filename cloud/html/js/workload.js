@@ -36,7 +36,7 @@ var workload={
                         },
                         ticks: {
                             min: 0,
-                            max: 100,
+                            max: 99,
                         },
                     }],
                     xAxes: [{
