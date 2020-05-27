@@ -55,12 +55,15 @@ loopifdef(OFFICEIDX,1,`defn(`SCENARIO_NAME')`_office'defn(`OFFICEIDX')`_location
 networkPreference: "defn(`NETWORK_PREFERENCE')"
 
 # default settings for IP camera simulation & discovery.
-# IP cameras are assumed being deployed on 192.168.x.0/24 subnets.
-discoverIPCamera: false
 discoverSimulatedCamera: true
-cameraRTSPPort: 17000
-cameraRTPPort: 27000
-cameraPortStep: 10
+cameraRTSPPort:   17000
+cameraRTPPort:    27000
+cameraPortStep:   10
+discoverIPCamera: false
+cameraSubnet:
+  - "192.168.1.0/24"
+  - "192.168.2.0/24"
+  - "192.168.3.0/24"
 
 # optional: provide Linux user id & group permissioned to access cloud storage
 # userID is obtained using command: `$ id -u`

@@ -197,7 +197,7 @@ spec:
           imagePullPolicy: IfNotPresent
           env:
             - name: PORT_SCAN
-              value: "-p T:80-65535 192.168.{{ add $officeIdx 1 }}.0/24"
+              value: "-p T:80-65535 {{ index $.Values.cameraSubnet $officeIdx }}"
             - name: OFFICE
               {{- $args := dict "scenarioName" $scenarioName "Values" $.Values "officeIdx" $officeIdx }}
               {{- include "smtc.env.office" $args }}
