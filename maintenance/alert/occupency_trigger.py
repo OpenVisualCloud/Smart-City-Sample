@@ -7,7 +7,7 @@ import os
 
 office=list(map(float,os.environ["OFFICE"].split(",")))
 service_interval=list(map(float,os.environ["SERVICE_INTERVAL"].split(",")))
-args=list(map(float,os.environ["OCCUPENCY_ARGS"].split(",")))
+args=os.environ["OCCUPENCY_ARGS"].split(",")
 dbhost=os.environ["DBHOST"]
 
 class OccupencyTrigger(Trigger):
@@ -18,28 +18,30 @@ class OccupencyTrigger(Trigger):
    def trigger(self):
        time.sleep(service_interval[0])
        objects=("",0)
-       seats=("",0)
-       people=("",0)
-       queue=("",0)
+       crowd=("",0)
+       entrance=("",0)
+       svcq=("",0)
        try:
-           for q in self._db.search("time>=now-"+str(args[0])+" and (nobjects>"+str(args[1])+" or count.people>"+str(args[2])+" or nseats>"+str(args[3])+" or count.queue>"+str(args[4])+")",size=75):
+           for q in self._db.search("time>=now-"+args[0]+" and ((nobjects>"+args[1]+" and algorithm:'object') or (count.people>"+args[2]+" and algorithm:'svcq') or (count.people>"+args[3]+" and algorithm:'crowd') or (count.people>"+args[4]+" and algorithm:'entrance'))",size=75):
 
-               if "nobjects" in q["_source"]:
-                   if q["_source"]["nobjects"]>objects[1]:
-                       objects=(q["_source"]["location"],q["_source"]["nobjects"])
+               algorithm=q["_source"]["algorithm"]
+               location=q["_source"]["location"]
 
-               if "nseats" in q["_source"]:
-                   if q["_source"]["nseats"]>seats[1]:
-                       seats=(q["_source"]["location"],q["_source"]["nseats"])
-
-               if "count" in q["_source"]:
-                   if "people" in q["_source"]["count"]:
-                       if q["_source"]["count"]["people"]>people[1]:
-                           people=(q["_source"]["location"],q["_source"]["count"]["people"])
-
-                   if "queue" in q["_source"]["count"]:
-                       if q["_source"]["count"]["queue"]>queue[1]:
-                           queue=(q["_source"]["location"],q["_source"]["count"]["queue"])
+               if algorithm.find("object")>=0:
+                   nobjects=q["_source"]["nobjects"]
+                   if nobjects>objects[1]:
+                       objects=(location, nobjects)
+               else:
+                   people=q["_source"]["count"]["people"]
+                   if algorithm.find("crowd")>=0:
+                       if people>crowd[1]:
+                           crowd=(location,people)
+                   elif algorithm.find("entrance")>=0:
+                       if people>entrance[1]:
+                           entrance=(location,people)
+                   elif algorithm.find("svcq")>=0:
+                       if people>svcq[1]:
+                           svcq=(location,people)
 
        except Exception as e:
            print("Exception: "+str(e), flush=True)
@@ -55,34 +57,35 @@ class OccupencyTrigger(Trigger):
                    },
                }],
            })
-       if people[1]>0:
+       if entrance[1]>0:
            info.append({
-               "location": people[0],
+               "location": entrance[0],
                "warning": [{
-                   "message": "Entrence crowded: #people="+str(people[1]),
+                   "message": "Entrence crowded: #people="+str(entrance[1]),
                    "args": {
-                       "occupency": people[1],
+                       "occupency": entrance[1],
                    }
                }],
            })
-       if queue[1]>0:
+       if svcq[1]>0:
            info.append({
-               "location": queue[0],
+               "location": svcq[0],
                "warning": [{
-                   "message": "Entrence crowded: #queue="+str(queue[1]),
+                   "message": "Service slow: #queue="+str(svcq[1]),
                    "args": {
-                       "occupency": queue[1],
+                       "occupency": svcq[1],
                    }
                }],
            })
-       if seats[1]>0: 
+       if crowd[1]>0: 
            info.append({
-               "location": seats[0],
+               "location": crowd[0],
                "warning": [{
-                   "message": "Zone crowded: #seats="+str(seats[1]),
+                   "message": "Zone crowded: #seats="+str(crowd[1]),
                    "args": {
-                       "nseats": seats[1],
+                       "nseats": crowd[1],
                    }
                }],
            })
+
        return info
