@@ -27,7 +27,10 @@ class OccupencyTrigger(Trigger):
                nobjects=q["_source"]["nobjects"]
                algorithm=q["_source"]["algorithm"]
                location=q["_source"]["location"]
-               if algorithm.find("entrance")>=0:
+               if algorithm.find("object")>=0:
+                   if nobjects>objects[1]:
+                       objects=(location,nobjects)
+               elif algorithm.find("entrance")>=0:
                    if nobjects>entrance[1]:
                        entrance=(location,nobjects)
                elif algorithm.find("svcq")>=0:
