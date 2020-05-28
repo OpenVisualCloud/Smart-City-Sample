@@ -74,7 +74,7 @@ defn(`PLATFORM_VOLUME_MOUNTS')dnl
           - name: recording
             emptyDir:
               medium: Memory
-              sizeLimit: 100Mi
+              sizeLimit: 150Mi
 defn(`PLATFORM_VOLUMES')dnl
 PLATFORM_NODE_SELECTOR(`VCAC-A')dnl
 ')dnl
@@ -128,12 +128,25 @@ ifelse(defn(`DISCOVER_IP_CAMERA'),`true',`dnl
             - mountPath: /etc/localtime
               name: timezone
               readOnly: true
+            - mountPath: /tmp/rec
+              name: recording
 defn(`PLATFORM_VOLUME_MOUNTS')dnl
+      initContainers:
+            - image: busybox:latest
+              name: init
+              command: ["/bin/chown","defn(`USERID'):defn(`GROUPID')","/tmp/rec"]
+              volumeMounts:
+                - mountPath: /tmp/rec
+                  name: recording
       volumes:
           - name: timezone
             hostPath:
                 path: /etc/localtime
                 type: File
+          - name: recording
+            emptyDir:
+              medium: Memory
+              sizeLimit: 150Mi
 defn(`PLATFORM_VOLUMES')dnl
 PLATFORM_NODE_SELECTOR(`VCAC-A')dnl
 
@@ -187,12 +200,25 @@ ifelse(defn(`DISCOVER_IP_CAMERA'),`true',`dnl
             - mountPath: /etc/localtime
               name: timezone
               readOnly: true
+            - mountPath: /tmp/rec
+              name: recording
 defn(`PLATFORM_VOLUME_MOUNTS')dnl
+      initContainers:
+            - image: busybox:latest
+              name: init
+              command: ["/bin/chown","defn(`USERID'):defn(`GROUPID')","/tmp/rec"]
+              volumeMounts:
+                - mountPath: /tmp/rec
+                  name: recording
       volumes:
           - name: timezone
             hostPath:
                 path: /etc/localtime
                 type: File
+          - name: recording
+            emptyDir:
+              medium: Memory
+              sizeLimit: 150Mi
 defn(`PLATFORM_VOLUMES')dnl
 PLATFORM_NODE_SELECTOR(`VCAC-A')dnl
 
@@ -246,12 +272,25 @@ ifelse(defn(`DISCOVER_IP_CAMERA'),`true',`dnl
             - mountPath: /etc/localtime
               name: timezone
               readOnly: true
+            - mountPath: /tmp/rec
+              name: recording
 defn(`PLATFORM_VOLUME_MOUNTS')dnl
+      initContainers:
+            - image: busybox:latest
+              name: init
+              command: ["/bin/chown","defn(`USERID'):defn(`GROUPID')","/tmp/rec"]
+              volumeMounts:
+                - mountPath: /tmp/rec
+                  name: recording
       volumes:
           - name: timezone
             hostPath:
                 path: /etc/localtime
                 type: File
+          - name: recording
+            emptyDir:
+              medium: Memory
+              sizeLimit: 150Mi
 defn(`PLATFORM_VOLUMES')dnl
 PLATFORM_NODE_SELECTOR(`VCAC-A')dnl
 ')
