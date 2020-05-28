@@ -74,8 +74,6 @@ spec:
             - mountPath: /etc/localtime
               name: timezone
               readOnly: true
-            - mountPath: /usr/share/elasticsearch/data
-              name: {{ $officeName }}-esdata
       initContainers:
         - name: init-volume-sysctl
           image: busybox:latest
@@ -87,8 +85,6 @@ spec:
             hostPath:
                 path: /etc/localtime
                 type: File
-          - name: {{ $officeName }}-esdata
-            emptyDir: {}
       {{ include "smtc.platform.node-selector" $ }}
 
 ---
