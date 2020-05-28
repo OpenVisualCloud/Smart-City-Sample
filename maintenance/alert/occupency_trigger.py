@@ -22,26 +22,20 @@ class OccupencyTrigger(Trigger):
        entrance=("",0)
        svcq=("",0)
        try:
-           for q in self._db.search("time>=now-"+args[0]+" and ((nobjects>"+args[1]+" and algorithm:'object') or (count.people>"+args[2]+" and algorithm:'svcq') or (count.people>"+args[3]+" and algorithm:'crowd') or (count.people>"+args[4]+" and algorithm:'entrance'))",size=75):
+           for q in self._db.search("time>=now-"+args[0]+" and ((nobjects>"+args[1]+" and algorithm:'object') or (nobjects>"+args[2]+" and algorithm:'svcq') or (nobjects>"+args[3]+" and algorithm:'crowd') or (nobjects>"+args[4]+" and algorithm:'entrance'))",size=75):
 
+               nobjects=q["_source"]["nobjects"]
                algorithm=q["_source"]["algorithm"]
                location=q["_source"]["location"]
-
-               if algorithm.find("object")>=0:
-                   nobjects=q["_source"]["nobjects"]
-                   if nobjects>objects[1]:
-                       objects=(location, nobjects)
-               else:
-                   people=q["_source"]["count"]["people"]
-                   if algorithm.find("crowd")>=0:
-                       if people>crowd[1]:
-                           crowd=(location,people)
-                   elif algorithm.find("entrance")>=0:
-                       if people>entrance[1]:
-                           entrance=(location,people)
-                   elif algorithm.find("svcq")>=0:
-                       if people>svcq[1]:
-                           svcq=(location,people)
+               if algorithm.find("entrance")>=0:
+                   if nobjects>entrance[1]:
+                       entrance=(location,nobjects)
+               elif algorithm.find("svcq")>=0:
+                   if nobjects>svcq[1]:
+                       svcq=(location,nobjects)
+               elif algorithm.find("crowd")>=0:
+                   if nobjects>crowd[1]:
+                       crowd=(location,nobjects)
 
        except Exception as e:
            print("Exception: "+str(e), flush=True)

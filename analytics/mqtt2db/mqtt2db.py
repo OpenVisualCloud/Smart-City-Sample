@@ -67,6 +67,7 @@ class MQTT2DB(object):
 
     def on_message(self, client, userdata, message):
         try:
+
             r = json.loads(str(message.payload.decode("utf-8", "ignore")))
             r.update(r["tags"])
             del r["tags"]
@@ -78,6 +79,9 @@ class MQTT2DB(object):
                 r["nobjects"] = int(len(r["objects"]))
             if "objects" in r and scenario == "stadium":
                 r["count"] = {"people": len(r["objects"])}
+            if "count" in r:
+                r["nobjects"] = int(max([r["count"][k] for k in r["count"]]))
+
         except:
             print(trackback.format_exc(), flush=True)
 
