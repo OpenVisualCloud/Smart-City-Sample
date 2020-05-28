@@ -77,7 +77,7 @@ spec:
           - name: recording
             emptyDir:
                 medium: Memory
-                sizeLimit: 100Mi
+                sizeLimit: 150Mi
           {{- include "smtc.platform.volumes" $ }}
       {{ include "smtc.platform.accel-selector" $ }}
 
@@ -133,12 +133,25 @@ spec:
             - mountPath: /etc/localtime
               name: timezone
               readOnly: true
+            - mountPath: /tmp/rec
+              name: recording
             {{- include "smtc.platform.mounts" $ }}
+      initContainers:
+            - image: busybox:latest
+              name: init
+              command: ["/bin/chown","{{ $.Values.userId }}:{{ $.Values.groupId }}","/tmp/rec"]
+              volumeMounts:
+                - mountPath: /tmp/rec
+                  name: recording
       volumes:
           - name: timezone
             hostPath:
                 path: /etc/localtime
                 type: File
+          - name: recording
+            emptyDir:
+                medium: Memory
+                sizeLimit: 150Mi
           {{- include "smtc.platform.volumes" $ }}
       {{ include "smtc.platform.accel-selector" $ }}
 ---
@@ -192,12 +205,25 @@ spec:
             - mountPath: /etc/localtime
               name: timezone
               readOnly: true
+            - mountPath: /tmp/rec
+              name: recording
             {{- include "smtc.platform.mounts" $ }}
+      initContainers:
+            - image: busybox:latest
+              name: init
+              command: ["/bin/chown","{{ $.Values.userId }}:{{ $.Values.groupId }}","/tmp/rec"]
+              volumeMounts:
+                - mountPath: /tmp/rec
+                  name: recording
       volumes:
           - name: timezone
             hostPath:
                 path: /etc/localtime
                 type: File
+          - name: recording
+            emptyDir:
+                medium: Memory
+                sizeLimit: 150Mi
           {{- include "smtc.platform.volumes" $ }}
       {{ include "smtc.platform.accel-selector" $ }}
 ---
@@ -251,12 +277,25 @@ spec:
             - mountPath: /etc/localtime
               name: timezone
               readOnly: true
+            - mountPath: /tmp/rec
+              name: recording
             {{- include "smtc.platform.mounts" $ }}
+      initContainers:
+            - image: busybox:latest
+              name: init
+              command: ["/bin/chown","{{ $.Values.userId }}:{{ $.Values.groupId }}","/tmp/rec"]
+              volumeMounts:
+                - mountPath: /tmp/rec
+                  name: recording
       volumes:
           - name: timezone
             hostPath:
                 path: /etc/localtime
                 type: File
+          - name: recording
+            emptyDir:
+                medium: Memory
+                sizeLimit: 150Mi
           {{- include "smtc.platform.volumes" $ }}
       {{ include "smtc.platform.accel-selector" $ }}
 {{- end }}
