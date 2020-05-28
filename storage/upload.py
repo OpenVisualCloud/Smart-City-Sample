@@ -8,6 +8,7 @@ from signal import signal, SIGTERM
 from db_query import DBQuery
 from db_ingest import DBIngest
 from probe import probe, run
+from language import text
 import datetime
 import time
 import base64
@@ -72,7 +73,7 @@ class UploadHandler(web.RequestHandler):
             if disk_usage>=warn_disk_th:
                 level="fatal" if disk_usage>=fatal_disk_th else "warning"
                 db_alt=DBIngest(host=dbhost, index="alerts", office=office)
-                message="Halt recording: disk "+str(disk_usage)+"%" if disk_usage>=halt_rec_th else "Disk usage: "+str(disk_usage)+"%"
+                message=text["halt recording"].format(disk_usage) if disk_usage>=halt_rec_th else text["disk usage"].format(disk_usage)
                 db_alt.ingest({
                     "time": int(time.mktime(datetime.datetime.now().timetuple())*1000),
                     "office": {

@@ -2,6 +2,7 @@
 
 from db_query import DBQuery
 from trigger import Trigger
+from language import text
 import time
 import os
 
@@ -48,7 +49,7 @@ class OccupencyTrigger(Trigger):
            info.append({
                "location": objects[0],
                "warning": [{
-                   "message": "Traffic busy: #objects="+str(objects[1]),
+                   "message": text["traffic busy"].format(objects[1]),
                    "args": {
                        "nobjects": objects[1],
                    },
@@ -58,7 +59,7 @@ class OccupencyTrigger(Trigger):
            info.append({
                "location": entrance[0],
                "warning": [{
-                   "message": "Entrence crowded: #people="+str(entrance[1]),
+                   "message": text["entrance crowded"].format(entrance[1]),
                    "args": {
                        "occupency": entrance[1],
                    }
@@ -68,7 +69,7 @@ class OccupencyTrigger(Trigger):
            info.append({
                "location": svcq[0],
                "warning": [{
-                   "message": "Service slow: #queue="+str(svcq[1]),
+                   "message": text["service slow"].format(svcq[1]),
                    "args": {
                        "occupency": svcq[1],
                    }
@@ -78,7 +79,7 @@ class OccupencyTrigger(Trigger):
            info.append({
                "location": crowd[0],
                "warning": [{
-                   "message": "Zone crowded: #seats="+str(crowd[1]),
+                   "message": text["seat crowded"].format(crowd[1]),
                    "args": {
                        "nseats": crowd[1],
                    }

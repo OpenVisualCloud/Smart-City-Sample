@@ -2,6 +2,7 @@
 
 from db_query import DBQuery
 from trigger import Trigger
+from language import text
 import time
 import os
 
@@ -35,7 +36,7 @@ class ImbalanceTrigger(Trigger):
         if nsensors["total"]>nsensors["streaming"]+nsensors["idle"]:
             info.append({
                 "fatal": [{ 
-                    "message": "Check sensor: #disconnected="+str(nsensors["total"]-nsensors["streaming"]-nsensors["idle"]),
+                    "message": text["check sensor"].format(nsensors["total"]-nsensors["streaming"]-nsensors["idle"]),
                     "args": nsensors,
                 }]
             })
@@ -43,7 +44,7 @@ class ImbalanceTrigger(Trigger):
         if nalgorithms["total"]>nsensors["streaming"]+nsensors["idle"]:
             info.append({
                 "warning": [{
-                    "message": "Imbalance: #analytics="+str(nalgorithms["total"])+",#sensors="+str(nsensors["streaming"]+nsensors["idle"]),
+                    "message": text("imbalance").format(nalgorithms["total"],nsensors["streaming"]+nsensors["idle"]),
                     "args": {
                         "nalgorithms": nalgorithms["total"],
                         "nsensors": nsensors["streaming"]+nsensors["idle"],

@@ -128,19 +128,19 @@ $("#homeSearch").on("focus", function () {
             });
             if (w!=text) return;
             if (wc["type"]=="date") {
-                candidates[0]="Search date time: VAR>MM/DD/YYYY, VAR<hh/mm/ss[.uuu], or VAR>=MM/DD/YYYY hh/mm/ss[.uuu], where hh is in 24 hours.";
+                candidates[0]=text["hint-search-datetime"];
             }
             if (wc["type"] in {"long":1,"float":1,"integer":1,"short":1,"byte":1,"double":1}) {
                 var range="";
                 if ("min" in wc) range=" ["+wc.min+"-)";
                 if ("max" in wc) if ("min" in wc) range=" ["+wc.min+"-"+wc.max+"]"; else range=" (-"+wc.max+"]";
-                candidates[0]="Search numbers"+range+": VAR=&lt;expr&gt; or VAR&gt;=&lt;expr&gt;";
+                candidates[0]=text.format(text["hint-search-number"],range);
             }
             if (wc["type"]=="text") {
-                candidates[0]='Search strings: VAR:"string" or VAR="string"';
+                candidates[0]=text["hint-search-string"];
             }
             if (wc["type"]=="geo_point") {
-                candidates[0]="Search geometric locations: VAR:[&lt;lat&gt;,&lt;lon&gt;] or VAR:[&lt;lat&gt;,&lt;lon&gt;,&lt;radius&gt;].";
+                candidates[0]=text["hint-search-location"];
             }
         });
         return candidates;
