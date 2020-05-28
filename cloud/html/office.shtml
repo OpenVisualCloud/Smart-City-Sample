@@ -5,15 +5,15 @@
   <div class="page-office-algorithm-table">
     <table algorithm-table>
       <thead>
-        <th>Algorithm</th>
-        <th>Instance</th>
-        <th>Sensor</th>
-        <th>Status</th>
-        <th>Latency (ms)</th>
-        <th>Performance (fps)</th>
-        <th>Skip (frames)</th>
-        <th>CPU (%)</th>
-        <th>Mem (%)</th>
+        <th>检测服务</th>
+        <th>实例</th>
+        <th>摄像头</th>
+        <th>状态</th>
+        <th>延迟(毫秒)</th>
+        <th>性能(帧/秒)</th>
+        <th>跳帧(帧)</th>
+        <th>处理器(%)</th>
+        <th>内存(%)</th>
       </thead>
       <tbody>
       </tbody>
@@ -27,10 +27,10 @@
   <div class="page-office-service-table">
     <table service-table>
       <thead>
-        <th>Name</th>
-        <th>Service</th>
-        <th>Instance</th>
-        <th>Status</th>
+        <th>服务名称</th>
+        <th>服务分类</th>
+        <th>服务实例</th>
+        <th>服务状态</th>
       </thead>
       <tbody></tbody>
     </table>

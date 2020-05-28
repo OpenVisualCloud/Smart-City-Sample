@@ -2,7 +2,7 @@
   <div class="top-bar-left">
     <ul class="menu header-background-color">
       <li class="menu-text">
-        <h4 id="header-text" class="header-text-color">Smart City E2E Pipeline<span id="header-alert"></span></h4>
+        <h4 id="header-text" class="header-text-color">智能城市管理端到端全程演示<span id="header-alert"></span></h4>
       </li>
     </ul>
   </div>
