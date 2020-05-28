@@ -35,7 +35,7 @@ spec:
             - name: SERVICE_INTERVAL
               value: "3,5,15"
             - name: OCCUPENCY_ARGS
-              value: "120000,8,200,300"
+              value: "100000,8,3,1000,20"
             - name: NO_PROXY
               value: "*"
             - name: no_proxy

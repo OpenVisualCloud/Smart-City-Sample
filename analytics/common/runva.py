@@ -67,11 +67,11 @@ class RunVA(object):
                 tags={
                     "sensor": sensor, 
                     "location": location, 
-                    "algorithm": algorithm,
+                    "algorithm": algorithmName,
                     "office": {
                         "lat": office[0], 
                         "lon": office[1]
-                    }
+                    },
                 }
                 parameters = {
                     "inference-interval": every_nth_frame,
