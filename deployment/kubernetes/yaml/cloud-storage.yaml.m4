@@ -63,23 +63,9 @@ spec:
             - mountPath: /etc/localtime
               name: timezone
               readOnly: true
-            - mountPath: /var/www
-              name: cloud-stdata
-      initContainers:
-        - name: cloud-storage-init
-          image: busybox:latest
-          command: ["sh","-c","mkdir -p /var/www/log /var/www/tmp /var/www/cache /var/www/upload /var/www/mp4 && chown -R defn(`USERID').defn(`GROUPID') /var/www"]
-          volumeMounts:
-            - mountPath: /etc/localtime
-              name: timezone
-              readOnly: true
-            - mountPath: /var/www
-              name: cloud-stdata
       volumes:
         - name: timezone
           hostPath:
             path: /etc/localtime
             type: File
-        - name: cloud-stdata
-          emptyDir: {}
 PLATFORM_NODE_SELECTOR(`Xeon')dnl

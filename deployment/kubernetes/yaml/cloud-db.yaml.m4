@@ -72,8 +72,6 @@ ifelse(eval(defn(`NOFFICES')>1),1,`dnl
             - mountPath: /etc/localtime
               name: timezone
               readOnly: true
-            - mountPath: /usr/share/elasticsearch/data
-              name: defn(`DB_NAME')-esdata
       initContainers:
         - name: init-volume-sysctl
           image: busybox:latest
@@ -85,6 +83,4 @@ ifelse(eval(defn(`NOFFICES')>1),1,`dnl
             hostPath:
                 path: /etc/localtime
                 type: File
-          - name: defn(`DB_NAME')-esdata
-            emptyDir: {}
 PLATFORM_NODE_SELECTOR(`Xeon')dnl

@@ -79,8 +79,6 @@ spec:
             - mountPath: /etc/localtime
               name: timezone
               readOnly: true
-            - mountPath: /usr/share/elasticsearch/data
-              name: defn(`OFFICE_NAME')-esdata
       initContainers:
         - name: init-volume-sysctl
           image: busybox:latest
@@ -92,8 +90,6 @@ spec:
             hostPath:
                 path: /etc/localtime
                 type: File
-          - name: defn(`OFFICE_NAME')-esdata
-            emptyDir: {}
 PLATFORM_NODE_SELECTOR(`Xeon')dnl
 
 ---

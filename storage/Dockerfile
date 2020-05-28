@@ -19,6 +19,5 @@ RUN  [ ${GID} -gt 0 ] && groupadd -f -g ${GID} ${GROUP}; \
      touch /var/run/nginx.pid && \
      mkdir -p /var/log/nginx /var/lib/nginx /var/www/cache /var/www/upload /var/www/mp4 && \
      chown -R ${UID}:${GID} /var/run/nginx.pid /var/log/nginx /var/lib/nginx /var/www /etc/nginx/nginx.conf
-VOLUME ["/var/www"]
 USER ${UID}
 ####

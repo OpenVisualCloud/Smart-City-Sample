@@ -67,25 +67,11 @@ spec:
             - mountPath: /etc/localtime
               name: timezone
               readOnly: true
-            - mountPath: /var/www
-              name: {{ $officeName }}-stdata
-      initContainers:
-        - name: storage-init
-          image: busybox:latest
-          command: ["sh","-c",{{ printf "mkdir -p /var/www/log /var/www/tmp /var/www/cache /var/www/upload /var/www/mp4 && chown -R %d.%d /var/www" (int $.Values.userId) (int $.Values.groupId) | quote }}]
-          volumeMounts:
-            - mountPath: /etc/localtime
-              name: timezone
-              readOnly: true
-            - mountPath: /var/www
-              name: {{ $officeName }}-stdata
       volumes:
         - name: timezone
           hostPath:
             path: /etc/localtime
             type: File
-        - name: {{ $officeName }}-stdata
-          emptyDir: {}
       {{ include "smtc.platform.node-selector" $ }}
 
 ---
