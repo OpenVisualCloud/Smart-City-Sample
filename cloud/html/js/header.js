@@ -85,11 +85,11 @@ $("#homeSearch").on("focus", function () {
         e.preventDefault();
         e.stopPropagation();
         if (candidates.length==0) return;
-        var text=page.val().substring(0,page[0].selectionStart);
+        var text1=page.val().substring(0,page[0].selectionStart);
         var text2=candidates[candidateIdx];
         for (var i=text2.length;i>=0;i--) {
-            if (i>=text2.length || text.substring(text.length-i)!=text2.substring(0,i)) continue;
-            page.val(text+text2.substring(i));
+            if (i>=text2.length || text1.substring(text1.length-i)!=text2.substring(0,i)) continue;
+            page.val(text1+text2.substring(i));
             page.trigger('input');
             return;
         }
@@ -112,10 +112,10 @@ $("#homeSearch").on("focus", function () {
 }).on("input",function (e) {
     var page=$(this);
 
-    var textPrep=function (text) {
-        return text.replace(/"[^"]*"*/,'""').replace(/'[^']*'*/,"''").replace(/ ([Aa][Nn][Dd]|[Oo][Rr]|[Nn][Oo][Tt]|[Ww][Hh][Ee][Rr][Ee]) /g,'&&');
+    var textPrep=function (text1) {
+        return text1.replace(/"[^"]*"*/,'""').replace(/'[^']*'*/,"''").replace(/ ([Aa][Nn][Dd]|[Oo][Rr]|[Nn][Oo][Tt]|[Ww][Hh][Ee][Rr][Ee]) /g,'&&');
     };
-    var textHelp=function (hints, ltext, rtext, text) {
+    var textHelp=function (hints, ltext, rtext, text1) {
         var candidates=[""];
         ltext=ltext.split(/[\&\|\!\(\)\]\+\-\*\/]/).pop().replace(/\s/g,"");
         $.each(hints, function (w, wc) {
@@ -126,7 +126,7 @@ $("#homeSearch").on("focus", function () {
                 var query=w+'="'+value+'"';
                 if (query.startsWith(ltext)) candidates.push(query);
             });
-            if (w!=text) return;
+            if (w!=text1) return;
             if (wc["type"]=="date") {
                 candidates[0]=text["hint-search-datetime"];
             }
@@ -146,18 +146,18 @@ $("#homeSearch").on("focus", function () {
         return candidates;
     };
 
-    var text=page.val(), cursor=page.get(0).selectionStart;
-    var rtext=textPrep(text.substring(cursor));
-    var ltext=text.substring(0,cursor);
+    var text1=page.val(), cursor=page.get(0).selectionStart;
+    var rtext=textPrep(text1.substring(cursor));
+    var ltext=text1.substring(0,cursor);
     var indexes=page.data('index').split(',');
     var index=indexes[(indexes.length>1 && ltext.match(/ [Ww][Hh][Ee][Rr][Ee] /))?1:0];
     ltext=textPrep(ltext);
     var varp=/[a-z_A-Z0-9.<=>:\[, ]/i, s, e;
     for (s=ltext.length-1;s>=0&&varp.test(ltext.charAt(s));s--) {}
     for (e=0;e<rtext.length&&varp.test(rtext.charAt(e));e++) {}
-    text=(ltext.substring(s+1)+rtext.substring(0,e)).split(/[<=>:]/)[0].replace(/\s/g,"");
+    text1=(ltext.substring(s+1)+rtext.substring(0,e)).split(/[<=>:]/)[0].replace(/\s/g,"");
 
-    var candidates=textHelp(page.data('hints')[index], ltext, rtext, text);
+    var candidates=textHelp(page.data('hints')[index], ltext, rtext, text1);
     var desc=candidates.shift();
     var candidateIdx;
     for (candidateIdx=0;candidateIdx<candidates.length;candidateIdx++)
