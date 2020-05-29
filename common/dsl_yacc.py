@@ -2,6 +2,7 @@
 
 import ply.yacc as yacc
 from dsl_lex import tokens, lexer
+from language_dsl import text
 import datetime
 import time
 import re
@@ -9,7 +10,7 @@ import re
 def get_spec(p, var):
     specs=p.parser.specs
     i=var["stage"]
-    if i>=len(specs): raise Exception("Parsing Error: Unsupported WHERE")
+    if i>=len(specs): raise Exception(text["unsupported where"])
     return specs[i]
 
 def check_nested_label(spec, var):
@@ -138,7 +139,7 @@ def p_term_divide(p):
     """term : term DIVIDE factor"""
     if "number" in p[1] and "number" in p[3]:
         if p[3]["number"] == 0:
-            raise Exception("Math Error: " + str(p[1]["number"]) + "/" + str(p[3]["number"]))
+            raise Exception(text["math error"].format(p[1]["number"],p[3]["number"]))
         p[0] = {"number": p[1]["number"] / p[3]["number"]}
     else:
         p[0] = {"op": ["/", p[1], p[3]]}
@@ -187,7 +188,7 @@ def p_time_am(p):
     """time : TIME AM"""
     p[0] = p[1]
     dt=datetime.datetime.fromtimestamp(p[1]/1000)
-    if dt.hour>12 or dt.hour==0: raise Exception("Syntax Exception: AM")
+    if dt.hour>12 or dt.hour==0: raise Exception(text["syntax error"].format("AM"))
     if dt.hour==12: p[0]=p[0]-12*3600*1000
 
 def p_time_pm(p):
@@ -195,7 +196,7 @@ def p_time_pm(p):
     p[0] = p[1]
     dt=datetime.datetime.fromtimestamp(p[1]/1000)
     print(dt)
-    if dt.hour==0 or dt.hour>12: raise Exception("Syntax Exception: PM")
+    if dt.hour==0 or dt.hour>12: raise Exception(text["syntax error"].format("PM"))
     if dt.hour!=12: p[0]=p[0]+p[2]
 
 def p_factor_variable(p):
@@ -211,16 +212,16 @@ def p_factor_parened(p):
 
 def p_query_geo_within(p):
     """query : VAR CONTAINS LBRACKET expr COMMA expr RBRACKET"""
-    if "number" not in p[4]: raise Exception("Parsing Error: "+str(p[4]))
-    if "number" not in p[6]: raise Exception("Parsing Error: "+str(p[6]))
+    if "number" not in p[4]: raise Exception(text["syntax error"].format(p[4]))
+    if "number" not in p[6]: raise Exception(text["syntax error"].format(p[6]))
     (nested, var) = check_nested_label(get_spec(p,p[1]), p[1]["name"])
     p[0]=nested_query(nested,{"geo_distance":{"distance":100,str(var):{"lat":p[4]["number"],"lon":p[6]["number"]}}})
 
 def p_query_geo_within_distance(p):
     """query : VAR CONTAINS LBRACKET expr COMMA expr COMMA expr RBRACKET"""
-    if "number" not in p[4]: raise Exception("Parsing Error: "+str(p[4]))
-    if "number" not in p[6]: raise Exception("Parsing Error: "+str(p[6]))
-    if "number" not in p[8]: raise Exception("Parsing Error: "+str(p[8]))
+    if "number" not in p[4]: raise Exception(text["syntax error"].format(p[4]))
+    if "number" not in p[6]: raise Exception(text["syntax error"].format(p[6]))
+    if "number" not in p[8]: raise Exception(text["syntax error"].format(p[8]))
     (nested, var) = check_nested_label(get_spec(p,p[1]), p[1]["name"])
     p[0]=nested_query(nested,{"geo_distance":{"distance":p[8]["number"],str(var):{"lat":p[4]["number"],"lon":p[6]["number"]}}})
 
@@ -298,14 +299,14 @@ def p_query_eq(p):
 
 def p_query_eq_boolean(p):
     """query : expr EQUAL BOOLEAN"""
-    if "var" not in p[1]: raise Exception("Syntax Error: First argument must be a VAR")
+    if "var" not in p[1]: raise Exception(text["var first"])
     (nested, var) = check_nested_label(p[1]["spec"], p[1]["var"])
     p[0] = nested_query(nested, {"term": { var: True } })
     if not p[3]: p[0] = {"bool": { "must_not": p[0] } }
         
 def p_query_eq_string(p):
     """query : expr EQUAL STRING"""
-    if "var" not in p[1]: raise Exception("Syntax Error: First argument must be a VAR")
+    if "var" not in p[1]: raise Exception(text["var first"])
     (nested, var) = check_nested_label(p[1]["spec"], p[1]["var"])
     if var == "_id":
         p[0] = { "ids": { "values": [ p[3] ] }}
@@ -314,7 +315,7 @@ def p_query_eq_string(p):
     
 def p_query_eq_all(p):
     """query : expr EQUAL MULTIPLY"""
-    if "var" not in p[1]: raise Exception("Syntax Error: First argument must be a VAR")
+    if "var" not in p[1]: raise Exception(text["var first"])
     (nested, var)=check_nested_label(p[1]["spec"], p[1]["var"])
     p[0] = nested_query(nested, { "exists": { "field": var }})
     
@@ -333,7 +334,7 @@ def p_query_neq(p):
 
 def p_query_neq_boolean(p):
     """query : expr NOTEQUAL BOOLEAN"""
-    if "var" not in p[1]: raise Exception("Syntax Error: only VAR!=BOOLEAN supported")
+    if "var" not in p[1]: raise Exception(text["var!=boolean only"])
     (nested, var) = check_nested_label(p[1]["spec"], p[1]["var"])
     p[0] = nested_query(nested, {"term": { var: True } })
     if p[3]: p[0] = {"bool": { "must_not": p[0] } }
@@ -364,8 +365,8 @@ def p_where_query(p):
 
 def p_error(p):
     if p is None:
-        raise Exception("Parsing Error: Unexpected EOL")
-    raise Exception("Parsing Error: " + str(p.value))
+        raise Exception(text["unexpected eol"])
+    raise Exception(text["syntax error"].format(p.value))
 
 parser = yacc.yacc(tabmodule='dsl_yacc_tab', debug=1, optimize=0, write_tables=False)
 

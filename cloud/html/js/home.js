@@ -1,7 +1,7 @@
 
 function format_sensor_tooltip(template, sensor) {
     $.each(template.find("td[field]"),function (x,v) {
-        $(v).text(sensor._source[$(v).attr("field")]);
+        $(v).text(text.translate(sensor._source[$(v).attr("field")]));
     });
     template.find("[location]").text("["+sensor._source.location.lat.toFixed(3)+","+sensor._source.location.lon.toFixed(3)+"]");
     template.find("[resolution]").text(sensor._source.resolution.width+"x"+sensor._source.resolution.height);

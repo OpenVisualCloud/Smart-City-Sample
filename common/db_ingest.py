@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 
+from language_dsl import translate
 import requests
 import json
 
@@ -16,7 +17,7 @@ class DBIngest(object):
             reason=r.json()["error"]["reason"]
         except:
             r.raise_for_status()
-        raise Exception(reason)
+        raise Exception(translate(reason))
 
     def ingest_bulk(self, bulk, batch=500):
         ''' save bulk data to the database
