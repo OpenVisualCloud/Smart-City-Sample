@@ -4,7 +4,7 @@ import requests
 import time
 import json
 from dsl_yacc import compile, check_nested_label
-from language_dsl import translate
+from language_dsl import text
 
 class DBQuery(object):
     def __init__(self, index, office, host):
@@ -20,9 +20,13 @@ class DBQuery(object):
         if r.status_code==200 or r.status_code==201: return
         try:
             reason=r.json()["error"]["reason"]
+            print("Exception: "+str(reason), flush=True)
         except:
-            r.raise_for_status()
-        raise Exception(translate(reason))
+            try:
+                r.raise_for_status()
+            except Exception as e:
+                print("Exception: "+str(e), flush=True)
+        raise Exception(text["query error"])
 
     def _spec_from_mapping(self, spec, prefix, properties):
         for field in properties:
