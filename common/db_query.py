@@ -21,7 +21,10 @@ class DBQuery(object):
         try:
             reason=r.json()["error"]["reason"]
         except:
-            r.raise_for_status()
+            try:
+                r.raise_for_status()
+            except Exception as e:
+                raise Exception(translate(str(e)))
         raise Exception(translate(reason))
 
     def _spec_from_mapping(self, spec, prefix, properties):
