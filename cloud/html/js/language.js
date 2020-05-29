@@ -32,10 +32,7 @@ text={
     "mb/s": "Mb/s",
     "gb/s": "Gb/s",
 
-    "traffic": "traffic",
     "traffic planning": "道路交通",
-
-    "stadium": "stadium",
     "stadium services": "体育场馆",
     
     "connection info": "链接信息",
