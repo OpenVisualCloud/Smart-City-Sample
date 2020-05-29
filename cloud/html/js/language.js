@@ -32,10 +32,7 @@ text={
     "mb/s": "Mb/s",
     "gb/s": "Gb/s",
 
-    "traffic": "traffic",
     "traffic planning": "Traffic Planning",
-
-    "stadium": "stadium",
     "stadium services": "Stadium Services",
     
     "connection info": "Connection Info",
