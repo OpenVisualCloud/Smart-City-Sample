@@ -1,15 +1,15 @@
 [{
     "scenario": "traffic",
-    "address": "Dawson Creek",
+    "address": "宁波路站点",
     "location": {
-        "lat": 45.539626,
-        "lon": -122.929569
+        "lat": 31.2402,
+        "lon": 121.47813
     },
     "sensors": [{
-        "address": "Shute & Dawson Creek",
+        "address": "天潼路四川中路",
         "location": {
-            "lat": 45.544223,
-            "lon": -122.926128
+            "lat": 31.2471,
+            "lon": 121.4812
         },
         "algorithm": "object-detection",
         "mnth": 75.0,
@@ -19,10 +19,10 @@
         "theta": 0.0,
         "simsn": "cams1o1c0"
     },{
-        "address": "Brookwood & Dawson Creek",
+        "address": "天潼路福建北路",
         "location": {
-            "lat": 45.546249,
-            "lon": -122.932145
+            "lat": 31.24527,
+            "lon": 121.47403
         },
         "algorithm": "object-detection",
         "mnth": 75.0,
@@ -32,10 +32,10 @@
         "theta": 115.0,
         "simsn": "cams1o1c1"
     },{
-        "address": "Brookwood & Airport Rd",
+        "address": "西藏北路曲埠路",
         "location": {
-            "lat": 45.538971,
-            "lon": -122.939726
+            "lat": 31.24413,
+            "lon": 121.46698
         },
         "algorithm": "object-detection",
         "mnth": 75.0,
@@ -45,10 +45,10 @@
         "theta": 225.0,
         "simsn": "cams1o1c2"
     },{
-        "address": "Cornell & 48th Ave",
+        "address": "北京西路西藏北路",
         "location": {
-            "lat": 45.533498,
-            "lon": -122.933868
+            "lat": 31.2395,
+            "lon": 121.469
         },
         "algorithm": "object-detection",
         "mnth": 75.0,
@@ -58,10 +58,10 @@
         "theta": 280.0,
         "simsn": "cams1o1c3"
     },{
-        "address": "Shute & Butler St",
+        "address": "九江路西藏中路",
         "location": {
-            "lat": 45.538148,
-            "lon": -122.926131
+            "lat": 31.2356,
+            "lon": 121.4705
         },
         "algorithm": "object-detection",
         "mnth": 75.0,
@@ -71,10 +71,10 @@
         "theta": 0.0,
         "simsn": "cams1o1c4"
     },{
-        "address": "Brookwood & Library",
+        "address": "广东路浙江中路",
         "location": {
-            "lat": 45.54289,
-            "lon": -122.93716
+            "lat": 31.2336,
+            "lon": 121.4758
         },
         "algorithm": "object-detection",
         "mnth": 75.0,
@@ -84,10 +84,10 @@
         "theta": 170.0,
         "simsn": "cams1o1c5"
     },{
-        "address": "Cornell & Shute",
+        "address": "广东路山东中路",
         "location": {
-            "lat": 45.5335,
-            "lon": -122.9260
+            "lat": 31.2346,
+            "lon": 121.4804
         },
         "algorithm": "object-detection",
         "mnth": 75.0,
@@ -97,10 +97,10 @@
         "theta": 270.0,
         "simsn": "cams1o1c6"
     },{
-        "address": "Tendem Way",
+        "address": "福州路四川中路",
         "location": {
-            "lat": 45.5415,
-            "lon": -122.9227
+            "lat": 31.2372,
+            "lon": 121.4845
         },
         "algorithm": "object-detection",
         "mnth": 75.0,
@@ -110,10 +110,10 @@
         "theta": 0.0,
         "simsn": "cams1o1c7"
     },{
-        "address": "Cornell and Brookwood",
+        "address": "南京东路中山中一路",
         "location": {
-            "lat": 45.532718,
-            "lon": -122.938067
+            "lat": 31.2408,
+            "lon": 121.4856
         },
         "algorithm": "object-detection",
         "mnth": 75.0,
@@ -124,34 +124,19 @@
         "device": {
             "SerialNumber": "071D3E467CCB"
         }
-    },{
-        "address": "Cornell and Elan Young Parkway",
-        "location": {
-            "lat": 45.533671,
-            "lon": -122.930607
-        },
-        "algorithm": "object-detection",
-        "mnth": 75.0,
-        "alpha": 45.0,
-        "fovh": 90.0,
-        "fovv": 68.0,
-        "theta": 90.0,
-        "device": {
-            "SerialNumber": "AMC0468C3847D602CA"
-        }
     }]
 },{
     "scenario": "traffic",
-    "address": "Shady Wood",
+    "address": "南京西路站",
     "location": {
-        "lat": 45.524460,
-        "lon": -122.960475
+        "lat": 31.22877,
+        "lon": 121.4473
     },
     "sensors": [{
-        "address": "Brogden & 37th Ave",
+        "address": "新闸路常德路",
         "location": {
-            "lat": 45.524295,
-            "lon": -122.944296
+            "lat": 31.2313,
+            "lon": 121.44197
         },
         "algorithm": "object-detection",
         "mnth": 75.0,
@@ -161,10 +146,10 @@
         "theta": 90.0,
         "simsn": "cams1o2c0"
     },{
-        "address": "Veteran & 34th Ave",
+        "address": "新闸路胶州路",
         "location": {
-            "lat": 45.528657,
-            "lon": -122.946688
+            "lat": 31.22977,
+            "lon": 121.43873
         },
         "algorithm": "object-detection",
         "mnth": 75.0,
@@ -174,10 +159,10 @@
         "theta": 135.0,
         "simsn": "cams1o2c1"
     },{
-        "address": "Sunrise & 25th Ave",
+        "address": "北京西路万航渡路",
         "location": {
-            "lat": 45.536660,
-            "lon": -122.957050
+            "lat": 31.22652,
+            "lon": 121.43827
         },
         "algorithm": "object-detection",
         "mnth": 75.0,
@@ -187,10 +172,10 @@
         "theta": 180.0,
         "simsn": "cams1o2c2"
     },{
-        "address": "Cornell & 17th Ave",
+        "address": "南京西路华山路",
         "location": {
-            "lat": 45.530704,
-            "lon": -122.964528
+            "lat": 31.22447,
+            "lon": 121.44062
         },
         "algorithm": "object-detection",
         "mnth": 75.0,
@@ -200,10 +185,10 @@
         "theta": 0.0,
         "simsn": "cams1o2c3"
     },{
-        "address": "Grant & Delsey",
+        "address": "延安中路富民路",
         "location": {
-            "lat": 45.528238,
-            "lon": -122.974870
+            "lat": 31.22357,
+            "lon": 121.44492
         },
         "algorithm": "object-detection",
         "mnth": 75.0,
@@ -213,10 +198,10 @@
         "theta": 225.0,
         "simsn": "cams1o2c4"
     },{
-        "address": "Cornell & Main St",
+        "address": "茂名南路陕西南路",
         "location": {
-            "lat": 45.5220,
-            "lon": -122.9738
+            "lat": 31.22571,
+            "lon": 121.45226
         },
         "algorithm": "object-detection",
         "mnth": 75.0,
@@ -226,10 +211,10 @@
         "theta": 0.0,
         "simsn": "cams1o2c5"
     },{
-        "address": "Oak & 18th Ave",
+        "address": "南京西路茂名北路",
         "location": {
-            "lat": 45.5185,
-            "lon": -122.9640
+            "lat": 31.23126,
+            "lon": 121.45394
         },
         "algorithm": "object-detection",
         "mnth": 75.0,
@@ -239,10 +224,10 @@
         "theta": 180.0,
         "simsn": "cams1o2c6"
     },{
-        "address": "Main & 28th Ave",
+        "address": "北京西路江宁路",
         "location": {
-            "lat": 45.5207,
-            "lon": -122.9545
+            "lat": 31.23211,
+            "lon": 121.45062
         },
         "algorithm": "object-detection",
         "mnth": 75.0,
@@ -254,16 +239,16 @@
     }]
 },{
     "scenario": "traffic",
-    "address": "Glencoe Tract",
+    "address": "武宁路站点",
     "location": {
-        "lat": 45.543645,
-        "lon": -122.984178
+        "lat": 31.2398,
+        "lon": 121.4155
     },
     "sensors": [{
-        "address": "Jackson School & Harewood",
+        "address": "奉曦路中山北路",
         "location": {
-            "lat": 45.538991,
-            "lon": -122.979685
+            "lat": 31.2473,
+            "lon": 121.4222
         },
         "algorithm": "object-detection",
         "mnth": 75.0,
@@ -273,10 +258,10 @@
         "theta": 90.0,
         "simsn": "cams1o3c0"
     },{
-        "address": "Circle Park",
+        "address": "武宁路曹杨路",
         "location": {
-            "lat": 45.543897,
-            "lon": -122.970496
+            "lat": 31.2472,
+            "lon": 121.4042
         },
         "algorithm": "object-detection",
         "mnth": 75.0,
@@ -286,10 +271,10 @@
         "theta": 315.0,
         "simsn": "cams1o3c1"
     },{
-        "address": "Evergreen & Jackson School",
+        "address": "枣阳路杏山路",
         "location": {
-            "lat": 45.549972,
-            "lon": -122.979717
+            "lat": 31.2401,
+            "lon": 121.4019
         },
         "algorithm": "object-detection",
         "mnth": 75.0,
@@ -299,10 +284,10 @@
         "theta": 270.0,
         "simsn": "cams1o3c2"
     },{
-        "address": "Glencoe & Evergreen",
+        "address": "金沙江路大河渡路",
         "location": {
-            "lat": 45.549807,
-            "lon": -122.995426
+            "lat": 31.2338,
+            "lon": 121.3973
         },
         "algorithm": "object-detection",
         "mnth": 75.0,
@@ -312,10 +297,10 @@
         "theta": 0.0,
         "simsn": "cams1o3c3"
     },{
-        "address": "Glencoe & Lenox St",
+        "address": "金沙江路中山北路",
         "location": {
-            "lat": 45.544388,
-            "lon": -122.995659
+            "lat": 31.2329,
+            "lon": 121.4059
         },
         "algorithm": "object-detection",
         "mnth": 75.0,
@@ -325,10 +310,10 @@
         "theta": 90.0,
         "simsn": "cams1o3c4"
     },{
-        "address": "Glencoe & Harewood",
+        "address": "白玉路隆德路", 
         "location": {
-            "lat": 45.5355,
-            "lon": -122.9910
+            "lat": 31.2304,
+            "lon": 121.4147
         },
         "algorithm": "object-detection",
         "mnth": 75.0,
@@ -338,10 +323,10 @@
         "theta": 90.0,
         "simsn": "cams1o3c5"
     },{
-        "address": "Jackson School & Evergreen",
+        "address": "万航渡路康定路",
         "location": {
-            "lat": 45.5499,
-            "lon": -122.9734
+            "lat": 31.2301,
+            "lon": 121.4248
         },
         "algorithm": "object-detection",
         "mnth": 75.0,
@@ -351,10 +336,10 @@
         "theta": 180.0,
         "simsn": "cams1o3c6"
     },{
-        "address": "Evergreen & 3rd Ave",
+        "address": "长寿路常德路",
         "location": {
-            "lat": 45.5522,
-            "lon": -122.9882
+            "lat": 31.2421,
+            "lon": 121.4332
         },
         "algorithm": "object-detection",
         "mnth": 75.0,
@@ -366,13 +351,13 @@
     }]
 },{
     "scenario": "stadium",
-    "address": "National Stadium",
+    "address": "国家体育馆",
     "location": {
         "lat": 37.39856,
         "lon": -121.94866
     },
     "sensors": [{
-        "address": "East Gate",
+        "address": "东门",
         "location": {
             "lat": 37.38813,
             "lon": -121.94370 
@@ -381,7 +366,7 @@
         "theta": 90.0,
         "simsn": "cams2o1e0"
     },{
-        "address": "North Gate",
+        "address": "北门",
         "location": {
             "lat": 37.40008,
             "lon": -121.95925
@@ -390,7 +375,7 @@
         "theta": 180,
         "simsn": "cams2o1e1"
     },{
-        "address": "West Gate",
+        "address": "西门",
         "location": {
             "lat": 37.38679,
             "lon": -121.98048
@@ -399,7 +384,7 @@
         "theta": 270.0,
         "simsn": "cams2o1e2"
     },{
-        "address": "South Gate",
+        "address": "南门",
         "location": {
             "lat": 37.37610,
             "lon": -121.96242
@@ -408,7 +393,7 @@
         "theta": 0.0,
         "simsn": "cams2o1e3"
     },{
-        "address": "South East Exit",
+        "address": "东南出口",
         "location": {
             "lat": 37.38062,
             "lon": -121.95048
@@ -417,7 +402,7 @@
         "theta": 45.0,
         "simsn": "cams2o1e4"
     },{
-        "address": "North East Exit",
+        "address": "东北出口",
         "location": {
             "lat": 37.39628,
             "lon": -121.95067
@@ -426,7 +411,7 @@
         "theta": 135.0,
         "simsn": "cams2o1e5"
     },{
-        "address": "North West Exit",
+        "address": "西北出口",
         "location": {
             "lat": 37.39628,
             "lon": -121.97461
@@ -435,7 +420,7 @@
         "theta": 225.0,
         "simsn": "cams2o1e6"
     },{
-        "address": "South West Exit",
+        "address": "西南出口",
         "location": {
             "lat": 37.38077,
             "lon": -121.97388
@@ -444,7 +429,7 @@
         "theta": 315.0,
         "simsn": "cams2o1e7"
     },{
-        "address": "East Wing",
+        "address": "东区座位",
         "location": {
             "lat": 37.38865,
             "lon": -121.95405
@@ -458,7 +443,7 @@
         }],
         "simsn": "cams2o1w0"
     },{
-        "address": "North East Wing",
+        "address": "东北区座位",
         "location": {
             "lat": 37.39347,
             "lon": -121.95452 
@@ -472,7 +457,7 @@
         }],
         "simsn": "cams2o1w4"
     },{
-        "address": "North Wing",
+        "address": "北区座位",
         "location": {
             "lat": 37.39369,
             "lon": -121.96285
@@ -486,7 +471,7 @@
         }],
         "simsn": "cams2o1w1"
     },{
-        "address": "North West Wing",
+        "address": "西北区座位",
         "location": {
             "lat": 37.39365,
             "lon": -121.97074
@@ -500,7 +485,7 @@
         }],
         "simsn": "cams2o1w5"
     },{
-        "address": "West Wing",
+        "address": "西区座位",
         "location": {
             "lat": 37.38847,
             "lon": -121.97160
@@ -514,7 +499,7 @@
         }],
         "simsn": "cams2o1w2"
     },{
-        "address": "South West Wing",
+        "address": "西南区座位",
         "location": {
             "lat": 37.38351,
             "lon": -121.97087
@@ -528,7 +513,7 @@
         }],
         "simsn": "cams2o1w6"
     },{
-        "address": "South Wing",
+        "address": "南区座位",
         "location": {
             "lat": 37.38351,
             "lon": -121.96285
@@ -542,7 +527,7 @@
         }],
         "simsn": "cams2o1w3"
     },{
-        "address": "South East Wing",
+        "address": "东南区座位",
         "location": {
             "lat": 37.38369,
             "lon": -121.95448
@@ -556,7 +541,7 @@
         }],
         "simsn": "cams2o1w7"
     },{
-        "address": "North West Restaurant",
+        "address": "西北区饭店",
         "location": {
             "lat": 37.39821,
             "lon": -121.96969
@@ -565,7 +550,7 @@
         "theta": 0.0,
         "simsn": "cams2o1q0"
     },{
-        "address": "North East Restaurant",
+        "address": "东北区饭店",
         "location": {
             "lat": 37.39804,
             "lon": -121.95195
@@ -574,7 +559,7 @@
         "theta": 0.0,
         "simsn": "cams2o1q1"
     },{
-        "address": "East Restaurant",
+        "address": "东区饭店",
         "location": {
             "lat": 37.39245,
             "lon": -121.94811
@@ -583,7 +568,7 @@
         "theta": 270.0,
         "simsn": "cams2o1q2"
     },{
-        "address": "South Restaurant",
+        "address": "南区饭店",
         "location": {
             "lat": 37.37813,
             "lon": -121.96965
@@ -592,7 +577,7 @@
         "theta": 180.0,
         "simsn": "cams2o1q3"
     },{
-        "address": "West Restaurant",
+        "address": "西区饭店",
         "location": {
             "lat": 37.38134,
             "lon": -121.97670
@@ -601,7 +586,7 @@
         "theta": 90.0,
         "simsn": "cams2o1q4"
     },{
-        "address": "West Telephone Booth",
+        "address": "西区电话亭",
         "location": {
             "lat": 37.39528,
             "lon": -121.94820
@@ -610,7 +595,7 @@
         "theta": 270.0,
         "simsn": "cams2o1q5"
     },{
-        "address": "South Telephone Booth",
+        "address": "南区电话亭",
         "location": {
             "lat": 37.37800,
             "lon": -121.95116
@@ -619,7 +604,7 @@
         "theta": 180.0,
         "simsn": "cams2o1q6"
     },{
-        "address": "West Elevator",
+        "address": "南区电梯",
         "location": {
             "lat": 37.39124,
             "lon": -121.97741

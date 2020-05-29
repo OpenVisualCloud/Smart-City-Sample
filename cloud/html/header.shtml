@@ -2,13 +2,13 @@
   <div class="top-bar-left">
     <ul class="menu header-background-color">
       <li class="menu-text">
-        <h4 id="header-text" class="header-text-color">Smart City E2E Pipeline<span id="header-alert"></span></h4>
+        <h4 id="header-text" class="header-text-color">智能城市管理端到端全程演示<span id="header-alert"></span></h4>
       </li>
     </ul>
   </div>
   <div class="top-bar-right">
     <ul class="menu header-background-color header-menu-row">
-      <li class="header-menu-col"><input id="homeSearch" type="search" placeholder="Search" class="header-search-bar" autocomplete="off"></li>
+      <li class="header-menu-col"><input id="homeSearch" type="search" placeholder="搜索字串" class="header-search-bar" autocomplete="off"></li>
       <li><div class="button-group">
         <button class="button tiny" id="homeButton"><i class="fi-home header-menu-button"></i></button>
         <button class="button tiny hidden" id="layoutButton"><i class="fi-zoom-out header-menu-button"></i></button>
@@ -30,52 +30,52 @@
   <BR>
 
   <div class="input-group">
-    <span class="input-group-label header-setting-label">Map Radius (m):</span>
+    <span class="input-group-label header-setting-label">地图半径 (米):</span>
     <input class="input-group-field" id="mapRadius" type="number" value=300000>
   </div>
 
   <div class="input-group">
-    <span class="input-group-label header-setting-label">Sensor Update (ms):</span>
+    <span class="input-group-label header-setting-label">传感器更新(毫秒):</span>
     <input class="input-group-field" id="sensorUpdate" type="number" value=2000>
   </div>
 
   <div class="input-group">
-    <span class="input-group-label header-setting-label">Service Update (ms):</span>
+    <span class="input-group-label header-setting-label">服务列表更新(毫秒):</span>
     <input class="input-group-field" id="serviceUpdate" type="number" value=5000>
   </div>
 
   <div class="input-group">
-    <span class="input-group-label header-setting-label">Analytics Precision (ms):</span>
+    <span class="input-group-label header-setting-label">分析精度(毫秒):</span>
     <input class="input-group-field" id="frameDuration" type="number" value=180>
   </div>
 
   <div class="input-group">
-    <span class="input-group-label header-setting-label">Alert Window (ms):</span>
+    <span class="input-group-label header-setting-label">警示信息范围(毫秒):</span>
     <input class="input-group-field" id="alertWindow" type="number" value=300000>
   </div>
 
   <div class="input-group">
-    <span class="input-group-label header-setting-label">Preview Queries:</span>
+    <span class="input-group-label header-setting-label">录像预览搜索:</span>
     <input class="input-group-field" id="previewQueries" type="text" value="time>=now-200000">
   </div>
 
   <div class="input-group">
-    <span class="input-group-label header-setting-label">Density Map Queries:</span>
+    <span class="input-group-label header-setting-label">热成像图搜索:</span>
     <input class="input-group-field" id="heatmapQueries" type="text" value="time>=now-75000">
   </div>
 
   <div class="input-group">
-    <span class="input-group-label header-setting-label">Statistics Queries:</span>
+    <span class="input-group-label header-setting-label">统计图搜索:</span>
     <input class="input-group-field" id="statsQueries" type="text" value="time>=now-200000">
   </div>
 
   <div class="input-group">
-    <span class="input-group-label header-setting-label">Statistics Historgram:</span>
+    <span class="input-group-label header-setting-label">统计图关键字:</span>
     <input class="input-group-field" id="statsHistogram" type="text" value="objects.detection.label">
   </div>
 
   <div class="input-group">
-    <span class="input-group-label header-setting-label">Zone Map Queries:</span>
+    <span class="input-group-label header-setting-label">人群检索搜索:</span>
     <input class="input-group-field" id="zoneMapQueries" type="text" value="time>=now-75000">
   </div>
 

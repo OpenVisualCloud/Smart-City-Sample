@@ -10,41 +10,42 @@ text={
         return (msg in text)?text[msg]:msg;
     },
 
-    "hint-search-datetime": "Search date time: VAR>MM/DD/YYYY, VAR<hh/mm/ss[.uuu], or VAR>=MM/DD/YYYY hh/mm/ss[.uuu], where hh is in 24 hours.",
-    "hint-search-number": "Search numbers {}: VAR=&lt;expr&gt; or VAR&gt;=&lt;expr&gt;",
-    "hint-search-string": 'Search strings: VAR:"string" or VAR="string"',
-    "hint-search-location": "Search geometric locations: VAR:[&lt;lat&gt;,&lt;lon&gt;] or VAR:[&lt;lat&gt;,&lt;lon&gt;,&lt;radius&gt;]",
+    "hint-search-datetime": "日期检索: VAR>MM/DD/YYYY, VAR<hh/mm/ss[.uuu], 或者VAR>=MM/DD/YYYY hh/mm/ss[.uuu], 这里hh 使用24 小时表示.",
+    "hint-search-number": "数字检索：区间 {} VAR=公式 或者 VAR&gt;=公式",
+    "hint-search-string": '字串检索: VAR:"字串"或者VAR="字串"',
+    "hint-search-location": "经纬度检索: VAR:[&lt;维度&gt;,&lt;经度&gt;] or VAR:[&lt;纬度&gt;,&lt;经度&gt;,&lt;距离半径&gt;]",
 
-    "cpu": "cpu",
-    "mem": "mem",
-    "disk": "disk",
+    "cpu": "处理器",
+    "mem": "内存",
+    "disk": "磁盘",
 
-    "vehicle": "vehicle",
-    "person": "person",
-    "car": "car",
-    "bicycle": "bicycle",
-    "bus": "bus",
-    "trunk": "trunk",
+    "vehicle": "车辆",
+    "person": "人",
+    "car": "汽车",
+    "bicycle": "自行车",
+    "bus": "公共汽车",
+    "trunk": "卡车",
 
-    "recording-unavailable": "Recording Unavailable",
+    "recording-unavailable": "录像暂时没有",
 
     "b/s": "b/s",
     "kb/s": "Kb/s",
     "mb/s": "Mb/s",
     "gb/s": "Gb/s",
 
-    "traffic planning": "Traffic Planning",
-    "stadium services": "Stadium Services",
+    "traffic planning": "道路交通",
+    "stadium services": "体育场馆",
     
-    "connection info": "Connection Info",
-    "density estimation": "Density Estimation",
-    "statistics histogram": "Statistics Histogram",
-    "preview clips": "Preview Clips",
-    "Scrolling Alerts": "Scrolling Alerts",
+    "connection info": "链接信息",
+    "density estimation": "热成像图",
+    "statistics histogram": "统计曲线",
+    "preview clips": "录像预览",
+    "Scrolling Alerts": "警报信息",
 
-    "camera": "Camera",
-    "ip_camera": "IP Camera",
+    "camera": "摄像头",
+    "ip_camera": "网络摄像机",
 
-    "workload title": "{} Workload",
+    "error": "出错",
+    "workload title": "{} 负载",
 };
 

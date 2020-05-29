@@ -24,7 +24,7 @@ function format_bandwidth(bandwidth) {
 var scenarios={
     traffic: {
         name: "traffic",
-        center: [45.536664,-122.960823],
+        center: [31.2343,121.4441],
         icon: {
             office: {
                 online: L.icon({
