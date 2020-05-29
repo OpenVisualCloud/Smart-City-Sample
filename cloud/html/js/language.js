@@ -1,8 +1,9 @@
 
 text={
     format: function (msg, args) {
+        msg=text.translate(msg);
         for (var i=0;i<args.length;i++)
-            msg=msg.replace('{}',args[i]);
+            msg=msg.replace("{}",args[i]);
         return msg;
     },
     translate: function (msg) {
@@ -45,5 +46,6 @@ text={
     "ip_camera": "网络摄像机",
 
     "error": "出错",
+    "workload title": "{} 负载",
 };
 
