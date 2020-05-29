@@ -137,10 +137,12 @@ var stats={
         chart.config.options.legend.display=(datasets.length<4);
         chart.update();
     },
-    update: function (layer, sensorctx, zoom, sensor, data, loc) {
-        var count=0;
-        for (var k in data) 
-            count=count+data[k];
+    update: function (layer, sensorctx, zoom, sensor, data1, loc) {
+        var count=0, data={};
+        for (var k in data1) {
+            count=count+data1[k];
+            data[text.translate(k)]=data1[k];
+        }
         stats.update_chart(sensorctx.chart, data);
         layer.eachLayer(function (layer1) {
             if (!layer1._sensor || !layer1._chart) return;
