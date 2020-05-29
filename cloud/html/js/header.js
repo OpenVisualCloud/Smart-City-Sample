@@ -134,7 +134,7 @@ $("#homeSearch").on("focus", function () {
                 var range="";
                 if ("min" in wc) range=" ["+wc.min+"-)";
                 if ("max" in wc) if ("min" in wc) range=" ["+wc.min+"-"+wc.max+"]"; else range=" (-"+wc.max+"]";
-                candidates[0]=text.format("hint-search-number",[range]);
+                candidates[0]=text.format("hint-search-number",range);
             }
             if (wc["type"]=="text") {
                 candidates[0]=text["hint-search-string"];
