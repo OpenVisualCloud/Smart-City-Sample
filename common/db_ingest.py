@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-from language_dsl import translate
+from language_dsl import text
 import requests
 import json
 
