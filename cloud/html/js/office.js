@@ -4,7 +4,7 @@ $("#office").on("open.zf.reveal", function(e) {
     var ctx2={};
 
     page.find("h3").empty().append(ctx.address+" @ ["+ctx.office.lat+","+ctx.office.lon+"]");
-    workload.create(ctx2,page.find('canvas'),text.format("workload title",ctx.address);
+    workload.create(ctx2,page.find('canvas'),text.format("workload title",[ctx.address]);
     var update=function () {
         /* fill the algorithm table */
         apiHost.search("algorithms","name:*",ctx.office).then(function (data) {
