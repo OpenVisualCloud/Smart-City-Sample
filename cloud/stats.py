@@ -5,6 +5,7 @@ from tornado import web,gen
 from tornado.concurrent import run_on_executor
 from concurrent.futures import ThreadPoolExecutor
 from db_query import DBQuery
+from language import translate
 import os
 import json
 
@@ -24,7 +25,7 @@ class StatsHandler(web.RequestHandler):
         try:
             return db.stats(queries, fields)
         except Exception as e:
-            return str(e)
+            return translate(str(e))
 
     @gen.coroutine
     def get(self):

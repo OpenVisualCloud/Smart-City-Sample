@@ -4,6 +4,7 @@ from urllib.parse import unquote
 from tornado import web,gen
 from tornado.concurrent import run_on_executor
 from concurrent.futures import ThreadPoolExecutor
+from language import translate
 import requests
 import os
 import json
@@ -27,7 +28,7 @@ class HealthHandler(web.RequestHandler):
                 return { "state": "online" }
             return "Node offline"
         except Exception as e:
-            return str(e)
+            return translate(str(e))
 
     @gen.coroutine
     def get(self):
