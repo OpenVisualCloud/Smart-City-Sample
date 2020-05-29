@@ -1,7 +1,7 @@
 
 text={
     format: function (msg, args) {
-        for (var i in args)
+        for (var i=0;i<args.length;i++)
             msg=msg.replace('{}',args[i]);
         return msg;
     },
