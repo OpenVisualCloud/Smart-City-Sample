@@ -211,7 +211,7 @@ $("#pg-home").on(":initpage", function(e) {
             });
             page.data('timer',setTimeout(update,settings.sensor_update(),queries));
         }).catch(function (e) {
-            $("[hint-panel]").trigger(":error", [b2a(e.statusText)]);
+            $("[hint-panel]").trigger(":error", [decodeURIComponent(e.statusText)]);
             page.data('timer',setTimeout(update,settings.sensor_update(),queries));
         });
     };

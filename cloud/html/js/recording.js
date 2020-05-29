@@ -50,7 +50,7 @@ $("#pg-recording").on(":initpage", function(e, queries, office) {
                 plist.append(line);
             });
         }).catch(function (e) {
-            $("[hint-panel]").trigger(":error", [b2a(e.statusText)]);
+            $("[hint-panel]").trigger(":error", [decodeURIComponent(e.statusText)]);
         });
     });
 

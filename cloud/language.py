@@ -1,11 +1,11 @@
 #!/usr/bin/python3
 
-from base64 import b64encode
+from urllib.parse import quote
 
 text={
     "connection error": "Connection Error",
 }
 
 def encode(msg):
-    return str(msg).encode('base64')
+    return quote(str(msg))
 
