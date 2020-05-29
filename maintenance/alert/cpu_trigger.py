@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 from trigger import Trigger
+from language import text
 import psutil
 import time
 import os
@@ -19,9 +20,9 @@ class CPUTrigger(Trigger):
             },
         }
         if workload["args"]["cpu"]>90:
-            workload["message"]="Server overload: "+str(workload["args"]["cpu"])+"%"
+            workload["message"]=text["server overload"].format(workload["args"]["cpu"])
             return [{ "fatal": [workload] }]
         elif workload["args"]["cpu"]>80:
-            workload["message"]="Server busy: "+str(workload["args"]["cpu"])+"%"
+            workload["message"]=text["server busy"].format(workload["args"]["cpu"])
             return [{ "warning": [workload] }]
         return []

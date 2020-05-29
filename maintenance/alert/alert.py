@@ -6,6 +6,7 @@ from concurrent.futures import ThreadPoolExecutor
 from cpu_trigger import CPUTrigger
 from imbalance_trigger import ImbalanceTrigger
 from occupency_trigger import OccupencyTrigger
+from language import text
 import time
 import os
 
@@ -29,9 +30,9 @@ dbt=DBIngest(index="services",office=office,host=dbhost)
 while True:
     try:
         rt=dbt.ingest({
-            "name": "triggers",
-            "service": "alert trigger",
-            "status": "active",
+            "name": text["alert trigger"],
+            "service": text["triggers"],
+            "status": text["active"],
         })
         break
     except Exception as e:

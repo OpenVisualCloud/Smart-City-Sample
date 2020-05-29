@@ -1,7 +1,7 @@
 
 function format_sensor_tooltip(template, sensor) {
     $.each(template.find("td[field]"),function (x,v) {
-        $(v).text(sensor._source[$(v).attr("field")]);
+        $(v).text(text.translate(sensor._source[$(v).attr("field")]));
     });
     template.find("[location]").text("["+sensor._source.location.lat.toFixed(3)+","+sensor._source.location.lon.toFixed(3)+"]");
     template.find("[resolution]").text(sensor._source.resolution.width+"x"+sensor._source.resolution.height);
@@ -36,11 +36,11 @@ $("#pg-home").on(":initpage", function(e) {
         page.data('map',map);
 
         /* add layers switching widget */
-        page.data('lineinfo',{ name: "Connection Info", layer: L.layerGroup() });
-        page.data('heatmap',{ name: "Density Estimation", layer: L.layerGroup() });
-        page.data('stat',{ name: "Statistics Histogram", layer: L.layerGroup() });
-        page.data('preview', { name: "Preview Clips", layer: L.layerGroup() });
-        page.data('alert', { name: "Scrolling Alerts", layer: L.layerGroup() });
+        page.data('lineinfo',{ name: text["connection info"], layer: L.layerGroup() });
+        page.data('heatmap',{ name: text["density estimation"], layer: L.layerGroup() });
+        page.data('stat',{ name: text["statistics histogram"], layer: L.layerGroup() });
+        page.data('preview', { name: text["preview clips"], layer: L.layerGroup() });
+        page.data('alert', { name: text["Scrolling Alerts"], layer: L.layerGroup() });
         page.data('controls', L.control.layers().addTo(map));
         alerts.setup(page);
 
@@ -211,7 +211,7 @@ $("#pg-home").on(":initpage", function(e) {
             });
             page.data('timer',setTimeout(update,settings.sensor_update(),queries));
         }).catch(function (e) {
-            $("[hint-panel]").trigger(":error", [e.statusText]);
+            $("[hint-panel]").trigger(":error", [decodeURIComponent(e.statusText)]);
             page.data('timer',setTimeout(update,settings.sensor_update(),queries));
         });
     };

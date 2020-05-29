@@ -3,6 +3,7 @@
 import datetime
 import time
 import ply.lex as lex
+from language_dsl import text
 
 tokens=('VAR','LPAREN','RPAREN','AND','OR','NOT','NUMBER','STRING', 'DATE', 'TIME',
         'CONTAINS','LESSEQUAL','LESSTHAN','GREATEREQUAL','GREATERTHAN',
@@ -19,7 +20,7 @@ def t_TIME(t):
             break
         except:
             pass
-    if dt is None: raise Exception("Parsing Error: "+str(t.value))
+    if dt is None: raise Exception(text["syntax error"].format(t.value))
     t.value = int(time.mktime(dt.timetuple())*1000+dt.microsecond)
     return t
 
@@ -155,7 +156,7 @@ def t_STRING(t):
     return t
 
 def t_error(t):
-    raise Exception("Syntax Error: " + str(t.value))
+    raise Exception(text["syntax error"].format(t.value))
 
 lexer = lex.lex(debug=0, optimize=0, lextab='dsl_lex_tab')
 lexer.stage=0

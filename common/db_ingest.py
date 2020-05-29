@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 
+from language_dsl import text
 import requests
 import json
 
@@ -13,10 +14,10 @@ class DBIngest(object):
     def _check_error(self, r):
         if r.status_code==200 or r.status_code==201: return
         try:
-            reason=r.json()["error"]["reason"]
+            print("Exception: "+str(r.json()["error"]["reason"]), flush=True)
         except:
-            r.raise_for_status()
-        raise Exception(reason)
+            print("Exception: "+str(r.text), flush=True)
+        raise Exception(text["ingest error"])
 
     def ingest_bulk(self, bulk, batch=500):
         ''' save bulk data to the database

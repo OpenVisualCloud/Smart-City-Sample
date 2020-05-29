@@ -6,6 +6,7 @@ from signal import signal, SIGTERM
 from concurrent.futures import ThreadPoolExecutor
 from rec2db import Rec2DB
 from runva import RunVA
+from language import text
 import os
 import time
 import uuid
@@ -60,12 +61,12 @@ if scenario=="stadium":
 while True:
     try:
         algorithm=dba.ingest({
-            "name": myAlgorithm,
+            "name": text[myAlgorithm],
             "office": {
                 "lat": office[0],
                 "lon": office[1],
             },
-            "status": "processing",
+            "status": text["processing"],
             "skip": every_nth_frame,
         })["_id"]
         break

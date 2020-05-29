@@ -4,6 +4,7 @@ from db_ingest import DBIngest
 from db_query import DBQuery
 from probe import probe, run
 from signal import signal, SIGTERM
+from language import text
 import requests
 import os
 import time
@@ -42,9 +43,9 @@ dbs=DBIngest(index="services",office=office,host=dbhost)
 while True:
     try:
         dbs.ingest({
-            "name": "smart-upload",
-            "service": "maintanence",
-            "status": "active",
+            "name": text["smart-upload"],
+            "service": text["maintanence"],
+            "status": text["active"],
         })
         break
     except Exception as e:

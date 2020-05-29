@@ -3,6 +3,7 @@
 from db_ingest import DBIngest
 from db_query import DBQuery
 from signal import signal, SIGTERM
+from language import text
 import os
 import time
 
@@ -26,9 +27,9 @@ dbs=DBIngest(index="services",office=office,host=dbhost)
 while True:
     try:
         dbs.ingest({
-            "name": "where-indexing",
-            "service": "maintanence",
-            "status": "active",
+            "name": text["where-indexing"],
+            "service": text["maintanence"],
+            "status": text["active"],
         })
         break
     except Exception as e:

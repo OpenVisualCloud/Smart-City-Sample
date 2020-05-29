@@ -6,15 +6,15 @@ var workload={
             data: {
                 labels: [],
                 datasets: [{ 
-                    label: "cpu",
+                    label: text["cpu"],
                     data: [], 
                     fill: false,
                 },{
-                    label: "mem",
+                    label: text["mem"],
                     data: [],
                     fill: false,
                 },{
-                    label: "disk",
+                    label: text["disk"],
                     data: [],
                     fill: false,
                 }],
