@@ -6,7 +6,7 @@ text={
         return msg;
     },
     translate: function (msg) {
-        return ("msg" in text)?text[msg]:msg;
+        return (msg in text)?text[msg]:msg;
     },
 
     "hint-search-datetime": "Search date time: VAR>MM/DD/YYYY, VAR<hh/mm/ss[.uuu], or VAR>=MM/DD/YYYY hh/mm/ss[.uuu], where hh is in 24 hours.",
@@ -33,13 +33,16 @@ text={
     "gb/s": "Gb/s",
 
     "traffic": "traffic",
+    "traffic planning": "Traffic Planning",
+
     "stadium": "stadium",
+    "stadium services": "Stadium Services",
     
-    "heatmap": "heatmap",
-    "stat": "stat",
-    "preview": "preview",
-    "alert": "alert",
-    "lineinfo": "lineinfo",
+    "connection info": "Connection Info",
+    "density estimation": "Density Estimation",
+    "statistics histogram": "Statistics Histogram",
+    "preview clips": "Preview Clips",
+    "Scrolling Alerts": "Scrolling Alerts",
 
     "camera": "Camera",
     "ip_camera": "IP Camera",

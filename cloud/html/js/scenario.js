@@ -15,9 +15,9 @@ function update_control_options(page, map, options) {
 
 function format_bandwidth(bandwidth) {
     var unit=text["b/s"];
-    if (bandwidth>1024) { bandwidth=bandwidth/1024; unit=text["Kb/s"]; }
-    if (bandwidth>1024) { bandwidth=bandwidth/1024; unit=text["Mb/s"]; }
-    if (bandwidth>1024) { bandwidth=bandwidth/1024; unit=text["Gb/s"]; }
+    if (bandwidth>1024) { bandwidth=bandwidth/1024; unit=text["kb/s"]; }
+    if (bandwidth>1024) { bandwidth=bandwidth/1024; unit=text["mb/s"]; }
+    if (bandwidth>1024) { bandwidth=bandwidth/1024; unit=text["gb/s"]; }
     return bandwidth>0?bandwidth.toFixed(1)+unit:"";
 }
 
@@ -80,7 +80,7 @@ var scenarios={
                 map.setView(scenarios.traffic.center,page.data('zoom'));
             });
             if (order==0) layer1.addTo(map).fire('add');
-            page.data('controls').addBaseLayer(layer1,"Traffic Planning");
+            page.data('controls').addBaseLayer(layer1,text["traffic planning"]);
         },
         create_sensor: function (officectx, sensorctx, sensor, page, map) {
             stats.create(sensorctx, sensor, page, map, function (chart_div) { return null; });
@@ -205,7 +205,7 @@ var scenarios={
                 map.setView(scenarios.stadium.center,page.data('zoom'));
             });
             if (order==0) layer1.addTo(map).fire('add');
-            page.data('controls').addBaseLayer(layer1,"Stadium Services");
+            page.data('controls').addBaseLayer(layer1,text["stadium services"]);
         },
         create_sensor: function (officectx, sensorctx, sensor, page, map) {
             stats.create(sensorctx, sensor, page, map, function (chart_div) {
