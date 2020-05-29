@@ -6,8 +6,7 @@ text={
         return msg;
     },
     translate: function (msg) {
-        if "msg" in text: return text[msg];
-        return msg;
+        return ("msg" in text)?text[msg]:msg;
     },
 
     "hint-search-datetime": "日期检索: VAR>MM/DD/YYYY, VAR<hh/mm/ss[.uuu], 或者VAR>=MM/DD/YYYY hh/mm/ss[.uuu], 这里hh 使用24 小时表示.",
