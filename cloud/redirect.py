@@ -5,7 +5,7 @@ from tornado import web,gen
 from tornado.concurrent import run_on_executor
 from concurrent.futures import ThreadPoolExecutor
 from db_query import DBQuery
-from language import translate
+from language import text, encode
 import datetime
 import os
 
@@ -35,14 +35,15 @@ class RedirectHandler(web.RequestHandler):
             offices[office_key]=r[0]
             return r[0]
         except Exception as e:
-            return translate(str(e))
+            print("Exception: "+str(e), flush=True)
+            return text["connection error"]
 
     @gen.coroutine
     def get(self):
         office=list(map(float,unquote(str(self.get_argument("office"))).split(",")))
         r=yield self._office_info(office)
         if isinstance(r, str):
-            self.set_status(400, str(r))
+            self.set_status(400, encode(r))
         else:
             uri=r["_source"]["uri"]+self.request.uri
             protocol=uri.split("://")[0]

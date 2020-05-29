@@ -4,7 +4,7 @@ from urllib.parse import unquote
 from tornado import web,gen
 from tornado.concurrent import run_on_executor
 from concurrent.futures import ThreadPoolExecutor
-from language import translate
+from language import text, encode
 import requests
 import os
 import json
@@ -28,7 +28,8 @@ class HealthHandler(web.RequestHandler):
                 return { "state": "online" }
             return "Node offline"
         except Exception as e:
-            return translate(str(e))
+            print("Exception: "+str(e), flush=True)
+            return text["connection error"]
 
     @gen.coroutine
     def get(self):
@@ -36,7 +37,7 @@ class HealthHandler(web.RequestHandler):
         if health_check=="enabled":
             r=yield self._check_health(zone)
             if isinstance(r, str):
-                self.set_status(400, str(r))
+                self.set_status(400, encode(r))
                 return
         else:
             r={ "state": "online" }
