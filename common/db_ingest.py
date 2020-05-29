@@ -16,10 +16,7 @@ class DBIngest(object):
         try:
             reason=r.json()["error"]["reason"]
         except:
-            try:
-                r.raise_for_status()
-            except Exception as e:
-                raise Exception(translate(str(e)))
+            r.raise_for_status()
         raise Exception(translate(reason))
 
     def ingest_bulk(self, bulk, batch=500):
