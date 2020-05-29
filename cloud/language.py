@@ -1,4 +1,4 @@
 #!/usr/bin/python3
 
 def translate(msg):
-    return msg
+    return "搜索错误"
