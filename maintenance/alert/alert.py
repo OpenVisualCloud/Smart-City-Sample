@@ -30,8 +30,8 @@ dbt=DBIngest(index="services",office=office,host=dbhost)
 while True:
     try:
         rt=dbt.ingest({
-            "name": text["triggers"],
-            "service": text["alert trigger"],
+            "name": text["alert trigger"],
+            "service": text["triggers"],
             "status": text["active"],
         })
         break
