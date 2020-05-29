@@ -5,6 +5,7 @@ from tornado import web,gen
 from tornado.concurrent import run_on_executor
 from concurrent.futures import ThreadPoolExecutor
 from db_query import DBQuery
+from language import text, encode
 import os
 import json
 
@@ -37,7 +38,7 @@ class HintHandler(web.RequestHandler):
 
         r=yield self._hint(indexes,office)
         if isinstance(r,str):
-            self.set_status(400, str(r))
+            self.set_status(400, encode(r))
             return
 
         self.write(r)
