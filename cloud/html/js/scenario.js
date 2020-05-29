@@ -7,23 +7,23 @@ function update_control_options(page, map, options) {
         control.removeLayer(layer_object.layer);
         map.removeLayer(layer_object.layer);
         if (layer_name in options) {
-            control.addOverlay(layer_object.layer, layer_object.name);
+            control.addOverlay(layer_object.layer, text[layer_object.name]);
             if (options[layer_name]) layer_object.layer.addTo(map);
         }
     });
 }
 
 function format_bandwidth(bandwidth) {
-    var unit="b/s";
-    if (bandwidth>1024) { bandwidth=bandwidth/1024; unit="Kb/s"; }
-    if (bandwidth>1024) { bandwidth=bandwidth/1024; unit="Mb/s"; }
-    if (bandwidth>1024) { bandwidth=bandwidth/1024; unit="Gb/s"; }
+    var unit=text["b/s"];
+    if (bandwidth>1024) { bandwidth=bandwidth/1024; unit=text["Kb/s"]; }
+    if (bandwidth>1024) { bandwidth=bandwidth/1024; unit=text["Mb/s"]; }
+    if (bandwidth>1024) { bandwidth=bandwidth/1024; unit=text["Gb/s"]; }
     return bandwidth>0?bandwidth.toFixed(1)+unit:"";
 }
 
 var scenarios={
     traffic: {
-        name: "traffic",
+        name: text["traffic"],
         center: [45.536664,-122.960823],
         icon: {
             office: {
@@ -108,7 +108,7 @@ var scenarios={
         },
     },
     stadium: {
-        name: "stadium",
+        name: text["stadium"],
         center: [37.388085,-121.963472],
         icon: {
             office: {

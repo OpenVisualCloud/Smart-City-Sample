@@ -120,7 +120,7 @@ var stats={
             delete data[v.label];
         });
         $.each(data, function (k,v) {
-            datasets.push({label:k,barThickness:'flex',data:[{t:time,y:v}]});
+            datasets.push({label:text.translate(k),barThickness:'flex',data:[{t:time,y:v}]});
         });
 
         if (labels.length>25) {
