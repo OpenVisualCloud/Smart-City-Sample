@@ -6,10 +6,10 @@
         "lon": 121.47813
     },
     "sensors": [{
-        "address": "河南中路北京东路",
+        "address": "天潼路四川中路",
         "location": {
-            "lat": 31.24238,
-            "lon": 121.47925
+            "lat": 31.2471,
+            "lon": 121.4812
         },
         "algorithm": "object-detection",
         "mnth": 75.0,
@@ -127,16 +127,16 @@
     }]
 },{
     "scenario": "traffic",
-    "address": "Shady Wood",
+    "address": "南京西路站",
     "location": {
-        "lat": 45.524460,
-        "lon": -122.960475
+        "lat": 31.22877,
+        "lon": 121.4473
     },
     "sensors": [{
-        "address": "Brogden & 37th Ave",
+        "address": "新闸路常德路",
         "location": {
-            "lat": 45.524295,
-            "lon": -122.944296
+            "lat": 31.2313,
+            "lon": 121.44197
         },
         "algorithm": "object-detection",
         "mnth": 75.0,
@@ -146,10 +146,10 @@
         "theta": 90.0,
         "simsn": "cams1o2c0"
     },{
-        "address": "Veteran & 34th Ave",
+        "address": "新闸路胶州路",
         "location": {
-            "lat": 45.528657,
-            "lon": -122.946688
+            "lat": 31.22977,
+            "lon": 121.43873
         },
         "algorithm": "object-detection",
         "mnth": 75.0,
@@ -159,10 +159,10 @@
         "theta": 135.0,
         "simsn": "cams1o2c1"
     },{
-        "address": "Sunrise & 25th Ave",
+        "address": "北京西路万航渡路",
         "location": {
-            "lat": 45.536660,
-            "lon": -122.957050
+            "lat": 31.22652,
+            "lon": 121.43827
         },
         "algorithm": "object-detection",
         "mnth": 75.0,
@@ -172,10 +172,10 @@
         "theta": 180.0,
         "simsn": "cams1o2c2"
     },{
-        "address": "Cornell & 17th Ave",
+        "address": "南京西路华山路",
         "location": {
-            "lat": 45.530704,
-            "lon": -122.964528
+            "lat": 31.22447,
+            "lon": 121.44062
         },
         "algorithm": "object-detection",
         "mnth": 75.0,
@@ -185,10 +185,10 @@
         "theta": 0.0,
         "simsn": "cams1o2c3"
     },{
-        "address": "Grant & Delsey",
+        "address": "延安中路富民路",
         "location": {
-            "lat": 45.528238,
-            "lon": -122.974870
+            "lat": 31.22357,
+            "lon": 121.44492
         },
         "algorithm": "object-detection",
         "mnth": 75.0,
@@ -198,10 +198,10 @@
         "theta": 225.0,
         "simsn": "cams1o2c4"
     },{
-        "address": "Cornell & Main St",
+        "address": "茂名南路陕西南路",
         "location": {
-            "lat": 45.5220,
-            "lon": -122.9738
+            "lat": 31.22571,
+            "lon": 121.45226
         },
         "algorithm": "object-detection",
         "mnth": 75.0,
@@ -211,10 +211,10 @@
         "theta": 0.0,
         "simsn": "cams1o2c5"
     },{
-        "address": "Oak & 18th Ave",
+        "address": "南京西路茂名北路",
         "location": {
-            "lat": 45.5185,
-            "lon": -122.9640
+            "lat": 31.23126,
+            "lon": 121.45394
         },
         "algorithm": "object-detection",
         "mnth": 75.0,
@@ -224,13 +224,10 @@
         "theta": 180.0,
         "simsn": "cams1o2c6"
     },{
-        "profile": {
-            "sn": "cams1o2c8"
-        },
-        "address": "Main & 28th Ave",
+        "address": "北京西路江宁路",
         "location": {
-            "lat": 45.5207,
-            "lon": -122.9545
+            "lat": 31.23211,
+            "lon": 121.45062
         },
         "algorithm": "object-detection",
         "mnth": 75.0,
@@ -242,16 +239,16 @@
     }]
 },{
     "scenario": "traffic",
-    "address": "Glencoe Tract",
+    "address": "武宁路站点",
     "location": {
-        "lat": 45.543645,
-        "lon": -122.984178
+        "lat": 31.2398,
+        "lon": 121.4155
     },
     "sensors": [{
-        "address": "Jackson School & Harewood",
+        "address": "奉曦路中山北路",
         "location": {
-            "lat": 45.538991,
-            "lon": -122.979685
+            "lat": 31.2473,
+            "lon": 121.4222
         },
         "algorithm": "object-detection",
         "mnth": 75.0,
@@ -261,10 +258,10 @@
         "theta": 90.0,
         "simsn": "cams1o3c0"
     },{
-        "address": "Circle Park",
+        "address": "武宁路曹杨路",
         "location": {
-            "lat": 45.543897,
-            "lon": -122.970496
+            "lat": 31.2472,
+            "lon": 121.4042
         },
         "algorithm": "object-detection",
         "mnth": 75.0,
@@ -274,10 +271,10 @@
         "theta": 315.0,
         "simsn": "cams1o3c1"
     },{
-        "address": "Evergreen & Jackson School",
+        "address": "枣阳路杏山路",
         "location": {
-            "lat": 45.549972,
-            "lon": -122.979717
+            "lat": 31.2401,
+            "lon": 121.4019
         },
         "algorithm": "object-detection",
         "mnth": 75.0,
@@ -287,10 +284,10 @@
         "theta": 270.0,
         "simsn": "cams1o3c2"
     },{
-        "address": "Glencoe & Evergreen",
+        "address": "金沙江路大河渡路",
         "location": {
-            "lat": 45.549807,
-            "lon": -122.995426
+            "lat": 31.2338,
+            "lon": 121.3973
         },
         "algorithm": "object-detection",
         "mnth": 75.0,
@@ -300,10 +297,10 @@
         "theta": 0.0,
         "simsn": "cams1o3c3"
     },{
-        "address": "Glencoe & Lenox St",
+        "address": "金沙江路中山北路",
         "location": {
-            "lat": 45.544388,
-            "lon": -122.995659
+            "lat": 31.2329,
+            "lon": 121.4059
         },
         "algorithm": "object-detection",
         "mnth": 75.0,
@@ -313,10 +310,10 @@
         "theta": 90.0,
         "simsn": "cams1o3c4"
     },{
-        "address": "Glencoe & Harewood",
+        "address": "白玉路隆德路", 
         "location": {
-            "lat": 45.5355,
-            "lon": -122.9910
+            "lat": 31.2304,
+            "lon": 121.4147
         },
         "algorithm": "object-detection",
         "mnth": 75.0,
@@ -326,10 +323,10 @@
         "theta": 90.0,
         "simsn": "cams1o3c5"
     },{
-        "address": "Jackson School & Evergreen",
+        "address": "万航渡路康定路",
         "location": {
-            "lat": 45.5499,
-            "lon": -122.9734
+            "lat": 31.2301,
+            "lon": 121.4248
         },
         "algorithm": "object-detection",
         "mnth": 75.0,
@@ -339,10 +336,10 @@
         "theta": 180.0,
         "simsn": "cams1o3c6"
     },{
-        "address": "Evergreen & 3rd Ave",
+        "address": "长寿路常德路",
         "location": {
-            "lat": 45.5522,
-            "lon": -122.9882
+            "lat": 31.2421,
+            "lon": 121.4332
         },
         "algorithm": "object-detection",
         "mnth": 75.0,
