@@ -7,7 +7,7 @@ function update_control_options(page, map, options) {
         control.removeLayer(layer_object.layer);
         map.removeLayer(layer_object.layer);
         if (layer_name in options) {
-            control.addOverlay(layer_object.layer, text[layer_object.name]);
+            control.addOverlay(layer_object.layer, layer_object.name);
             if (options[layer_name]) layer_object.layer.addTo(map);
         }
     });

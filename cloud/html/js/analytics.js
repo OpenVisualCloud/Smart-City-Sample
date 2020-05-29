@@ -54,7 +54,7 @@ function draw_analytics(video, doc) {
                                             x:sxoff+xmin,
                                             y:syoff+ymin,
                                             fill: ("id" in v1)?colors_id[v1.id%colors_id.length]:"cyan",
-                                        }).text(v1.detection.label+id+Math.floor(v1.detection.confidence*100)+"%"));
+                                        }).text(text.translate(v1.detection.label)+id+Math.floor(v1.detection.confidence*100)+"%"));
                                     }
                                 }
                             }
