@@ -23,7 +23,7 @@ function format_bandwidth(bandwidth) {
 
 var scenarios={
     traffic: {
-        name: text["traffic"],
+        name: "traffic",
         center: [45.536664,-122.960823],
         icon: {
             office: {
@@ -108,7 +108,7 @@ var scenarios={
         },
     },
     stadium: {
-        name: text["stadium"],
+        name: "stadium",
         center: [37.388085,-121.963472],
         icon: {
             office: {
