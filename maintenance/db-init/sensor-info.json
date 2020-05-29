@@ -1,15 +1,15 @@
 [{
     "scenario": "traffic",
-    "address": "Dawson Creek",
+    "address": "宁波路站点",
     "location": {
-        "lat": 45.539626,
-        "lon": -122.929569
+        "lat": 31.2402,
+        "lon": 121.47813
     },
     "sensors": [{
-        "address": "Shute & Dawson Creek",
+        "address": "河南中路北京东路",
         "location": {
-            "lat": 45.544223,
-            "lon": -122.926128
+            "lat": 31.24238,
+            "lon": 121.47925
         },
         "algorithm": "object-detection",
         "mnth": 75.0,
@@ -19,10 +19,10 @@
         "theta": 0.0,
         "simsn": "cams1o1c0"
     },{
-        "address": "Brookwood & Dawson Creek",
+        "address": "天潼路福建北路",
         "location": {
-            "lat": 45.546249,
-            "lon": -122.932145
+            "lat": 31.24527,
+            "lon": 121.47403
         },
         "algorithm": "object-detection",
         "mnth": 75.0,
@@ -32,10 +32,10 @@
         "theta": 115.0,
         "simsn": "cams1o1c1"
     },{
-        "address": "Brookwood & Airport Rd",
+        "address": "西藏北路曲埠路",
         "location": {
-            "lat": 45.538971,
-            "lon": -122.939726
+            "lat": 31.24413,
+            "lon": 121.46698
         },
         "algorithm": "object-detection",
         "mnth": 75.0,
@@ -45,10 +45,10 @@
         "theta": 225.0,
         "simsn": "cams1o1c2"
     },{
-        "address": "Cornell & 48th Ave",
+        "address": "北京西路西藏北路",
         "location": {
-            "lat": 45.533498,
-            "lon": -122.933868
+            "lat": 31.2395,
+            "lon": 121.469
         },
         "algorithm": "object-detection",
         "mnth": 75.0,
@@ -58,10 +58,10 @@
         "theta": 280.0,
         "simsn": "cams1o1c3"
     },{
-        "address": "Shute & Butler St",
+        "address": "九江路西藏中路",
         "location": {
-            "lat": 45.538148,
-            "lon": -122.926131
+            "lat": 31.2356,
+            "lon": 121.4705
         },
         "algorithm": "object-detection",
         "mnth": 75.0,
@@ -71,10 +71,10 @@
         "theta": 0.0,
         "simsn": "cams1o1c4"
     },{
-        "address": "Brookwood & Library",
+        "address": "广东路浙江中路",
         "location": {
-            "lat": 45.54289,
-            "lon": -122.93716
+            "lat": 31.2336,
+            "lon": 121.4758
         },
         "algorithm": "object-detection",
         "mnth": 75.0,
@@ -84,10 +84,10 @@
         "theta": 170.0,
         "simsn": "cams1o1c5"
     },{
-        "address": "Cornell & Shute",
+        "address": "广东路山东中路",
         "location": {
-            "lat": 45.5335,
-            "lon": -122.9260
+            "lat": 31.2346,
+            "lon": 121.4804
         },
         "algorithm": "object-detection",
         "mnth": 75.0,
@@ -97,10 +97,10 @@
         "theta": 270.0,
         "simsn": "cams1o1c6"
     },{
-        "address": "Tendem Way",
+        "address": "福州路四川中路",
         "location": {
-            "lat": 45.5415,
-            "lon": -122.9227
+            "lat": 31.2372,
+            "lon": 121.4845
         },
         "algorithm": "object-detection",
         "mnth": 75.0,
@@ -110,10 +110,10 @@
         "theta": 0.0,
         "simsn": "cams1o1c7"
     },{
-        "address": "Cornell and Brookwood",
+        "address": "南京东路中山中一路",
         "location": {
-            "lat": 45.532718,
-            "lon": -122.938067
+            "lat": 31.2408,
+            "lon": 121.4856
         },
         "algorithm": "object-detection",
         "mnth": 75.0,
@@ -123,21 +123,6 @@
         "theta": 45.0,
         "device": {
             "SerialNumber": "071D3E467CCB"
-        }
-    },{
-        "address": "Cornell and Elan Young Parkway",
-        "location": {
-            "lat": 45.533671,
-            "lon": -122.930607
-        },
-        "algorithm": "object-detection",
-        "mnth": 75.0,
-        "alpha": 45.0,
-        "fovh": 90.0,
-        "fovv": 68.0,
-        "theta": 90.0,
-        "device": {
-            "SerialNumber": "AMC0468C3847D602CA"
         }
     }]
 },{
