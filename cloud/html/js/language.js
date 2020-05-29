@@ -1,8 +1,9 @@
 
 text={
     format: function (msg, args) {
+        msg=text.translate(msg);
         for (var i=0;i<args.length;i++)
-            msg=msg.replace('{}',args[i]);
+            msg=msg.replace("{}",args[i]);
         return msg;
     },
     translate: function (msg) {
@@ -43,5 +44,7 @@ text={
 
     "camera": "Camera",
     "ip_camera": "IP Camera",
+
+    "workload title": "{} Workload",
 };
 
