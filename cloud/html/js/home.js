@@ -36,11 +36,11 @@ $("#pg-home").on(":initpage", function(e) {
         page.data('map',map);
 
         /* add layers switching widget */
-        page.data('lineinfo',{ name: "Connection Info", layer: L.layerGroup() });
-        page.data('heatmap',{ name: "Density Estimation", layer: L.layerGroup() });
-        page.data('stat',{ name: "Statistics Histogram", layer: L.layerGroup() });
-        page.data('preview', { name: "Preview Clips", layer: L.layerGroup() });
-        page.data('alert', { name: "Scrolling Alerts", layer: L.layerGroup() });
+        page.data('lineinfo',{ name: text["connection info"], layer: L.layerGroup() });
+        page.data('heatmap',{ name: text["density estimation"], layer: L.layerGroup() });
+        page.data('stat',{ name: text["statistics histogram"], layer: L.layerGroup() });
+        page.data('preview', { name: text["preview clips"], layer: L.layerGroup() });
+        page.data('alert', { name: text["Scrolling Alerts"], layer: L.layerGroup() });
         page.data('controls', L.control.layers().addTo(map));
         alerts.setup(page);
 

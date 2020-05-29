@@ -6,7 +6,7 @@ text={
         return msg;
     },
     translate: function (msg) {
-        return ("msg" in text)?text[msg]:msg;
+        return (msg in text)?text[msg]:msg;
     },
 
     "hint-search-datetime": "日期检索: VAR>MM/DD/YYYY, VAR<hh/mm/ss[.uuu], 或者VAR>=MM/DD/YYYY hh/mm/ss[.uuu], 这里hh 使用24 小时表示.",
@@ -32,14 +32,17 @@ text={
     "mb/s": "Mb/s",
     "gb/s": "Gb/s",
 
-    "traffic": "道路交通",
-    "stadium": "体育场馆",
+    "traffic": "traffic",
+    "traffic planning": "道路交通",
+
+    "stadium": "stadium",
+    "stadium services": "体育场馆",
     
-    "heatmap": "热成像图",
-    "stat": "统计曲线",
-    "preview": "录像预览",
-    "alert": "警报信息",
-    "lineinfo": "链接信息",
+    "connection info": "链接信息",
+    "density estimation": "热成像图",
+    "statistics histogram": "统计曲线",
+    "preview clips": "录像预览",
+    "Scrolling Alerts": "警报信息",
 
     "camera": "摄像头",
     "ip_camera": "网络摄像机",
