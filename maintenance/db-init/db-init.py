@@ -165,7 +165,7 @@ for index in settings:
             time.sleep(2)
 
 # populate db with simulated offices and provisions
-with open("/run/secrets/sensor-info.json","rt") as fd:
+with open("/run/secrets/sensor-info.json",encoding='utf-8') as fd:
     data=json.load(fd)
     dbo=DBIngest(index="offices",office="",host=dbhost)
     dbp=DBIngest(index="provisions", office=office, host=dbhost)
