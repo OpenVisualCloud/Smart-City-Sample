@@ -351,13 +351,13 @@
     }]
 },{
     "scenario": "stadium",
-    "address": "National Stadium",
+    "address": "国家体育馆",
     "location": {
         "lat": 37.39856,
         "lon": -121.94866
     },
     "sensors": [{
-        "address": "East Gate",
+        "address": "东门",
         "location": {
             "lat": 37.38813,
             "lon": -121.94370 
@@ -366,7 +366,7 @@
         "theta": 90.0,
         "simsn": "cams2o1e0"
     },{
-        "address": "North Gate",
+        "address": "北门",
         "location": {
             "lat": 37.40008,
             "lon": -121.95925
@@ -375,7 +375,7 @@
         "theta": 180,
         "simsn": "cams2o1e1"
     },{
-        "address": "West Gate",
+        "address": "西门",
         "location": {
             "lat": 37.38679,
             "lon": -121.98048
@@ -384,7 +384,7 @@
         "theta": 270.0,
         "simsn": "cams2o1e2"
     },{
-        "address": "South Gate",
+        "address": "南门",
         "location": {
             "lat": 37.37610,
             "lon": -121.96242
@@ -393,7 +393,7 @@
         "theta": 0.0,
         "simsn": "cams2o1e3"
     },{
-        "address": "South East Exit",
+        "address": "东南出口",
         "location": {
             "lat": 37.38062,
             "lon": -121.95048
@@ -402,7 +402,7 @@
         "theta": 45.0,
         "simsn": "cams2o1e4"
     },{
-        "address": "North East Exit",
+        "address": "东北出口",
         "location": {
             "lat": 37.39628,
             "lon": -121.95067
@@ -411,7 +411,7 @@
         "theta": 135.0,
         "simsn": "cams2o1e5"
     },{
-        "address": "North West Exit",
+        "address": "西北出口",
         "location": {
             "lat": 37.39628,
             "lon": -121.97461
@@ -420,7 +420,7 @@
         "theta": 225.0,
         "simsn": "cams2o1e6"
     },{
-        "address": "South West Exit",
+        "address": "西南出口",
         "location": {
             "lat": 37.38077,
             "lon": -121.97388
@@ -429,7 +429,7 @@
         "theta": 315.0,
         "simsn": "cams2o1e7"
     },{
-        "address": "East Wing",
+        "address": "东区座位",
         "location": {
             "lat": 37.38865,
             "lon": -121.95405
@@ -443,7 +443,7 @@
         }],
         "simsn": "cams2o1w0"
     },{
-        "address": "North East Wing",
+        "address": "东北区座位",
         "location": {
             "lat": 37.39347,
             "lon": -121.95452 
@@ -457,7 +457,7 @@
         }],
         "simsn": "cams2o1w4"
     },{
-        "address": "North Wing",
+        "address": "北区座位",
         "location": {
             "lat": 37.39369,
             "lon": -121.96285
@@ -471,7 +471,7 @@
         }],
         "simsn": "cams2o1w1"
     },{
-        "address": "North West Wing",
+        "address": "西北区座位",
         "location": {
             "lat": 37.39365,
             "lon": -121.97074
@@ -485,7 +485,7 @@
         }],
         "simsn": "cams2o1w5"
     },{
-        "address": "West Wing",
+        "address": "西区座位",
         "location": {
             "lat": 37.38847,
             "lon": -121.97160
@@ -499,7 +499,7 @@
         }],
         "simsn": "cams2o1w2"
     },{
-        "address": "South West Wing",
+        "address": "西南区座位",
         "location": {
             "lat": 37.38351,
             "lon": -121.97087
@@ -513,7 +513,7 @@
         }],
         "simsn": "cams2o1w6"
     },{
-        "address": "South Wing",
+        "address": "南区座位",
         "location": {
             "lat": 37.38351,
             "lon": -121.96285
@@ -527,7 +527,7 @@
         }],
         "simsn": "cams2o1w3"
     },{
-        "address": "South East Wing",
+        "address": "东南区座位",
         "location": {
             "lat": 37.38369,
             "lon": -121.95448
@@ -541,7 +541,7 @@
         }],
         "simsn": "cams2o1w7"
     },{
-        "address": "North West Restaurant",
+        "address": "西北区饭店",
         "location": {
             "lat": 37.39821,
             "lon": -121.96969
@@ -550,7 +550,7 @@
         "theta": 0.0,
         "simsn": "cams2o1q0"
     },{
-        "address": "North East Restaurant",
+        "address": "东北区饭店",
         "location": {
             "lat": 37.39804,
             "lon": -121.95195
@@ -559,7 +559,7 @@
         "theta": 0.0,
         "simsn": "cams2o1q1"
     },{
-        "address": "East Restaurant",
+        "address": "东区饭店",
         "location": {
             "lat": 37.39245,
             "lon": -121.94811
@@ -568,7 +568,7 @@
         "theta": 270.0,
         "simsn": "cams2o1q2"
     },{
-        "address": "South Restaurant",
+        "address": "南区饭店",
         "location": {
             "lat": 37.37813,
             "lon": -121.96965
@@ -577,7 +577,7 @@
         "theta": 180.0,
         "simsn": "cams2o1q3"
     },{
-        "address": "West Restaurant",
+        "address": "西区饭店",
         "location": {
             "lat": 37.38134,
             "lon": -121.97670
@@ -586,7 +586,7 @@
         "theta": 90.0,
         "simsn": "cams2o1q4"
     },{
-        "address": "West Telephone Booth",
+        "address": "西区电话亭",
         "location": {
             "lat": 37.39528,
             "lon": -121.94820
@@ -595,7 +595,7 @@
         "theta": 270.0,
         "simsn": "cams2o1q5"
     },{
-        "address": "South Telephone Booth",
+        "address": "南区电话亭",
         "location": {
             "lat": 37.37800,
             "lon": -121.95116
@@ -604,7 +604,7 @@
         "theta": 180.0,
         "simsn": "cams2o1q6"
     },{
-        "address": "West Elevator",
+        "address": "南区电梯",
         "location": {
             "lat": 37.39124,
             "lon": -121.97741
