@@ -1,9 +1,9 @@
 
 text={
-    format: function (msg, args) {
+    format: function (msg) {
         msg=text.translate(msg);
-        for (var i=0;i<args.length;i++)
-            msg=msg.replace("{}",args[i]);
+        for (var i=1;i<arguments.length;i++)
+            msg=msg.replace("{}",arguments[i]);
         return msg;
     },
     translate: function (msg) {
