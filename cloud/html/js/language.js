@@ -6,8 +6,7 @@ text={
         return msg;
     },
     translate: function (msg) {
-        if "msg" in text: return text[msg];
-        return msg;
+        return ("msg" in text)?text[msg]:msg;
     },
 
     "hint-search-datetime": "Search date time: VAR>MM/DD/YYYY, VAR<hh/mm/ss[.uuu], or VAR>=MM/DD/YYYY hh/mm/ss[.uuu], where hh is in 24 hours.",
