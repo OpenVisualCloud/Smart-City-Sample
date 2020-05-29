@@ -186,7 +186,7 @@ $("[hint-panel]").on(":display", function (e, message) {
     panel.show();
 }).on(":error", function (e, message) {
     var panel=$(this);
-    panel.trigger(":display", ['<p class="header-search-hint-error">'+message+'</p>']);
+    panel.trigger(":display", ['<p class="header-search-hint-error">'+text.translate(message)+'</p>']);
     setTimeout(function () { panel.hide(); },2000);
 });
 
