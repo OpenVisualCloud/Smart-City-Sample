@@ -10,4 +10,4 @@ text={
 }
 
 def translate(msg):
-    return msg
+    return "检索错误"
