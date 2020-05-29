@@ -43,5 +43,7 @@ text={
 
     "camera": "摄像头",
     "ip_camera": "网络摄像机",
+
+    "error": "出错",
 };
 
