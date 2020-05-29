@@ -15,9 +15,13 @@ class DBIngest(object):
         if r.status_code==200 or r.status_code==201: return
         try:
             reason=r.json()["error"]["reason"]
+            print("Exception: "+str(reason), flush=True)
         except:
-            r.raise_for_status()
-        raise Exception(translate(reason))
+            try:
+                r.raise_for_status()
+            except Exception as e:
+                print("Exception: "+str(e), flush=True)
+        raise Exception(text["ingest error"])
 
     def ingest_bulk(self, bulk, batch=500):
         ''' save bulk data to the database
