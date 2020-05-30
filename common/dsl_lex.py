@@ -8,7 +8,7 @@ from language_dsl import text
 tokens=('VAR','LPAREN','RPAREN','AND','OR','NOT','NUMBER','STRING', 'DATE', 'TIME',
         'CONTAINS','LESSEQUAL','LESSTHAN','GREATEREQUAL','GREATERTHAN',
         'EQUAL','NOTEQUAL','PLUS','MINUS','MULTIPLY','DIVIDE','REMAINDER',
-        'NOW','BOOLEAN','COMMA','LBRACKET','RBRACKET','WHERE', 'AM', 'PM')
+        'NOW','BOOLEAN','COMMA','LBRACKET','RBRACKET','WHERE', 'AM', 'PM', 'IP')
 
 def t_TIME(t):
     r'[0-2]?\d:[0-5]?\d:[0-5]?\d\.?\d*'
@@ -43,6 +43,10 @@ def t_DATE(t):
 def t_NOW(t):
     r'[Nn][Oo][Ww]'
     t.value = int(time.mktime(datetime.datetime.now().timetuple())*1000)
+    return t
+
+def t_IP(t):
+    r'[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+(\/[0-9][0-9]?)?'
     return t
 
 def t_NUMBER(t):

@@ -2,6 +2,5 @@
 
 text={
     "crowd-counting": "crowd-counting",
-    "processing": "processing",
 }
 

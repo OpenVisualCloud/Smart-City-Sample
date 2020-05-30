@@ -3,7 +3,6 @@
 text={
    "triggers": "triggers",
    "alert trigger": "alert trigger",
-   "active": "active",
    "server busy": "Server busy: {}%",
    "server overload": "Server overload: {}%",
    "check sensor": "Check sensor: #disconnected={}",

@@ -45,7 +45,7 @@ while True:
         dbs.ingest({
             "name": text["smart-upload"],
             "service": text["maintanence"],
-            "status": text["active"],
+            "status": "active",
         })
         break
     except Exception as e:
