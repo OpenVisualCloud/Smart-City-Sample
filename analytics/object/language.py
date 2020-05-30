@@ -3,5 +3,4 @@
 text={
     "object-detection": "object-detection",
     "svcq-counting": "svcq-counting",
-    "processing": "processing",
 }

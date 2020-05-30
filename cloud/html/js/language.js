@@ -14,6 +14,7 @@ text={
     "hint-search-number": "Search numbers {}: VAR=&lt;expr&gt; or VAR&gt;=&lt;expr&gt;",
     "hint-search-string": 'Search strings: VAR:"string" or VAR="string"',
     "hint-search-location": "Search geometric locations: VAR:[&lt;lat&gt;,&lt;lon&gt;] or VAR:[&lt;lat&gt;,&lt;lon&gt;,&lt;radius&gt;]",
+    "hint-search-ip": 'Search IP address: VAR=192.168.1.0 or VAR=192.168.1.0/16',
 
     "cpu": "cpu",
     "mem": "mem",

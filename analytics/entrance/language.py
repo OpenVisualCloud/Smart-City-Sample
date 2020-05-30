@@ -2,6 +2,5 @@
 
 text={
     "entrance-counting": "entrance-counting",
-    "processing": "processing",
 }
 

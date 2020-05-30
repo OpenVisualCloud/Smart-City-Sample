@@ -3,5 +3,4 @@
 text={
     "where-indexing": "where-indexing",
     "maintanence": "maintanence",
-    "active": "active",
 }

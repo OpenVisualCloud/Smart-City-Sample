@@ -3,5 +3,4 @@
 text={
     "smart-upload": "smart-upload",
     "maintanence": "maintanence",
-    "active": "active",
 }

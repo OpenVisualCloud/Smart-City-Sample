@@ -29,7 +29,7 @@ while True:
         dbs.ingest({
             "name": text["where-indexing"],
             "service": text["maintanence"],
-            "status": text["active"],
+            "status": "active",
         })
         break
     except Exception as e:

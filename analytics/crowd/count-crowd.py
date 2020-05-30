@@ -60,7 +60,7 @@ while not stop:
                 "lat": office[0],
                 "lon": office[1],
             },
-            "status": text["processing"],
+            "status": "processing",
             "skip": every_nth_frame,
         })["_id"]
         break

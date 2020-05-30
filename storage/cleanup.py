@@ -28,7 +28,7 @@ while isinstance(office,list):
         rs=dbs.ingest({
             "name": text["cleanup"],
             "service": text["maintanence"],
-            "status": text["active"],
+            "status": "active",
         })
         break
     except Exception as e:

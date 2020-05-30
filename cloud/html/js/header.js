@@ -142,6 +142,9 @@ $("#homeSearch").on("focus", function () {
             if (wc["type"]=="geo_point") {
                 candidates[0]=text["hint-search-location"];
             }
+            if (wc["type"]=="ip") {
+                candidates[0]=text["hint-search-ip"];
+            }
         });
         return candidates;
     };
