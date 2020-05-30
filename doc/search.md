@@ -48,6 +48,11 @@ Substring Match: ```sensor:"camera"``` or ```sensor:'camera'```
 Return records based on the geo-location of a search field.    
 Examples: ```office:[45,-122]``` or ```office:[45,-122,100]```   
 
+- IP Address Search:
+
+Return records based on the IP address of a search field.   
+Examples: `ip=192.168.0.1` or `ip=192.168.0.0/16`   
+
 - Complex Search:   
 
 Return records for any logic combinations of simple searches.    

@@ -32,7 +32,7 @@ while True:
         rt=dbt.ingest({
             "name": text["alert trigger"],
             "service": text["triggers"],
-            "status": text["active"],
+            "status": "active",
         })
         break
     except Exception as e:

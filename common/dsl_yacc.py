@@ -313,6 +313,12 @@ def p_query_eq_string(p):
     else:
         p[0] = nested_query(nested, {"term": { var+".keyword": p[3] } })
     
+def p_query_eq_ip(p):
+    """query : expr EQUAL IP"""
+    if "var" not in p[1]: raise Exception(text["var first"])
+    (nested, var) = check_nested_label(p[1]["spec"], p[1]["var"])
+    p[0] = nested_query(nested, {"term": { var: p[3] } })
+    
 def p_query_eq_all(p):
     """query : expr EQUAL MULTIPLY"""
     if "var" not in p[1]: raise Exception(text["var first"])

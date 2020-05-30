@@ -69,6 +69,7 @@ settings={
             "properties": {
                 "office": { "type": "geo_point", },
                 "location": { "type": "geo_point", },
+                "ip": { "type": "ip", },
             },
         },
     },
