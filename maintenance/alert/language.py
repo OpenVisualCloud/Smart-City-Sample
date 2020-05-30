@@ -3,7 +3,6 @@
 text={
    "triggers": "触发服务",
    "alert trigger": "警报触发",
-   "active": "运行中",
    "server busy": "服务器忙碌: {}%",
    "server overload": "服务器过载: {}%",
    "check sensor": "请检查录像头: 连接中断{}",

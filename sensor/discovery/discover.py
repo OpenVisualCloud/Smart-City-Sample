@@ -59,6 +59,18 @@ if dbhost:
 
 while True:
     for ip,port in probe_camera():
+        r=None
+        if dbhost:
+            try:
+                r=list(dbs.search("ip="+ip+" and port="+str(port),size=1))
+                if r: 
+                    if r[0]["_source"]["status"]!="disconnected":
+                        print("Skipping {}:{}:{}".format(ip,port,r[0]["_source"]["status"]),flush=True)
+                        continue
+            except Exception as e:
+                print("Exception: "+str(e), flush=True)
+            
+        # new or disconnected camera
         print("Probing "+ip+":"+str(port), flush=True)
         try:
             rtspuri,camid,desc=probe_camera_info(ip,port)
@@ -66,8 +78,6 @@ while True:
         except Exception as e:
             print("Exception: "+str(e), flush=True)
             continue
-        #print(rtspuri, flush=True)
-        #print(camid[0]+":"+camid[1], flush=True)
 
         # probe width & height from the stream
         width=height=0
@@ -89,13 +99,14 @@ while True:
             'model': 'ip_camera',
             'url': rtspuri,
             'status': 'idle',
+            'ip': ip,
+            'port': port,
         })
         print(json.dumps(sinfo,indent=2), flush=True) 
 
         if not dbhost: continue
         try:
-            r=list(dbs.search("sensor:'camera' and "+camid[0]+"='"+camid[1]+"'",size=1))
-            if not r:     # new camera
+            if not r: # new camera
                 print("Searching for template: "+camid[0]+"="+camid[1], flush=True)
                 template=list(dbp.search(camid[0]+"='"+camid[1]+"'",size=1))
                 if template:
@@ -105,7 +116,7 @@ while True:
                     dbi.ingest(record)
                 else:
                     print("Template not found", flush=True)
-            elif r[0]["_source"]["status"]=="disconnected":   # camera re-connect
+            else: # camera re-connect
                 dbs.update(r[0]["_id"],sinfo)
         except Exception as e:
             print("Exception: "+str(e), flush=True)
