@@ -6,7 +6,7 @@ if test -z "${DIR}"; then
 fi
 
 pid="$(docker ps -f ancestor=$IMAGE --format='{{.ID}}' | head -n 1)"
-if [ -n "$pid" ] && [ "$#" -le "1" ]; then
+if [ -n "$pid" ] && [ "$#" -eq 0 ]; then
     echo "bash into running container...$IMAGE"
     docker exec -it $pid ${*-/bin/bash}
 else
