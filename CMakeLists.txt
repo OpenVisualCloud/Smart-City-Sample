@@ -65,7 +65,6 @@ add_custom_target(dist  ${CMAKE_HOME_DIRECTORY}/script/mk-dist.sh)
 if(NOT REGISTRY)
     add_custom_target(update ${CMAKE_HOME_DIRECTORY}/script/update-image.sh)
 endif()
-add_custom_target(discover ${CMAKE_HOME_DIRECTORY}/sensor/discovery/shell.sh /home/discover.py $ENV{PORT_SCAN})
 
 file(GLOB dirs "deployment" "*")
 list(REMOVE_DUPLICATES dirs)
