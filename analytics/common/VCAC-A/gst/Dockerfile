@@ -14,3 +14,4 @@ RUN  DEBIAN_FRONTEND=noninteractive apt-get update -qq && apt-get install -qq py
 
 COPY --from=build /home/ /home/
 ENV  FRAMEWORK=gstreamer
+ENV  PYTHONIOENCODING=UTF-8
