@@ -27,7 +27,7 @@ while isinstance(office,list):
     try:
         rs=dbs.ingest({
             "name": text["cleanup"],
-            "service": text["maintanence"],
+            "service": text["maintenance"],
             "status": "active",
         })
         break
