@@ -5,3 +5,4 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update -qq && apt-get install -qq pyt
 
 COPY app /home/
 COPY *.py /home/
+ENV  PYTHONIOENCODING=UTF-8

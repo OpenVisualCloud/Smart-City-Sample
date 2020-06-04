@@ -26,6 +26,7 @@ COPY --from=smtc_common /home/*.py /home/
 COPY    *.py /home/
 CMD     ["/home/discover.py"]
 WORKDIR /home
+ENV     PYTHONIOENCODING=UTF-8
 
 ####
 ARG  USER=docker
