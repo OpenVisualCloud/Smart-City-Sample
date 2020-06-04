@@ -3,7 +3,7 @@ FROM openvisualcloud/xeon-centos76-media-ffmpeg:20.4
 
 RUN yum install -y -q epel-release nmap && yum -y -q install python36-ply python36-requests python36-setuptools && rm -rf /var/cache/yum/*
 
-ARG ZEEP_VER=3.3.1
+ARG ZEEP_VER=3.4.0
 ARG ZEEP_REPO=https://github.com/mvantellingen/python-zeep/archive/${ZEEP_VER}.tar.gz
 ARG ONVIF_ZEEP_VER=0.2.12
 ARG ONVIF_ZEEP_REPO=https://github.com/FalkTannhaeuser/python-onvif-zeep/archive/v${ONVIF_ZEEP_VER}.tar.gz
@@ -26,6 +26,7 @@ COPY --from=smtc_common /home/*.py /home/
 COPY    *.py /home/
 CMD     ["/home/discover.py"]
 WORKDIR /home
+ENV     PYTHONIOENCODING=UTF-8
 
 ####
 ARG  USER=docker

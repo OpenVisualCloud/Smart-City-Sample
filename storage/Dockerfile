@@ -7,6 +7,7 @@ COPY --from=smtc_common /home/*.py /home/
 COPY    *.py /home/
 COPY    *.conf /etc/nginx/
 CMD     ["/home/manage.py"]
+ENV     PYTHONIOENCODING=UTF-8
 
 ####
 ARG  USER=docker

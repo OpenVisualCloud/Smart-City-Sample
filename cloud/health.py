@@ -26,7 +26,7 @@ class HealthHandler(web.RequestHandler):
             r=requests.get(dbhost+"/_nodes/"+zone+"/http")
             if r.json()["_nodes"]["successful"]>0: 
                 return { "state": "online" }
-            return "Node offline"
+            return text["connection error"]
         except Exception as e:
             print("Exception: "+str(e), flush=True)
             return text["connection error"]

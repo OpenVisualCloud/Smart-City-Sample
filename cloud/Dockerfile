@@ -8,7 +8,7 @@ COPY    *.conf /etc/nginx/
 COPY    *.py /home/
 COPY    html /var/www/html
 CMD     ["/home/webc.py"]
-EXPOSE  8080
+ENV     PYTHONIOENCODING=UTF-8
 
 ####
 ARG  USER=docker

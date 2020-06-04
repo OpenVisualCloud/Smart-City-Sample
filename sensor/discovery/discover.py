@@ -9,7 +9,7 @@ import time
 import json
 import os
 
-port_scan=os.environ['PORT_SCAN']
+port_scan=os.environ['PORT_SCAN'] if 'PORT_SCAN' in os.environ else "-p T:80-65535 192.168.1.0/24"
 sim_ports=list(map(int,os.environ["SIM_PORT"].strip("/").split("/"))) if "SIM_PORT" in os.environ else []
 sim_prefix=os.environ["SIM_PREFIX"] if "SIM_PREFIX" in os.environ else ""
 service_interval = float(os.environ["SERVICE_INTERVAL"]) if "SERVICE_INTERVAL" in os.environ else 30

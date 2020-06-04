@@ -4,6 +4,7 @@ RUN apt-get update -qq && apt-get install -qq python3-requests vlc && rm -rf /va
 COPY *.py /home/
 COPY archive/*.mp4 /mnt/simulated/
 CMD ["/home/simulate.py"]
+ENV  PYTHONIOENCODING=UTF-8
 
 ####
 ARG  USER=docker

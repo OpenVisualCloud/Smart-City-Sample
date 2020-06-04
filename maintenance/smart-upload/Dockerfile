@@ -5,6 +5,7 @@ RUN  yum install -y -q epel-release && yum install -y -q python36-requests pytho
 COPY --from=smtc_common /home/*.py /home/
 COPY    *.py /home/
 CMD     ["/home/smart-upload.py"]
+ENV     PYTHONIOENCODING=UTF-8
 
 ####
 ARG  USER=docker
