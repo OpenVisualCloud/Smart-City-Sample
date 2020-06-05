@@ -4,7 +4,6 @@ from db_ingest import DBIngest
 import paho.mqtt.client as mqtt
 from threading import Thread, Condition, Timer
 from signal import signal, SIGTERM
-import traceback
 import json
 import time
 import sys
@@ -37,7 +36,7 @@ class MQTT2DB(object):
                 self._mqtt.connect(mqtthost)
                 break
             except:
-                print(trackback.format_exc(), flush=True)
+                print(traceback.format_exc(), flush=True)
         timer.cancel()
         print("mqtt connected", flush=True)
 
@@ -86,7 +85,7 @@ class MQTT2DB(object):
                 r["nobjects"] = int(max([r["count"][k] for k in r["count"]]))
 
         except:
-            print(trackback.format_exc(), flush=True)
+            print(traceback.format_exc(), flush=True)
 
         self._add1(r)
 
@@ -101,7 +100,7 @@ class MQTT2DB(object):
             try:
                 self._db.ingest_bulk(bulk)
             except:
-                print(trackback.format_exc(), flush=True)
+                print(traceback.format_exc(), flush=True)
 
 
 mqtt2db = MQTT2DB()
