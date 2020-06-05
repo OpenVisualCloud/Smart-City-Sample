@@ -1,9 +1,10 @@
 #!/usr/bin/python3
-import traceback
+
 from db_ingest import DBIngest
 import paho.mqtt.client as mqtt
 from threading import Thread, Condition, Timer
 from signal import signal, SIGTERM
+import traceback
 import json
 import time
 import sys
@@ -13,7 +14,6 @@ mqtthost = os.environ["MQTTHOST"]
 scenario = os.environ["SCENARIO"]
 dbhost = os.environ["DBHOST"]
 office = list(map(float, os.environ["OFFICE"].split(",")))
-
 
 class MQTT2DB(object):
     def __init__(self):
