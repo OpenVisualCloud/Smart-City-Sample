@@ -44,8 +44,7 @@ class RunVA(object):
             print("stopping", flush=True)
             self._stop.set()
 
-    def loop(self, sensor, location, uri, algorithm, algorithmName,
-             resolution={"width": 0, "height": 0}, zonemap=[], topic="analytics"):
+    def loop(self, sensor, location, uri, algorithm, algorithmName, options={}, topic="analytics"):
         try:
             VAServing.start({
                 'model_dir': '/home/models',
@@ -77,15 +76,7 @@ class RunVA(object):
                     "inference-interval": every_nth_frame,
                     "recording_prefix": "/tmp/rec/" + sensor
                 }
-
-                if algorithmName == "crowd-counting":
-                    parameters.update({
-                        "crowd_count": {
-                            "width": resolution["width"],
-                            "height": resolution["height"],
-                            "zonemap": zonemap,
-                        }
-                    })
+                parameters.update(options)
 
                 pipeline = VAServing.pipeline(self._pipeline, self._version)
                 instance_id = pipeline.start(source=source,
@@ -120,7 +111,7 @@ class RunVA(object):
                             "memory": psutil.virtual_memory().percent,
                         })
 
-                    self._stop.wait(1)
+                    self._stop.wait(3)
 
                 self._stop=None
                 pipeline.stop()
