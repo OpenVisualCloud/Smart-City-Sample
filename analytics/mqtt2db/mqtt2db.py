@@ -69,11 +69,14 @@ class MQTT2DB(object):
         try:
 
             r = json.loads(str(message.payload.decode("utf-8", "ignore")))
-            r.update(r["tags"])
-            del r["tags"]
-            if "real_base" not in r:
-                r["real_base"] = 0
-            r["time"] = int((r["real_base"] + r["timestamp"]) / 1000000)
+
+            if "tags" in r:
+                r.update(r["tags"])
+                del r["tags"]
+
+            if ("time" not in r) and ("real_base" in r) and ("timestamp" in r): 
+                real_base=r["real_base"] if "real_base" in r else 0
+                r["time"] = int((real_base + r["timestamp"]) / 1000000)
 
             if "objects" in r and scenario == "traffic":
                 r["nobjects"] = int(len(r["objects"]))

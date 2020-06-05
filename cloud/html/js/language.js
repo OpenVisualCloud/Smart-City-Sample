@@ -47,5 +47,6 @@ text={
     "ip_camera": "IP Camera",
 
     "workload title": "{} Workload",
+    "N/A": "N/A",
 };
 
