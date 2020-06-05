@@ -34,7 +34,13 @@ def connect(sensor, location, uri, algorithm, algorithmName, resolution, zonemap
 
             # any VA exit indicates a camera disconnect
             with ThreadPoolExecutor(1) as e1:
-                e1.submit(runva.loop, sensor, location, uri, algorithm, algorithmName, resolution, zonemap)
+                e1.submit(runva.loop, sensor, location, uri, algorithm, algorithmName, {
+                    "crowd_count": {
+                        "width": resolution["width"],
+                        "height": resolution["height"],
+                        "zonemap": zonemap,
+                    },
+                })
 
             if stop: rec2db.stop()
             raise Exception("VA exited. This should not happen.")
