@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-import traceback
+
 from db_ingest import DBIngest
 import paho.mqtt.client as mqtt
 from threading import Thread, Condition, Timer
@@ -14,7 +14,6 @@ mqtthost = os.environ["MQTTHOST"]
 scenario = os.environ["SCENARIO"]
 dbhost = os.environ["DBHOST"]
 office = list(map(float, os.environ["OFFICE"].split(",")))
-
 
 class MQTT2DB(object):
     def __init__(self):
@@ -37,7 +36,7 @@ class MQTT2DB(object):
                 self._mqtt.connect(mqtthost)
                 break
             except:
-                print(trackback.format_exc(), flush=True)
+                print(traceback.format_exc(), flush=True)
         timer.cancel()
         print("mqtt connected", flush=True)
 
@@ -86,7 +85,7 @@ class MQTT2DB(object):
                 r["nobjects"] = int(max([r["count"][k] for k in r["count"]]))
 
         except:
-            print(trackback.format_exc(), flush=True)
+            print(traceback.format_exc(), flush=True)
 
         self._add1(r)
 
@@ -101,7 +100,7 @@ class MQTT2DB(object):
             try:
                 self._db.ingest_bulk(bulk)
             except:
-                print(trackback.format_exc(), flush=True)
+                print(traceback.format_exc(), flush=True)
 
 
 mqtt2db = MQTT2DB()
