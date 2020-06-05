@@ -51,5 +51,6 @@ text={
 
     "active": "运行中",
     "processing": "运行中",
+    "N/A": "无",
 };
 
