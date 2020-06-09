@@ -61,7 +61,7 @@ while not stop:
         })["_id"]
         break
     except Exception as e:
-        print("Exception in count-entrance register algorithm: "+str(e), flush=True)
+        print("Waiting for DB...", flush=True)
         time.sleep(10)
 
 # compete for a sensor connection
