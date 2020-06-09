@@ -71,7 +71,7 @@ while True:
         })["_id"]
         break
     except Exception as e:
-        print("Exception in detec-object.py1: "+str(e), flush=True)
+        print("Waiting for DB...", flush=True)
         time.sleep(10)
 
 # compete for a sensor connection

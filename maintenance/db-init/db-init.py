@@ -162,7 +162,7 @@ for index in settings:
             r=requests.put(dbhost+"/"+index+"/_settings",json={ routing_key: routing_value })
             break
         except Exception as e:
-            print("Exception: "+str(e),flush=True)
+            print("Waiting for DB...",flush=True)
             time.sleep(2)
 
 # populate db with simulated offices and provisions

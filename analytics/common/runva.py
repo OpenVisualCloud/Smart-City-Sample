@@ -24,7 +24,7 @@ class RunVA(object):
                 mqtt.connect(mqtthost)
                 break
             except:
-                print(traceback.format_exc(), flush=True)
+                print("Waiting for mqtt...", flush=True)
                 time.sleep(5)
         print("mqtt connected", flush=True)
         mqtt.disconnect()
