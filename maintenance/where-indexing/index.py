@@ -33,7 +33,7 @@ while True:
         })
         break
     except Exception as e:
-        print("Exception: "+str(e), flush=True)
+        print("Waiting for DB...", flush=True)
         time.sleep(10)
 
 dbq=DBQuery(index=indexes[0],office=office,host=dbhost)
