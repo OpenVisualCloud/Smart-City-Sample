@@ -152,18 +152,13 @@ settings={
     },
 }
 
-# wait for db
-while True:
-    try: 
-        r=requests.get(dbhost)
-        break
+# delete sensors, provisions, algorithms, and services. 
+for index1 in ["sensors","provisions","algorithms","services"]:
+    try:
+        r=requests.delete(dbhost+"/"+index1+officestr)
     except:
         print("Waiting for DB...", flush=True)
-        time.sleep(1)
-
-# delete sensors, provisions, algorithms, and services. 
-for index in ["sensors","provisions","algorithms","services"]:
-    requests.delete(dbhost+"/"+index+officestr)
+    time.sleep(1)
 
 # initialize db index settings
 routing_key="index.routing.allocation.include.zone"
