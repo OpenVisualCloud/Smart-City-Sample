@@ -72,6 +72,8 @@ var stats={
 	    sensorctx.text=L.tooltip({permanent:true,direction:'center',className:'tooltip_text'});
         var offset={x:0,y:0};
         var div=$('<div class="page-stats" draggable="true"><canvas class="max-size"></canvas></div>').on('dragstart', function (e) {
+            if (sensorctx.chart_icon) sensorctx.chart_icon.closePopup();
+
             var divoffset=$(this).offset();
             offset={x:e.pageX-divoffset.left,y:e.pageY-divoffset.top};
             e.originalEvent.dataTransfer.setData('application/json',JSON.stringify(sensor));
