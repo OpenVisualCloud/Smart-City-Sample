@@ -24,14 +24,15 @@ function draw_analytics(video, doc) {
 
                 svg.empty();
                 if (tid in timed) {
+                    var sx=svg.width()/video[0].videoWidth;
+                    var sy=svg.height()/video[0].videoHeight;
+                    var sxy=Math.min(sx,sy);
+                    var sw=sxy*video[0].videoWidth;
+                    var sh=sxy*video[0].videoHeight;
+                    var sxoff=(svg.width()-sw)/2;
+                    var syoff=(svg.height()-sh)/2;
+
                     $.each(timed[tid], function (x,v) {
-                        var sx=svg.width()/v._source.resolution.width;
-                        var sy=svg.height()/v._source.resolution.height;
-                        var sxy=Math.min(sx,sy);
-                        var sw=sxy*v._source.resolution.width;
-                        var sh=sxy*v._source.resolution.height;
-                        var sxoff=(svg.width()-sw)/2;
-                        var syoff=(svg.height()-sh)/2;
                         $.each(v._source.objects, function (x1, v1) {
                             if ("detection" in v1) {
                                 if ("bounding_box" in v1.detection) {
