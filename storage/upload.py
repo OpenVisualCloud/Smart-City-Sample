@@ -99,7 +99,7 @@ class UploadHandler(web.RequestHandler):
         else:
             # ingest recording cloud
             if sinfo:
-                db_rec=DBIngest(host=dbhost, index="recordings_c", office="")
+                db_rec=DBIngest(host=dbhost, index="recordings", office="")
                 db_rec.ingest(sinfo)
 
     @gen.coroutine
