@@ -10,7 +10,7 @@ class DBIngest(object):
         super(DBIngest,self).__init__()
         self._host=host
         if isinstance(office,list): office='$'+('$'.join(map(str,office)))
-        if isinstance(office,dict): office='$'+str(office["lat"])+"$"+str(office("lon"))
+        if isinstance(office,dict): office='$'+str(office["lat"])+"$"+str(office["lon"])
         self._index=index+office
 
     def _request(self, op, *args, **kwargs):

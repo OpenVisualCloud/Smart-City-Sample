@@ -12,7 +12,7 @@
       <li><div class="button-group">
         <button class="button tiny" id="homeButton"><i class="fi-home header-menu-button"></i></button>
         <button class="button tiny hidden" id="layoutButton"><i class="fi-zoom-out header-menu-button"></i></button>
-        <button class="button tiny hidden" id="cloudButton"><i class="fi-cloud header-menu-button"></i></button>
+        <button class="button tiny" id="cloudButton"><i class="fi-cloud header-menu-button"></i></button>
         <button class="button tiny" data-open="settingPanel"><i class="fi-wrench header-menu-button"></i></button>
       </div></li>
     </ul>

@@ -8,15 +8,6 @@ $("#pg-recording").on(":initpage", function(e, queries, office) {
         page.find("[layout4]").toggle();
     });
 
-    $("#cloudButton").show().unbind('click').click(function () {
-        if ($(this).find("i").toggleClass("fi-cloud").toggleClass("fi-video").hasClass("fi-cloud")) {
-            $("#homeSearch").data('office',office);
-        } else {
-            $("#homeSearch").data('office','').val("sensor:*");
-        }
-        $("#homeSearch").trigger($.Event("keydown",{keyCode:13}));
-    });
-
     /* update home button */   
     $("#homeButton").unbind('click').click(function () {
         selectPage('home');
@@ -27,15 +18,13 @@ $("#pg-recording").on(":initpage", function(e, queries, office) {
     $("#homeSearch").data('index','recordings,analytics').data('office',office).data('invoke',function (queries) {
         var plist=page.find("[play-list]");
         plist.empty();
-        var index1=$("#homeSearch").data('index');
-        var office1=$("#homeSearch").data('office');
-        apiHost.search(index1,queries,office1).then(function (data) {
+        apiHost.search($("#homeSearch").data('index'),queries,office).then(function (data) {
             data.response.sort(function(a,b){return a._source.time-b._source.time});
             $.each(data.response, function (k,v) {
                 var time=new Date(v._source.time).toLocaleString();
-                v._source.office=office1;
-                v._source.path="recording/"+v._source.path+(office1?'?'+$.param({office:office1.lat+","+office1.lon}):'');
-                var line=$('<tr><td class="no-padding"><a href="javascript:void(0)"><img src="'+v._source.path.replace('mp4?','mp4.png?')+'" draggable="true"/><figcaption class="xx-small">'+time+' <pre>'+v._source.path+'</pre></figcaption></a></td></tr>');
+                v._source.office=office;
+                v._source.path="recording/"+v._source.path+(office?'?'+$.param({office:office.lat+","+office.lon}):'');
+                var line=$('<tr><td class="no-padding"><a href="javascript:void(0)"><img src="'+v._source.path.replace(".mp4",".mp4.png")+'" draggable="true"/><figcaption class="xx-small">'+time+' <pre>'+v._source.path+'</pre></figcaption></a></td></tr>');
                 line.find("img").css({width:plist.width()+"px"});
                 line.on("dragstart",function (e) {
                     e.originalEvent.dataTransfer.setData("application/json",JSON.stringify(v));
@@ -98,4 +87,8 @@ $("#pg-recording [layout1] video").on("drop",function (e) {
     draw_analytics(page, doc);
 }).on("dragover",function (e) {
     e.preventDefault();
+});
+
+$("#cloudButton").click(function () {
+    selectPage("recording",['sensor=*',""]);
 });

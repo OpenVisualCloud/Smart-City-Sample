@@ -34,7 +34,7 @@ spec:
                 cpu: "200m"
           env:
             - name: QUERY
-              value: "time>=now-{{ mul $ServiceIntervalSmartUpload 1000 }} where objects.detection.bounding_box.x_max-objects.detection.bounding_box.x_min>0.01"
+              value: "uploaded=false and time>=now-{{ mul $ServiceIntervalSmartUpload 1000 }} where objects.detection.bounding_box.x_max-objects.detection.bounding_box.x_min>0.01"
             - name: OFFICE
               {{- $args := dict "scenarioName" $scenarioName "Values" $.Values "officeIdx" $officeIdx }}
               {{- include "smtc.env.office" $args }}
@@ -44,7 +44,7 @@ spec:
             - name: SMHOST
               value: "http://{{ $officeName }}-storage-service:8080/recording"
             - name: CLOUDHOST
-              value: "http://cloud-storage-service:8080/recording"
+              value: "http://cloud-storage-service:8080/api/upload"
             - name: SERVICE_INTERVAL
               value: "{{ $ServiceIntervalSmartUpload }}"
             - name: NO_PROXY

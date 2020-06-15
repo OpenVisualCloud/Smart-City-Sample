@@ -37,7 +37,7 @@ spec:
                 cpu: "200m"
           env:
             - name: QUERY
-              value: "time>=now-eval(defn(`SERVICE_INTERVAL_SMART_UPLOAD')*1000)"
+              value: "uploaded=false"
             - name: OFFICE
               value: "defn(`OFFICE_LOCATION')"
             - name: DBHOST
@@ -45,7 +45,7 @@ spec:
             - name: SMHOST
               value: "http://defn(`OFFICE_NAME')-storage-service:8080/recording"
             - name: CLOUDHOST
-              value: "http://cloud-storage-service:8080/recording"
+              value: "http://cloud-storage-service:8080/api/upload"
             - name: SERVICE_INTERVAL
               value: "defn(`SERVICE_INTERVAL_SMART_UPLOAD')"
             - name: NO_PROXY

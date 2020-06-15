@@ -55,6 +55,7 @@ class UploadHandler(web.RequestHandler):
                 },
                 "time": timestamp,
                 "path": mp4file[len(self._storage)+1:],
+                "uploaded": False,
             })
         else:
             print("Disk full: recording halted", flush=True)
@@ -117,6 +118,7 @@ class UploadHandler(web.RequestHandler):
                     db_sc=DBQuery(host=dbhost, index="sensors", office="")
                     sensor_c=list(db_sc.search("md5='"+md5+"'",size=1))
                     if not sensor_c:  # if not available, ingest a sensor record in cloud
+                        sensor_c=[{ "_source": sensor[0]["_source"].copy() }]
                         sensor_c[0]["_source"]["md5"]=md5
                         db_sc=DBIngest(host=dbhost, index="sensors", office="")
                         print("Ingest sensor: {}".format(sensor_c[0]["_source"]), flush=True)
@@ -124,6 +126,7 @@ class UploadHandler(web.RequestHandler):
 
                     # replace cloud sensor id and ingest recording
                     sinfo["sensor"]=sensor_c[0]["_id"]
+                    sinfo["uploaded"]=True
                     db_rec=DBIngest(host=dbhost, index="recordings", office="")
                     print("Ingest recording: {}".format(sinfo), flush=True)
                     db_rec.ingest(sinfo)
@@ -131,7 +134,7 @@ class UploadHandler(web.RequestHandler):
                     # copy local analytics to cloud
                     db_a=DBQuery(host=dbhost, index="analytics", office=sinfo["office"])
                     data=[]
-                    for r in db_a.search('sensor="'+sensor+'" and office:['+str(office[0])+','+str(office[1])+'] and time>='+str(sinfo["time"])+' and time<='+str(sinfo["time"]+sinfo["duration"]*1000),size=10000):
+                    for r in db_a.search('sensor="'+sensor[0]["_id"]+'" and office:['+str(office[0])+','+str(office[1])+'] and time>='+str(sinfo["time"])+' and time<='+str(sinfo["time"]+sinfo["duration"]*1000),size=10000):
                         r["_source"]["sensor"]=sinfo["sensor"]
                         r["_source"].pop("recording",None) # force where indexing
                         data.append(r["_source"])
