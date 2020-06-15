@@ -34,7 +34,7 @@ spec:
                 cpu: "200m"
           env:
             - name: QUERY
-              value: "time>={{ mul $ServiceIntervalSmartUpload 1000 }} where objects.detection.bounding_box.x_max-objects.detection.bounding_box.x_min>0.01"
+              value: "time>=now-{{ mul $ServiceIntervalSmartUpload 1000 }} where objects.detection.bounding_box.x_max-objects.detection.bounding_box.x_min>0.01"
             - name: OFFICE
               {{- $args := dict "scenarioName" $scenarioName "Values" $.Values "officeIdx" $officeIdx }}
               {{- include "smtc.env.office" $args }}

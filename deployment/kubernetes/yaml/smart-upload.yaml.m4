@@ -37,7 +37,7 @@ spec:
                 cpu: "200m"
           env:
             - name: QUERY
-              value: "time>=now-eval(defn(`SERVICE_INTERVAL_SMART_UPLOAD')*1000)"
+              value: "time>=now-eval(defn(`SERVICE_INTERVAL_SMART_UPLOAD')*1000) where objects.detection.bounding_box.x_max-objects.detection.bounding_box.x_min>0.01"
             - name: OFFICE
               value: "defn(`OFFICE_LOCATION')"
             - name: DBHOST
