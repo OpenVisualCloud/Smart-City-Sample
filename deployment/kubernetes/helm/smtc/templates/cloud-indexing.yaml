@@ -22,8 +22,7 @@ spec:
           imagePullPolicy: IfNotPresent
           env:
             - name: DBHOST
-              {{- $args := dict "officeName" $officeName "Values" $.Values }}
-              {{- include "smtc.env.dbhost" $args }}
+              value: "http://{{ include "smtc.db.name" . }}-service:9200"
             - name: SERVICE_INTERVAL
               value: "30"
             - name: UPDATE_INTERVAL
