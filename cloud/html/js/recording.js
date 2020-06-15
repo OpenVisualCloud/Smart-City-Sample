@@ -8,12 +8,11 @@ $("#pg-recording").on(":initpage", function(e, queries, office) {
         page.find("[layout4]").toggle();
     });
 
-    var index="recordings,analytics";
-    $("#cloudButton").unbind('click').click(function () {
+    $("#cloudButton").show().unbind('click').click(function () {
         if ($(this).find("i").toggleClass("fi-cloud").toggleClass("fi-video").hasClass("fi-cloud")) {
-            $("#homeSearch").data('index',index);
+            $("#homeSearch").data('office',office);
         } else {
-            $("#homeSearch").data('index',index.split(",").join("_c,")+"_c");
+            $("#homeSearch").data('office',null);
         }
         $("#homeSearch").trigger($.Event("keydown",{keyCode:13}));
     });
@@ -25,14 +24,17 @@ $("#pg-recording").on(":initpage", function(e, queries, office) {
 
     /* enable recording queries */
     var monitor=0;
-    $("#homeSearch").data('index',index).data('office',office).data('invoke',function (queries) {
+    $("#homeSearch").data('index','recordings,analytics').data('office',office).data('invoke',function (queries) {
         var plist=page.find("[play-list]");
         plist.empty();
-        apiHost.search($("#homeSearch").data('index'),queries,office).then(function (data) {
+        var index1=$("#homeSearch").data('index');
+        var office1=$("#homeSearch").data('office');
+        apiHost.search(index1,queries,office1).then(function (data) {
             data.response.sort(function(a,b){return a._source.time-b._source.time});
             $.each(data.response, function (k,v) {
                 var time=new Date(v._source.time).toLocaleString();
-                v._source.path="recording/"+v._source.path+'?'+$.param({office:office.lat+","+office.lon});
+                v._source.office=office1;
+                v._source.path="recording/"+v._source.path+(office1?'?'+$.param({office:office1.lat+","+office1.lon}):'');
                 var line=$('<tr><td class="no-padding"><a href="javascript:void(0)"><img src="'+v._source.path.replace('mp4?','mp4.png?')+'" draggable="true"/><figcaption class="xx-small">'+time+' <pre>'+v._source.path+'</pre></figcaption></a></td></tr>');
                 line.find("img").css({width:plist.width()+"px"});
                 line.on("dragstart",function (e) {

@@ -10,6 +10,7 @@ import datetime
 import os
 
 dbhost=os.environ["DBHOST"]
+sthost=os.environ["STHOST"]
 
 db=DBQuery(index="offices",office="",host=dbhost)
 offices={}
@@ -40,8 +41,13 @@ class RedirectHandler(web.RequestHandler):
 
     @gen.coroutine
     def get(self):
-        office=list(map(float,unquote(str(self.get_argument("office"))).split(",")))
-        r=yield self._office_info(office)
+        office=self.get_argument("office",None)
+        if office:
+            office=list(map(float,unquote(str(self.get_argument("office"))).split(",")))
+            r=yield self._office_info(office)
+        else:
+            r={"_source":{"uri":sthost}}
+
         if isinstance(r, str):
             self.set_status(400, encode(r))
         else:
