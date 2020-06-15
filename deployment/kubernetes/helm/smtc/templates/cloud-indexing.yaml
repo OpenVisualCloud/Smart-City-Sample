@@ -1,36 +1,26 @@
 
-{{- range $scenarioIdx, $scenarioName := $.Values.scenario }}
-{{- $args := dict "scenarioName" $scenarioName "Values" $.Values }}
-{{- range $officeIdx := until ( int ( include "smtc.noffices" $args ) ) }}
-{{- $officeName := printf "%s-office%d" $scenarioName $officeIdx }}
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ $officeName }}-where-indexing
+  name: cloud-where-indexing
   labels:
-     app: {{ $officeName }}-where-indexing
+     app: cloud-where-indexing
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: {{ $officeName }}-where-indexing
+      app: cloud-where-indexing
   template:
     metadata:
       labels:
-        app: {{ $officeName }}-where-indexing
+        app: cloud-where-indexing
     spec:
       enableServiceLinks: false
       containers:
-        - name: {{ $officeName }}-where-indexing
+        - name: cloud-where-indexing
           image: {{ $.Values.registryPrefix }}smtc_where_indexing:latest
           imagePullPolicy: IfNotPresent
           env:
-            - name: INDEXES
-              value: "recordings,analytics"
-            - name: OFFICE
-              {{- $args := dict "scenarioName" $scenarioName "Values" $.Values "officeIdx" $officeIdx }}
-              {{- include "smtc.env.office" $args }}
             - name: DBHOST
               {{- $args := dict "officeName" $officeName "Values" $.Values }}
               {{- include "smtc.env.dbhost" $args }}
@@ -57,7 +47,3 @@ spec:
                 type: File
       {{ include "smtc.platform.node-selector" $ }}
 
----
-
-{{- end }}
-{{- end }}

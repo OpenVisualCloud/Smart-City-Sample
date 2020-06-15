@@ -7,12 +7,12 @@ from language import text
 import os
 import time
 
-indexes=os.environ["INDEXES"].split(",")
+indexes="recordings,analytics"
 service_interval=float(os.environ["SERVICE_INTERVAL"])  # in seconds
 update_interval=float(os.environ["UPDATE_INTERVAL"])  # in seconds
 search_batch=int(os.environ["SEARCH_BATCH"])
 update_batch=int(os.environ["UPDATE_BATCH"])
-office=list(map(float, os.environ["OFFICE"].split(",")))
+office=list(map(float, os.environ["OFFICE"].split(","))) if "OFFICE" in os.environ else ""
 dbhost=os.environ["DBHOST"]
 
 dbs=None

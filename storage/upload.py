@@ -103,7 +103,7 @@ class UploadHandler(web.RequestHandler):
             # ingest recording cloud
             if sinfo:
                 db_s=DBQuery(host=dbhost, index="sensors", office=sinfo["office"])
-                sensor=list(db_s.query("_id='"+sinfo["sensor"]+"'",size=1))
+                sensor=list(db_s.search("_id='"+sinfo["sensor"]+"'",size=1))
                 if sensor:
                     # remove status
                     sensor[0]["_source"].pop("status",None)
@@ -115,7 +115,7 @@ class UploadHandler(web.RequestHandler):
 
                     # locate the sensor record in cloud
                     db_sc=DBQuery(host=dbhost, index="sensors", office="")
-                    sensor_c=list(db_sc.query("md5='"+md5+"'",size=1))
+                    sensor_c=list(db_sc.search("md5='"+md5+"'",size=1))
                     if not sensor_c:  # if not available, ingest a sensor record in cloud
                         sensor_c[0]["_source"]["md5"]=md5
                         db_sc=DBIngest(host=dbhost, index="sensors", office="")
@@ -128,6 +128,16 @@ class UploadHandler(web.RequestHandler):
                     print("Ingest recording: {}".format(sinfo), flush=True)
                     db_rec.ingest(sinfo)
 
+                    # copy local analytics to cloud
+                    db_a=DBQuery(host=dbhost, index="analytics", office=sinfo["office"])
+                    data=[]
+                    for r in db_a.search('sensor="'+sensor+'" and office:['+str(office[0])+','+str(office[1])+'] and time>='+str(sinfo["time"])+' and time<='+str(sinfo["time"]+sinfo["duration"]*1000),size=10000):
+                        r["_source"]["sensor"]=sinfo["sensor"]
+                        data.append(r["_source"])
+                    db_ac=DBIngest(host=dbhost, index="analytics", office="")
+                    print("Ingest analytics: {}".format(len(data)), flush=True)
+                    db_ac.ingest_bulk(data)
+                        
     @gen.coroutine
     def post(self):
         office=list(map(float,self.get_body_argument('office').split(",")))

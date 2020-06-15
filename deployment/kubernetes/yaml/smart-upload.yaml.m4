@@ -1,4 +1,4 @@
-define(`SERVICE_INTERVAL_SMART_UPLOAD',120)
+define(`SERVICE_INTERVAL_SMART_UPLOAD',30)
 
 include(platform.m4)
 include(../../../script/loop.m4)
