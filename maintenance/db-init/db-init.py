@@ -8,8 +8,6 @@ import json
 
 dbhost=os.environ["DBHOST"]
 office=list(map(float,os.environ["OFFICE"].split(",")))
-proxyhost=os.environ["PROXYHOST"]
-scenario=os.environ["SCENARIO"]
 zone=os.environ["ZONE"]
 
 officestr='$'+('$'.join(map(str,office)))

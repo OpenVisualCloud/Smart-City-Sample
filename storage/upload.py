@@ -133,6 +133,7 @@ class UploadHandler(web.RequestHandler):
                     data=[]
                     for r in db_a.search('sensor="'+sensor+'" and office:['+str(office[0])+','+str(office[1])+'] and time>='+str(sinfo["time"])+' and time<='+str(sinfo["time"]+sinfo["duration"]*1000),size=10000):
                         r["_source"]["sensor"]=sinfo["sensor"]
+                        r["_source"].pop("recording",None) # force where indexing
                         data.append(r["_source"])
                     db_ac=DBIngest(host=dbhost, index="analytics", office="")
                     print("Ingest analytics: {}".format(len(data)), flush=True)

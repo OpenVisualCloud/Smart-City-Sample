@@ -10,7 +10,7 @@ import datetime
 import os
 
 dbhost=os.environ["DBHOST"]
-sthost=os.environ["STHOST"]
+proxyhost=os.environ["PROXYHOST"]
 
 db=DBQuery(index="offices",office="",host=dbhost)
 offices={}
@@ -46,7 +46,7 @@ class RedirectHandler(web.RequestHandler):
             office=list(map(float,unquote(str(self.get_argument("office"))).split(",")))
             r=yield self._office_info(office)
         else:
-            r={"_source":{"uri":sthost}}
+            r={"_source":{"uri":proxyhost}}
 
         if isinstance(r, str):
             self.set_status(400, encode(r))

@@ -12,7 +12,7 @@ $("#pg-recording").on(":initpage", function(e, queries, office) {
         if ($(this).find("i").toggleClass("fi-cloud").toggleClass("fi-video").hasClass("fi-cloud")) {
             $("#homeSearch").data('office',office);
         } else {
-            $("#homeSearch").data('office',null);
+            $("#homeSearch").data('office','').val("sensor:*");
         }
         $("#homeSearch").trigger($.Event("keydown",{keyCode:13}));
     });
