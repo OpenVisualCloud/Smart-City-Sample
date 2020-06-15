@@ -152,18 +152,20 @@ settings={
     },
 }
 
+# delete sensors, provisions, algorithms, and services. 
+for index1 in ["sensors","provisions","algorithms","services"]:
+    try:
+        r=requests.delete(dbhost+"/"+index1+officestr)
+    except:
+        print("Waiting for DB...", flush=True)
+    time.sleep(1)
+
 # initialize db index settings
 routing_key="index.routing.allocation.include.zone"
 for index in settings:
     routing_value=settings[index]["settings"].pop(routing_key)
-    while True:
-        try:
-            r=requests.put(dbhost+"/"+index,json=settings[index],params=_include_type_name)
-            r=requests.put(dbhost+"/"+index+"/_settings",json={ routing_key: routing_value })
-            break
-        except Exception as e:
-            print("Exception: "+str(e),flush=True)
-            time.sleep(2)
+    requests.put(dbhost+"/"+index,json=settings[index],params=_include_type_name)
+    requests.put(dbhost+"/"+index+"/_settings",json={ routing_key: routing_value })
 
 # populate db with simulated offices and provisions
 with open("/run/secrets/sensor-info.json",encoding='utf-8') as fd:

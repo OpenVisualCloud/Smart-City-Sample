@@ -18,6 +18,8 @@ var preview={
 
             var offset={x:0,y:0};
             div.attr('draggable','true').bind('dragstart',function (e) {
+                sensorctx.marker.closePopup();
+
                 var divoffset=$(this).offset();
                 offset={x:e.pageX-divoffset.left,y:e.pageY-divoffset.top};
                 e.originalEvent.dataTransfer.setData("application/json",JSON.stringify(sensor));

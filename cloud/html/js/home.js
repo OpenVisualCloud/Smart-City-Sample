@@ -66,7 +66,7 @@ $("#pg-home").on(":initpage", function(e) {
     /* enable the office button */
     var search=$("#homeSearch");
     $("#homeButton").unbind('click').click(function () {
-        map.setView(page.data('scenario').center, page.data('zoom'));
+        map.flyTo(page.data('scenario').center, page.data('zoom'));
     });
 
     /* update map with the sensor info */
