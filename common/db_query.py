@@ -13,6 +13,7 @@ class DBQuery(object):
         self._host=host
         indexes=index.split(",")
         if isinstance(office,list): office='$'+('$'.join(map(str,office)))
+        if isinstance(office,dict): office='$'+str(office["lat"])+"$"+str(office["lon"])
         self._index=indexes[0]+office
         self._include_type_name={"include_type_name":"false"}
         self._where=indexes[1]+office if len(indexes)>1 else None

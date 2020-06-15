@@ -41,6 +41,8 @@ spec:
           env:
             - name: DBHOST
               value: "http://{{ include "smtc.db.name" . }}-service:9200"
+            - name: PROXYHOST
+              value: "http://cloud-storage-service.default.svc.cluster.local:8080"
             - name: SCENARIO
               value: {{ join "," $.Values.scenario | quote }}
             - name: HEALTH_CHECK

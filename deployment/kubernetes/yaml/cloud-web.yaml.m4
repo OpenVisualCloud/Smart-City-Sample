@@ -46,6 +46,8 @@ spec:
               value: "http://ifelse(eval(defn(`NOFFICES')>1),1,cloud-db,db)-service:9200"
             - name: `SCENARIO'
               value: "defn(`SCENARIO')"
+            - name: PROXYHOST
+              value: "http://cloud-storage-service.default.svc.cluster.local:8080"
             - name: HEALTH_CHECK
               value: "ifelse(eval(defn(`NOFFICES')>1),1,enabled,disabled)"
             - name: NO_PROXY

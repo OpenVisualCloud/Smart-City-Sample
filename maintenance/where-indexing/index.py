@@ -7,12 +7,11 @@ from language import text
 import os
 import time
 
-indexes=os.environ["INDEXES"].split(",")
 service_interval=float(os.environ["SERVICE_INTERVAL"])  # in seconds
 update_interval=float(os.environ["UPDATE_INTERVAL"])  # in seconds
 search_batch=int(os.environ["SEARCH_BATCH"])
 update_batch=int(os.environ["UPDATE_BATCH"])
-office=list(map(float, os.environ["OFFICE"].split(",")))
+office=list(map(float, os.environ["OFFICE"].split(","))) if "OFFICE" in os.environ else ""
 dbhost=os.environ["DBHOST"]
 
 dbs=None
@@ -36,8 +35,8 @@ while True:
         print("Waiting for DB...", flush=True)
         time.sleep(10)
 
-dbq=DBQuery(index=indexes[0],office=office,host=dbhost)
-dba=DBQuery(index=indexes[1],office=office,host=dbhost)
+dbq=DBQuery(index="recordings",office=office,host=dbhost)
+dba=DBQuery(index="analytics",office=office,host=dbhost)
 while True:
     print("Sleeping...")
     time.sleep(service_interval)
