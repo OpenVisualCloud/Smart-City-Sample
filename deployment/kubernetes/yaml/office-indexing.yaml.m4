@@ -29,8 +29,6 @@ spec:
           image: defn(`REGISTRY_PREFIX')smtc_where_indexing:latest
           imagePullPolicy: IfNotPresent
           env:
-            - name: INDEXES
-              value: "recordings,analytics"
             - name: OFFICE
               value: "defn(`OFFICE_LOCATION')"
             - name: DBHOST

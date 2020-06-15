@@ -43,7 +43,7 @@ spec:
             - name: PROXYHOST
               value: "http://cloud-storage-service.default.svc.cluster.local:8080"
             - name: INDEXES
-              value: "recordings_c"
+              value: "recordings"
             - name: RETENTION_TIME
               value: "1800"
             - name: SERVICE_INTERVAL

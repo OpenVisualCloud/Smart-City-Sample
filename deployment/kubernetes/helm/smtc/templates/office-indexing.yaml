@@ -1,6 +1,4 @@
 
-{{ $ServiceIntervalSmartUpload := 120 }}
-
 {{- range $scenarioIdx, $scenarioName := $.Values.scenario }}
 {{- $args := dict "scenarioName" $scenarioName "Values" $.Values }}
 {{- range $officeIdx := until ( int ( include "smtc.noffices" $args ) ) }}
@@ -9,44 +7,39 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ $officeName }}-smart-upload
+  name: {{ $officeName }}-where-indexing
   labels:
-     app: {{ $officeName }}-smart-upload
+     app: {{ $officeName }}-where-indexing
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: {{ $officeName }}-smart-upload
+      app: {{ $officeName }}-where-indexing
   template:
     metadata:
       labels:
-        app: {{ $officeName }}-smart-upload
+        app: {{ $officeName }}-where-indexing
     spec:
       enableServiceLinks: false
       containers:
-        - name: {{ $officeName }}-smart-upload
-          image: {{ $.Values.registryPrefix }}smtc_smart_upload:latest
+        - name: {{ $officeName }}-where-indexing
+          image: {{ $.Values.registryPrefix }}smtc_where_indexing:latest
           imagePullPolicy: IfNotPresent
-          resources:
-            requests:
-                cpu: "100m"
-            limits:
-                cpu: "200m"
           env:
-            - name: QUERY
-              value: "uploaded=false"
             - name: OFFICE
               {{- $args := dict "scenarioName" $scenarioName "Values" $.Values "officeIdx" $officeIdx }}
               {{- include "smtc.env.office" $args }}
             - name: DBHOST
               {{- $args := dict "officeName" $officeName "Values" $.Values }}
               {{- include "smtc.env.dbhost" $args }}
-            - name: STHOSTL
-              value: "http://{{ $officeName }}-storage-service:8080/recording"
-            - name: STHOSTC
-              value: "http://cloud-storage-service:8080/api/upload"
             - name: SERVICE_INTERVAL
-              value: "{{ $ServiceIntervalSmartUpload }}"
+              value: "30"
+            - name: UPDATE_INTERVAL
+              value: "5"
+            - name: SEARCH_BATCH
+              value: "3000"
+            - name: UPDATE_BATCH
+              value: "500"
             - name: NO_PROXY
               value: "*"
             - name: no_proxy
@@ -61,6 +54,7 @@ spec:
                 path: /etc/localtime
                 type: File
       {{ include "smtc.platform.node-selector" $ }}
+
 ---
 
 {{- end }}
