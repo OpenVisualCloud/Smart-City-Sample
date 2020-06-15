@@ -3,7 +3,7 @@ var apiHost={
     search: function (index, queries, office, size) {
         if (typeof size=="undefined") size=25;
         var url="api/search";
-        var args={index:index,queries:queries,size:size,office:office?office.lat+","+office.lon:"*"};
+        var args={index:index,queries:queries,size:size,office:typeof office=='string'?office:office.lat+","+office.lon};
         console.log("GET "+url+"?"+$.param(args));
         return $.get(url,args);
     },
@@ -27,7 +27,7 @@ var apiHost={
     },
     hint: function (index, office) {
         var url="api/hint";
-        var args={ index:index, office:office?office.lat+","+office.lon:"*" };
+        var args={ index:index, office:typeof office=='string'?office:office.lat+","+office.lon };
         console.log("GET "+url+"?"+$.param(args));
         return $.get(url,args);
     },

@@ -1,7 +1,7 @@
 
 FROM smtc_common
 COPY *.py /home/
-CMD  ["/home/db-init.py"]
+CMD  ["/bin/sh","-c","/home/db-init.py && /home/provision.py"]
 
 ####
 ARG  USER=docker

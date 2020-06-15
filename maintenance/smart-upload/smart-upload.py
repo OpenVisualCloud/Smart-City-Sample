@@ -5,20 +5,17 @@ from db_query import DBQuery
 from probe import probe, run
 from signal import signal, SIGTERM
 from language import text
+import traceback
 import requests
 import os
 import time
 
 query=os.environ["QUERY"]
-indexes=os.environ["INDEXES"]
 service_interval=float(os.environ["SERVICE_INTERVAL"])  # in seconds
-update_interval=float(os.environ["UPDATE_INTERVAL"])  # in seconds
-search_batch=int(os.environ["SEARCH_BATCH"])
-update_batch=int(os.environ["UPDATE_BATCH"])
 office=list(map(float, os.environ["OFFICE"].split(",")))
 dbhost=os.environ["DBHOST"]
-smhost=os.environ["SMHOST"]
-cloudhost=os.environ["CLOUDHOST"]
+sthostl=os.environ["STHOSTL"]
+sthostc=os.environ["STHOSTC"]
 
 dbs=None
 rs=None
@@ -36,7 +33,6 @@ def upload(cloudhost, filename, office, sensor, timestamp):
         },files={
             "file": fd,
         },verify=False)
-    os.remove(filename)
 
 signal(SIGTERM, quit_service)
 dbs=DBIngest(index="services",office=office,host=dbhost)
@@ -52,7 +48,7 @@ while True:
         print("Waiting for DB...", flush=True)
         time.sleep(10)
 
-dbq=DBQuery(index=indexes,office=office,host=dbhost)
+dbq=DBQuery(index="recordings,analytics",office=office,host=dbhost)
 
 while True:
 
@@ -60,23 +56,25 @@ while True:
     print("query = ", query)
 
     try:
-        for q in dbq.search(query):
-            url=smhost+'/'+q["_source"]["path"]
-            print("url: ", url)
+        for q in dbq.search(query, size=25):
+            # mark it as uploaded
+            dbq.update(q["_id"],{ "uploaded": True })
+
+            url=sthostl+'/'+q["_source"]["path"]
+            print("url: "+url, flush=True)
 
             mp4file="/tmp/"+str(os.path.basename(url))
 
-            print("Transcoding...")
-            os.remove(mp4file)
-            list(run(["/usr/local/bin/ffmpeg","-f","mp4","-i",url,"-c:v","libsvt_hevc","-c:a","aac",mp4file]))
+            print("Transcoding...", flush=True)
+            list(run(["/usr/local/bin/ffmpeg","-f","mp4","-i",url,"-c:v","libx264","-preset","ultrafast","-c:a","aac","-f","mp4","-y",mp4file]))
 
-            print("Uploading: ", cloudhost)
+            print("Uploading: "+ sthostc, flush=True)
             sensor=q["_source"]["sensor"]
             timestamp=q["_source"]["time"]
-            upload(cloudhost, mp4file, office, sensor, timestamp)
-
-    except Exception as e:
-        print("Exception: "+str(e), flush=True)
+            upload(sthostc, mp4file, office, sensor, timestamp)
+            os.remove(mp4file)
+    except:
+        print(traceback.format_exc(), flush=True)
 
     print("Sleeping...")
     time.sleep(service_interval)

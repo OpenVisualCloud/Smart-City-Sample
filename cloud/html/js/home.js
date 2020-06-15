@@ -21,7 +21,6 @@ function sensor_line_color(officectx, sensor) {
 $("#pg-home").on(":initpage", function(e) {
     var page=$(this);
     $("#layoutButton").hide();
-    $("#cloudButton").hide();
 
     /* create map */
     var map=page.data('map');
@@ -80,7 +79,7 @@ $("#pg-home").on(":initpage", function(e) {
         if (timer) clearTimeout(timer);
 
         var center=map.getCenter();
-        apiHost.search(index,"("+queries+") and location:["+center.lat+","+center.lng+","+settings.radius()+"]",null).then(function (data) {
+        apiHost.search(index,"("+queries+") and location:["+center.lat+","+center.lng+","+settings.radius()+"]","$*").then(function (data) {
             var offices=page.data('offices');
             var sensors=page.data('sensors');
             var scenario=page.data('scenario');
@@ -105,7 +104,7 @@ $("#pg-home").on(":initpage", function(e) {
                 var officectx=offices[officeid];
                 officectx.used=true;
                 if (!("address" in officectx)) {
-                    apiHost.search('offices','location:['+officeid+']',null,1).then(function (data) {
+                    apiHost.search('offices','location:['+officeid+']',"$*",1).then(function (data) {
                         if (data.response.length==0) return;
                         officectx.address=data.response[0]._source.address;
 
@@ -217,7 +216,7 @@ $("#pg-home").on(":initpage", function(e) {
     };
 
     /* enable sensor queries */
-    search.val(page.data("queries")).data('index',index).data('office',null).data('invoke',update).focus().trigger($.Event("keydown",{keyCode:13}));
+    search.val(page.data("queries")).data('index',index).data('office',"$*").data('invoke',update).focus().trigger($.Event("keydown",{keyCode:13}));
 
 }).on(":closepage",function() {
     var page=$(this);

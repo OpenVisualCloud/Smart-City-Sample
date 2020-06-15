@@ -48,7 +48,7 @@ var alerts={
         var screen=$(".page-home-alert-screen");
         if (screen.is(":visible")) {
             var center=map.getCenter();
-            apiHost.search("alerts","time>=now-"+settings.alert_window()+" and location:["+center.lat+","+center.lng+","+settings.radius()+"]",null).then(function (r) {
+            apiHost.search("alerts","time>=now-"+settings.alert_window()+" and location:["+center.lat+","+center.lng+","+settings.radius()+"]","$*").then(function (r) {
                 $.each(r.response, function (x,r1) {
                     var time=new Date(r1._source.time);
                     $.each(["info","warning","fatal"], function (x, level) {
