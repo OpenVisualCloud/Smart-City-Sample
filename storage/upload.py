@@ -9,10 +9,13 @@ from db_query import DBQuery
 from db_ingest import DBIngest
 from probe import probe, run
 from language import text
+import traceback
+import hashlib
 import datetime
 import time
 import base64
 import psutil
+import json
 import os
 
 dbhost=os.environ["DBHOST"]
@@ -99,8 +102,31 @@ class UploadHandler(web.RequestHandler):
         else:
             # ingest recording cloud
             if sinfo:
-                db_rec=DBIngest(host=dbhost, index="recordings", office="")
-                db_rec.ingest(sinfo)
+                db_s=DBQuery(host=dbhost, index="sensors", office=sinfo["office"])
+                sensor=list(db_s.query("_id='"+sinfo["sensor"]+"'",size=1))
+                if sensor:
+                    # remove status
+                    sensor[0]["_source"].pop("status",None)
+
+                    # calcualte hash code for the sensor
+                    m=hashlib.md5()
+                    m.update(json.dumps(sensor[0]["_source"],ensure_ascii=False).encode('utf-8'))
+                    md5=m.hexdigest()
+
+                    # locate the sensor record in cloud
+                    db_sc=DBQuery(host=dbhost, index="sensors", office="")
+                    sensor_c=list(db_sc.query("md5='"+md5+"'",size=1))
+                    if not sensor_c:  # if not available, ingest a sensor record in cloud
+                        sensor_c[0]["_source"]["md5"]=md5
+                        db_sc=DBIngest(host=dbhost, index="sensors", office="")
+                        print("Ingest sensor: {}".format(sensor_c[0]["_source"]), flush=True)
+                        sensor_c[0]=db_sc.ingest(sensor_c[0]["_source"])
+
+                    # replace cloud sensor id and ingest recording
+                    sinfo["sensor"]=sensor_c[0]["_id"]
+                    db_rec=DBIngest(host=dbhost, index="recordings", office="")
+                    print("Ingest recording: {}".format(sinfo), flush=True)
+                    db_rec.ingest(sinfo)
 
     @gen.coroutine
     def post(self):
