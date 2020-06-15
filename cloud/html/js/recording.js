@@ -81,9 +81,10 @@ $("#pg-recording [layout1] video").on("drop",function (e) {
     var page=$(this);
     var doc=JSON.parse(e.originalEvent.dataTransfer.getData('application/json'));
 
-    page.parent().find("div").text(new Date(doc._source.time).toLocaleString());
+    apiHost.search("sensors","_id='"+doc._source.sensor+"'",doc._source.office,1).then(function (data) {
+        page.parent().find("div").text(data.response[0]._source.address+" "+new Date(doc._source.time).toLocaleString());
+    });
     page.find("source").prop('src',doc._source.path);
-    console.log(doc);
     draw_analytics(page, doc);
 }).on("dragover",function (e) {
     e.preventDefault();
