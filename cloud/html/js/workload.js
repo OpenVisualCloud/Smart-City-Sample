@@ -47,7 +47,7 @@ var workload={
                         type: 'time',
                         time: {
                             displayFormats: {
-                                second: 'hh:mm:ss',
+                                second: 'mm:ss',
                             },
                         },
                         ticks: {
