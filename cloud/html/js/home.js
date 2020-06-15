@@ -104,7 +104,7 @@ $("#pg-home").on(":initpage", function(e) {
                 var officectx=offices[officeid];
                 officectx.used=true;
                 if (!("address" in officectx)) {
-                    apiHost.search('offices','location:['+officeid+']',"$*",1).then(function (data) {
+                    apiHost.search('offices','location:['+officeid+']',"",1).then(function (data) {
                         if (data.response.length==0) return;
                         officectx.address=data.response[0]._source.address;
 
