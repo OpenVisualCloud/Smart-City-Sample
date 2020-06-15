@@ -14,8 +14,8 @@ query=os.environ["QUERY"]
 service_interval=float(os.environ["SERVICE_INTERVAL"])  # in seconds
 office=list(map(float, os.environ["OFFICE"].split(",")))
 dbhost=os.environ["DBHOST"]
-smhost=os.environ["SMHOST"]
-cloudhost=os.environ["CLOUDHOST"]
+sthostl=os.environ["STHOSTL"]
+sthostc=os.environ["STHOSTC"]
 
 dbs=None
 rs=None
@@ -60,19 +60,18 @@ while True:
             # mark it as uploaded
             dbq.update(q["_id"],{ "uploaded": True })
 
-            url=smhost+'/'+q["_source"]["path"]
+            url=sthostl+'/'+q["_source"]["path"]
             print("url: "+url, flush=True)
 
             mp4file="/tmp/"+str(os.path.basename(url))
 
             print("Transcoding...", flush=True)
-            #list(run(["/usr/local/bin/ffmpeg","-f","mp4","-i",url,"-c:v","libsvt_hevc","-preset","9","-c:a","aac","-f","mp4","-y",mp4file]))
-            list(run(["/usr/local/bin/ffmpeg","-f","mp4","-i",url,"-c","copy","-f","mp4","-y",mp4file]))
+            list(run(["/usr/local/bin/ffmpeg","-f","mp4","-i",url,"-c:v","libsvt_hevc","-preset","9","-c:a","aac","-f","mp4","-y",mp4file]))
 
-            print("Uploading: "+ cloudhost, flush=True)
+            print("Uploading: "+ sthostc, flush=True)
             sensor=q["_source"]["sensor"]
             timestamp=q["_source"]["time"]
-            upload(cloudhost, mp4file, office, sensor, timestamp)
+            upload(sthostc, mp4file, office, sensor, timestamp)
             os.remove(mp4file)
     except:
         print(traceback.format_exc(), flush=True)
