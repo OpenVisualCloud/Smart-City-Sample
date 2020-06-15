@@ -35,8 +35,6 @@ spec:
           env:
             - name: QUERY
               value: "time>={{ mul $ServiceIntervalSmartUpload 1000 }} where objects.detection.bounding_box.x_max-objects.detection.bounding_box.x_min>0.01"
-            - name: INDEXES
-              value: "recordings,analytics"
             - name: OFFICE
               {{- $args := dict "scenarioName" $scenarioName "Values" $.Values "officeIdx" $officeIdx }}
               {{- include "smtc.env.office" $args }}
@@ -49,12 +47,6 @@ spec:
               value: "http://cloud-storage-service:8080/recording"
             - name: SERVICE_INTERVAL
               value: "{{ $ServiceIntervalSmartUpload }}"
-            - name: UPDATE_INTERVAL
-              value: "5"
-            - name: SEARCH_BATCH
-              value: "3000"
-            - name: UPDATE_BATCH
-              value: "500"
             - name: NO_PROXY
               value: "*"
             - name: no_proxy

@@ -10,11 +10,7 @@ import os
 import time
 
 query=os.environ["QUERY"]
-indexes=os.environ["INDEXES"]
 service_interval=float(os.environ["SERVICE_INTERVAL"])  # in seconds
-update_interval=float(os.environ["UPDATE_INTERVAL"])  # in seconds
-search_batch=int(os.environ["SEARCH_BATCH"])
-update_batch=int(os.environ["UPDATE_BATCH"])
 office=list(map(float, os.environ["OFFICE"].split(",")))
 dbhost=os.environ["DBHOST"]
 smhost=os.environ["SMHOST"]
@@ -52,7 +48,7 @@ while True:
         print("Waiting for DB...", flush=True)
         time.sleep(10)
 
-dbq=DBQuery(index=indexes,office=office,host=dbhost)
+dbq=DBQuery(index="recordings,analytics",office=office,host=dbhost)
 
 while True:
 

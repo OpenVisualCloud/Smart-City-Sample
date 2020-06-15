@@ -1,4 +1,4 @@
-define(`SERVICE_INTERVAL_SMART_UPLOAD',120)
+define(`SERVICE_INTERVAL_SMART_UPLOAD',10)
 
 include(platform.m4)
 include(../../../script/loop.m4)
@@ -37,9 +37,7 @@ spec:
                 cpu: "200m"
           env:
             - name: QUERY
-              value: "time>=eval(defn(`SERVICE_INTERVAL_SMART_UPLOAD')*1000) where objects.detection.bounding_box.x_max-objects.detection.bounding_box.x_min>0.01"
-            - name: INDEXES
-              value: "recordings,analytics"
+              value: "time>=now-eval(defn(`SERVICE_INTERVAL_SMART_UPLOAD')*1000)"
             - name: OFFICE
               value: "defn(`OFFICE_LOCATION')"
             - name: DBHOST
@@ -50,12 +48,6 @@ spec:
               value: "http://cloud-storage-service:8080/recording"
             - name: SERVICE_INTERVAL
               value: "defn(`SERVICE_INTERVAL_SMART_UPLOAD')"
-            - name: UPDATE_INTERVAL
-              value: "5"
-            - name: SEARCH_BATCH
-              value: "3000"
-            - name: UPDATE_BATCH
-              value: "500"
             - name: NO_PROXY
               value: "*"
             - name: no_proxy
