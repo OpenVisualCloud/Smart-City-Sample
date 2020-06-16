@@ -55,7 +55,7 @@ spec:
             - name: RETENTION_TIME
               value: "3600"
             - name: SERVICE_INTERVAL
-              value: "3600"
+              value: "1800"
             - name: WARN_DISK
               value: "75"
             - name: FATAL_DISK
