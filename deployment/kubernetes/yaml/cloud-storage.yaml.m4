@@ -46,9 +46,9 @@ spec:
             - name: INDEXES
               value: "recordings"
             - name: RETENTION_TIME
-              value: "1800"
+              value: "7200"
             - name: SERVICE_INTERVAL
-              value: "1800"
+              value: "3600"
             - name: WARN_DISK
               value: "75"
             - name: FATAL_DISK
