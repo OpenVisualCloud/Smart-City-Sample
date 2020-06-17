@@ -1,5 +1,7 @@
 include(platform.m4)
 
+ifelse(index(`cloud',defn(`BUILD_SCOPE')),-1,,`
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -47,3 +49,4 @@ spec:
                 type: File
 PLATFORM_NODE_SELECTOR(`Xeon')dnl
 
+')
