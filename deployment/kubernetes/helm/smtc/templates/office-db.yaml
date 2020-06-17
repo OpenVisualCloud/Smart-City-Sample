@@ -106,8 +106,7 @@ spec:
               {{- $args := dict "scenarioName" $scenarioName "Values" $.Values "officeIdx" $officeIdx }}
               {{- include "smtc.env.office" $args }}
             - name: DBHOST
-              {{- $args := dict "officeName" $officeName "Values" $.Values }}
-              {{- include "smtc.env.dbhost" $args }}
+              value: "http://{{ include "smtc.db.name" $ }}-service:9200"
             - name: PROXYHOST
               value: "http://{{ $officeName }}-storage-service.default.svc.cluster.local:8080"
             - name: SCENARIO

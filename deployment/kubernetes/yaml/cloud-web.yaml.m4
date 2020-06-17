@@ -1,5 +1,7 @@
 include(platform.m4)
 
+ifelse(index(`cloud',defn(`BUILD_SCOPE')),-1,,`
+
 apiVersion: v1
 kind: Service
 metadata:
@@ -70,3 +72,5 @@ spec:
           secret:
             secretName: self-signed-certificate
 PLATFORM_NODE_SELECTOR(`Xeon')dnl
+
+')

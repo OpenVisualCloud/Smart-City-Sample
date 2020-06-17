@@ -28,7 +28,7 @@ ifelse(eval(defn(`NOFFICES')>1),1,`
     defn(`OFFICE_NAME')_db_init:
         image: defn(`REGISTRY_PREFIX')smtc_db_init:latest
         environment:
-            DBHOST: "http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')_db,db):9200"
+            DBHOST: "http://ifelse(eval(defn(`NOFFICES')>1),1,cloud_db,db):9200"
             OFFICE: "defn(`OFFICE_LOCATION')"
             PROXYHOST: "http://defn(`OFFICE_NAME')_storage:8080"
             `SCENARIO': "defn(`SCENARIO_NAME')"

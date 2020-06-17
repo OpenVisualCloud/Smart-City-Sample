@@ -1,6 +1,8 @@
 include(platform.m4)
 define(`DB_NAME',ifelse(eval(defn(`NOFFICES')>1),1,cloud-db,db))dnl
 
+ifelse(index(`cloud',defn(`BUILD_SCOPE')),-1,,`
+
 apiVersion: v1
 kind: Service
 metadata:
@@ -84,3 +86,5 @@ ifelse(eval(defn(`NOFFICES')>1),1,`dnl
                 path: /etc/localtime
                 type: File
 PLATFORM_NODE_SELECTOR(`Xeon')dnl
+
+')
