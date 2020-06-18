@@ -1,5 +1,7 @@
 include(platform.m4)
 
+ifelse(index(`cloud',defn(`BUILD_SCOPE')),-1,,`
+
 apiVersion: v1
 kind: Service
 metadata:
@@ -46,9 +48,9 @@ spec:
             - name: INDEXES
               value: "recordings"
             - name: RETENTION_TIME
-              value: "1800"
+              value: "7200"
             - name: SERVICE_INTERVAL
-              value: "1800"
+              value: "3600"
             - name: WARN_DISK
               value: "75"
             - name: FATAL_DISK
@@ -69,3 +71,5 @@ spec:
             path: /etc/localtime
             type: File
 PLATFORM_NODE_SELECTOR(`Xeon')dnl
+
+')

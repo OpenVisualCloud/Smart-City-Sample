@@ -6,7 +6,7 @@
             INDEXES: "recordings"
             PROXYHOST: "http://cloud_storage:8080"
             RETENTION_TIME: "7200"
-            SERVICE_INTERVAL: "7200"
+            SERVICE_INTERVAL: "3600"
             WARN_DISK: "75"
             FATAL_DISK: "85"
             HALT_REC: "95"

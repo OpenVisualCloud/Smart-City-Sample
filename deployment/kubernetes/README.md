@@ -30,6 +30,25 @@ The command ```make update``` uploads the sample images to each worker node. If 
 
 ---
 
+### Multiple office SCOPE support
+
+The sample supposes dynamic office starting/stopping, if you configure the sample to run multiple offices (NOFFICES>1). You can selectively start and stop each office, as follows:
+
+```
+cmake -DNOFFICES=2 ..
+make
+
+SCOPE=cloud make start_kubernetes
+SCOPE=office1 make start_kubernetes
+SCOPE=office2 make start_kubernetes
+...
+SCOPE=office1 make stop_kubernetes
+...
+SCOPE=office1 make start_kubernetes
+...
+make stop_kubernetes  # cleanup all
+```
+
 ### See Also 
 
 - [Utility Scripts](../../doc/script.md)   
