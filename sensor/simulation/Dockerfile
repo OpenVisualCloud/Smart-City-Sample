@@ -9,12 +9,8 @@ ENV  PYTHONIOENCODING=UTF-8
 ####
 ARG  USER=docker
 ARG  GROUP=docker
-ARG  UID
-ARG  GID
 ## VLC must run as nonroot
-## must use ; here to ignore user exist status code
-RUN  groupadd ${GROUP}; \
-     useradd -d /home/${USER} -g ${GROUP} ${USER}; \
-     chown -R ${USER}:${GROUP} /home
+RUN  groupadd ${GROUP} && \
+     useradd -d /home/${USER} -g ${GROUP} ${USER}
 USER ${USER}
 ####

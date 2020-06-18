@@ -15,3 +15,14 @@ RUN  DEBIAN_FRONTEND=noninteractive apt-get update -qq && apt-get install -qq py
 COPY --from=build /home/ /home/
 ENV  FRAMEWORK=gstreamer
 ENV  PYTHONIOENCODING=UTF-8
+
+####
+ARG  USER=docker
+ARG  GROUP=docker
+ARG  UID
+ARG  GID
+## must use ; here to ignore user exist status code
+RUN  [ ${GID} -gt 0 ] && groupadd -f -g ${GID} ${GROUP}; \
+     [ ${UID} -gt 0 ] && useradd -d /home/${USER} -g ${GID} -K UID_MAX=${UID} -K UID_MIN=${UID} ${USER}; \
+     echo
+####
