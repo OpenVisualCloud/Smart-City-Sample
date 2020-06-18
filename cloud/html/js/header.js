@@ -113,7 +113,7 @@ $("#homeSearch").on("focus", function () {
     var page=$(this);
 
     var textPrep=function (text1) {
-        return text1.replace(/"[^"]*"*/,'""').replace(/'[^']*'*/,"''").replace(/ ([Aa][Nn][Dd]|[Oo][Rr]|[Nn][Oo][Tt]|[Ww][Hh][Ee][Rr][Ee]) /g,'&&');
+        return text1.replace(/"[^"]*"*/,'""').replace(/'[^']*'*/,"''").replace(/ ([Aa][Nn][Dd]|[Oo][Rr]|[Nn][Oo][Tt]) /g,'&&');
     };
     var textHelp=function (hints, ltext, rtext, text1) {
         var candidates=[""];
@@ -153,7 +153,7 @@ $("#homeSearch").on("focus", function () {
     var rtext=textPrep(text1.substring(cursor));
     var ltext=text1.substring(0,cursor);
     var indexes=page.data('index').split(',');
-    var index=indexes[(indexes.length>1 && ltext.match(/ [Ww][Hh][Ee][Rr][Ee] /))?1:0];
+    var index=indexes[0];
     ltext=textPrep(ltext);
     var varp=/[a-z_A-Z0-9.<=>:\[, ]/i, s, e;
     for (s=ltext.length-1;s>=0&&varp.test(ltext.charAt(s));s--) {}

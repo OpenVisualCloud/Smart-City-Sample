@@ -1,6 +1,4 @@
 
-{{ $ServiceIntervalSmartUpload := 120 }}
-
 {{- range $scenarioIdx, $scenarioName := $.Values.scenario }}
 {{- $args := dict "scenarioName" $scenarioName "Values" $.Values }}
 {{- range $officeIdx := until ( int ( include "smtc.noffices" $args ) ) }}
@@ -34,7 +32,7 @@ spec:
                 cpu: "200m"
           env:
             - name: QUERY
-              value: "uploaded=false"
+              value: "sensor=*"
             - name: OFFICE
               {{- $args := dict "scenarioName" $scenarioName "Values" $.Values "officeIdx" $officeIdx }}
               {{- include "smtc.env.office" $args }}
@@ -46,7 +44,7 @@ spec:
             - name: STHOSTC
               value: "http://cloud-storage-service:8080/api/upload"
             - name: SERVICE_INTERVAL
-              value: "{{ $ServiceIntervalSmartUpload }}"
+              value: "30"
             - name: NO_PROXY
               value: "*"
             - name: no_proxy
