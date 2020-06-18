@@ -16,7 +16,6 @@ class DBQuery(object):
         if isinstance(office,dict): office='$'+str(office["lat"])+"$"+str(office["lon"])
         self._index=indexes[0]+office
         self._include_type_name={"include_type_name":"false"}
-        self._where=indexes[1]+office if len(indexes)>1 else None
 
     def _request(self, op, *args, **kwargs):
         try:
@@ -39,41 +38,30 @@ class DBQuery(object):
             if "properties" in properties[field]:
                 self._spec_from_mapping(spec, prefix+field+".", properties[field]["properties"])
 
-    def _spec_from_index(self, specs, index):
-        specs.append({"nested":[],"types":{}})
-
-        r=self._request(requests.get,self._host+"/"+index+"/_mapping",params=self._include_type_name)
+    def _spec_from_index(self):
+        specs={"nested":[],"types":{}}
+        r=self._request(requests.get,self._host+"/"+self._index+"/_mapping",params=self._include_type_name)
         for index1 in r: 
-            self._spec_from_mapping(specs[-1],"",r[index1]["mappings"]["properties"])
-
-    def _specs(self):
-        specs=[]
-        self._spec_from_index(specs,self._index)
-        if self._where: self._spec_from_index(specs,self._where)
+            self._spec_from_mapping(specs,"",r[index1]["mappings"]["properties"])
         return specs
 
-    def search(self, queries, size=10000, where_size=200):
-        dsl=compile(queries,self._specs())
-        query=dsl[0]
-        if len(dsl)>1:
-            r=self._request(requests.post,self._host+"/"+self._where+"/_search",json={"query":dsl[1],"size":0,"aggs":{ "recording": { "terms": { "field": "recording.keyword", "min_doc_count": 1, "size": where_size }}}})
-            ids=[x["key"] for x in r["aggregations"]["recording"]["buckets"]]
-            query={"bool":{"must":[query,{"ids":{"values":ids}}]}}
-        r=self._request(requests.post,self._host+"/"+self._index+"/_search",json={"query":query,"size":size, "seq_no_primary_term": True})
+    def search(self, queries, size=10000):
+        dsl=compile(queries,self._spec_from_index())
+        r=self._request(requests.post,self._host+"/"+self._index+"/_search",json={"query":dsl,"size":size, "seq_no_primary_term": True})
         for x in r["hits"]["hits"]:
             yield x
 
     def count(self,queries):
-        dsl={ "query": compile(queries,self._specs())[0] }
+        dsl={ "query": compile(queries,self._spec_from_index()) }
         r=self._request(requests.post,self._host+"/"+self._index+"/_count",json=dsl)
         return r["count"]
 
     def stats(self, queries, fields):
-        specs=self._specs()
+        specs=self._spec_from_index()
         dsl=compile(queries,specs)
-        query={"query":dsl[0],"aggs":{},"size":0}
+        query={"query":dsl,"aggs":{},"size":0}
         for field in fields:
-            nested,var=check_nested_label(specs[0],field)
+            nested,var=check_nested_label(specs,field)
             # nested aggs
             aggs={"stats":{"field":var, "missing":0}}
             if nested: 
@@ -100,18 +88,18 @@ class DBQuery(object):
                 self._scan_bucket(buckets,r[k])
 
     def _bucketize(self, queries, fields, size, specs):
-        if not specs: specs=self._specs()
+        if not specs: specs=self._spec_from_index()
 
-        dsl=compile(queries,specs)[0] if queries else {"match_all":{}} 
+        dsl=compile(queries,specs) if queries else {"match_all":{}} 
         dsl={"query":dsl,"aggs":{},"size":0}
 
         for field in fields:
-            nested,var=check_nested_label(specs[0],field)
+            nested,var=check_nested_label(specs,field)
 
             # replace text field with field.keyword
-            if "types" in specs[0]:
-                if var in specs[0]["types"]:
-                    if specs[0]["types"][var]=="text":
+            if "types" in specs:
+                if var in specs["types"]:
+                    if specs["types"][var]=="text":
                         var=var+".keyword"
             # nested aggs
             aggs={"terms":{"field":var, "size":size}}
@@ -132,7 +120,7 @@ class DBQuery(object):
         return buckets
 
     def bucketize(self, queries, fields, size=25):
-        specs=self._specs()
+        specs=self._spec_from_index()
         return self._bucketize(queries,fields,size,specs)
 
     def update(self, _id, info, seq_no=None, primary_term=None):
@@ -164,11 +152,11 @@ class DBQuery(object):
         return self._request(requests.delete,self._host+"/"+self._index+"/_doc/"+_id,headers={'Content-Type':'application/json'})
 
     def hints(self, size=50):
-        specs=self._specs()
+        specs=self._spec_from_index()
         keywords={}
         fields=[]
 
-        types=specs[0]["types"]
+        types=specs["types"]
         for var in types:
             keywords[var]={"type":types[var]}
             if types[var]=="text": 

@@ -48,17 +48,20 @@ while True:
         print("Waiting for DB...", flush=True)
         time.sleep(10)
 
-dbq=DBQuery(index="recordings,analytics",office=office,host=dbhost)
+dbq=DBQuery(index="recordings",office=office,host=dbhost)
+dba=DBQuery(index="analytics",office=office,host=dbhost)
 
 while True:
 
     print("Searching...",flush=True)
-    print("query = ", query)
-
     try:
-        for q in dbq.search(query, size=25):
-            # mark it as uploaded
-            dbq.update(q["_id"],{ "uploaded": True })
+        for q in dbq.search("evaluated=false", size=25):
+            # mark it as evaluated
+            dbq.update(q["_id"],{ "evaluated": True })
+
+            # make the upload decision based on analytics queries
+            r=list(dba.search("( " + query + " ) and ( sensor='"+q["_source"]["sensor"]+"' and time>"+str(q["_source"]["time"])+" and time<"+ str(q["_source"]["time"]+q["_source"]["duration"]*1000) +" ) ", size=1))
+            if not r: continue
 
             url=sthostl+'/'+q["_source"]["path"]
             print("url: "+url, flush=True)

@@ -1,14 +1,13 @@
-define(`SERVICE_INTERVAL_SMART_UPLOAD',`120')dnl
 
     defn(`OFFICE_NAME')_smart_upload:
         image: defn(`REGISTRY_PREFIX')smtc_smart_upload:latest
         environment:
-            QUERY: "uploaded=false"
+            QUERY: "sensor=*"
             OFFICE: "defn(`OFFICE_LOCATION')"
             DBHOST: "http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')_db,db):9200"
             STHOSTL: "http://defn(`OFFICE_NAME')_storage:8080/recording"
             STHOSTC: "http://cloud_storage:8080/api/upload"
-            SERVICE_INTERVAL: defn(`SERVICE_INTERVAL_SMART_UPLOAD')
+            SERVICE_INTERVAL: "30"
             NO_PROXY: "*"
             no_proxy: "*"
         volumes:

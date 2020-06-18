@@ -8,7 +8,6 @@ services:
 include(cloud-db.m4)
 include(cloud-web.m4)
 include(cloud-storage.m4)
-include(cloud-indexing.m4)
 looplist(SCENARIO_NAME,defn(`SCENARIOS'),`
 loop(`OFFICEIDX',1,defn(`NOFFICES'),`
     include(office.m4)
@@ -17,7 +16,6 @@ loop(`OFFICEIDX',1,defn(`NOFFICES'),`
         include(office-db.m4)
         include(discovery.m4)
         include(alert.m4)
-        include(office-indexing.m4)
         include(office-storage.m4)
         include(smart-upload.m4)
         include(analytics.m4)
