@@ -8,7 +8,7 @@ from language_dsl import text
 tokens=('VAR','LPAREN','RPAREN','AND','OR','NOT','NUMBER','STRING', 'DATE', 'TIME',
         'CONTAINS','LESSEQUAL','LESSTHAN','GREATEREQUAL','GREATERTHAN',
         'EQUAL','NOTEQUAL','PLUS','MINUS','MULTIPLY','DIVIDE','REMAINDER',
-        'NOW','BOOLEAN','COMMA','LBRACKET','RBRACKET','WHERE', 'AM', 'PM', 'IP')
+        'NOW','BOOLEAN','COMMA','LBRACKET','RBRACKET','AM', 'PM', 'IP')
 
 def t_TIME(t):
     r'[0-2]?\d:[0-5]?\d:[0-5]?\d\.?\d*'
@@ -126,14 +126,9 @@ def t_BOOLEAN(t):
         t.value=False
     return t
 
-def t_WHERE(t):
-    r'[Ww][Hh][Ee][Rr][Ee]'
-    t.lexer.stage=t.lexer.stage+1
-    return t
-
 def t_VAR(t):
     r'[a-zA-Z_][a-zA-Z_\.0-9]*'
-    t.value={ "name": t.value, "stage": t.lexer.stage}
+    t.value={ "name": t.value }
     return t
 
 t_ignore = ' \t'
@@ -163,7 +158,6 @@ def t_error(t):
     raise Exception(text["syntax error"].format(t.value))
 
 lexer = lex.lex(debug=0, optimize=0, lextab='dsl_lex_tab')
-lexer.stage=0
 
 if __name__ == '__main__':
     while True:

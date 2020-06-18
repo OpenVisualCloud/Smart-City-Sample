@@ -126,7 +126,6 @@ class UploadHandler(web.RequestHandler):
 
                     # replace cloud sensor id and ingest recording
                     sinfo["sensor"]=sensor_c[0]["_id"]
-                    sinfo["uploaded"]=True
                     db_rec=DBIngest(host=dbhost, index="recordings", office="")
                     print("Ingest recording: {}".format(sinfo), flush=True)
                     db_rec.ingest(sinfo)
@@ -136,7 +135,6 @@ class UploadHandler(web.RequestHandler):
                     data=[]
                     for r in db_a.search('sensor="'+sensor[0]["_id"]+'" and office:['+str(office[0])+','+str(office[1])+'] and time>='+str(sinfo["time"])+' and time<='+str(sinfo["time"]+sinfo["duration"]*1000),size=10000):
                         r["_source"]["sensor"]=sinfo["sensor"]
-                        r["_source"].pop("recording",None) # force where indexing
                         data.append(r["_source"])
                     db_ac=DBIngest(host=dbhost, index="analytics", office="")
                     print("Ingest analytics: {}".format(len(data)), flush=True)

@@ -8,10 +8,7 @@ import time
 import re
 
 def get_spec(p, var):
-    specs=p.parser.specs
-    i=var["stage"]
-    if i>=len(specs): raise Exception(text["unsupported where"])
-    return specs[i]
+    return p.parser.specs
 
 def check_nested_label(spec, var):
     # expand keyword if matches
@@ -96,7 +93,7 @@ def painless_query(optree):
     (nested, code) = painless_code(optree, params, None)
     return nested_query(nested, {"script": {"script": {"lang": "painless", "source": code, "params": {"v": params}}}})
 
-start = 'where_query'
+start = 'query'
 precedence = (
     ('left', 'OR'),
     ('left', 'AND'),
@@ -106,7 +103,7 @@ precedence = (
     ('left', 'MULTIPLY', 'DIVIDE', 'REMAINDER'),
     ('left', 'NOT'),
     ('left', 'LPAREN', 'RPAREN'),
-    ('nonassoc', 'LBRACKET', 'RBRACKET', 'COMMA', 'WHERE'),
+    ('nonassoc', 'LBRACKET', 'RBRACKET', 'COMMA'),
     ('right', 'UMINUS'),
 )
 
@@ -361,14 +358,6 @@ def p_query_parened(p):
     """query : LPAREN query RPAREN"""
     p[0] = p[2]
 
-def p_where_query_with_constraints(p):
-    """where_query : query WHERE query"""
-    p[0]=[p[1],p[3]]
-
-def p_where_query(p):
-    """where_query : query"""
-    p[0]=[p[1]]
-
 def p_error(p):
     if p is None:
         raise Exception(text["unexpected eol"])
@@ -376,11 +365,10 @@ def p_error(p):
 
 parser = yacc.yacc(tabmodule='dsl_yacc_tab', debug=1, optimize=0, write_tables=False)
 
-def compile(queries,specs=[{},{}]):
+def compile(queries,specs={}):
     parser.specs = specs
-    lexer.stage = 0
     dsl = parser.parse(queries, lexer=lexer)
-    if dsl is None: dsl = [{"match_none":{}}]
+    if dsl is None: dsl = {"match_none":{}}
     return dsl
 
 if __name__ == '__main__':
@@ -395,4 +383,4 @@ if __name__ == '__main__':
         if not s:
             continue
 
-        print(json.dumps(compile(s,specs=[{"types":{"time":"date"}},{}])))
+        print(json.dumps(compile(s,specs={"types":{"time":"date"}})))

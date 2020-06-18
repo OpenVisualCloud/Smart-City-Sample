@@ -1,4 +1,3 @@
-define(`SERVICE_INTERVAL_SMART_UPLOAD',120)
 
 include(platform.m4)
 include(../../../script/loop.m4)
@@ -37,7 +36,7 @@ spec:
                 cpu: "200m"
           env:
             - name: QUERY
-              value: "uploaded=false"
+              value: "sensor=*"
             - name: OFFICE
               value: "defn(`OFFICE_LOCATION')"
             - name: DBHOST
@@ -47,7 +46,7 @@ spec:
             - name: STHOSTC
               value: "http://cloud-storage-service:8080/api/upload"
             - name: SERVICE_INTERVAL
-              value: "defn(`SERVICE_INTERVAL_SMART_UPLOAD')"
+              value: "30"
             - name: NO_PROXY
               value: "*"
             - name: no_proxy
