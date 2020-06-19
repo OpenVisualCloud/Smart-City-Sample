@@ -37,7 +37,7 @@ var preview={
                     preview.play(div,sensor1);
 
                     div.append('<a class="leaflet-popup-close-button front" href="javascript:void(0)">x</a>').find('a').click(function() {
-                        marker.remove();
+                        page.data('preview').layer.removeLayer(marker);
                     });
                 });
             });
