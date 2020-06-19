@@ -9,8 +9,8 @@ COPY *.py /home/
 COPY models /home/models
 COPY VCAC-A/gst/pipeline /home/pipelines/entrance_counting
 COPY custom_transforms /home/custom_transforms
-CMD ["/home/count-entrance.py"]
-ENV PATH=${PATH}:/home/custom_transforms
+CMD  ["/home/count-entrance.py"]
+ENV  PATH=${PATH}:/home/custom_transforms
 
 ####
 ARG  UID
