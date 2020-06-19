@@ -8,8 +8,8 @@ COPY *.py /home/
 COPY models/CSRNet_IR_model_2020R2/1 /home/models/CSRNet_IR_model_2020R2/1
 COPY Xeon/gst/pipeline /home/pipelines/crowd_counting
 COPY custom_transforms /home/custom_transforms
-CMD ["/home/count-crowd.py"]
-ENV PATH=${PATH}:/home/custom_transforms
+CMD  ["/home/count-crowd.py"]
+ENV  PATH=${PATH}:/home/custom_transforms
 
 ####
 ARG  UID
