@@ -15,7 +15,7 @@ $("#pg-recording").on(":initpage", function(e, queries, office) {
 
     /* enable recording queries */
     var monitor=0;
-    $("#homeSearch").data('index','recordings,analytics').data('office',office).data('invoke',function (queries) {
+    $("#homeSearch").data('index','recordings').data('office',office).data('invoke',function (queries) {
         var plist=page.find("[play-list]");
         plist.empty();
         apiHost.search($("#homeSearch").data('index'),queries,office).then(function (data) {
