@@ -92,4 +92,13 @@ $("#pg-recording [layout1] video").on("drop",function (e) {
 
 $("#cloudButton").click(function () {
     selectPage("recording",['sensor=*',""]);
-});
+}).on(":initwatcher", function () {
+    var button=$(this);
+    var timer=setInterval(function () {
+        apiHost.search("recordings","sensor=*","",1).then(function (data) {
+            if (data.response.length==0) return;
+            clearInterval(timer);
+            button.show();
+        });
+    }, 20000);
+}).hide();

@@ -20,6 +20,7 @@ function selectPage1(page, options) {
     contents.children().show().not("#pg-"+page).hide().trigger(":closepage");
     contents.find("#pg-"+page).trigger(":initpage", options);
     $(window).trigger('resize');    
+    $("#cloudButton").trigger(":initwatcher");
 }
 
 function selectPage(page, options) {
