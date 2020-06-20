@@ -36,7 +36,7 @@ spec:
                 cpu: "200m"
           env:
             - name: QUERY
-              value: "sensor=*"
+              value: "objects.detection.bounding_box.x_max-objects.detection.bounding_box.x_min>0.1"
             - name: OFFICE
               value: "defn(`OFFICE_LOCATION')"
             - name: DBHOST
