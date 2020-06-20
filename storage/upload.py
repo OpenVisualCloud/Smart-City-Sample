@@ -108,6 +108,8 @@ class UploadHandler(web.RequestHandler):
                 if sensor:
                     # remove status
                     sensor[0]["_source"].pop("status",None)
+                    # denormalize address
+                    sinfo["address"]=sensor[0]["_source"]["address"]
 
                     # calcualte hash code for the sensor
                     m=hashlib.md5()
@@ -126,8 +128,9 @@ class UploadHandler(web.RequestHandler):
 
                     # replace cloud sensor id and ingest recording
                     sinfo["sensor"]=sensor_c[0]["_id"]
-                    db_rec=DBIngest(host=dbhost, index="recordings", office="")
+
                     print("Ingest recording: {}".format(sinfo), flush=True)
+                    db_rec=DBIngest(host=dbhost, index="recordings", office="")
                     db_rec.ingest(sinfo)
 
                     # copy local analytics to cloud
