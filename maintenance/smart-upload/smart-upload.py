@@ -61,7 +61,9 @@ while True:
 
             # make the upload decision based on analytics queries
             r=list(dba.search("( " + query + " ) and ( sensor='"+q["_source"]["sensor"]+"' and time>"+str(q["_source"]["time"])+" and time<"+ str(q["_source"]["time"]+q["_source"]["duration"]*1000) +" ) ", size=1))
-            if not r: continue
+            if not r: 
+                time.sleep(2)
+                continue
 
             url=sthostl+'/'+q["_source"]["path"]
             print("url: "+url, flush=True)
