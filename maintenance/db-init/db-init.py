@@ -85,7 +85,6 @@ settings={
             "properties": {
                 "office": { "type": "geo_point" },
                 "time": { "type": "date" },
-                "streams": { "type": "nested" },
             },
         },
     },
@@ -101,7 +100,6 @@ settings={
             "properties": {
                 "office": { "type": "geo_point" },
                 "time": { "type": "date" },
-                "streams": { "type": "nested" },
             },
         },
     },

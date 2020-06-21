@@ -42,7 +42,7 @@ def t_DATE(t):
 
 def t_NOW(t):
     r'[Nn][Oo][Ww]'
-    t.value = int(time.mktime(datetime.datetime.now().timetuple())*1000)
+    t.value = int(time.time()*1000)
     return t
 
 def t_IP(t):
