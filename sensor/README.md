@@ -19,14 +19,14 @@ The sample implements the ONVIF protocol to discover IP cameras on the specified
 
 #### (1) Finding Camera IDs
 
-To uniquely identify a camera, we need to define a camera ID. This is usually the camera serial number (1st choice) or the MAC address of the network interface (2nd choice if serial number is missing from probing).  
+To uniquely identify a camera, we need to define a camera ID. This is usually the camera serial number or the MAC address of the network interface.  
 
 Scan the camera IP range as follows:
 ```
-PORT_SCAN='-p T:80-65535 192.168.1.0/24' make discover
+read && PORT_SCAN='-p T:80-65535 192.168.1.0/24' PASSCODE=$REPLY make discover
 ```
 
-where ```PORT_SCAN``` specifies the ```nmap``` command line arguments. The camera network is ```192.168.1.0/24``` and the port range is ```80-65535```. The output is similar to the following lines:    
+where `PORT_SCAN` specifies the `nmap` command line arguments. The camera network is `192.168.1.0/24` and the port range is `80-65535`. At the prompt, please enter the passcode of the IP camera as `username:password`. The output is similar to the following lines:    
 
 ```
 ...
@@ -46,8 +46,6 @@ where ```PORT_SCAN``` specifies the ```nmap``` command line arguments. The camer
   ],
 ...
 ```
-
-Note that the sample uses a predefined username and password for camera authentication. See [```probe_camera_info```](../sensor/discovery/discover.py) for details.  
 
 #### (2) Provisioning Cameras
 
@@ -106,17 +104,18 @@ In above provisioning parameters, the ```simsn``` fields identify simulated came
         }],
         "device": { 
             "SerialNumber": "ND021808019141"
-        }
+        },
+        "passcode": "admin:admin"
 ...
 ```
 
 #### (3) Enabling the Discovering Service
 
-Enable the IP camera discovering service by configuring ```DISCOVER_IP_CAMERA``` to ```true``` in [docker-swarm/office.m4](../deployment/docker-swarm/office.m4) and/or [kubernetes/office.m4](../deployment/kubernetes/office.m4).   
+Enable the IP camera discovering service by configuring ```DISCOVER_IP_CAMERA``` to ```true``` in [Docker swarm/office.m4](../deployment/docker-swarm/office.m4), [Kubernetes/office.m4](../deployment/kubernetes/yaml/office.m4), or [Kubernetes Helm/values.yaml.m4](../deployment/kubernetes/helm/smtc/values.yaml.m4).
 
 --- 
 
-Due to Kubernetes limitation, if IP camera is enabled, the discovering service and the analytics instances will run on the host network to reliably receive RTP streams.   
+Due to Kubernetes limitation, if IP camera is enabled, the discovering service and the analytics instances will run on the host network for reliably receiving RTP streams.   
 
 ---
 

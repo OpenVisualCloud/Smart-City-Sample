@@ -23,10 +23,9 @@ RUN  curl -L ${ZEEP_REPO} | tar xz && \
      rm -rf python-onvif-zeep-${ONVIF_ZEEP_VER}
 
 COPY --from=smtc_common /home/*.py /home/
-COPY    *.py /home/
-CMD     ["/home/discover.py"]
-WORKDIR /home
-ENV     PYTHONIOENCODING=UTF-8
+COPY *.py /home/
+CMD  ["/home/discover.py"]
+ENV  PYTHONIOENCODING=UTF-8
 
 ####
 ARG  USER=docker
@@ -35,7 +34,7 @@ ARG  UID
 ARG  GID
 ## must use ; here to ignore user exist status code
 RUN  [ ${GID} -gt 0 ] && groupadd -f -g ${GID} ${GROUP}; \
-     [ ${UID} -gt 0 ] && useradd -d /home/${USER} -g ${GID} -K UID_MAX=${UID} -K UID_MIN=${UID} ${USER}; \
-     echo
+     [ ${UID} -gt 0 ] && useradd -d /home -M -g ${GID} -K UID_MAX=${UID} -K UID_MIN=${UID} ${USER}; \
+     chown -R ${UID}:${GID} /home
 USER ${UID}
 ####

@@ -37,6 +37,7 @@ settings={
         "mappings": {
             "properties": {
                 "location": { "type": "geo_point", },
+                "office": { "type": "geo_point", },
             },
         },
     },

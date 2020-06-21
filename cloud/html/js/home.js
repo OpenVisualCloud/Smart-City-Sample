@@ -194,7 +194,7 @@ $("#pg-home").on(":initpage", function(e) {
                     if (v.close_sensor) v.close_sensor();
                     if (v.marker) v.marker.remove();
                     if (v.line) v.line.remove();
-                    preview.close(v);
+                    preview.close(v, page);
                     delete sensors[x];
                 }
             });

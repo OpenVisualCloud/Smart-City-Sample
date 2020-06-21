@@ -15,7 +15,7 @@ $("#pg-recording").on(":initpage", function(e, queries, office) {
 
     /* enable recording queries */
     var monitor=0;
-    $("#homeSearch").data('index','recordings,analytics').data('office',office).data('invoke',function (queries) {
+    $("#homeSearch").data('index','recordings').data('office',office).data('invoke',function (queries) {
         var plist=page.find("[play-list]");
         plist.empty();
         apiHost.search($("#homeSearch").data('index'),queries,office).then(function (data) {
@@ -92,4 +92,13 @@ $("#pg-recording [layout1] video").on("drop",function (e) {
 
 $("#cloudButton").click(function () {
     selectPage("recording",['sensor=*',""]);
-});
+}).on(":initwatcher", function () {
+    var button=$(this);
+    var timer=setInterval(function () {
+        apiHost.search("recordings","sensor=*","",1).then(function (data) {
+            if (data.response.length==0) return;
+            clearInterval(timer);
+            button.show();
+        });
+    }, 20000);
+}).hide();

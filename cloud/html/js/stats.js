@@ -92,7 +92,7 @@ var stats={
 
                 div1.append('<a class="leaflet-popup-close-button front" href="javascript:void(0)">x</a>');
                 div1.find('a').click(function() {
-                    marker1.remove();
+                    page.data('stat').layer.removeLayer(marker1);
                 });
             });
         });

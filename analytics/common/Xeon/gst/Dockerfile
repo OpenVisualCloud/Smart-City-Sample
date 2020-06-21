@@ -10,7 +10,7 @@ COPY *.py /home/
 
 FROM openvisualcloud/xeon-ubuntu1804-analytics-gst:20.4
 
-RUN  DEBIAN_FRONTEND=noninteractive apt-get update -qq && apt-get install -qq python3-gst-1.0 python3-jsonschema python3-psutil && rm -rf /var/lib/apt/lists/*
+RUN  apt-get update -qq && apt-get install -qq python3-gst-1.0 python3-jsonschema python3-psutil && rm -rf /var/lib/apt/lists/*
 
 COPY --from=build /home/ /home/
 ENV  FRAMEWORK=gstreamer
@@ -23,7 +23,7 @@ ARG  UID
 ARG  GID
 ## must use ; here to ignore user exist status code
 RUN  [ ${GID} -gt 0 ] && groupadd -f -g ${GID} ${GROUP}; \
-     [ ${UID} -gt 0 ] && useradd -d /home/${USER} -g ${GID} -K UID_MAX=${UID} -K UID_MIN=${UID} ${USER}; \
-     echo
+     [ ${UID} -gt 0 ] && useradd -d /home -M -g ${GID} -K UID_MAX=${UID} -K UID_MIN=${UID} ${USER}; \
+     chown -R ${UID}:${GID} /home
 ####
 
