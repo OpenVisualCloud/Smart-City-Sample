@@ -37,7 +37,7 @@ var preview={
                     marker.on('add', function (e) {
                         preview.play(div,sensor1);
                     }).on('remove', function (e) {
-                        $(marker._icon).find("div,video").remove();
+                        div.find("div,video").remove();
                     }).fire('add');
 
                     div.append('<a class="leaflet-popup-close-button front" href="javascript:void(0)">x</a>').find('a').click(function() {
