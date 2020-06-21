@@ -37,7 +37,7 @@ var preview={
                     marker.on('add', function (e) {
                         preview.play(div,sensor1);
                     }).on('remove', function (e) {
-                        $(marker._icon).empty();
+                        $(marker._icon).find("div,video").remove();
                     }).fire('add');
 
                     div.append('<a class="leaflet-popup-close-button front" href="javascript:void(0)">x</a>').find('a').click(function() {
@@ -51,7 +51,7 @@ var preview={
         var update=function () {
             var error='<div class="page-home-preview-screen-recording-unavailable">'+text["recording-unavailable"]+'</div>';
             apiHost.search("recordings",settings.preview_query()+" and sensor='"+sensor._id+"'",sensor._source.office,1).then(function (r) {
-                div.empty();
+                div.find("div,video").remove();
                 r=r.response;
                 if (r.length==0) {
                     div.append(error);
@@ -62,7 +62,7 @@ var preview={
                 });
                 div.append(video);
             }).catch(function () {
-                div.empty();
+                div.find("div,video").remove();
                 div.append(error);
                 setTimeout(update,5000);
             });
