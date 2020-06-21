@@ -14,6 +14,9 @@ def probe(file1):
     duration=0
     codec_type=None
     start_time= -1
+    width=0
+    height=0
+    bandwidth=0
     streams=[]
     sinfo={}
     for line in run(["/usr/local/bin/ffprobe","-v","error","-show_streams",file1]):
@@ -35,6 +38,10 @@ def probe(file1):
         else:
             try:
                 v=int(v)
+                if codec_type=="video":
+                    if line[0:i]=="coded_width": width=v
+                    if line[0:i]=="coded_height": height=v
+                if line[0:i]=="bit_rate": bandwidth=bandwidth+v
             except:
                 try:
                     v=float(v)
@@ -52,4 +59,13 @@ def probe(file1):
             s1=s1[k]
         s1[keys[-1]]=v
 
-    return { "duration": duration, "start_time": start_time, "streams": streams }
+    return { 
+        "duration": float(duration), 
+        "start_time": float(start_time), 
+        "resolution": {
+            "width": int(width), 
+            "height": int(height),
+        },
+        "bandwidth": float(bandwidth),
+    }
+

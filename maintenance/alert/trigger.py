@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 
 from db_ingest import DBIngest
-import datetime
 import time
 import os
 
@@ -23,7 +22,7 @@ class Trigger(object):
 
             for v in info:
                 v.update({
-                    "time": int(time.mktime(datetime.datetime.now().timetuple())*1000),
+                    "time": int(time.time()*1000),
                     "office": {
                         "lat": office[0],
                         "lon": office[1],

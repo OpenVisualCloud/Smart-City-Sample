@@ -45,8 +45,8 @@ class UploadHandler(web.RequestHandler):
 
             list(run(["/usr/local/bin/ffmpeg","-f","mp4","-i",path,"-c","copy",mp4file]))
             list(run(["/usr/local/bin/ffmpeg","-i",mp4file,"-vf","scale=640:360","-frames:v","1",mp4file+".png"]))
-            sinfo=probe(mp4file)
 
+            sinfo=probe(mp4file)
             sinfo.update({
                 "sensor": sensor,
                 "office": {
@@ -62,15 +62,9 @@ class UploadHandler(web.RequestHandler):
             sinfo=None
 
         if local_office:
-            if sinfo:
-                # calculate total bandwidth
-                bandwidth=0
-                for stream1 in sinfo["streams"]:
-                    if "bit_rate" in stream1:
-                        bandwidth=bandwidth+stream1["bit_rate"]
-                if bandwidth: 
-                    db_cam=DBQuery(host=dbhost, index="sensors", office=office)
-                    db_cam.update(sensor, {"bandwidth": bandwidth})
+            if sinfo["bandwidth"]:
+                db_cam=DBQuery(host=dbhost, index="sensors", office=office)
+                db_cam.update(sensor, {"bandwidth": sinfo["bandwidth"]})
 
             # check disk usage and send alert
             disk_usage=psutil.disk_usage(self._storage).percent
@@ -79,7 +73,7 @@ class UploadHandler(web.RequestHandler):
                 db_alt=DBIngest(host=dbhost, index="alerts", office=office)
                 message=text["halt recording"].format(disk_usage) if disk_usage>=halt_rec_th else text["disk usage"].format(disk_usage)
                 db_alt.ingest({
-                    "time": int(time.mktime(datetime.datetime.now().timetuple())*1000),
+                    "time": int(time.time()*1000),
                     "office": {
                         "lat": office[0],
                         "lon": office[1],

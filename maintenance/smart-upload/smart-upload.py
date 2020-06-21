@@ -2,7 +2,7 @@
 
 from db_ingest import DBIngest
 from db_query import DBQuery
-from probe import probe, run
+from probe import run
 from signal import signal, SIGTERM
 from language import text
 import traceback
