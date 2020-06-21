@@ -79,7 +79,7 @@ class UploadHandler(web.RequestHandler):
                 db_alt=DBIngest(host=dbhost, index="alerts", office=office)
                 message=text["halt recording"].format(disk_usage) if disk_usage>=halt_rec_th else text["disk usage"].format(disk_usage)
                 db_alt.ingest({
-                    "time": int(time.mktime(datetime.datetime.now().timetuple())*1000),
+                    "time": int(time.time()*1000),
                     "office": {
                         "lat": office[0],
                         "lon": office[1],

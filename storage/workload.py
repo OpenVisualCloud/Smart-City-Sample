@@ -4,7 +4,6 @@ from tornado import web, gen
 from tornado.concurrent import run_on_executor
 from concurrent.futures import ThreadPoolExecutor
 from urllib.parse import unquote
-import datetime
 import time
 import psutil
 import os
@@ -20,7 +19,7 @@ class WorkloadHandler(web.RequestHandler):
     @run_on_executor
     def _workload(self):
         return {
-            "time": int(time.mktime(datetime.datetime.now().timetuple())*1000),
+            "time": int(time.time()*1000),
             "cpu": psutil.cpu_percent(),
             "memory": psutil.virtual_memory().percent,
             "disk": psutil.disk_usage("/var/www/mp4").percent,
