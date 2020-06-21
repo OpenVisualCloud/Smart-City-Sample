@@ -102,29 +102,17 @@ while True:
                     print("Skipping {}:{}:{}".format(ip,port,r[0]["_source"]["status"]),flush=True)
                     continue
             
-        # probe width & height from the stream
-        width=height=0
-        try:
-            sinfo=probe(rtspuri)
-            for stream in sinfo["streams"]:
-                if "coded_width" in stream: width=int(stream["coded_width"])
-                if "coded_height" in stream: height=int(stream["coded_height"])
-        except:
-            pass
-
-        if width==0 or height==0:
+        sinfo=probe(rtspuri)
+        if sinfo["resolution"]["width"]==0 or sinfo["resolution"]["height"]==0:
             print("Unknown width & height, skipping", flush=True)
             continue
 
-        sinfo["resolution"]={ "width": width, "height": height }
         sinfo.update(desc)
         sinfo.update({
             'sensor': 'camera',
             'model': 'ip_camera',
             'url': rtspuri,
             'status': 'idle',
-            'ip': ip,
-            'port': port,
         })
         print(json.dumps(sinfo,indent=2), flush=True) 
 
