@@ -40,12 +40,15 @@ def connect(sensor, location, uri, algorithm, algorithmName, resolution, zonemap
             },
         })
 
+        print("rec2db stop", flush=True)
         if stop: rec2db.stop()
         thread.join()
+        print("rec2db stopped", flush=True)
         raise Exception("VA exited. This should not happen.")
 
     except:
         print(traceback.format_exc(), flush=True)
+    print("connect stopped", flush=True)
 
 def quit_service(signum, sigframe):
     global stop
