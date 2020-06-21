@@ -3,10 +3,11 @@
 from db_ingest import DBIngest
 from db_query import DBQuery
 from signal import signal, SIGTERM
-from concurrent.futures import ThreadPoolExecutor
+from threading import Thread
 from rec2db import Rec2DB
 from runva import RunVA
 from language import text
+import traceback
 import os
 import time
 import uuid
@@ -27,26 +28,24 @@ def connect(sensor, location, uri, algorithm, algorithmName, resolution, zonemap
 
     try:
         rec2db=Rec2DB(sensor)
+        thread=Thread(target=rec2db.loop)
+        thread.start()
+
         runva=RunVA("crowd_counting")
+        runva.loop(sensor, location, uri, algorithm, algorithmName, {
+            "crowd_count": {
+                "width": resolution["width"],
+                "height": resolution["height"],
+                "zonemap": zonemap,
+            },
+        })
 
-        with ThreadPoolExecutor(2) as e:
-            e.submit(rec2db.loop)
+        if stop: rec2db.stop()
+        thread.join()
+        raise Exception("VA exited. This should not happen.")
 
-            # any VA exit indicates a camera disconnect
-            with ThreadPoolExecutor(1) as e1:
-                e1.submit(runva.loop, sensor, location, uri, algorithm, algorithmName, {
-                    "crowd_count": {
-                        "width": resolution["width"],
-                        "height": resolution["height"],
-                        "zonemap": zonemap,
-                    },
-                })
-
-            if stop: rec2db.stop()
-            raise Exception("VA exited. This should not happen.")
-
-    except Exception as e:
-        print("Exception in connect: "+str(e), flush=True)
+    except:
+        print(traceback.format_exc(), flush=True)
 
 def quit_service(signum, sigframe):
     global stop
