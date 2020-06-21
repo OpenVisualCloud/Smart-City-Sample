@@ -111,7 +111,7 @@ In above provisioning parameters, the ```simsn``` fields identify simulated came
 
 #### (3) Enabling the Discovering Service
 
-Enable the IP camera discovering service by configuring ```DISCOVER_IP_CAMERA``` to ```true``` in [Docker swarm/office.m4](../deployment/docker-swarm/office.m4), [Kubernetes/office.m4](../deployment/kubernetes/office.m4), or [Kubernetes Helm/values.yaml.m4](../deployment/kubernetes/helm/smtc/values.yaml.m4).
+Enable the IP camera discovering service by configuring ```DISCOVER_IP_CAMERA``` to ```true``` in [Docker swarm/office.m4](../deployment/docker-swarm/office.m4), [Kubernetes/office.m4](../deployment/kubernetes/yaml/office.m4), or [Kubernetes Helm/values.yaml.m4](../deployment/kubernetes/helm/smtc/values.yaml.m4).
 
 --- 
 
