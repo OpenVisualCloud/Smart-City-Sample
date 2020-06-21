@@ -4,6 +4,9 @@ from onvif import ONVIFCamera
 import subprocess
 import time
 import sys
+import os
+
+no_proxy=os.environ["no_proxy"].split(",") if "no_proxy" in os.environ else []
 
 # A fix for 'NotImplementedError: AnySimpleType.pytonvalue() not implemented'
 # https://github.com/FalkTannhaeuser/python-onvif-zeep/issues/4
@@ -95,12 +98,15 @@ def _discover(ip, port, user, passwd):
 
     return desc
 
-def safe_discover(ip, port, user='admin', passwd='admin'):
+def safe_discover(ip, port, user, passwd):
     # timeout 2 seconds
     cnt = 0
     timeout = 2.0
     interval = 0.5
     is_timeout = False
+    
+    # put IP into no_proxy environment variable
+    os.environ["no_proxy"]=",".join(no_proxy+[str(ip)])
     
     # this routine may hang. Put it into subprocess so we can timeout it.
     p = subprocess.Popen(["/home/onvif_discover.py", ip, str(port), user, passwd], stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
