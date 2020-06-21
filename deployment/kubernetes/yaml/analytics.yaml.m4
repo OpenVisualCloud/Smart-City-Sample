@@ -48,6 +48,8 @@ ifelse(defn(`DISCOVER_IP_CAMERA'),`true',`dnl
               value: "defn(`SCENARIO_NAME')"
             - name: `NETWORK_PREFERENCE'
               value: "{\"defn(`PLATFORM_DEVICE')\":\"defn(`NETWORK_PREFERENCE')\"}"
+            - name: GST_DEBUG
+              value: "3"
             - name: NO_PROXY
               value: "*"
             - name: no_proxy
