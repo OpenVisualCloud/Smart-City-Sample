@@ -122,8 +122,9 @@
         "fovv": 68.0,
         "theta": 45.0,
         "device": {
-            "SerialNumber": "071D3E467CCB"
-        }
+            "SerialNumber": "031158077176194102" 
+        },
+        "passcode": "admin:123456"
     },{
         "address": "Cornell and Elan Young Parkway",
         "location": {
@@ -138,7 +139,8 @@
         "theta": 90.0,
         "device": {
             "SerialNumber": "AMC0468C3847D602CA"
-        }
+        },
+        "passcode": "admin:admin"
     }]
 },{
     "scenario": "traffic",
