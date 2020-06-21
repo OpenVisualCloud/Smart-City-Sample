@@ -30,10 +30,8 @@ spec:
           image: defn(`REGISTRY_PREFIX')smtc_smart_upload:latest
           imagePullPolicy: IfNotPresent
           resources:
-            requests:
-                cpu: "100m"
             limits:
-                cpu: "200m"
+                cpu: "50m"
           env:
             - name: QUERY
               value: "objects.detection.bounding_box.x_max-objects.detection.bounding_box.x_min>0.1"
