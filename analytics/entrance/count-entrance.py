@@ -3,7 +3,6 @@
 from db_ingest import DBIngest
 from db_query import DBQuery
 from signal import signal, SIGTERM
-from threading import Thread
 from rec2db import Rec2DB
 from runva import RunVA
 from language import text
@@ -24,14 +23,12 @@ def connect(sensor, location, uri, algorithm, algorithmName):
 
     try:
         rec2db=Rec2DB(sensor)
-        thread=Thread(target=rec2db.loop)
-        thread.start()
+        rec2db.start()
 
         runva=RunVA("entrance_counting")
         runva.loop(sensor, location, uri, algorithm, algorithmName)
 
-        if stop: rec2db.stop()
-        thread.join()
+        rec2db.stop()
         raise Exception("VA exited. This should not happen.")
 
     except:

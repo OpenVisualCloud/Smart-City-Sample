@@ -3,7 +3,6 @@
 from db_ingest import DBIngest
 from db_query import DBQuery
 from signal import signal, SIGTERM
-from threading import Thread
 from rec2db import Rec2DB
 from runva import RunVA
 from language import text
@@ -28,8 +27,7 @@ def connect(sensor, location, uri, algorithm, algorithmName, resolution, zonemap
 
     try:
         rec2db=Rec2DB(sensor)
-        thread=Thread(target=rec2db.loop)
-        thread.start()
+        rec2db.start()
 
         runva=RunVA("crowd_counting")
         runva.loop(sensor, location, uri, algorithm, algorithmName, {
@@ -41,8 +39,7 @@ def connect(sensor, location, uri, algorithm, algorithmName, resolution, zonemap
         })
 
         print("rec2db stop", flush=True)
-        if stop: rec2db.stop()
-        thread.join()
+        rec2db.stop()
         print("rec2db stopped", flush=True)
         raise Exception("VA exited. This should not happen.")
 

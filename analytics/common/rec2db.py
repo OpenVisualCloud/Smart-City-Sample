@@ -2,7 +2,6 @@
 
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
-from threading import Event
 import requests
 import os
 
@@ -42,20 +41,16 @@ class Rec2DB(object):
     def __init__(self, sensor):
         super(Rec2DB,self).__init__()
         self._sensor=sensor
-        self._handler=Handler(sensor)
         self._observer=Observer()
-        self._watcher=None
-        self._stop=Event()
 
-    def loop(self):
+    def start(self):
         folder="/tmp/rec/"+self._sensor
         os.makedirs(folder, exist_ok=True)
-        self._watcher=self._observer.schedule(self._handler, folder, recursive=True)
+
+        handler=Handler(self._sensor)
+        self._observer.schedule(handler, folder, recursive=True)
         self._observer.start()
-        self._stop.clear()
-        self._stop.wait()
 
     def stop(self):
-        self._stop.set()
         self._observer.stop()
         self._observer.join()
