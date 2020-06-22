@@ -41,18 +41,16 @@ class Rec2DB(object):
     def __init__(self, sensor):
         super(Rec2DB,self).__init__()
         self._sensor=sensor
-        self._handler=Handler(sensor)
         self._observer=Observer()
-        self._watcher=None
 
-    def loop(self):
-        self._observer.start()
-
+    def start(self):
         folder="/tmp/rec/"+self._sensor
         os.makedirs(folder, exist_ok=True)
-        self._watcher=self._observer.schedule(self._handler, folder, recursive=True)
-        self._observer.join()
+
+        handler=Handler(self._sensor)
+        self._observer.schedule(handler, folder, recursive=True)
+        self._observer.start()
 
     def stop(self):
-        if self._watcher: self._observer.unschedule(self._watcher)
         self._observer.stop()
+        self._observer.join()

@@ -17,53 +17,32 @@ def probe(file1):
     width=0
     height=0
     bandwidth=0
-    streams=[]
-    sinfo={}
-    for line in run(["/usr/local/bin/ffprobe","-v","error","-show_streams",file1]):
-        if line=="[STREAM]": sinfo={}
-        if line=="[/STREAM]": streams.append(sinfo)
 
+    for line in run(["/usr/local/bin/ffprobe","-v","error","-show_streams",file1]):
         i=line.find("=")
         if i<0: continue
-        keys=line[0:i].split(":")
+        k=line[0:i]
         v=line[i+1:]
  
         # try parsing the value format
         if v=="N/A": continue
-        if line[0:i]=="codec_type": codec_type=v
-        if v == "true":
-           v=True
-        elif v == "false":
-           v=False
-        else:
-            try:
-                v=int(v)
-                if codec_type=="video":
-                    if line[0:i]=="coded_width": width=v
-                    if line[0:i]=="coded_height": height=v
-                if line[0:i]=="bit_rate": bandwidth=bandwidth+v
-            except:
-                try:
-                    v=float(v)
-                    # calculate the stream duration
-                    if codec_type=="video":
-                        if line[0:i]=="duration" and v>duration: duration=v
-                        if line[0:i]=="start_time" and (v<start_time or start_time<0): start_time=v
-                except:
-                    pass 
-
-        # set k:v
-        s1=sinfo
-        for k in keys[:-1]:
-            if k not in s1: s1[k]={}
-            s1=s1[k]
-        s1[keys[-1]]=v
+        if k=="codec_type": codec_type=v
+        try:
+            v=float(v)
+            if codec_type=="video":
+                if k=="coded_width": width=v
+                if k=="coded_height": height=v
+                if k=="duration" and v>duration: duration=v
+                if k=="start_time" and (v<start_time or start_time<0): start_time=v
+            if k=="bit_rate": bandwidth=bandwidth+v
+        except:
+            pass 
 
     return { 
-        "duration": float(duration), 
-        "start_time": float(start_time), 
+        "duration": float(duration),
+        "start_time": float(start_time),
         "resolution": {
-            "width": int(width), 
+            "width": int(width),
             "height": int(height),
         },
         "bandwidth": float(bandwidth),

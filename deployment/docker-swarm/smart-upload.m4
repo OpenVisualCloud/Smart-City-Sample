@@ -17,9 +17,7 @@
         deploy:
             resources:
                 limits:
-                    cpus: '0.20'
-                reservations:
-                    cpus: '0.10'
+                    cpus: '0.05'
             placement:
                 constraints:
                     - node.labels.vcac_zone!=yes
