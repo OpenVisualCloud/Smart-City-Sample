@@ -77,7 +77,7 @@ ifelse(eval(defn(`NOFFICES')>1),1,`dnl
       initContainers:
         - name: init-volume-sysctl
           image: busybox:latest
-          command: ["sh","-c","sysctl -w vm.max_map_count=262144"]
+          command: ["sh","-c","sysctl -w vm.max_map_count=262144 && ulimit -n 65535 && ulimit -u 4096"]
           securityContext:
             privileged: true
       volumes:
