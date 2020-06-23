@@ -1,4 +1,6 @@
 
+{{- if contains $.Values.buildScope "cloud" }}
+
 apiVersion: v1
 kind: Service
 metadata:
@@ -71,7 +73,7 @@ spec:
       initContainers:
         - name: init-volume-sysctl
           image: busybox:latest
-          command: ["sh","-c","sysctl -w vm.max_map_count=262144"]
+          command: ["sh","-c","sysctl -w vm.max_map_count=262144 && ulimit -n 65535 && ulimit -u 4096"]
           securityContext:
             privileged: true
       volumes:
@@ -80,3 +82,5 @@ spec:
                 path: /etc/localtime
                 type: File
       {{ include "smtc.platform.node-selector" . }}
+
+{{- end }}

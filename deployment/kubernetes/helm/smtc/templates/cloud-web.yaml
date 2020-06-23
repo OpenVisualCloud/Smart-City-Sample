@@ -1,4 +1,6 @@
 
+{{- if contains $.Values.buildScope "cloud" }}
+
 apiVersion: v1
 kind: Service
 metadata:
@@ -71,3 +73,5 @@ spec:
           secret:
             secretName: self-signed-certificate
       {{ include "smtc.platform.node-selector" . }}
+
+{{- end }}
