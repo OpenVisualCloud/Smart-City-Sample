@@ -2,7 +2,8 @@
 {{- range $scenarioIdx, $scenarioName := $.Values.scenario }}
 {{- $args := dict "scenarioName" $scenarioName "Values" $.Values }}
 {{- range $officeIdx := until ( int ( include "smtc.noffices" $args ) ) }}
-{{- $officeName := printf "%s-office%d" $scenarioName $officeIdx }}
+{{- $officeName := printf "%s-office%d" $scenarioName (add $officeIdx 1) }}
+{{- if eq $.Values.buildScope (printf "office%d" (add $officeIdx 1)) }}
 
 apiVersion: v1
 kind: Service
@@ -134,6 +135,8 @@ spec:
             configMap:
                 name: sensor-info
       {{ include "smtc.platform.node-selector" $ }}
+
+{{- end }}
 ---
 
 {{- end }}

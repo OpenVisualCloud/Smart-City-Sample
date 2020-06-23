@@ -1,4 +1,6 @@
 
+{{- if eq $.Values.buildScope "cloud" }}
+
 apiVersion: v1
 kind: Service
 metadata:
@@ -80,3 +82,5 @@ spec:
                 path: /etc/localtime
                 type: File
       {{ include "smtc.platform.node-selector" . }}
+
+{{- end }}

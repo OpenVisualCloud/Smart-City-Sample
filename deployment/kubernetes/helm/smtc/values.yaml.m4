@@ -70,3 +70,6 @@ cameraSubnet:
 # groupID is obtained using command: `$ id -g`
 userId: defn(`USERID')
 groupId: defn(`GROUPID')
+
+# optional: build scope: one of "", "cloud", or "officeN"
+buildScope: ""
