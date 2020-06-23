@@ -5,7 +5,8 @@
 {{- range $scenarioIdx, $scenarioName := $.Values.scenario }}
 {{- $args := dict "scenarioName" $scenarioName "Values" $.Values }}
 {{- range $officeIdx := until ( int ( include "smtc.noffices" $args ) ) }}
-{{- $officeName := printf "%s-office%d" $scenarioName $officeIdx }}
+{{- $officeName := printf "%s-office%d" $scenarioName (add $officeIdx 1) }}
+{{- if contains $.Values.buildScope $officeName }}
 
 {{- $args := dict "scenarioName" $scenarioName "Values" $.Values }}
 {{- $ncameras := int ( include "smtc.ncameras" $args ) }}
@@ -197,6 +198,7 @@ spec:
               value: {{ $.Values.cameraPortStep | quote }}
       {{ include "smtc.platform.node-selector" $ }}
 
+{{- end }}
 {{- end }}
 {{- end }}
 
