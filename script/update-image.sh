@@ -76,5 +76,13 @@ kubectl get node >/dev/null 2>/dev/null && (
         for image in $(awk -v labels="$labels" -f "$DIR/scan-yaml.awk" "${DIR}/../deployment/kubernetes/yaml"/*.yaml); do
             transfer_image $image "$id" "$nodeip" "$labels"
         done
+
+        for image in $(awk -v labels="$labels" -f "$DIR/scan-yaml.awk" "${DIR}/../deployment/openness/office"/*.yaml); do
+            transfer_image $image "$id" "$nodeip" "$labels"
+	done
+
+        for image in $(awk -v labels="$labels" -f "$DIR/scan-yaml.awk" "${DIR}/../deployment/openness/cloud"/*.yaml); do
+	    transfer_image $image "$id" "$nodeip" "$labels"
+        done
     done
 ) || echo -n ""

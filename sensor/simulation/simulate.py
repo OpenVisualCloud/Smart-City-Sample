@@ -19,7 +19,7 @@ ncameras=int(os.environ["NCAMERAS"])
 def serve_stream(file1, rtsp_port1, rtp_port1):
     rtsp="rtsp://@:"+str(rtsp_port1)+"/live.sdp"
     while True:
-        subprocess.call(["/usr/bin/cvlc","-vvv",file1,"--loop",":sout=#gather:rtp{sdp="+rtsp+",port="+str(rtp_port1)+"}",":network-caching:1500",":sout-all",":sout-keep"])
+        subprocess.call(["/usr/bin/cvlc","-vvv","--mtu=1200", file1,"--loop",":sout=#gather:rtp{sdp="+rtsp+",port="+str(rtp_port1)+"}",":network-caching:1500",":sout-all",":sout-keep"])
         time.sleep(10)
 
 def quit_service(signum, sigframe):
