@@ -69,15 +69,6 @@ ifelse(defn(`SCENARIO_NAME'),`stadium',`dnl
               value: "defn(`CAMERA_RTP_PORT')"
             - name: PORT_STEP
               value: "defn(`CAMERA_PORT_STEP')"
-          volumeMounts:
-            - mountPath: /etc/localtime
-              name: timezone
-              readOnly: true
-      volumes:
-          - name: timezone
-            hostPath:
-                path: /etc/localtime
-                type: File
 PLATFORM_NODE_SELECTOR(`Xeon')dnl
 ')dnl
 
@@ -139,15 +130,6 @@ loop(`CAMERAIDX',1,defn(`NCAMERAS2'),`dnl
               value: "defn(`CAMERA_RTP_PORT')"
             - name: PORT_STEP
               value: "defn(`CAMERA_PORT_STEP')"
-          volumeMounts:
-            - mountPath: /etc/localtime
-              name: timezone
-              readOnly: true
-      volumes:
-          - name: timezone
-            hostPath:
-                path: /etc/localtime
-                type: File
 PLATFORM_NODE_SELECTOR(`Xeon')dnl
 ')dnl
 
@@ -208,15 +190,6 @@ loop(`CAMERAIDX',1,defn(`NCAMERAS3'),`dnl
               value: "defn(`CAMERA_RTP_PORT')"
             - name: PORT_STEP
               value: "defn(`CAMERA_PORT_STEP')"
-          volumeMounts:
-            - mountPath: /etc/localtime
-              name: timezone
-              readOnly: true
-      volumes:
-          - name: timezone
-            hostPath:
-                path: /etc/localtime
-                type: File
 PLATFORM_NODE_SELECTOR(`Xeon')dnl
 ')dnl
 ')dnl

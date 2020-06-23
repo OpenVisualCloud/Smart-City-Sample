@@ -12,8 +12,6 @@ ifelse(defn(`SCENARIO_NAME'),`stadium',`dnl
             RTSP_PORT: "defn(`CAMERA_RTSP_PORT')"
             RTP_PORT: "defn(`CAMERA_RTP_PORT')"
             PORT_STEP: "defn(`CAMERA_PORT_STEP')"
-        volumes:
-            - /etc/localtime:/etc/localtime:ro
         networks:
             - appnet
         deploy:
@@ -30,8 +28,6 @@ ifelse(defn(`SCENARIO_NAME'),`stadium',`
             RTSP_PORT: "defn(`CAMERA_RTSP_PORT')"
             RTP_PORT: "defn(`CAMERA_RTP_PORT')"
             PORT_STEP: "defn(`CAMERA_PORT_STEP')"
-        volumes:
-            - /etc/localtime:/etc/localtime:ro
         networks:
             - appnet
         deploy:
@@ -47,8 +43,6 @@ ifelse(defn(`SCENARIO_NAME'),`stadium',`
             RTSP_PORT: "defn(`CAMERA_RTSP_PORT')"
             RTP_PORT: "defn(`CAMERA_RTP_PORT')"
             PORT_STEP: "defn(`CAMERA_PORT_STEP')"
-        volumes:
-            - /etc/localtime:/etc/localtime:ro
         networks:
             - appnet
         deploy:
