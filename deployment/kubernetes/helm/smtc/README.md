@@ -78,3 +78,24 @@ Launch your browser and browse to `https://<hostname>` for the sample UI.
 * If you see a browser warning of self-signed certificate, please accept it to proceed to the sample UI.    
   
 ---
+
+### Multiple office SCOPE support
+
+The sample supposes dynamic office starting/stopping, if you configure the sample to run multiple offices (NOFFICES>1). You can selectively start and stop each office, as follows:
+
+```
+cmake -DNOFFICES=2 ..
+make
+
+SCOPE=cloud make start_helm
+SCOPE=office1 make start_helm
+SCOPE=office2 make start_helm
+...
+SCOPE=office1 make stop_helm
+...
+SCOPE=office1 make start_helm
+...
+SCOPE=office1 make stop_helm
+SCOPE=office2 make stop_helm
+SCOPE=cloud make stop_helm
+```
