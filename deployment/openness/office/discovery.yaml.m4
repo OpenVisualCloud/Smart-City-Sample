@@ -1,6 +1,11 @@
-include(office.m4)
 include(platform.m4)
 include(../../../script/loop.m4)
+include(../../../maintenance/db-init/sensor-info.m4)
+
+looplist(SCENARIO_NAME,defn(`SCENARIOS'),`
+loop(OFFICEIDX,1,defn(`NOFFICES'),`
+include(office.m4)
+ifelse(len(defn(`OFFICE_LOCATION')),0,,`
 
 ifelse(defn(`DISCOVER_SIMULATED_CAMERA'),`true',`
 apiVersion: apps/v1
@@ -203,3 +208,7 @@ spec:
                 type: File
 PLATFORM_NODE_SELECTOR(`Xeon')dnl
 ')
+
+---
+')')')
+

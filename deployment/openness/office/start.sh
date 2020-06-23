@@ -41,5 +41,5 @@ kubectl create configmap sensor-info "--from-file=${DIR}/../../../maintenance/db
 create_and_deploy_office_db_key_pair
 
 for yaml in $(find "$DIR" -maxdepth 1 -name "*.yaml" -print); do
-    kubectl apply -f "$yaml"
+    kubectl apply -f "$yaml" 2>&1 | grep -v "no objects passed to apply" || echo -n ""
 done
