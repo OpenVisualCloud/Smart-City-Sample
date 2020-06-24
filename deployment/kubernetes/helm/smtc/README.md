@@ -79,9 +79,9 @@ Launch your browser and browse to `https://<hostname>` for the sample UI.
   
 ---
 
-### Multiple office SCOPE support
+### Multiple Office Start/Stop:
 
-The sample supposes dynamic office starting/stopping, if you configure the sample to run multiple offices (NOFFICES>1). You can selectively start and stop each office, as follows:
+The sample supposes dynamic office starting/stopping. You can selectively start and stop any office, as follows:
 
 ```
 cmake -DNOFFICES=2 ..
