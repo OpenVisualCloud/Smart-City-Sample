@@ -36,7 +36,7 @@ The sample is powered by the following Open Visual Cloud software stacks:
 
 - **Time Zone**: Check that the timezone setting of your host machine is correctly configured. Timezone is used during build. If you plan to run the sample on a cluster of machines managed by Docker Swarm or Kubernetes, please make sure to synchronize time among the manager/master node and worker nodes.    
 
-- **Build Tools**: Install ```cmake``` and ```m4``` if they are not available on your system.        
+- **Build Tools**: Install `cmake`, `m4` and `gawk` if they are not available on your system.        
 
 - **Docker Engine**:        
   - Install [docker engine](https://docs.docker.com/install). Make sure you [setup](https://docs.docker.com/install/linux/linux-postinstall) docker to run as a regular user.   
