@@ -73,3 +73,8 @@ groupId: defn(`GROUPID')
 
 # optional: build scope: one of "", "cloud", or "officeN"
 buildScope: ""
+
+# optional: specify connector hosts if they are from different Kubernetes clusters.
+connector:
+    cloud: ""
+    camera: ""

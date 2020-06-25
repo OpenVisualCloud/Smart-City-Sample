@@ -1,0 +1,47 @@
+
+{{- if (len $.Values.connector.cloud) }}
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cloud-tunnel
+  labels:
+     app: cloud-tunnel
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cloud-tunnel
+  template:
+    metadata:
+      labels:
+        app: cloud-tunnel
+    spec:
+      enableServiceLinks: false
+      containers:
+        - name: cloud-tunnel
+          image: smtc_ssl_tunnel:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: REVERSE_TUNNEL1
+              value: "{{ $.Values.connector.cloud }}:9200 cloud-db-service:9200"
+            - name: REVERSE_TUNNEL2
+              value: "{{ $.Values.connector.cloud }}:9300 cloud-db-service:9300"
+            - name: REVERSE_TUNNEL3
+              value: "{{ $.Values.connector.cloud }}:8080 cloud-storage-service.default.svc.cluster.local:8080"
+            - name: NO_PROXY
+              value: "*"
+            - name: no_proxy
+              value: "*"
+          volumeMounts:
+            - mountPath: /mnt
+              name: tunnel-secret
+              readOnly: true
+      volumes:
+          - name: tunnel-secret
+            secret:
+                secretName: tunnel-secret
+                defaultMode: 256
+      {{ include "smtc.platform.node-selector" $ }}
+
+{{- end }}
