@@ -76,5 +76,5 @@ buildScope: ""
 
 # optional: specify connector hosts if they are from different Kubernetes clusters.
 connector:
-    cloud: ""
-    camera: ""
+    cloudHost: ""
+    cameraHost: ""

@@ -1,5 +1,5 @@
 
-{{- if (len $.Values.connector.cloud) }}
+{{- if (len $.Values.connector.cloudHost) }}
 {{- range $scenarioIdx, $scenarioName := $.Values.scenario }}
 {{- $args := dict "scenarioName" $scenarioName "Values" $.Values }}
 {{- range $officeIdx := until ( int ( include "smtc.noffices" $args ) ) }}
@@ -52,13 +52,13 @@ spec:
           env:
 {{- $officeIdx2 := add (mul $officeIdx (len $.Values.scenarios)) $scenarioIdx }}
             - name: REVERSE_TUNNEL1
-              value: "{{ $.Values.connector.cloud }}:{{ add 30300 $officeIdx2 }} {{ $officeName }}-db-service:9300"
+              value: "{{ $.Values.connector.cloudHost }}:{{ add 30300 $officeIdx2 }} {{ $officeName }}-db-service:9300"
             - name: REVERSE_TUNNEL2
-              value: "{{ $.Values.connector.cloud }}:{{ add 8080 $officeIdx2 }} {{ $officeName }}-storage-service.default.svc.cluster.local:8080"
+              value: "{{ $.Values.connector.cloudHost }}:{{ add 8080 $officeIdx2 }} {{ $officeName }}-storage-service.default.svc.cluster.local:8080"
             - name: FORWARD_TUNNEL1
-              value: "{{ $officeName }}-tunnel:8080 {{ $.Values.connector.cloud }}:8080"
+              value: "{{ $officeName }}-tunnel:8080 {{ $.Values.connector.cloudHost }}:8080"
             - name: FORWARD_TUNNEL2
-              value: "{{ $officeName }}-tunnel:9200 {{ $.Values.connector.cloud }}:9200"
+              value: "{{ $officeName }}-tunnel:9200 {{ $.Values.connector.cloudHost }}:9200"
             - name: NO_PROXY
               value: "*"
             - name: no_proxy
@@ -71,7 +71,6 @@ spec:
           - name: tunnel-secret
             secret:
                 secretName: tunnel-secret
-                defaultMode: 256
       {{ include "smtc.platform.node-selector" $ }}
 
 {{- end }}

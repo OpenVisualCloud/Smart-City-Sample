@@ -58,11 +58,11 @@ spec:
               value: "cloud"
             - name: "ES_JAVA_OPTS"
               value: "-Xms2048m -Xmx2048m"
-{{- if (ne .Values.connector.cloud "") }}
+{{- if (len .Values.connector.cloudHost) }}
             - name: "transport.port"
               value: "9300"
             - name: "transport.publish_host"
-              value: "{{ .Values.connector.cloud }}"
+              value: {{ include "smtc.connector.cloud.hostname" $ | quote }}
             - name: "transport.publish_port"
               value: "9300"
 {{- end }}

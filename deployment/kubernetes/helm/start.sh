@@ -29,10 +29,10 @@ if [ -n "${CONNECTOR_CLOUD}" ]; then
     case "N$SCOPE" in
         Ncloud | Noffice*)
             # create secrets
-            "$DIR/../../tunnel/shell.sh" /home/tunnel-key.sh "$(id -un)@${CONNECTOR_CLOUD}"
+            "$DIR/../../tunnel/shell.sh" /home/tunnel-key.sh "${CONNECTOR_CLOUD}"
             create_secret2 tunnel-secret "${DIR}/../../tunnel/.key/id_rsa" "${DIR}/../../tunnel/.key/id_rsa.pub"
         ;;
     esac
 fi
 
-helm install smtc${SCOPE} "$DIR/smtc" --set buildScope=${SCOPE} --set connector.cloud=${CONNECTOR_CLOUD} --set connector.camera=${CONNECTOR_CAMERA}
+helm install smtc${SCOPE} "$DIR/smtc" --set buildScope=${SCOPE} --set "connector.cloudHost=${CONNECTOR_CLOUD}" --set "connector.cameraHost=${CONNECTOR_CAMERA}"

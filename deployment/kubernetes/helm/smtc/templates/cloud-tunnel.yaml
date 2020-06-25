@@ -1,5 +1,5 @@
 
-{{- if (len $.Values.connector.cloud) }}
+{{- if (len $.Values.connector.cloudHost) }}
 
 apiVersion: apps/v1
 kind: Deployment
@@ -23,12 +23,16 @@ spec:
           image: smtc_ssl_tunnel:latest
           imagePullPolicy: IfNotPresent
           env:
+            - name: WAIT_SOURCE1
+              value: "http://cloud-db-service:9200"
             - name: REVERSE_TUNNEL1
-              value: "{{ $.Values.connector.cloud }}:9200 cloud-db-service:9200"
+              value: "{{ $.Values.connector.cloudHost }}:9200 cloud-db-service:9200"
             - name: REVERSE_TUNNEL2
-              value: "{{ $.Values.connector.cloud }}:9300 cloud-db-service:9300"
+              value: "{{ $.Values.connector.cloudHost }}:9300 cloud-db-service:9300"
+            - name: WAIT_SOURCE2
+              value: "http://cloud-storage-service:8080/api/workload"
             - name: REVERSE_TUNNEL3
-              value: "{{ $.Values.connector.cloud }}:8080 cloud-storage-service.default.svc.cluster.local:8080"
+              value: "{{ $.Values.connector.cloudHost }}:8080 cloud-storage-service.default.svc.cluster.local:8080"
             - name: NO_PROXY
               value: "*"
             - name: no_proxy
@@ -41,7 +45,6 @@ spec:
           - name: tunnel-secret
             secret:
                 secretName: tunnel-secret
-                defaultMode: 256
       {{ include "smtc.platform.node-selector" $ }}
 
 {{- end }}
