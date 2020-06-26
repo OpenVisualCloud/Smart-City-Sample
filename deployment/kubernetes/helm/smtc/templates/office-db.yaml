@@ -44,7 +44,11 @@ spec:
       enableServiceLinks: false
       containers:
         - name: {{ $officeName }}-db
+{{- if (len $.Values.connector.cloudHost) }}
+          image: {{ $.Values.registryPrefix }}smtc_database_tunnelled:latest
+{{- else }}
           image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.8.1
+{{- end }}
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 9200
@@ -61,20 +65,22 @@ spec:
             - name: "node.attr.zone"
               value: "{{ $officeName }}"
 {{- if (len $.Values.connector.cloudHost) }}
-            - name: "transport.host"
-              value: "0.0.0.0"
             - name: "transport.port"
               value: "9300"
             - name: "transport.publish_host"
-              value: {{ include "smtc.connector.cloud.hostname" $ | quote }}
+              value: "localhost"
             - name: "transport.publish_port"
-              value: "{{ add 29300 $officeIdx2 }}"
+              value: "{{ add $.Values.connector.officeTransportPort $officeIdx2 }}"
+            - name: "REVERSE_TUNNEL1"
+              value: "{{ $.Values.connector.cloudHost }}:{{ add $.Values.connector.officeTransportPort $officeIdx2 }} localhost:9300"
+            - name: "FORWARD_TUNNEL1"
+              value: "{{ $.Values.connector.cloudHost }}:{{ $.Values.connector.cloudTransportPort }} localhost:{{ $.Values.connector.cloudTransportPort }}"
 {{- end }}
             - name: "discovery.zen.minimum_master_nodes"
               value: "1"
             - name: "discovery.zen.ping.unicast.hosts"
 {{- if (len $.Values.connector.cloudHost) }}
-              value: {{ printf "%s:9300" (include "smtc.connector.cloud.hostname" $) |quote }}
+              value: "localhost:{{ $.Values.connector.cloudTransportPort }}"
 {{- else }}
               value: "cloud-db-service"
 {{- end }}
@@ -90,6 +96,11 @@ spec:
             - mountPath: /etc/localtime
               name: timezone
               readOnly: true
+{{- if (len $.Values.connector.cloudHost) }}
+            - mountPath: /etc/hostkey
+              name: hostkey
+              readOnly: true
+{{- end }}
       initContainers:
         - name: init-volume-sysctl
           image: busybox:latest
@@ -101,6 +112,12 @@ spec:
             hostPath:
                 path: /etc/localtime
                 type: File
+{{- if (len $.Values.connector.cloudHost) }}
+          - name: hostkey
+            secret:
+                secretName: tunnel-secret
+                defaultMode: 0400
+{{- end }}
       {{ include "smtc.platform.node-selector" $ }}
 
 ---
