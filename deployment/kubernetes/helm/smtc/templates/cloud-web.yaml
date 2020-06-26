@@ -36,7 +36,11 @@ spec:
       enableServiceLinks: false
       containers:
         - name: cloud-web
+{{- if (len $.Values.connector.cloudHost) }}
+          image: {{ $.Values.registryPrefix }}smtc_web_cloud_tunnelled:latest
+{{- else }}
           image: {{ $.Values.registryPrefix }}smtc_web_cloud:latest
+{{- end }}
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8443
@@ -48,11 +52,21 @@ spec:
             - name: SCENARIO
               value: {{ join "," $.Values.scenario | quote }}
             - name: HEALTH_CHECK
-              {{- if gt (int .Values.noffices) 1 }}
+{{- if gt (int $.Values.noffices) 1 }}
               value: "enabled"
-              {{- else }}
+{{- else }}
               value: "disabled"
-              {{- end }}
+{{- end }}
+{{- if (len $.Values.connector.cloudHost) }}
+{{- range $scenarioIdx, $scenarioName := $.Values.scenario }}
+{{- $args := dict "scenarioName" $scenarioName "Values" $.Values }}
+{{- range $officeIdx := until ( int ( include "smtc.noffices" $args ) ) }}
+{{- $officeIdx2 := add (mul $officeIdx (len $.Values.scenario)) $scenarioIdx }}
+            - name: "FORWARD_TUNNEL{{ $officeIdx2 }}"
+              value: "{{ $.Values.connector.cloudHost }}:{{ add $.Values.connector.officeStoragePort $officeIdx2 }} localhost:{{ add $.Values.connector.officeStoragePort $officeIdx2 }}"
+{{- end }}
+{{- end }}
+{{- end }}
             - name: NO_PROXY
               value: "*"
             - name: no_proxy
@@ -64,6 +78,11 @@ spec:
             - mountPath: /var/run/secrets
               name: self-signed-certificate
               readOnly: true
+{{- if (len $.Values.connector.cloudHost) }}
+            - mountPath: /etc/hostkey
+              name: hostkey
+              readOnly: true
+{{- end }}
       volumes:
         - name: timezone
           hostPath:
@@ -72,6 +91,11 @@ spec:
         - name: self-signed-certificate
           secret:
             secretName: self-signed-certificate
+{{- if (len $.Values.connector.cloudHost) }}
+        - name: hostkey
+          secret:
+            secretName: tunnel-secret
+{{- end }}
       {{ include "smtc.platform.node-selector" . }}
 
 {{- end }}

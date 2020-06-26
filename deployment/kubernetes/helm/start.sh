@@ -29,7 +29,7 @@ if [ -n "${CONNECTOR_CLOUD}" ]; then
     case "N$SCOPE" in
         Ncloud | Noffice*)
             # create secrets
-            "$DIR/../../tunnel/shell.sh" /home/tunnel-key.sh "${CONNECTOR_CLOUD}"
+            "$DIR/../../tunnel/create-key.sh" "${CONNECTOR_CLOUD}"
             create_secret2 tunnel-secret "${DIR}/../../tunnel/.key/id_rsa" "${DIR}/../../tunnel/.key/id_rsa.pub"
         ;;
     esac

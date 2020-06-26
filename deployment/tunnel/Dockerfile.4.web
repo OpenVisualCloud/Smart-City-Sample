@@ -1,0 +1,15 @@
+# smtc_web_cloud_tunnelled
+
+FROM smtc_web_cloud
+USER root
+
+RUN  yum install -y -q openssh-clients && rm -rf /var/cache/yum/*
+COPY *.sh /home/
+CMD  ["/home/tunnel.sh","/home/webc.py"]
+WORKDIR /home
+
+####
+ARG UID
+USER ${UID}
+####
+

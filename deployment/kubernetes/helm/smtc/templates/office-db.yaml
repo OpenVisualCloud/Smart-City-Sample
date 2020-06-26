@@ -4,6 +4,7 @@
 {{- range $officeIdx := until ( int ( include "smtc.noffices" $args ) ) }}
 {{- $officeName := printf "%s-office%d" $scenarioName (add $officeIdx 1) }}
 {{- if contains $.Values.buildScope $officeName }}
+{{- $officeIdx2 := add (mul $officeIdx (len $.Values.scenario)) $scenarioIdx }}
 
 apiVersion: v1
 kind: Service
@@ -59,10 +60,24 @@ spec:
               value: "true"
             - name: "node.attr.zone"
               value: "{{ $officeName }}"
+{{- if (len $.Values.connector.cloudHost) }}
+            - name: "transport.host"
+              value: "0.0.0.0"
+            - name: "transport.port"
+              value: "9300"
+            - name: "transport.publish_host"
+              value: {{ include "smtc.connector.cloud.hostname" $ | quote }}
+            - name: "transport.publish_port"
+              value: "{{ add 29300 $officeIdx2 }}"
+{{- end }}
             - name: "discovery.zen.minimum_master_nodes"
               value: "1"
             - name: "discovery.zen.ping.unicast.hosts"
+{{- if (len $.Values.connector.cloudHost) }}
+              value: {{ printf "%s:9300" (include "smtc.connector.cloud.hostname" $) |quote }}
+{{- else }}
               value: "cloud-db-service"
+{{- end }}
             - name: "action.auto_create_index"
               value: "0"
             - name: "ES_JAVA_OPTS"
@@ -106,10 +121,17 @@ spec:
             - name: OFFICE
               {{- $args := dict "scenarioName" $scenarioName "Values" $.Values "officeIdx" $officeIdx }}
               {{- include "smtc.env.office" $args }}
+{{- if (len $.Values.connector.cloudHost) }}
+            - name: DBHOST
+              value: "http://{{ $officeName }}-tunnel-service:9200"
+            - name: PROXYHOST
+              value: {{ printf "http://%s:%d" (include "smtc.connector.cloud.hostname" $) (add 28080 $officeIdx2) | quote }}
+{{- else }}
             - name: DBHOST
               value: "http://{{ include "smtc.db.name" $ }}-service:9200"
             - name: PROXYHOST
               value: "http://{{ $officeName }}-storage-service.default.svc.cluster.local:8080"
+{{- end }}
             - name: SCENARIO
               value: {{ $scenarioName | quote }}
             - name: "ZONE"

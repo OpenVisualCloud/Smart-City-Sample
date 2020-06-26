@@ -41,7 +41,11 @@ spec:
             - name: STHOSTL
               value: "http://{{ $officeName }}-storage-service:8080/recording"
             - name: STHOSTC
+{{- if (len $.Values.connector.cloudHost) }}
+              value: "http://{{ $officeName }}-tunnel-service:8080/api/upload"
+{{- else }}
               value: "http://cloud-storage-service:8080/api/upload"
+{{- end }}
             - name: SERVICE_INTERVAL
               value: "30"
             - name: NO_PROXY

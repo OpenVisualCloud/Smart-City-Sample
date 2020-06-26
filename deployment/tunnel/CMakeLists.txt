@@ -1,5 +1,3 @@
 
-set(service "smtc_ssl_tunnel")
-include("${CMAKE_SOURCE_DIR}/script/service.cmake")
-add_dependencies(build_${service} build_smtc_common)
+add_custom_target(tunnel_images ${CMAKE_CURRENT_SOURCE_DIR}/build.sh DEPENDS build_smtc_web_cloud build_smtc_storage_manager build_smtc_smart_upload)
 
