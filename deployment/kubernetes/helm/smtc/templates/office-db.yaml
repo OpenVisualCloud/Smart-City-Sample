@@ -132,7 +132,11 @@ spec:
       enableServiceLinks: false
       containers:
         - name: {{ $officeName }}-db-init
+{{- if (len $.Values.connector.cloudHost) }}
+          image: {{ $.Values.registryPrefix }}smtc_db_init_tunnelled:latest
+{{- else }}
           image: {{ $.Values.registryPrefix }}smtc_db_init:latest
+{{- end }}
           imagePullPolicy: IfNotPresent
           env:
             - name: OFFICE
@@ -140,9 +144,11 @@ spec:
               {{- include "smtc.env.office" $args }}
 {{- if (len $.Values.connector.cloudHost) }}
             - name: DBHOST
-              value: "http://{{ $officeName }}-tunnel-service:9200"
+              value: "http://localhost:9200"
             - name: PROXYHOST
-              value: {{ printf "http://%s:%d" (include "smtc.connector.cloud.hostname" $) (add 28080 $officeIdx2) | quote }}
+              value: "localhost:{{ add $.Values.connector.officeStoragePort $officeIdx2 }}"
+            - name: FORWARD_TUNNEL1
+              value: "{{ $.Values.connector.cloudHost }}:{{ $.Values.connector.cloudQueryPort }} localhost:9200"
 {{- else }}
             - name: DBHOST
               value: "http://{{ include "smtc.db.name" $ }}-service:9200"
@@ -164,6 +170,11 @@ spec:
             - mountPath: /var/run/secrets
               name: sensor-info
               readOnly: true
+{{- if (len $.Values.connector.cloudHost) }}
+            - mountPath: /etc/hostkey
+              name: hostkey
+              readOnly: true
+{{- end }}
       restartPolicy: Never
       volumes:
           - name: timezone
@@ -173,6 +184,11 @@ spec:
           - name: sensor-info
             configMap:
                 name: sensor-info
+{{- if (len $.Values.connector.cloudHost) }}
+          - name: hostkey
+            secret:
+                secretName: tunnel-secret
+{{- end }}
       {{ include "smtc.platform.node-selector" $ }}
 
 {{- end }}

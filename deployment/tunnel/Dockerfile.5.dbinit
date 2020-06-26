@@ -1,0 +1,15 @@
+# smtc_db_init_tunnelled
+
+FROM smtc_db_init
+USER root
+
+RUN  yum install -y -q openssh-clients && rm -rf /var/cache/yum/*
+COPY *.sh /home/
+CMD  ["/home/tunnel.sh","/bin/sh","-c","/home/db-init.py && /home/provision.py"]
+WORKDIR /home
+
+####
+ARG UID
+USER ${UID}
+####
+
