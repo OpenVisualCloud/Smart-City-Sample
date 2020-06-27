@@ -1,4 +1,4 @@
 .key/*
 .ssh/*
 build.sh
-shell.sh
+.bash_history
