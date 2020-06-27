@@ -77,7 +77,6 @@ buildScope: ""
 # optional: specify connector hosts if they are from different Kubernetes clusters.
 connector:
     cloudHost: ""
-    cameraHost: ""
     cloudQueryPort: 29200
     cloudTransportPort: 29300
     officeTransportPort: 29301

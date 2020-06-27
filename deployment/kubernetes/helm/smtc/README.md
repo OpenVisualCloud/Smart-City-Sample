@@ -99,3 +99,29 @@ SCOPE=office1 make stop_helm
 SCOPE=office2 make stop_helm
 SCOPE=cloud make stop_helm
 ```
+
+### Multiple Cluster Setup
+
+The sample supports running Cloud and Edge in different Kubernetes clusters. The Cloud cluster hosts the web server, the cloud database, and the cloud storage. Multiple Edge clusters can be present, each of which hosts a local database, camera discovery, camera streaming, and analytics instances. The Edge and the Cloud communicate securely through a connector host.  
+
+```
+# Start Cloud instances
+cmake -DNOFFICES=2 ..
+make
+make tunnels
+
+SCOPE=cloud   CONNECTOR_CLOUD=<user>@<connect-host> make start_helm
+
+# Start Edge instances
+SCOPE=office1 CONNECTOR_CLOUD=<user>@<connect-host> make start_helm
+SCOPE=office2 CONNECTOR_CLOUD=<user>@<connect-host> make start_helm
+...
+SCOPE=office1 CONNECTOR_CLOUD=<user>@<connect-host> make stop_helm
+...
+SCOPE=office1 CONNECTOR_CLOUD=<user>@<connect-host> make start_helm
+...
+# Clean up
+SCOPE=office1 CONNECTOR_CLOUD=<user>@<connect-host> make stop_helm
+SCOPE=office2 CONNECTOR_CLOUD=<user>@<connect-host> make stop_helm
+SCOPE=cloud   CONNECTOR_CLOUD=<user>@<connect-host> make stop_helm
+```
