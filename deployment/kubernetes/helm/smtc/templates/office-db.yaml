@@ -146,7 +146,7 @@ spec:
             - name: DBHOST
               value: "http://localhost:9200"
             - name: PROXYHOST
-              value: "localhost:{{ add $.Values.connector.officeStoragePort $officeIdx2 }}"
+              value: "http://127.0.0.1:{{ add $.Values.connector.officeStoragePort $officeIdx2 }}"
             - name: FORWARD_TUNNEL1
               value: "{{ $.Values.connector.cloudHost }}:{{ $.Values.connector.cloudQueryPort }} localhost:9200"
 {{- else }}
