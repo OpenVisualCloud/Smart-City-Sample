@@ -1,0 +1,15 @@
+# smtc_smart_upload_tunnelled
+
+FROM smtc_smart_upload
+USER root
+
+RUN  yum install -y -q openssh-clients && rm -rf /var/cache/yum/*
+COPY *.sh /home/
+CMD  ["/home/tunnel.sh","/home/smart-upload.py"]
+WORKDIR /home
+
+####
+ARG UID
+USER ${UID}
+####
+

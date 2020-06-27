@@ -73,3 +73,12 @@ groupId: defn(`GROUPID')
 
 # optional: build scope: one of "", "cloud", or "officeN"
 buildScope: ""
+
+# optional: specify connector hosts if they are from different Kubernetes clusters.
+connector:
+    cloudHost: ""
+    cloudQueryPort: 29200
+    cloudTransportPort: 29300
+    officeTransportPort: 29301
+    cloudStoragePort: 28080
+    officeStoragePort: 28081

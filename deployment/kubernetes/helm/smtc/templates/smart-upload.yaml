@@ -24,7 +24,11 @@ spec:
       enableServiceLinks: false
       containers:
         - name: {{ $officeName }}-smart-upload
+{{- if (len $.Values.connector.cloudHost) }}
+          image: {{ $.Values.registryPrefix }}smtc_smart_upload_tunnelled:latest
+{{- else }}
           image: {{ $.Values.registryPrefix }}smtc_smart_upload:latest
+{{- end }}
           imagePullPolicy: IfNotPresent
           resources:
             limits:
@@ -40,8 +44,15 @@ spec:
               {{- include "smtc.env.dbhost" $args }}
             - name: STHOSTL
               value: "http://{{ $officeName }}-storage-service:8080/recording"
+{{- if (len $.Values.connector.cloudHost) }}
+            - name: STHOSTC
+              value: "http://localhost:8080/api/upload"
+            - name: FORWARD_TUNNEL1
+              value: "{{ $.Values.connector.cloudHost }}:{{ $.Values.connector.cloudStoragePort }} localhost:8080"
+{{- else }}
             - name: STHOSTC
               value: "http://cloud-storage-service:8080/api/upload"
+{{- end }}
             - name: SERVICE_INTERVAL
               value: "30"
             - name: NO_PROXY
@@ -52,11 +63,21 @@ spec:
             - mountPath: /etc/localtime
               name: timezone
               readOnly: true
+{{- if (len $.Values.connector.cloudHost) }}
+            - mountPath: /etc/hostkey
+              name: hostkey
+              readOnly: true
+{{- end }}
       volumes:
           - name: timezone
             hostPath:
                 path: /etc/localtime
                 type: File
+{{- if (len $.Values.connector.cloudHost) }}
+          - name: hostkey
+            secret:
+                secretName: tunnel-secret
+{{- end }}
       {{ include "smtc.platform.node-selector" $ }}
 
 {{- end }}

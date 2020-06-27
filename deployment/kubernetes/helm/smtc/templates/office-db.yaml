@@ -4,6 +4,7 @@
 {{- range $officeIdx := until ( int ( include "smtc.noffices" $args ) ) }}
 {{- $officeName := printf "%s-office%d" $scenarioName (add $officeIdx 1) }}
 {{- if contains $.Values.buildScope $officeName }}
+{{- $officeIdx2 := add (mul $officeIdx (len $.Values.scenario)) $scenarioIdx }}
 
 apiVersion: v1
 kind: Service
@@ -43,7 +44,11 @@ spec:
       enableServiceLinks: false
       containers:
         - name: {{ $officeName }}-db
+{{- if (len $.Values.connector.cloudHost) }}
+          image: {{ $.Values.registryPrefix }}smtc_database_tunnelled:latest
+{{- else }}
           image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.8.1
+{{- end }}
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 9200
@@ -59,10 +64,34 @@ spec:
               value: "true"
             - name: "node.attr.zone"
               value: "{{ $officeName }}"
+{{- if (len $.Values.connector.cloudHost) }}
+            - name: "transport.port"
+              value: "9300"
+            - name: "transport.publish_host"
+              value: "localhost"
+            - name: "transport.publish_port"
+              value: "{{ add $.Values.connector.officeTransportPort $officeIdx2 }}"
+            - name: "REVERSE_TUNNEL1"
+              value: "{{ $.Values.connector.cloudHost }}:{{ add $.Values.connector.officeTransportPort $officeIdx2 }} localhost:9300"
+            - name: "FORWARD_TUNNEL_CLOUD_TRANSPORT"
+              value: "{{ $.Values.connector.cloudHost }}:{{ $.Values.connector.cloudTransportPort }} localhost:{{ $.Values.connector.cloudTransportPort }}"
+            {{- range $tmpsidx, $tmpsname := $.Values.scenario }}
+            {{- $args := dict "scenarioName" $tmpsname "Values" $.Values }}
+            {{- range $tmpoidx := until ( int ( include "smtc.noffices" $args ) ) }}
+            {{- $tmpoidx2 := add (mul $tmpoidx (len $.Values.scenario)) $tmpsidx }}
+            - name: "FORWARD_TUNNEL_OFFICE_TRANSPORT{{ $tmpoidx2 }}"
+              value: "{{ $.Values.connector.cloudHost }}:{{ add $.Values.connector.officeTransportPort $tmpoidx2 }} localhost:{{ add $.Values.connector.officeTransportPort $tmpoidx2 }}"
+            {{- end }}
+            {{- end }}
+{{- end }}
             - name: "discovery.zen.minimum_master_nodes"
               value: "1"
             - name: "discovery.zen.ping.unicast.hosts"
+{{- if (len $.Values.connector.cloudHost) }}
+              value: "localhost:{{ $.Values.connector.cloudTransportPort }}"
+{{- else }}
               value: "cloud-db-service"
+{{- end }}
             - name: "action.auto_create_index"
               value: "0"
             - name: "ES_JAVA_OPTS"
@@ -75,6 +104,11 @@ spec:
             - mountPath: /etc/localtime
               name: timezone
               readOnly: true
+{{- if (len $.Values.connector.cloudHost) }}
+            - mountPath: /etc/hostkey
+              name: hostkey
+              readOnly: true
+{{- end }}
       initContainers:
         - name: init-volume-sysctl
           image: busybox:latest
@@ -86,6 +120,12 @@ spec:
             hostPath:
                 path: /etc/localtime
                 type: File
+{{- if (len $.Values.connector.cloudHost) }}
+          - name: hostkey
+            secret:
+                secretName: tunnel-secret
+                defaultMode: 0400
+{{- end }}
       {{ include "smtc.platform.node-selector" $ }}
 
 ---
@@ -100,16 +140,29 @@ spec:
       enableServiceLinks: false
       containers:
         - name: {{ $officeName }}-db-init
+{{- if (len $.Values.connector.cloudHost) }}
+          image: {{ $.Values.registryPrefix }}smtc_db_init_tunnelled:latest
+{{- else }}
           image: {{ $.Values.registryPrefix }}smtc_db_init:latest
+{{- end }}
           imagePullPolicy: IfNotPresent
           env:
             - name: OFFICE
               {{- $args := dict "scenarioName" $scenarioName "Values" $.Values "officeIdx" $officeIdx }}
               {{- include "smtc.env.office" $args }}
+{{- if (len $.Values.connector.cloudHost) }}
+            - name: DBHOST
+              value: "http://localhost:9200"
+            - name: PROXYHOST
+              value: "http://127.0.0.1:{{ add $.Values.connector.officeStoragePort $officeIdx2 }}"
+            - name: FORWARD_TUNNEL1
+              value: "{{ $.Values.connector.cloudHost }}:{{ $.Values.connector.cloudQueryPort }} localhost:9200"
+{{- else }}
             - name: DBHOST
               value: "http://{{ include "smtc.db.name" $ }}-service:9200"
             - name: PROXYHOST
               value: "http://{{ $officeName }}-storage-service.default.svc.cluster.local:8080"
+{{- end }}
             - name: SCENARIO
               value: {{ $scenarioName | quote }}
             - name: "ZONE"
@@ -125,6 +178,11 @@ spec:
             - mountPath: /var/run/secrets
               name: sensor-info
               readOnly: true
+{{- if (len $.Values.connector.cloudHost) }}
+            - mountPath: /etc/hostkey
+              name: hostkey
+              readOnly: true
+{{- end }}
       restartPolicy: Never
       volumes:
           - name: timezone
@@ -134,6 +192,11 @@ spec:
           - name: sensor-info
             configMap:
                 name: sensor-info
+{{- if (len $.Values.connector.cloudHost) }}
+          - name: hostkey
+            secret:
+                secretName: tunnel-secret
+{{- end }}
       {{ include "smtc.platform.node-selector" $ }}
 
 {{- end }}

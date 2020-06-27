@@ -14,4 +14,12 @@ case "N$SCOPE" in
         ;;
 esac
 
+if [ -n "${CONNECTOR_CLOUD}" ]; then
+    case "N$SCOPE" in
+        Ncloud | Noffice*)
+            kubectl delete secret tunnel-secret 2> /dev/null
+        ;;
+    esac
+fi
+
 echo -n ""
