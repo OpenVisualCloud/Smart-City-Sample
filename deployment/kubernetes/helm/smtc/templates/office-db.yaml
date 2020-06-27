@@ -73,8 +73,16 @@ spec:
               value: "{{ add $.Values.connector.officeTransportPort $officeIdx2 }}"
             - name: "REVERSE_TUNNEL1"
               value: "{{ $.Values.connector.cloudHost }}:{{ add $.Values.connector.officeTransportPort $officeIdx2 }} localhost:9300"
-            - name: "FORWARD_TUNNEL1"
+            - name: "FORWARD_TUNNEL_CLOUD_TRANSPORT"
               value: "{{ $.Values.connector.cloudHost }}:{{ $.Values.connector.cloudTransportPort }} localhost:{{ $.Values.connector.cloudTransportPort }}"
+            {{- range $tmpsidx, $tmpsname := $.Values.scenario }}
+            {{- $args := dict "scenarioName" $tmpsname "Values" $.Values }}
+            {{- range $tmpoidx := until ( int ( include "smtc.noffices" $args ) ) }}
+            {{- $tmpoidx2 := add (mul $tmpoidx (len $.Values.scenario)) $tmpsidx }}
+            - name: "FORWARD_TUNNEL_OFFICE_TRANSPORT{{ $tmpoidx2 }}"
+              value: "{{ $.Values.connector.cloudHost }}:{{ add $.Values.connector.officeTransportPort $tmpoidx2 }} localhost:{{ add $.Values.connector.officeTransportPort $tmpoidx2 }}"
+            {{- end }}
+            {{- end }}
 {{- end }}
             - name: "discovery.zen.minimum_master_nodes"
               value: "1"
