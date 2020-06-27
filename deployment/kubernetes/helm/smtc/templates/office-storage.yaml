@@ -4,6 +4,7 @@
 {{- range $officeIdx := until ( int ( include "smtc.noffices" $args ) ) }}
 {{- $officeName := printf "%s-office%d" $scenarioName (add $officeIdx 1) }}
 {{- if contains $.Values.buildScope $officeName }}
+{{- $officeIdx2 := add (mul $officeIdx (len $.Values.scenario)) $scenarioIdx }}
 
 apiVersion: v1
 kind: Service
@@ -37,7 +38,11 @@ spec:
       enableServiceLinks: false
       containers:
         - name: {{ $officeName }}-storage
+{{- if (len $.Values.connector.cloudHost) }}
+          image: {{ $.Values.registryPrefix }}smtc_storage_manager_tunnelled:latest
+{{- else }}
           image: {{ $.Values.registryPrefix }}smtc_storage_manager:latest
+{{- end }}
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
@@ -60,6 +65,10 @@ spec:
               value: "85"
             - name: HALT_REC
               value: "95"
+{{- if (len $.Values.connector.cloudHost) }}
+            - name: REVERSE_TUNNEL1
+              value: "{{ $.Values.connector.cloudHost }}:{{ add $.Values.connector.officeStoragePort $officeIdx2 }} localhost:{{ add $.Values.connector.officeStoragePort $officeIdx2 }}"
+{{- end }}
             - name: NO_PROXY
               value: "*"
             - name: no_proxy
@@ -68,11 +77,21 @@ spec:
             - mountPath: /etc/localtime
               name: timezone
               readOnly: true
+{{- if (len $.Values.connector.cloudHost) }}
+            - mountPath: /etc/hostkey
+              name: hostkey
+              readOnly: true
+{{- end }}
       volumes:
         - name: timezone
           hostPath:
             path: /etc/localtime
             type: File
+{{- if (len $.Values.connector.cloudHost) }}
+        - name: hostkey
+          secret:
+            secretName: tunnel-secret
+{{- end }}
       {{ include "smtc.platform.node-selector" $ }}
 
 {{- end }}
