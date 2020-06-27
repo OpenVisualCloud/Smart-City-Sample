@@ -143,3 +143,10 @@ Expand the platform device name.
 {{- "cpu" }}
 {{- end }}
 {{- end }}
+
+{{/*
+Extract the hostname from for connector.host
+*/}}
+{{- define "smtc.connector.cloud.hostname" }}
+{{- regexReplaceAll ".*@" .Values.connector.cloudHost "" }}
+{{- end }}

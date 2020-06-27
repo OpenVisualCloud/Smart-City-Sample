@@ -1,0 +1,15 @@
+# smtc_storage_manager_tunnelled
+
+FROM smtc_storage_manager
+USER root
+
+RUN  yum install -y -q openssh-clients && rm -rf /var/cache/yum/*
+COPY *.sh /home/
+CMD  ["/home/tunnel.sh","/home/manage.py"]
+WORKDIR /home
+
+####
+ARG UID
+USER ${UID}
+####
+
