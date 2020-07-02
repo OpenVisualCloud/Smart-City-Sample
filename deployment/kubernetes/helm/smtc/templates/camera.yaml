@@ -61,10 +61,20 @@ spec:
             {{- if eq $scenarioName "traffic" }}
             - name: FILES
               value: "_traffic.mp4$$"
+            - name: ALGORITHM
+              value: "object-detection"
             {{- else if eq $scenarioName "stadium" }}
             - name: FILES
               value: "_svcq.mp4$$"
+            - name: ALGORITHM
+              value: "svcq-counting"
             {{- end }}
+            - name: OFFICE
+              {{- $args := dict "scenarioName" $scenarioName "Values" $.Values "officeIdx" $officeIdx }}
+              {{- include "smtc.env.office" $args }}
+            - name: DBHOST
+              {{- $args := dict "officeName" $officeName "Values" $.Values }}
+              {{- include "smtc.env.dbhost" $args }}
             - name: NCAMERAS
               value: {{ $ncameras | quote}}
             - name: RTSP_PORT
@@ -126,7 +136,15 @@ spec:
             {{- end }}
           env:
             - name: FILES
-              value: "crowd.mp4$$"
+              value: "_crowd.mp4$$"
+            - name: ALGORITHM
+              value: "crowd-counting"
+            - name: OFFICE
+              {{- $args := dict "scenarioName" $scenarioName "Values" $.Values "officeIdx" $officeIdx }}
+              {{- include "smtc.env.office" $args }}
+            - name: DBHOST
+              {{- $args := dict "officeName" $officeName "Values" $.Values }}
+              {{- include "smtc.env.dbhost" $args }}
             - name: NCAMERAS
               value: {{ $.Values.ncameras.crowd | quote }}
             - name: RTSP_PORT
@@ -188,6 +206,14 @@ spec:
           env:
             - name: FILES
               value: "_entrance.mp4$$"
+            - name: ALGORITHM
+              value: "entrance-counting"
+            - name: OFFICE
+              {{- $args := dict "scenarioName" $scenarioName "Values" $.Values "officeIdx" $officeIdx }}
+              {{- include "smtc.env.office" $args }}
+            - name: DBHOST
+              {{- $args := dict "officeName" $officeName "Values" $.Values }}
+              {{- include "smtc.env.dbhost" $args }}
             - name: NCAMERAS
               value: {{ $.Values.ncameras.entrance | quote }}
             - name: RTSP_PORT
