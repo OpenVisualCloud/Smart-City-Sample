@@ -56,11 +56,19 @@ loop(`CAMERAIDX',1,defn(`NCAMERAS'),`dnl
 ifelse(defn(`SCENARIO_NAME'),`traffic',`dnl
             - name: FILES
               value: "_traffic.mp4$$"
+            - name: ALGORITHM
+              value: "object-detection"
 ')dnl
 ifelse(defn(`SCENARIO_NAME'),`stadium',`dnl
             - name: FILES
               value: "_svcq.mp4$$"
+            - name: ALGORITHM
+              value: "svcq-counting"
 ')dnl
+            - name: OFFICE
+              value: "defn(`OFFICE_LOCATION')"
+            - name: DBHOST
+              value: "http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')-db,db)-service:9200"
             - name: `NCAMERAS'
               value: "defn(`NCAMERAS')"
             - name: RTSP_PORT
@@ -121,7 +129,13 @@ loop(`CAMERAIDX',1,defn(`NCAMERAS2'),`dnl
 ')dnl
           env:
             - name: FILES
-              value: "crowd.mp4$$"
+              value: "_crowd.mp4$$"
+            - name: ALGORITHM
+              value: "crowd-counting"
+            - name: OFFICE
+              value: "defn(`OFFICE_LOCATION')"
+            - name: DBHOST
+              value: "http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')-db,db)-service:9200"
             - name: `NCAMERAS'
               value: "defn(`NCAMERAS2')"
             - name: RTSP_PORT
@@ -182,6 +196,12 @@ loop(`CAMERAIDX',1,defn(`NCAMERAS3'),`dnl
           env:
             - name: FILES
               value: "_entrance.mp4$$"
+            - name: ALGORITHM
+              value: "entrance-counting"
+            - name: OFFICE
+              value: "defn(`OFFICE_LOCATION')"
+            - name: DBHOST
+              value: "http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')-db,db)-service:9200"
             - name: `NCAMERAS'
               value: "defn(`NCAMERAS3')"
             - name: RTSP_PORT
