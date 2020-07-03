@@ -11,7 +11,7 @@ import json
 import os
 
 port_scan=os.environ['PORT_SCAN']
-passcodes=os.environ['PASSCODE'].split(" ") if 'PASSCODE' in os.environ else [":"]
+passcodes=os.environ['PASSCODE'].split(" ") if 'PASSCODE' in os.environ else []
 sim_ports=list(map(int,os.environ["SIM_PORT"].strip("/").split("/"))) if "SIM_PORT" in os.environ else []
 sim_prefix=os.environ["SIM_PREFIX"] if "SIM_PREFIX" in os.environ else ""
 service_interval = float(os.environ["SERVICE_INTERVAL"]) if "SERVICE_INTERVAL" in os.environ else 30
@@ -24,6 +24,9 @@ def quit_service(signum, sigframe):
 
 signal(SIGTERM, quit_service)
 
+dbi=None
+dbs=None
+dbp=None
 if dbhost and office:
     dbi=DBIngest(index="sensors",office=office,host=dbhost)
     dbs=DBQuery(index="sensors",office=office,host=dbhost)
@@ -37,11 +40,21 @@ if dbhost and office:
             print("Waiting for DB...", flush=True)
             time.sleep(5)
 
-def get_passcodes():
+def get_passcodes(ip, port):
     if office and dbhost:
+        def _bucketize(query):
+            r=dbp.bucketize(query,["passcode"])
+            if "passcode" in r: 
+                return [k for k in r["passcode"] if r["passcode"][k]]
+            return []
+
         try:
-            r=dbp.bucketize("office:[{},{}] and passcode:*".format(office[0],office[1]),["passcode"])
-            if "passcode" in r: return list(r["passcode"].keys())
+            codes=_bucketize("passcode:* and ip={} and port={}".format(ip,port))
+            if codes: return codes
+            codes=_bucketize("passcode:* and ip={}".format(ip))
+            if codes: return codes
+            codes=_bucketize("passcode:*")
+            if codes: return codes
         except:
             print(traceback.format_exc(), flush=True)
     return []
@@ -57,7 +70,8 @@ def probe_camera():
             yield ip,port
 
 def probe_camera_info(ip, port):
-    for passcode in get_passcodes()+passcodes:
+    for passcode in get_passcodes(ip,port)+passcodes:
+        print("OnVIF discovery over {}:{} {}".format(ip,port,passcode), flush=True)
         up=passcode.split(":")
         desc=safe_discover(ip, port, up[0], up[1])
         if desc:
@@ -121,7 +135,8 @@ while True:
         try:
             if not r: # new camera
                 print("Searching for template", flush=True)
-                template=list(dbp.search(" or ".join([id1[0]+'="'+id1[1]+'"' for id1 in camids]),size=1))
+                template=list(dbp.search(" or ".join(['{}="{}"'.format(id1[0],id1[1]) for id1 in camids]),size=1))
+                if not template: template=list(dbp.search("ip={} and port={}".format(ip,port),size=1))
                 if template:
                     print("Ingesting", flush=True)
                     record=template[0]["_source"]

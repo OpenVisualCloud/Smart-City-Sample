@@ -29,7 +29,11 @@ with open("/run/secrets/sensor-info.json",encoding='utf-8') as fd:
         office1["zone"]=zone
         dbo.ingest(office1,officestr)
 
-        for s in sensors: s["office"]=location1
+        for s in sensors: 
+            s["office"]=location1
+            if "ip" in s: # convert IP to CIDR
+                if s["ip"].find("/")<0:
+                    s["ip"]=s["ip"]+"/32"
         dbp.ingest_bulk(sensors)
 
 print("DB Initialized", flush=True)
