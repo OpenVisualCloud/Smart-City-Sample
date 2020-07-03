@@ -19,9 +19,9 @@ The sample implements the ONVIF protocol to discover IP cameras on the specified
 
 #### (1) Uniquely Identifying an IP Camrea
 
-Assume an IP camera can be on and off during the streaming cycles, we need to define a way to uniquely identify an IP camera (so that we can associate any [provisioning](#2-provisioning-cameras) parameters with the camera.)   
+Assume an IP camera can be on and off during the streaming cycles, we need to define a way to uniquely identify an IP camera (so that we can associate any [provisioning](#2-provisioning-cameras) parameters to the camera.)   
 
-If the IP address of the IP camera is statically assigned, then the pair of the assigned IP address and the camera RTSP port can be the unique identifier. 
+If the IP address of an IP camera is statically assigned, then the pair of the assigned IP address and the camera RTSP port can be the unique identifier. 
 
 If the IP address is assigned through DHCP, then we need to use the ONVIF protocol to locate the camera serial number or the MAC address. Either one can be the unique identifier. Use the following script to scan the network for IP cameras:  
 
@@ -52,7 +52,7 @@ where `PORT_SCAN` specifies the `nmap` command line arguments. The camera networ
 
 #### (2) Provisioning Cameras
 
-Provisioning is a process of associating a set of application-specific parameters to a camera, for example, the GPS location, field of view, direction and positioning transformation. Developing provisioning tools is outside the sample scope. As a workaround, the sample stores the provisioning information at [sensor-info.json](../maintenance/db-init/sensor-info.json) and uses it to initialize the database.   
+Provisioning is a process of associating a set of application-specific parameters to a camera, for example, the GPS location, field of view, direction and positioning transformation. Developing provisioning tools is outside the sample scope. As a workaround, the sample stores the provisioning information in [sensor-info.json](../maintenance/db-init/sensor-info.json) and uses it to initialize the database.   
 
 The provisioning information is scenario specific. The ```traffic``` scenario parameters are as follows:
 ```
@@ -92,7 +92,7 @@ The ```stadium``` scenario parameters are as follows:
 
 In above provisioning parameters, the `simsn` fields identify simulated cameras. Replace those with the IP camera [unique identifiers](#1-Uniquely-Identifying-an-IP-Camrea).  
 
-For example, the following parameters associate the ```South East Wing``` or ```zone 7``` with the IP camera, whose serial number is ```ND021808019141```,  
+For example, the following parameters associate the ```South East Wing``` or ```zone 7``` with an IP camera, whose serial number is ```ND021808019141```,  
 ```
 ...
         "address": "South East Wing",
@@ -115,7 +115,7 @@ For example, the following parameters associate the ```South East Wing``` or ```
 ...
 ```
 
-or with statically allocated IP address and the RTSP ports.     
+or with statically allocated IP address(es) and the RTSP ports.     
 ```
 ...
         "passcode": "admin:admin",
@@ -128,7 +128,7 @@ where `passcode` specifies the camera username and password; `ip` can be either 
 
 ---
 
-It is recommended to always specify at least an IP address range to be associated with `passcode` so that the discovery service can feed the IP cameras with the right passcode during discovery. Certain IP cameras may lock up for a period of time as the result of fed with wrong passcode.   
+It is recommended that you always specify an IP address range to be associated with `passcode`. Certain IP cameras may lock up for a period of time if fed with a wrong passcode.   
 
 ---
 
