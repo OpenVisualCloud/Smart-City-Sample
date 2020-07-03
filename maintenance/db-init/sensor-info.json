@@ -134,7 +134,7 @@
         "port": [ 80, 9988 ],
         "device": {
             "SerialNumber": "031158077176194102" 
-        },
+        }
     }]
 },{
     "scenario": "traffic",
