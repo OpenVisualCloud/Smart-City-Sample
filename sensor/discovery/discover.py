@@ -6,13 +6,14 @@ from db_ingest import DBIngest
 from probe import probe, run
 from onvif_discover import safe_discover
 import traceback
+import socket
 import time
 import json
 import os
 
 port_scan=os.environ['PORT_SCAN']
 passcodes=os.environ['PASSCODE'].split(" ") if 'PASSCODE' in os.environ else []
-sim_ports=list(map(int,os.environ["SIM_PORT"].strip("/").split("/"))) if "SIM_PORT" in os.environ else []
+sim_hosts=[hp.split(":") for hp in os.environ["SIM_HOST"].strip("/").split("/")] if "SIM_HOST" in os.environ else []
 sim_prefix=os.environ["SIM_PREFIX"] if "SIM_PREFIX" in os.environ else ""
 service_interval = float(os.environ["SERVICE_INTERVAL"]) if "SERVICE_INTERVAL" in os.environ else 30
 office = list(map(float,os.environ["OFFICE"].split(","))) if "OFFICE" in os.environ else None
@@ -70,6 +71,17 @@ def probe_camera():
             yield ip,port
 
 def probe_camera_info(ip, port):
+    # check to see if ip/port is simulated
+    for simh in sim_hosts:
+        if str(port)!=simh[1]: continue
+        if str(socket.gethostbyname(simh[0]))!=ip: continue
+
+        global sim_cameras
+        rtspuri = "rtsp://"+ip+":"+str(port)+"/live.sdp"
+        if rtspuri not in sim_cameras: sim_cameras[rtspuri]=len(sim_cameras.keys())
+        camid=("simsn",sim_prefix+str(sim_cameras[rtspuri]))
+        return (rtspuri,[camid],{"uri":[rtspuri]})
+
     for passcode in get_passcodes(ip,port)+passcodes:
         print("OnVIF discovery over {}:{} {}".format(ip,port,passcode), flush=True)
         up=passcode.split(":")
@@ -86,13 +98,6 @@ def probe_camera_info(ip, port):
                         if "HwAddress" in network1:
                             camids.append(("networks.HwAddress",network1['HwAddress']))
                 return (rtspuri,camids,desc)
-
-    if port in sim_ports:
-        global sim_cameras
-        rtspuri = "rtsp://"+ip+":"+str(port)+"/live.sdp"
-        if rtspuri not in sim_cameras: sim_cameras[rtspuri]=len(sim_cameras.keys())
-        camid=("simsn",sim_prefix+str(sim_cameras[rtspuri]))
-        return (rtspuri,[camid],{"uri":[rtspuri]})
 
     return (None,[],None)
 
