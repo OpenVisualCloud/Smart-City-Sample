@@ -38,6 +38,7 @@ settings={
             "properties": {
                 "location": { "type": "geo_point", },
                 "office": { "type": "geo_point", },
+                "ip": { "type": "ip_range", },
             },
         },
     },
@@ -53,7 +54,7 @@ settings={
             "properties": {
                 "office": { "type": "geo_point", },
                 "location": { "type": "geo_point", },
-                "ip": { "type": "ip", },
+                "ip": { "type": "ip_range", },
             },
         },
     },
@@ -69,7 +70,7 @@ settings={
             "properties": {
                 "office": { "type": "geo_point", },
                 "location": { "type": "geo_point", },
-                "ip": { "type": "ip", },
+                "ip": { "type": "ip_range", },
             },
         },
     },
