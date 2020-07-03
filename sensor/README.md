@@ -17,11 +17,14 @@ ffmpeg -i <source>.mp4 -c:v libx264 -profile:v baseline -x264-params keyint=30:b
 
 The sample implements the ONVIF protocol to discover IP cameras on the specified IP range. Do the following to add IP cameras to the sample:   
 
-#### (1) Finding Camera IDs
+#### (1) Uniquely Identifying an IP Camrea
 
-To uniquely identify a camera, we need to define a camera ID. This is usually the camera serial number or the MAC address of the network interface.  
+Assume an IP camera can be on and off during the streaming cycles, we need to define a way to uniquely identify an IP camera (so that we can associate any [provisioning](#2-provisioning-cameras) parameters to the camera.)   
 
-Scan the camera IP range as follows:
+If the IP address of an IP camera is statically assigned, then the pair of the assigned IP address and the camera RTSP port can be the unique identifier. 
+
+If the IP address is assigned through DHCP, then we need to use the ONVIF protocol to locate the camera serial number or the MAC address. Either one can be the unique identifier. Use the following script to scan the network for IP cameras:  
+
 ```
 read && PORT_SCAN='-p T:80-65535 192.168.1.0/24' PASSCODE=$REPLY make discover
 ```
@@ -49,7 +52,7 @@ where `PORT_SCAN` specifies the `nmap` command line arguments. The camera networ
 
 #### (2) Provisioning Cameras
 
-Provisioning is a process of associating a set of application-specific parameters to a camera, for example, the GPS location, field of view, direction and positioning transformation. Developing provisioning tools is outside the sample scope. As a workaround, the sample stores the provisioning information at [sensor-info.json](../maintenance/db-init/sensor-info.json) and uses it to initialize the database.   
+Provisioning is a process of associating a set of application-specific parameters to a camera, for example, the GPS location, field of view, direction and positioning transformation. Developing provisioning tools is outside the sample scope. As a workaround, the sample stores the provisioning information in [sensor-info.json](../maintenance/db-init/sensor-info.json) and uses it to initialize the database.   
 
 The provisioning information is scenario specific. The ```traffic``` scenario parameters are as follows:
 ```
@@ -87,7 +90,9 @@ The ```stadium``` scenario parameters are as follows:
 ...
 ```
 
-In above provisioning parameters, the ```simsn``` fields identify simulated cameras. Replace those with the discovered camera IDs. For example, the following parameters associate the ```South East Wing``` or ```zone 7``` with the IP camera, whose serial number is ```ND021808019141```.   
+In above provisioning parameters, the `simsn` fields identify simulated cameras. Replace those with the IP camera [unique identifiers](#1-Uniquely-Identifying-an-IP-Camrea).  
+
+For example, the following parameters associate the ```South East Wing``` or ```zone 7``` with an IP camera, whose serial number is ```ND021808019141```,  
 ```
 ...
         "address": "South East Wing",
@@ -102,12 +107,30 @@ In above provisioning parameters, the ```simsn``` fields identify simulated came
             "zone": 7,
             "polygon": [[0,0],[1023,0],[1023,1023],[0,1023],[0,0]]
         }],
+        "passcode": "admin:admin"
+        "ip": "192.168.1.0/16",
         "device": { 
             "SerialNumber": "ND021808019141"
         },
-        "passcode": "admin:admin"
 ...
 ```
+
+or with statically allocated IP address(es) and the RTSP ports.     
+```
+...
+        "passcode": "admin:admin",
+        "ip": "192.168.1.114",
+        "port": [ 80, 9988 ]
+...
+```
+
+where `passcode` specifies the camera username and password; `ip` can be either a specific IP address `192.168.1.114` or an IP address range such as `192.168.1.0/24`; and `port` is a list of the camera RTSP ports.    
+
+---
+
+It is recommended that you always specify an IP address range to be associated with `passcode`. Certain IP cameras may lock up for a period of time if fed with a wrong passcode.   
+
+---
 
 #### (3) Enabling the Discovering Service
 
