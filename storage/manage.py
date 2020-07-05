@@ -4,6 +4,7 @@ from tornado import ioloop, web
 from tornado.options import define, options, parse_command_line
 from workload import WorkloadHandler
 from upload import UploadHandler
+from thumbnail import ThumbnailHandler
 from subprocess import Popen
 from signal import signal, SIGTERM, SIGQUIT
 import os
@@ -21,6 +22,7 @@ def quit_service(signum, frame):
 app = web.Application([
     (r'/api/workload',WorkloadHandler),
     (r'/api/upload',UploadHandler),
+    (r'/api/thumbnail/.*',ThumbnailHandler),
 ])
 
 if __name__ == "__main__":

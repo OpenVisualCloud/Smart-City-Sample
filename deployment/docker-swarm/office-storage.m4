@@ -10,6 +10,7 @@
             WARN_DISK: "75"
             FATAL_DISK: "85"
             HALT_REC: "95"
+            THUMBNAIL_CACHE: "50"
             NO_PROXY: "*"
             no_proxy: "*"
         volumes:

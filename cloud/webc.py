@@ -41,6 +41,7 @@ app = web.Application([
     (r'/api/workload',RedirectHandler),
     (r'/api/hint',HintHandler),
     (r'/recording/.*',RedirectHandler),
+    (r'/thumbnail/.*',RedirectHandler),
 ])
 
 if __name__ == "__main__":

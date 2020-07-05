@@ -62,6 +62,8 @@ spec:
               value: "85"
             - name: HALT_REC
               value: "95"
+            - name: THUMBNAIL_CACHE
+              value: "50"
             - name: NO_PROXY
               value: "*"
             - name: no_proxy
