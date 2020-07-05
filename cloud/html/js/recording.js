@@ -23,8 +23,9 @@ $("#pg-recording").on(":initpage", function(e, queries, office) {
             $.each(data.response, function (k,v) {
                 var time=new Date(v._source.time).toLocaleString();
                 v._source.office=office;
-                v._source.path="recording/"+v._source.path+(office?'?'+$.param({office:office.lat+","+office.lon}):'');
-                var line=$('<tr><td class="no-padding"><a href="javascript:void(0)"><img src="'+v._source.path.replace(".mp4",".mp4.png")+'" draggable="true"/><figcaption class="xx-small">'+time+' <pre>'+v._source.path+'</pre></figcaption></a></td></tr>');
+                v._source.path=v._source.path+(office?'?'+$.param({office:office.lat+","+office.lon}):'');
+                var address=("address" in v._source)?v._source.address:"";
+                var line=$('<tr><td class="no-padding"><a href="javascript:void(0)"><img src="thumbnail/'+v._source.path.replace(".mp4",".mp4.png")+'" draggable="true"/><figcaption class="xx-small">'+address+' '+time+'</figcaption></a></td></tr>');
                 line.find("img").css({width:plist.width()+"px"});
                 line.on("dragstart",function (e) {
                     e.originalEvent.dataTransfer.setData("application/json",JSON.stringify(v));
@@ -69,7 +70,7 @@ $("#pg-recording [layout4] video").on("drop",function (e) {
     e.preventDefault();
     var page=$(this);
     var doc=JSON.parse(e.originalEvent.dataTransfer.getData("application/json"));
-    page.find("source").prop('src',doc._source.path);
+    page.find("source").prop('src','recording/'+doc._source.path);
     page.get(0).load();
     page.parent().find("div").text(new Date(doc._source.time).toLocaleString());
 }).on("dragover",function (e) {
@@ -84,7 +85,7 @@ $("#pg-recording [layout1] video").on("drop",function (e) {
     apiHost.search("sensors","_id='"+doc._source.sensor+"'",doc._source.office,1).then(function (data) {
         page.parent().find("div").text(data.response[0]._source.address+" "+new Date(doc._source.time).toLocaleString());
     });
-    page.find("source").prop('src',doc._source.path);
+    page.find("source").prop('src','recording/'+doc._source.path);
     draw_analytics(page, doc);
 }).on("dragover",function (e) {
     e.preventDefault();
@@ -100,5 +101,5 @@ $("#cloudButton").click(function () {
             clearInterval(timer);
             button.show();
         });
-    }, 20000);
+    }, 5000);
 }).hide();
