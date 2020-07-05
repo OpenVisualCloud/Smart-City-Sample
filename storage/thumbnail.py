@@ -57,7 +57,7 @@ class ThumbnailHandler(web.RequestHandler):
     @gen.coroutine
     def get(self):
         mp4=self.request.uri.replace("/api/thumbnail",self._storage).split("?")[0]
-        size=self.get_argument("size","640:360")
+        size=self.get_argument("size","")
         start_time=float(self.get_argument("start_time","0"))
         png=yield self._mp4ToPNG(mp4,size,start_time)
         if png:
