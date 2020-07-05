@@ -23,9 +23,9 @@ $("#pg-recording").on(":initpage", function(e, queries, office) {
             $.each(data.response, function (k,v) {
                 var time=new Date(v._source.time).toLocaleString();
                 v._source.office=office;
-                v._source.path=v._source.path+(office?'?'+$.param({office:office.lat+","+office.lon}):'');
+                v._source.path=v._source.path+"?"+(office?$.param({office:office.lat+","+office.lon}):'');
                 var address=("address" in v._source)?v._source.address:"";
-                var line=$('<tr><td class="no-padding"><a href="javascript:void(0)"><img src="thumbnail/'+v._source.path.replace(".mp4",".mp4.png")+'" draggable="true"/><figcaption class="xx-small">'+address+' '+time+'</figcaption></a></td></tr>');
+                var line=$('<tr><td class="no-padding"><a href="javascript:void(0)"><img src="thumbnail/'+v._source.path.replace(".mp4",".mp4.png")+'&size=640:360" draggable="true"/><figcaption class="xx-small">'+address+' '+time+'</figcaption></a></td></tr>');
                 line.find("img").css({width:plist.width()+"px"});
                 line.on("dragstart",function (e) {
                     e.originalEvent.dataTransfer.setData("application/json",JSON.stringify(v));
