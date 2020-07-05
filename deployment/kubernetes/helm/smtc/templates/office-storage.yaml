@@ -67,6 +67,8 @@ spec:
               value: "85"
             - name: HALT_REC
               value: "95"
+            - name: THUMBNAIL_CACHE
+              value: "50"
 {{- if (len $.Values.connector.cloudHost) }}
             - name: REVERSE_TUNNEL1
               value: "{{ $.Values.connector.cloudHost }}:{{ add $.Values.connector.officeStoragePort $officeIdx2 }} {{ $officeName }}-storage-service:8080"
