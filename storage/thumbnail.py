@@ -20,9 +20,10 @@ class Thumbnail(object):
                 return c[3]
 
         png="/tmp/"+str(uuid.uuid4())+".png"
-        cmds=["/usr/local/bin/ffmpeg","-i",mp4]
-        if size: cmds.extend(["-vf","scale="+size])
+        cmds=["/usr/local/bin/ffmpeg"]
         if start_time: cmds.extend(["-ss","{:02d}:{:02d}:{:02d}.{:03d}".format(int(start_time/3600000),int(start_time/60000),int(start_time/1000),int(start_time%1000))])
+        cmds.extend(["-i",mp4])
+        if size: cmds.extend(["-vf","scale="+size])
         cmds.extend(["-frames:v","1",png])
 
         image=None
