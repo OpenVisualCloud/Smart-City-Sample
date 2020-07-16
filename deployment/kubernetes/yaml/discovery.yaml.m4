@@ -133,7 +133,7 @@ spec:
           env:
             - name: PORT_SCAN
               value: "-p T:defn(`CAMERA_RTSP_PORT')-eval(defn(`CAMERA_RTSP_PORT')+defn(`NCAMERAS3')*defn(`CAMERA_PORT_STEP')) defn(`OFFICE_NAME')-cameras-entrance-service -Pn"
-            - name: SIM_PORT
+            - name: SIM_HOST
               value: ifelse(eval(defn(`NCAMERAS3')>0),1,"loop(`CAMERAIDX',1,defn(`NCAMERAS3'),`defn(`OFFICE_NAME')-cameras-entrance-service:eval(defn(`CAMERA_RTSP_PORT')+defn(`CAMERAIDX')*defn(`CAMERA_PORT_STEP')-defn(`CAMERA_PORT_STEP'))/')",":0")
             - name: SIM_PREFIX
               value: "`cams2o'defn(`OFFICEIDX')e"

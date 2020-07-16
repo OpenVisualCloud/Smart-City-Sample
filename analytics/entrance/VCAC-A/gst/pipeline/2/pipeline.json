@@ -1,5 +1,5 @@
 {
-    "name": "people_counting",
+    "name": "entrance_counting",
     "version": 2,
     "type": "GStreamer",
     "template": [
