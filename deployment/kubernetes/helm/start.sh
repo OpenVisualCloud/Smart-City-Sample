@@ -19,11 +19,11 @@ case "N$SCOPE" in
         # create secrets
         "$DIR/../../certificate/self-sign.sh"
         create_secret2 self-signed-certificate "${DIR}/../../certificate/self.crt" "${DIR}/../../certificate/self.key"
-
-        # create configmap
-        kubectl create configmap sensor-info "--from-file=${DIR}/../../../maintenance/db-init/sensor-info.json"
         ;;
 esac
+
+# create configmap
+kubectl create configmap sensor-info "--from-file=${DIR}/../../../maintenance/db-init/sensor-info.json" || echo -n ""
 
 if [ -n "${CONNECTOR_CLOUD}" ]; then
     case "N$SCOPE" in
