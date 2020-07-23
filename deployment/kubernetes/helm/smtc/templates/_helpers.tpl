@@ -150,3 +150,14 @@ Extract the hostname from for connector.host
 {{- define "smtc.connector.cloud.hostname" }}
 {{- regexReplaceAll ".*@" .Values.connector.cloudHost "" }}
 {{- end }}
+
+{{/*
+Secret Mode
+*/}}
+{{- define "smtc.secret.mode" }}
+{{- if (int .Values.userId) }}
+{{- 0444 }}
+{{- else }}
+{{- 0400 }}
+{{- end }}
+{{- end }}
