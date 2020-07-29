@@ -80,12 +80,19 @@ def probe_camera_info(ip, port):
         rtspuri = "rtsp://"+ip+":"+str(port)+"/live.sdp"
         if rtspuri not in sim_cameras: sim_cameras[rtspuri]=len(sim_cameras.keys())
         camid=("simsn",sim_prefix+str(sim_cameras[rtspuri]))
-        return (rtspuri,[camid],{"uri":[rtspuri]})
+        return (rtspuri,[camid])
+
+    if office and dbhost:
+        r=list(dbp.search("ip={} and port={} and rtspurl:*".format(ip,port),size=1))
+        if r:
+            rtspuri=r[0]["_source"]["rtspurl"]
+            return (rtspuri,[("rtspurl",rtspuri)])
 
     for passcode in get_passcodes(ip,port)+passcodes:
         print("OnVIF discovery over {}:{} {}".format(ip,port,passcode), flush=True)
         up=passcode.split(":")
         desc=safe_discover(ip, port, up[0], up[1])
+        print(json.dumps(desc,indent=2), flush=True) 
         if desc:
             if "uri" in desc:
                 rtspuri=desc["uri"][0].replace("rtsp://","rtsp://"+passcode+"@") if passcode!=":" else desc["uri"][0]
@@ -97,16 +104,16 @@ def probe_camera_info(ip, port):
                     for network1 in desc['networks']:
                         if "HwAddress" in network1:
                             camids.append(("networks.HwAddress",network1['HwAddress']))
-                return (rtspuri,camids,desc)
+                return (rtspuri,camids)
 
-    return (None,[],None)
+    return (None,[])
 
 while True:
     for ip,port in probe_camera():
         # new or disconnected camera
         print("Probing "+ip+":"+str(port), flush=True)
         try:
-            rtspuri,camids,desc=probe_camera_info(ip,port)
+            rtspuri,camids=probe_camera_info(ip,port)
             if rtspuri is None: continue
         except:
             print(traceback.format_exc(), flush=True)
@@ -126,14 +133,12 @@ while True:
             print("Unknown width & height, skipping", flush=True)
             continue
 
-        sinfo.update(desc)
         sinfo.update({
             'sensor': 'camera',
             'model': 'ip_camera',
             'url': rtspuri,
             'status': 'idle',
         })
-        print(json.dumps(sinfo,indent=2), flush=True) 
 
         if not dbhost: continue
 
