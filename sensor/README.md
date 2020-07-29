@@ -85,7 +85,7 @@ or
 
 #### (2) Provisioning Cameras
 
-Provisioning is a process of associating a set of application-specific parameters to a camera, for example, the GPS location, field of view, direction and positioning transformation. Developing provisioning tools is outside the sample scope. As a workaround, the sample stores the provisioning information in [sensor-info.json](../maintenance/db-init/sensor-info.json) and uses it to initialize the database.   
+Provisioning is a process of associating a set of application-specific parameters to a camera, for example, the GPS location, field of view, direction and positioning transformation. Developing provisioning tools is outside the sample scope. As a workaround, the sample stores the provisioning information in [sensor-info.json](../maintenance/db-init/sensor-info.json) and uses it to initialize the database. See [provision.py](../maintenance/db-init/provision.py) for how to ingest provisioning data into the database should you need to develop such a provisioning tool.  
 
 The provisioning information is scenario specific. The `traffic` scenario parameters are as follows:
 
