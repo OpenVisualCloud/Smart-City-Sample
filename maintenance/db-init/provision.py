@@ -22,19 +22,19 @@ with open("/run/secrets/sensor-info.json",encoding='utf-8') as fd:
         if scenario != office1["scenario"]: continue
         location1=office1["location"]
         if location1["lat"]!=office[0] or location1["lon"]!=office[1]: continue
-        office1.pop("scenario")
 
         sensors=office1.pop("sensors")
-        office1["uri"]=proxyhost
-        office1["zone"]=zone
-        dbo.ingest(office1,officestr)
-
         for s in sensors: 
             s["office"]=location1
             if "ip" in s: # convert IP to CIDR
                 if s["ip"].find("/")<0:
                     s["ip"]=s["ip"]+"/32"
         dbp.ingest_bulk(sensors)
+
+        office1.pop("scenario")
+        office1["uri"]=proxyhost
+        office1["zone"]=zone
+        dbo.ingest(office1,officestr)
 
 print("DB Initialized", flush=True)
 

@@ -34,17 +34,12 @@ signal(SIGTERM, quit_service)
 filters=[pattern for i in range(ncameras)]
 if dbhost and office:
     db=DBQuery(index="provisions",office=office,host=dbhost)
-    while True:
-        try:
-            for r1 in db.search("algorithm='{}' and office:[{},{}] and simfile:* and simsn:*".format(algorithm,office[0],office[1]),size=ncameras):
-                m=re.search('[0-9]+$',r1["_source"]["simsn"])
-                if not m: continue
-                i=int(m.group(0))
-                if i<ncameras: filters[i]=r1["_source"]["simfile"]
-            break
-        except:
-            print("Waiting for DB...", flush=True)
-            time.sleep(10)
+    db.wait()
+    for r1 in db.search("algorithm='{}' and office:[{},{}] and simfile:* and simsn:*".format(algorithm,office[0],office[1]),size=ncameras):
+        m=re.search('[0-9]+$',r1["_source"]["simsn"])
+        if not m: continue
+        i=int(m.group(0))
+        if i<ncameras: filters[i]=r1["_source"]["simfile"]
 
 files=list(os.listdir(simulated_root))
 with ThreadPoolExecutor(ncameras) as e:

@@ -194,7 +194,7 @@ for index in settings:
                 if r.status_code==404 or r.status_code==200: break
             except:
                 print("Waiting for DB...", flush=True)
-            time.sleep(5)
+            time.sleep(1)
 
 # initialize db index settings
 _include_type_name={"include_type_name":"false"}

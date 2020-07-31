@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 from dsl_yacc import compile, check_nested_label
+from threading import Event
 from language_dsl import text
 import traceback
 import requests
@@ -166,3 +167,14 @@ class DBQuery(object):
         for var in values:
             keywords[var]["values"]=list(values[var].keys())
         return keywords
+
+    def wait(self, stop=Event()):
+        officestr="$".join(self._index.split("$")[1:])
+        while not stop.is_set():
+            try:
+                r=requests.get(self._host+"/offices/_doc/"+officestr)
+                if r.status_code==200: return stop
+            except:
+                print("Waiting for DB...", flush=True)
+            stop.wait(1)
+

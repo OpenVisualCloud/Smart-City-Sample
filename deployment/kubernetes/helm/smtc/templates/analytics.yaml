@@ -38,10 +38,10 @@ spec:
           env:
             - name: OFFICE
               {{- $args := dict "scenarioName" $scenarioName "Values" $.Values "officeIdx" $officeIdx }}
-              {{- include "smtc.env.office" $args }}
+              value: {{ include "smtc.env.office" $args | quote }}
             - name: DBHOST
               {{- $args := dict "officeName" $officeName "Values" $.Values }}
-              {{- include "smtc.env.dbhost" $args }}
+              value: {{ include "smtc.env.dbhost" $args | quote }}
             - name: MQTTHOST
               value: "{{ $officeName }}-mqtt-service"
             - name: STHOST
@@ -112,10 +112,10 @@ spec:
           env:
             - name: OFFICE
               {{- $args := dict "scenarioName" $scenarioName "Values" $.Values "officeIdx" $officeIdx }}
-              {{- include "smtc.env.office" $args }}
+              value: {{ include "smtc.env.office" $args | quote }}
             - name: DBHOST
               {{- $args := dict "officeName" $officeName "Values" $.Values }}
-              {{- include "smtc.env.dbhost" $args }}
+              value: {{ include "smtc.env.dbhost" $args | quote }}
             - name: MQTTHOST
               value: "{{ $officeName }}-mqtt-service"
             - name: STHOST
@@ -184,10 +184,10 @@ spec:
           env:
             - name: OFFICE
               {{- $args := dict "scenarioName" $scenarioName "Values" $.Values "officeIdx" $officeIdx }}
-              {{- include "smtc.env.office" $args }}
+              value: {{ include "smtc.env.office" $args | quote }}
             - name: DBHOST
               {{- $args := dict "officeName" $officeName "Values" $.Values }}
-              {{- include "smtc.env.dbhost" $args }}
+              value: {{ include "smtc.env.dbhost" $args | quote }}
             - name: MQTTHOST
               value: "{{ $officeName }}-mqtt-service"
             - name: STHOST
@@ -256,10 +256,10 @@ spec:
           env:
             - name: OFFICE
               {{- $args := dict "scenarioName" $scenarioName "Values" $.Values "officeIdx" $officeIdx }}
-              {{- include "smtc.env.office" $args }}
+              value: {{ include "smtc.env.office" $args | quote }}
             - name: DBHOST
               {{- $args := dict "officeName" $officeName "Values" $.Values }}
-              {{- include "smtc.env.dbhost" $args }}
+              value: {{ include "smtc.env.dbhost" $args | quote }}
             - name: MQTTHOST
               value: "{{ $officeName }}-mqtt-service"
             - name: STHOST

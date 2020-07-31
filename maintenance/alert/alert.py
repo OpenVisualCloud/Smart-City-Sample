@@ -7,43 +7,33 @@ from cpu_trigger import CPUTrigger
 from imbalance_trigger import ImbalanceTrigger
 from occupency_trigger import OccupencyTrigger
 from language import text
-import time
+from threading import Event
 import os
 
 office=list(map(float, os.environ["OFFICE"].split(",")))
 dbhost=os.environ["DBHOST"]
 
-dbt=None
-rt=None
-
+stop=Event()
 def quit_service(signum, sigframe):
-    try:
-        if dbt and rt: dbt.delete(rt["_id"])
-    except Exception as e:
-        pass
-    exit(143)
+    stop.set()
 
 signal(SIGTERM, quit_service)
 
 # register trigger
 dbt=DBIngest(index="services",office=office,host=dbhost)
-while True:
-    try:
-        rt=dbt.ingest({
-            "name": text["alert trigger"],
-            "service": text["triggers"],
-            "status": "active",
-        })
-        break
-    except Exception as e:
-        print("Waiting for DB...", flush=True)
-        time.sleep(10)
+dbt.wait(stop)
+rt=dbt.ingest({
+    "name": text["alert trigger"],
+    "service": text["triggers"],
+    "status": "active",
+})
 
 imbalance=ImbalanceTrigger()
 occupency=OccupencyTrigger()
 cpu=CPUTrigger()
 with ThreadPoolExecutor(3) as e:
-    e.submit(imbalance.loop)
-    e.submit(occupency.loop)
-    e.submit(cpu.loop)
+    e.submit(imbalance.loop,stop)
+    e.submit(occupency.loop,stop)
+    e.submit(cpu.loop,stop)
 
+dbt.delete(rt["_id"])

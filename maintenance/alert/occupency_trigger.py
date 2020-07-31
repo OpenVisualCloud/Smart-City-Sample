@@ -3,7 +3,6 @@
 from db_query import DBQuery
 from trigger import Trigger
 from language import text
-import time
 import os
 
 office=list(map(float,os.environ["OFFICE"].split(",")))
@@ -16,8 +15,8 @@ class OccupencyTrigger(Trigger):
        super(OccupencyTrigger,self).__init__()
        self._db=DBQuery(index="analytics",office=office,host=dbhost)
 
-   def trigger(self):
-       time.sleep(service_interval[0])
+   def trigger(self, stop):
+       stop.wait(service_interval[0])
        objects=("",0)
        crowd=("",0)
        entrance=("",0)

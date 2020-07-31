@@ -3,7 +3,6 @@
 from db_query import DBQuery
 from trigger import Trigger
 from language import text
-import time
 import os
 
 service_interval=list(map(float,os.environ["SERVICE_INTERVAL"].split(",")))
@@ -16,8 +15,8 @@ class ImbalanceTrigger(Trigger):
         self._dbs=DBQuery(index="sensors",office=office,host=dbhost)
         self._dba=DBQuery(index="algorithms",office=office,host=dbhost)
 
-    def trigger(self):
-        time.sleep(service_interval[2])
+    def trigger(self, stop):
+        stop.wait(service_interval[2])
         info=[]
 
         try:
