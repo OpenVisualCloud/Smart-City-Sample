@@ -74,6 +74,10 @@ ifelse(eval(defn(`NOFFICES')>1),1,`dnl
             - mountPath: /etc/localtime
               name: timezone
               readOnly: true
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/usr/bin/curl","-X","DELETE","http://defn(`DB_NAME')-service:9200/offices"]
       initContainers:
         - name: init-volume-sysctl
           image: busybox:latest
