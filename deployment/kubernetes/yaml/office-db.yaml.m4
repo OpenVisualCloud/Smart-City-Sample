@@ -82,7 +82,7 @@ spec:
           lifecycle:
             preStop:
               exec:
-                command: ["/usr/bin/curl","-X","DELETE","http://cloud-db-service:9200/offices/_doc/translit(defn(`OFFICE_LOCATION'),`,',`$')"]
+                command: ["/usr/bin/curl","-X","DELETE","http://cloud-db-service:9200/offices/_doc/patsubst(patsubst(translit(defn(`OFFICE_LOCATION'),`,',`$'),`\.?0*\$',`$'),`\.?0*$',`')"]
       initContainers:
         - name: init-volume-sysctl
           image: busybox:latest
@@ -116,7 +116,7 @@ spec:
             - name: "OFFICE"
               value: "defn(`OFFICE_LOCATION')"
             - name: "DBHOST"
-              value: "http://ifelse(eval(defn(`NOFFICES')>1),1,cloud-)db-service:9200"
+              value: "http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')-db,db)-service:9200"
             - name: PROXYHOST
               value: "http://defn(`OFFICE_NAME')-storage-service.default.svc.cluster.local:8080"
             - name: `SCENARIO'

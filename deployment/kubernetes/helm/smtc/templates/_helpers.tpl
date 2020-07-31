@@ -161,3 +161,15 @@ Secret Mode
 {{- 0400 }}
 {{- end }}
 {{- end }}
+
+{{/*
+Connector DBHost
+*/}}
+{{- define "smtc.connector.dbhost" }}
+{{- if (len .Values.connector.cloudHost) }}
+{{- printf "localhost:%d" .Values.connector.cloudQueryPort }}
+{{- else }}
+{{- "cloud-db-service:9200" }}
+{{- end }}
+{{- end }}
+

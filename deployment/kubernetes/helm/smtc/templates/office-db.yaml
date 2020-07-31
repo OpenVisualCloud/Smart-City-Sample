@@ -112,12 +112,8 @@ spec:
           lifecycle:
             preStop:
               exec:
-{{- $args := dict "scenarioName" $scenarioName "Values" $.Values "officeIdx" $officeIdx }}
-{{- if (len $.Values.connector.cloudHost) }}
-                command: ["/usr/bin/curl","-X","DELETE",{{ printf "http://localhost:%d/offices/_doc/%s" $.Values.connector.cloudQueryPort (include "smtc.env.office" $args) | replace "," "$" | quote }}]
-{{- else }}
-                command: ["/usr/bin/curl","-X","DELETE",{{ printf "http://cloud-db-service:9200/offices/_doc/%s" (include "smtc.env.office" $args) | replace "," "$" | quote }}]
-{{- end }}
+                {{- $args := dict "scenarioName" $scenarioName "Values" $.Values "officeIdx" $officeIdx }}
+                command: ["/usr/bin/curl","-X","DELETE",{{ regexReplaceAllLiteral "\\.?0*$" (regexReplaceAllLiteral "\\.?0*," (printf "http://%s/offices/_doc/%s" (include "smtc.connector.dbhost" $) (include "smtc.env.office" $args)) ",") "" | replace "," "$" | quote }}]
       initContainers:
         - name: init-volume-sysctl
           image: busybox:latest
@@ -149,29 +145,17 @@ spec:
       enableServiceLinks: false
       containers:
         - name: {{ $officeName }}-db-init
-{{- if (len $.Values.connector.cloudHost) }}
-          image: {{ $.Values.registryPrefix }}smtc_db_init_tunnelled:latest
-{{- else }}
           image: {{ $.Values.registryPrefix }}smtc_db_init:latest
-{{- end }}
           imagePullPolicy: IfNotPresent
           env:
             - name: OFFICE
               {{- $args := dict "scenarioName" $scenarioName "Values" $.Values "officeIdx" $officeIdx }}
               value: {{ include "smtc.env.office" $args | quote }}
-{{- if (len $.Values.connector.cloudHost) }}
             - name: DBHOST
-              value: "http://localhost:9200"
-            - name: PROXYHOST
-              value: "http://127.0.0.1:{{ add $.Values.connector.officeStoragePort $officeIdx2 }}"
-            - name: FORWARD_TUNNEL1
-              value: "{{ $.Values.connector.cloudHost }}:{{ $.Values.connector.cloudQueryPort }} localhost:9200"
-{{- else }}
-            - name: DBHOST
-              value: {{ printf "http://%s-service:9200" (include "smtc.db.name" $) | quote }}
+              {{- $args := dict "officeName" $officeName "Values" $.Values }}
+              value: {{ include "smtc.env.dbhost" $args | quote }}
             - name: PROXYHOST
               value: "http://{{ $officeName }}-storage-service.default.svc.cluster.local:8080"
-{{- end }}
             - name: SCENARIO
               value: {{ $scenarioName | quote }}
             - name: "ZONE"
@@ -187,11 +171,6 @@ spec:
             - mountPath: /var/run/secrets
               name: sensor-info
               readOnly: true
-{{- if (len $.Values.connector.cloudHost) }}
-            - mountPath: /etc/hostkey
-              name: hostkey
-              readOnly: true
-{{- end }}
       restartPolicy: Never
       volumes:
           - name: timezone
@@ -201,12 +180,6 @@ spec:
           - name: sensor-info
             configMap:
                 name: sensor-info
-{{- if (len $.Values.connector.cloudHost) }}
-          - name: hostkey
-            secret:
-                secretName: tunnel-secret
-                defaultMode: {{ include "smtc.secret.mode" $ }}
-{{- end }}
       {{ include "smtc.platform.node-selector" $ }}
 
 {{- end }}
