@@ -79,6 +79,10 @@ spec:
             - mountPath: /etc/localtime
               name: timezone
               readOnly: true
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/usr/bin/curl","-X","DELETE","http://cloud-db-service:9200/offices/_doc/translit(defn(`OFFICE_LOCATION'),`,',`$')"]
       initContainers:
         - name: init-volume-sysctl
           image: busybox:latest

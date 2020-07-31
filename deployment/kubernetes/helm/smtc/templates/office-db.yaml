@@ -109,6 +109,15 @@ spec:
               name: hostkey
               readOnly: true
 {{- end }}
+          lifecycle:
+            preStop:
+              exec:
+{{- $args := dict "scenarioName" $scenarioName "Values" $.Values "officeIdx" $officeIdx }}
+{{- if (len $.Values.connector.cloudHost) }}
+                command: ["/usr/bin/curl","-X","DELETE",{{ printf "http://localhost:%d/offices/_doc/%s" $.Values.connector.cloudQueryPort (include "smtc.env.office" $args) | replace "," "$" | quote }}]
+{{- else }}
+                command: ["/usr/bin/curl","-X","DELETE",{{ printf "http://cloud-db-service:9200/offices/_doc/%s" (include "smtc.env.office" $args) | replace "," "$" | quote }}]
+{{- end }}
       initContainers:
         - name: init-volume-sysctl
           image: busybox:latest
@@ -149,7 +158,7 @@ spec:
           env:
             - name: OFFICE
               {{- $args := dict "scenarioName" $scenarioName "Values" $.Values "officeIdx" $officeIdx }}
-              {{- include "smtc.env.office" $args }}
+              value: {{ include "smtc.env.office" $args | quote }}
 {{- if (len $.Values.connector.cloudHost) }}
             - name: DBHOST
               value: "http://localhost:9200"
@@ -159,7 +168,7 @@ spec:
               value: "{{ $.Values.connector.cloudHost }}:{{ $.Values.connector.cloudQueryPort }} localhost:9200"
 {{- else }}
             - name: DBHOST
-              value: "http://{{ include "smtc.db.name" $ }}-service:9200"
+              value: {{ printf "http://%s-service:9200" (include "smtc.db.name" $) | quote }}
             - name: PROXYHOST
               value: "http://{{ $officeName }}-storage-service.default.svc.cluster.local:8080"
 {{- end }}

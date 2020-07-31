@@ -25,9 +25,9 @@ Expand to the office db name
 */}}
 {{- define "smtc.env.dbhost" }}
 {{- if gt (int .Values.noffices) 1 }}
-              value: {{ ( .officeName ) | printf "http://%s-db-service:9200" | quote }}
+{{- printf "http://%s-db-service:9200" .officeName }}
 {{- else }}
-              value: "http://db-service:9200"
+{{- "http://db-service:9200" }}
 {{- end }}
 {{- end }}
 
@@ -93,9 +93,9 @@ Office location
 */}}
 {{- define "smtc.env.office" -}}
 {{- if eq .scenarioName "traffic" }}
-              value: {{ index .Values.officeLocations.traffic .officeIdx | quote }}
+{{- index .Values.officeLocations.traffic .officeIdx }}
 {{- else if eq .scenarioName "stadium" }}
-              value: {{ index .Values.officeLocations.stadium .officeIdx | quote }}
+{{- index .Values.officeLocations.stadium .officeIdx }}
 {{- end }}
 {{- end }}
 
@@ -145,7 +145,7 @@ Expand the platform device name.
 {{- end }}
 
 {{/*
-Extract the hostname from for connector.host
+Extract the hostname from connector.host
 */}}
 {{- define "smtc.connector.cloud.hostname" }}
 {{- regexReplaceAll ".*@" .Values.connector.cloudHost "" }}

@@ -71,10 +71,10 @@ spec:
             {{- end }}
             - name: OFFICE
               {{- $args := dict "scenarioName" $scenarioName "Values" $.Values "officeIdx" $officeIdx }}
-              {{- include "smtc.env.office" $args }}
+              value: {{ include "smtc.env.office" $args | quote }}
             - name: DBHOST
               {{- $args := dict "officeName" $officeName "Values" $.Values }}
-              {{- include "smtc.env.dbhost" $args }}
+              value: {{ include "smtc.env.dbhost" $args | quote }}
             - name: NCAMERAS
               value: {{ $ncameras | quote}}
             - name: RTSP_PORT
@@ -141,10 +141,10 @@ spec:
               value: "crowd-counting"
             - name: OFFICE
               {{- $args := dict "scenarioName" $scenarioName "Values" $.Values "officeIdx" $officeIdx }}
-              {{- include "smtc.env.office" $args }}
+              value: {{ include "smtc.env.office" $args | quote }}
             - name: DBHOST
               {{- $args := dict "officeName" $officeName "Values" $.Values }}
-              {{- include "smtc.env.dbhost" $args }}
+              value: {{ include "smtc.env.dbhost" $args | quote }}
             - name: NCAMERAS
               value: {{ $.Values.ncameras.crowd | quote }}
             - name: RTSP_PORT
@@ -210,10 +210,10 @@ spec:
               value: "entrance-counting"
             - name: OFFICE
               {{- $args := dict "scenarioName" $scenarioName "Values" $.Values "officeIdx" $officeIdx }}
-              {{- include "smtc.env.office" $args }}
+              value: {{ include "smtc.env.office" $args | quote }}
             - name: DBHOST
               {{- $args := dict "officeName" $officeName "Values" $.Values }}
-              {{- include "smtc.env.dbhost" $args }}
+              value: {{ include "smtc.env.dbhost" $args | quote }}
             - name: NCAMERAS
               value: {{ $.Values.ncameras.entrance | quote }}
             - name: RTSP_PORT

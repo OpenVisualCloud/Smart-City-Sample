@@ -45,7 +45,7 @@ spec:
             - containerPort: 8080
           env:
             - name: DBHOST
-              value: "http://{{ include "smtc.db.name" . }}-service:9200"
+              value: {{ printf "http://%s-service:9200" (include "smtc.db.name" .) | quote }}
             - name: PROXYHOST
               value: "http://cloud-storage-service.default.svc.cluster.local:8080"
             - name: INDEXES

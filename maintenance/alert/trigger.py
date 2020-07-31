@@ -15,9 +15,9 @@ class Trigger(object):
     def trigger(self):
         return None
 
-    def loop(self):
-        while True:
-            info=self.trigger()
+    def loop(self, stop):
+        while not stop.is_set():
+            info=self.trigger(stop)
             if not info: continue
 
             for v in info:
