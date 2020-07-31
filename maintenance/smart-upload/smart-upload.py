@@ -5,10 +5,10 @@ from db_query import DBQuery
 from probe import run
 from signal import signal, SIGTERM
 from language import text
+from threading import Event
 import traceback
 import requests
 import os
-import time
 
 query=os.environ["QUERY"]
 service_interval=float(os.environ["SERVICE_INTERVAL"])  # in seconds
@@ -17,12 +17,9 @@ dbhost=os.environ["DBHOST"]
 sthostl=os.environ["STHOSTL"]
 sthostc=os.environ["STHOSTC"]
 
-dbs=None
-rs=None
-
+stop=Event()
 def quit_service(signum, sigframe):
-    if dbs and rs: dbs.delete(rs["_id"])
-    exit(143)
+    stop.set()
 
 def upload(cloudhost, filename, office, sensor, timestamp):
     with open(filename,"rb") as fd:
@@ -36,33 +33,29 @@ def upload(cloudhost, filename, office, sensor, timestamp):
 
 signal(SIGTERM, quit_service)
 dbs=DBIngest(index="services",office=office,host=dbhost)
-while True:
-    try:
-        dbs.ingest({
-            "name": text["smart-upload"],
-            "service": text["maintanence"],
-            "status": "active",
-        })
-        break
-    except Exception as e:
-        print("Waiting for DB...", flush=True)
-        time.sleep(10)
+dbs.wait(stop)
+rs=dbs.ingest({
+    "name": text["smart-upload"],
+    "service": text["maintanence"],
+    "status": "active",
+})
 
 dbq=DBQuery(index="recordings",office=office,host=dbhost)
 dba=DBQuery(index="analytics",office=office,host=dbhost)
 
-while True:
-
+while not stop.is_set():
     print("Searching...",flush=True)
     try:
         for q in dbq.search("evaluated=false", size=25):
+            if stop.is_set(): break
+
             # mark it as evaluated
             dbq.update(q["_id"],{ "evaluated": True })
 
             # make the upload decision based on analytics queries
             r=list(dba.search("( " + query + " ) and ( sensor='"+q["_source"]["sensor"]+"' and time>"+str(q["_source"]["time"])+" and time<"+ str(q["_source"]["time"]+q["_source"]["duration"]*1000) +" ) ", size=1))
             if not r: 
-                time.sleep(2)
+                stop.wait(2)
                 continue
 
             url=sthostl+'/'+q["_source"]["path"]
@@ -83,4 +76,6 @@ while True:
         print(traceback.format_exc(), flush=True)
 
     print("Sleeping...")
-    time.sleep(service_interval)
+    stop.wait(service_interval)
+
+dbs.delete(rs["_id"])

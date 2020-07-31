@@ -36,7 +36,7 @@ class MQTT2DB(object):
                 self._mqtt.connect(mqtthost)
                 break
             except:
-                print(traceback.format_exc(), flush=True)
+                pass
         timer.cancel()
         print("mqtt connected", flush=True)
 

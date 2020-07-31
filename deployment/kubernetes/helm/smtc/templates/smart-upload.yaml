@@ -38,10 +38,10 @@ spec:
               value: "objects.detection.bounding_box.x_max-objects.detection.bounding_box.x_min>0.1"
             - name: OFFICE
               {{- $args := dict "scenarioName" $scenarioName "Values" $.Values "officeIdx" $officeIdx }}
-              {{- include "smtc.env.office" $args }}
+              value: {{ include "smtc.env.office" $args | quote }}
             - name: DBHOST
               {{- $args := dict "officeName" $officeName "Values" $.Values }}
-              {{- include "smtc.env.dbhost" $args }}
+              value: {{ include "smtc.env.dbhost" $args | quote }}
             - name: STHOSTL
               value: "http://{{ $officeName }}-storage-service:8080/recording"
 {{- if (len $.Values.connector.cloudHost) }}

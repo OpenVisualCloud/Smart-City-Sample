@@ -46,10 +46,10 @@ spec:
               {{- end }}
             - name: OFFICE
               {{- $args := dict "scenarioName" $scenarioName "Values" $.Values "officeIdx" $officeIdx }}
-              {{- include "smtc.env.office" $args }}
+              value: {{ include "smtc.env.office" $args | quote }}
             - name: DBHOST
               {{- $args := dict "officeName" $officeName "Values" $.Values }}
-              {{- include "smtc.env.dbhost" $args }}
+              value: {{ include "smtc.env.dbhost" $args | quote }}
             - name: SERVICE_INTERVAL
               value: "30"
             - name: NO_PROXY
@@ -98,10 +98,10 @@ spec:
               value: "cams2o{{ add $officeIdx 1 }}w"
             - name: OFFICE
               {{- $args := dict "scenarioName" $scenarioName "Values" $.Values "officeIdx" $officeIdx }}
-              {{- include "smtc.env.office" $args }}
+              value: {{ include "smtc.env.office" $args | quote }}
             - name: DBHOST
               {{- $args := dict "officeName" $officeName "Values" $.Values }}
-              {{- include "smtc.env.dbhost" $args }}
+              value: {{ include "smtc.env.dbhost" $args | quote }}
             - name: SERVICE_INTERVAL
               value: "30"
             - name: NO_PROXY
@@ -146,10 +146,10 @@ spec:
               value: "{{- range $i := until (int $.Values.ncameras.entrance) }}{{ $officeName }}-cameras-entrance-service:{{ mul $i $step | add $port }}/{{- end }}"
             - name: OFFICE
               {{- $args := dict "scenarioName" $scenarioName "Values" $.Values "officeIdx" $officeIdx }}
-              {{- include "smtc.env.office" $args }}
+              value: {{ include "smtc.env.office" $args | quote }}
             - name: DBHOST
               {{- $args := dict "officeName" $officeName "Values" $.Values }}
-              {{- include "smtc.env.dbhost" $args }}
+              value: {{ include "smtc.env.dbhost" $args | quote }}
             - name: SIM_PREFIX
               value: "cams2o{{ add $officeIdx 1 }}e"
             - name: SERVICE_INTERVAL
@@ -201,10 +201,10 @@ spec:
               value: "-p T:80-65535 {{ index $.Values.cameraSubnet $officeIdx }}"
             - name: OFFICE
               {{- $args := dict "scenarioName" $scenarioName "Values" $.Values "officeIdx" $officeIdx }}
-              {{- include "smtc.env.office" $args }}
+              value: {{ include "smtc.env.office" $args | quote }}
             - name: DBHOST
               {{- $args := dict "officeName" $officeName "Values" $.Values }}
-              {{- include "smtc.env.dbhost" $args }}
+              value: {{ include "smtc.env.dbhost" $args | quote }}
             - name: SERVICE_INTERVAL
               value: "30"
             - name: NO_PROXY

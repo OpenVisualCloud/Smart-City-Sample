@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 from language_dsl import text
+from threading import Event
 import traceback
 import requests
 import json
@@ -53,3 +54,13 @@ class DBIngest(object):
 
     def delete(self, _id):
         return self._request(requests.delete,self._host+"/"+self._index+"/_doc/"+_id,headers={'Content-Type':'application/json'})
+
+    def wait(self, stop=Event()):
+        officestr="$".join(self._index.split("$")[1:])
+        while not stop.is_set():
+            try:
+                r=requests.get(self._host+"/offices/_doc/"+officestr)
+                if r.status_code==200: return stop
+            except:
+                print("Waiting for DB...", flush=True)
+            stop.wait(1)

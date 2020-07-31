@@ -32,14 +32,7 @@ if dbhost and office:
     dbi=DBIngest(index="sensors",office=office,host=dbhost)
     dbs=DBQuery(index="sensors",office=office,host=dbhost)
     dbp=DBQuery(index="provisions",office=office,host=dbhost)
-
-    while True:
-        try:
-            r=list(dbp.search("office:*"))
-            break
-        except:
-            print("Waiting for DB...", flush=True)
-            time.sleep(5)
+    dbp.wait()
 
 def get_passcodes(ip, port):
     if office and dbhost:
