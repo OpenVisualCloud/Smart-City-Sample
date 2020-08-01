@@ -77,7 +77,7 @@ ifelse(eval(defn(`NOFFICES')>1),1,`dnl
           lifecycle:
             preStop:
               exec:
-                command: ["/usr/bin/curl","-X","DELETE","http://defn(`DB_NAME')-service:9200/offices"]
+                command: ["/usr/bin/curl","-X","DELETE","http://localhost:9200/offices"]
       initContainers:
         - name: init-volume-sysctl
           image: busybox:latest
