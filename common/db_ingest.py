@@ -5,6 +5,7 @@ from threading import Event
 import traceback
 import requests
 import json
+import re
 
 class DBIngest(object):
     def __init__(self, index, office, host):
@@ -12,6 +13,7 @@ class DBIngest(object):
         self._host=host
         if isinstance(office,list): office='$'+('$'.join(map(str,office)))
         if isinstance(office,dict): office='$'+str(office["lat"])+"$"+str(office["lon"])
+        office=re.sub(r'\.?0*\$',r'$',re.sub(r'\.?0*$',r'',office))
         self._index=index+office
 
     def _request(self, op, *args, **kwargs):

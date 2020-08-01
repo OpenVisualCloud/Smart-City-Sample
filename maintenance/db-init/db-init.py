@@ -184,17 +184,20 @@ settings={
     },
 }
 
+# wait until DB is ready
+while True:
+    try:
+        r=requests.get(dbhost+"/_cluster/health").json()
+        if r["status"]=="green" or r["status"]=="yellow": break
+    except:
+        print("Waiting for DB...", flush=True)
+    time.sleep(1)
+    
 # delete office specific indexes (to start the office afresh)
 for index in settings:
     if index.endswith(officestr):
         print("Delete index "+index , flush=True)
-        while True:
-            try:
-                r=requests.delete(dbhost+"/"+index)
-                if r.status_code==404 or r.status_code==200: break
-            except:
-                print("Waiting for DB...", flush=True)
-            time.sleep(1)
+        requests.delete(dbhost+"/"+index)
 
 # initialize db index settings
 _include_type_name={"include_type_name":"false"}
