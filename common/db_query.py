@@ -7,15 +7,16 @@ import traceback
 import requests
 import time
 import json
+import re
 
 class DBQuery(object):
     def __init__(self, index, office, host):
         super(DBQuery,self).__init__()
         self._host=host
-        indexes=index.split(",")
         if isinstance(office,list): office='$'+('$'.join(map(str,office)))
         if isinstance(office,dict): office='$'+str(office["lat"])+"$"+str(office["lon"])
-        self._index=indexes[0]+office
+        office=re.sub(r'\.?0*\$',r'$',re.sub(r'\.?0*$',r'',office))
+        self._index=index+office
         self._include_type_name={"include_type_name":"false"}
 
     def _request(self, op, *args, **kwargs):
