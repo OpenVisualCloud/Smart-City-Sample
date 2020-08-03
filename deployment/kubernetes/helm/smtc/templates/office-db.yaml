@@ -114,6 +114,8 @@ spec:
               exec:
                 {{- $args := dict "scenarioName" $scenarioName "Values" $.Values "officeIdx" $officeIdx }}
                 command: ["/usr/bin/curl","-X","DELETE",{{ regexReplaceAllLiteral "\\.?0*$" (regexReplaceAllLiteral "\\.?0*," (printf "http://%s/offices/_doc/%s" (include "smtc.connector.dbhost" $) (include "smtc.env.office" $args)) ",") "" | replace "," "$" | quote }}]
+          securityContext:
+            runAsUser: 1000
       initContainers:
         - name: init-volume-sysctl
           image: busybox:latest

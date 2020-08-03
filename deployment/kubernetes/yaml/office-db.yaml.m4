@@ -83,6 +83,8 @@ spec:
             preStop:
               exec:
                 command: ["/usr/bin/curl","-X","DELETE","http://cloud-db-service:9200/offices/_doc/patsubst(patsubst(translit(defn(`OFFICE_LOCATION'),`,',`$'),`\.?0*\$',`$'),`\.?0*$',`')"]
+          securityContext:
+            runAsUser: 1000
       initContainers:
         - name: init-volume-sysctl
           image: busybox:latest

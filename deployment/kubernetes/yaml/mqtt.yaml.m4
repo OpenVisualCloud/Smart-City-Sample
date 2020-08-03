@@ -54,6 +54,8 @@ spec:
             - mountPath: /etc/localtime
               name: timezone
               readOnly: true
+          securityContext:
+            runAsUser: 1883
       volumes:
           - name: timezone
             hostPath:
