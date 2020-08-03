@@ -19,6 +19,7 @@ ifelse(eval(defn(`NOFFICES')>1),1,`dnl
             - /etc/localtime:/etc/localtime:ro
         networks:
             - appnet
+        user: elasticsearch
         deploy:
             placement:
                 constraints:

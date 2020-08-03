@@ -8,6 +8,7 @@
             - /etc/localtime:/etc/localtime:ro
         networks:
             - appnet
+        user: mosquitto
         deploy:
             placement:
                 constraints:
