@@ -78,6 +78,8 @@ ifelse(eval(defn(`NOFFICES')>1),1,`dnl
             preStop:
               exec:
                 command: ["/usr/bin/curl","-X","DELETE","http://localhost:9200/offices"]
+          securityContext:
+            runAsUser: 1000
       initContainers:
         - name: init-volume-sysctl
           image: busybox:latest
