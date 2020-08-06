@@ -6,8 +6,8 @@
         "rtspsrc udp-buffer-size=212992 name=\"source\" ! queue ! rtph264depay ",
         "! h264parse ! video/x-h264 ! tee name=t ! queue ! decodebin ! queue leaky=upstream ",
         "! video/x-raw(memory:VASurface) ! vaapipostproc brightness=0.0001 ",
-        "! gvadetect model=\"{models[person_detection_2020R2][1][network]}\" model-proc=\"{models[person_detection_2020R2][1][proc]}\" name=\"detection\" pre-process-backend=vaapi ",
-        "! queue ! gvaclassify model=\"{models[person_reidentification_2020R2][1][network]}\" model-proc=\"{models[person_reidentification_2020R2][1][proc]}\" name=\"reidentification\" pre-process-backend=vaapi ",
+        "! gvadetect device=HDDL model=\"{models[person_detection_2020R2][1][network]}\" model-proc=\"{models[person_detection_2020R2][1][proc]}\" name=\"detection\" pre-process-backend=vaapi ",
+        "! queue ! gvaclassify device=HDDL model=\"{models[person_reidentification_2020R2][1][network]}\" model-proc=\"{models[person_reidentification_2020R2][1][proc]}\" name=\"reidentification\" pre-process-backend=vaapi ",
         "! queue ! gvametaconvert name=\"metaconvert\" ! queue ! gvapython name=\"peoplecounting\" module=\"custom_transforms/people_counting\" class=\"PeopleCounting\" ",
         "! queue ! gvametapublish name=\"destination\" ",
         "! appsink name=appsink t. ! queue ! splitmuxsink max-size-time=60500000000 name=\"splitmuxsink\""
@@ -37,10 +37,13 @@
                 "maximum": 64,
                 "default": 3
             },
-            "device": {
-                "element": "detection",
-                "default": "HDDL",
-                "type": "string"
+            "reidentify_device": {
+              "element": {
+                "name": "reidentification",
+                "property": "device"
+              },
+              "default": "HDDL",
+              "type": "string"
             },
             "recording_prefix": {
                 "type": "string",
