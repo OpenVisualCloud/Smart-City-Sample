@@ -12,5 +12,5 @@ CMD ["/home/detect-object.py"]
 
 ####
 ARG  UID
-USER ${UID}
+#USER ${UID}
 ####

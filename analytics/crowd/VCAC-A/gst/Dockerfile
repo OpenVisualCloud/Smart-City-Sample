@@ -14,5 +14,5 @@ ENV  PATH=${PATH}:/home/custom_transforms
 
 ####
 ARG  UID
-USER ${UID}
+#USER ${UID}
 ####
