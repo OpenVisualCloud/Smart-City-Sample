@@ -34,6 +34,8 @@ spec:
         app: cloud-web
     spec:
       enableServiceLinks: false
+      securityContext:
+        fsGroup: {{ $.Values.groupId }}
       containers:
         - name: cloud-web
 {{- if (len $.Values.connector.cloudHost) }}
@@ -95,7 +97,7 @@ spec:
         - name: hostkey
           secret:
             secretName: tunnel-secret
-            defaultMode: {{ include "smtc.secret.mode" $ }}
+            defaultMode: 0440
 {{- end }}
       {{ include "smtc.platform.node-selector" . }}
 

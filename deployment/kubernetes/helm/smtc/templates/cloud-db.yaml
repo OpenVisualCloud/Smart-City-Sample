@@ -37,6 +37,8 @@ spec:
         app: {{ include "smtc.db.name" . }}
     spec:
       enableServiceLinks: false
+      securityContext:
+        fsGroup: 1000
       containers:
         - name: {{ include "smtc.db.name" . }}
 {{- if (len $.Values.connector.cloudHost) }}
@@ -109,6 +111,7 @@ spec:
                 command: ["/usr/bin/curl","-X","DELETE","http://localhost:9200/offices"]
           securityContext:
             runAsUser: 1000
+            runAsGroup: 1000
       initContainers:
         - name: init-volume-sysctl
           image: busybox:latest
@@ -124,7 +127,7 @@ spec:
           - name: hostkey
             secret:
                 secretName: tunnel-secret
-                defaultMode: 0444
+                defaultMode: 0440
 {{- end }}
       {{ include "smtc.platform.node-selector" . }}
 

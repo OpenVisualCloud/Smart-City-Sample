@@ -33,6 +33,8 @@ spec:
         app: cloud-storage
     spec:
       enableServiceLinks: false
+      securityContext:
+        fsGroup: {{ $.Values.groupId }}
       containers:
         - name: cloud-storage
 {{- if (len $.Values.connector.cloudHost) }}
@@ -88,7 +90,7 @@ spec:
         - name: hostkey
           secret:
             secretName: tunnel-secret
-            defaultMode: {{ include "smtc.secret.mode" $ }}
+            defaultMode: 0440
 {{- end }}
       {{ include "smtc.platform.node-selector" . }}
 
