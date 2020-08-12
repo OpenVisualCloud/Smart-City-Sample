@@ -131,7 +131,7 @@ spec:
           - name: hostkey
             secret:
                 secretName: tunnel-secret
-                defaultMode: 0400
+                defaultMode: 0444
 {{- end }}
       {{ include "smtc.platform.node-selector" $ }}
 
