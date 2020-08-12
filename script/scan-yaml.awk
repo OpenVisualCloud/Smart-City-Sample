@@ -27,15 +27,15 @@ function saveim() {
     
 /image:/ && c_space==0 {
     saveim();
-    im=$2;
+    im=$NF;
 }
 
 /image:/ && c_space>0 {
-    im=im","$2
+    im=im","$NF
 }
 
 /VCAC_IMAGE:/ {
-    im=im","$2
+    im=im","$NF
 }
 
 /- node\..*==.*/ && labels!="*" {
