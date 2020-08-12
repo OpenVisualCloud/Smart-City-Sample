@@ -3,6 +3,11 @@
 case "$(cat /proc/1/sched | head -n 1)" in
 *create-key.sh*)  # in docker
 
+    # create .ssh
+    rm -rf /home/.ssh
+    mkdir -p /home/.ssh
+    chmod 700 /home/.ssh
+
     # create key pair for ssh to cloud db host machine
     if [ ! -f /home/.key/id_rsa ]; then
         rm -rf "/home/.key"
@@ -11,7 +16,7 @@ case "$(cat /proc/1/sched | head -n 1)" in
     fi
 
     # copy keys to cloud db host machine
-    ssh-copy-id -i /home/.key/id_rsa -o StrictHostKeyChecking=no "$1"
+    ssh-copy-id -i /home/.key/id_rsa "$1"
     ;;
 *)
     IMAGE="smtc_web_cloud_tunnelled"

@@ -152,17 +152,6 @@ Extract the hostname from connector.host
 {{- end }}
 
 {{/*
-Secret Mode
-*/}}
-{{- define "smtc.secret.mode" }}
-{{- if (int .Values.userId) }}
-{{- 0444 }}
-{{- else }}
-{{- 0400 }}
-{{- end }}
-{{- end }}
-
-{{/*
 Connector DBHost
 */}}
 {{- define "smtc.connector.dbhost" }}

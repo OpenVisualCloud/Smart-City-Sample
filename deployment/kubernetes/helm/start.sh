@@ -11,14 +11,14 @@ function create_secret {
 }
 
 function create_secret2 {
-    create_secret $1 "$2" "$3" 2> /dev/null || (kubectl delete secret $1; create_secret $1 "$2" "$3")
+    kubectl create secret generic $1 "--from-file=$2" "--from-file=$3" "--from-file=$4" 2> /dev/null || (kubectl delete secret $1; kubectl create secret generic $1 "--from-file=$2" "--from-file=$3" "--from-file=$4")
 }
 
 case "N$SCOPE" in
     N | Ncloud)
         # create secrets
         "$DIR/../../certificate/self-sign.sh"
-        create_secret2 self-signed-certificate "${DIR}/../../certificate/self.crt" "${DIR}/../../certificate/self.key"
+        create_secret self-signed-certificate "${DIR}/../../certificate/self.crt" "${DIR}/../../certificate/self.key"
         ;;
 esac
 
@@ -30,7 +30,7 @@ if [ -n "${CONNECTOR_CLOUD}" ]; then
         Ncloud | Noffice*)
             # create secrets
             "$DIR/../../tunnel/create-key.sh" "${CONNECTOR_CLOUD}"
-            create_secret2 tunnel-secret "${DIR}/../../tunnel/.key/id_rsa" "${DIR}/../../tunnel/.key/id_rsa.pub"
+            create_secret2 tunnel-secret "${DIR}/../../tunnel/.key/id_rsa" "${DIR}/../../tunnel/.key/id_rsa.pub" "${DIR}/../../tunnel/.ssh/known_hosts"
         ;;
     esac
 fi
