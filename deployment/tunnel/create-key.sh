@@ -11,7 +11,7 @@ case "$(cat /proc/1/sched | head -n 1)" in
     fi
 
     # copy keys to cloud db host machine
-    ssh-copy-id -i /home/.key/id_rsa -o StrictHostKeyChecking=no "$1"
+    ssh-copy-id -i /home/.key/id_rsa "$1"
     ;;
 *)
     IMAGE="smtc_web_cloud_tunnelled"

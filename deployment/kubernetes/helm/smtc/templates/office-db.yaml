@@ -42,6 +42,8 @@ spec:
         app: {{ $officeName }}-db
     spec:
       enableServiceLinks: false
+      securityContext:
+        fsGroup: 1000
       containers:
         - name: {{ $officeName }}-db
 {{- if (len $.Values.connector.cloudHost) }}
@@ -116,6 +118,7 @@ spec:
                 command: ["/usr/bin/curl","-X","DELETE",{{ regexReplaceAllLiteral "\\.?0*$" (regexReplaceAllLiteral "\\.?0*," (printf "http://%s/offices/_doc/%s" (include "smtc.connector.dbhost" $) (include "smtc.env.office" $args)) ",") "" | replace "," "$" | quote }}]
           securityContext:
             runAsUser: 1000
+            runAsGroup: 1000
       initContainers:
         - name: init-volume-sysctl
           image: busybox:latest
@@ -131,7 +134,7 @@ spec:
           - name: hostkey
             secret:
                 secretName: tunnel-secret
-                defaultMode: 0444
+                defaultMode: 0440
 {{- end }}
       {{ include "smtc.platform.node-selector" $ }}
 
