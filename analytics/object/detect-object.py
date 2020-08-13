@@ -16,24 +16,19 @@ office = list(map(float, os.environ["OFFICE"].split(",")))
 dbhost = os.environ["DBHOST"]
 every_nth_frame = int(os.environ["EVERY_NTH_FRAME"])
 
-runva=None
 stop=Event()
 myAlgorithm=""
 version=0
 
 def connect(sensor, location, uri, algorithm, algorithmName):
-    global runva
-
     try:
         rec2db=Rec2DB(sensor)
         rec2db.start()
 
-        runva=RunVA("object_detection", version)
+        runva=RunVA("object_detection", version, stop=stop)
         runva.loop(sensor, location, uri, algorithm, algorithmName)
 
-        print("rec2db stop", flush=True)
         rec2db.stop()
-        print("rec2db stopped", flush=True)
         raise Exception("VA exited. This should not happen.")
 
     except:
@@ -41,7 +36,6 @@ def connect(sensor, location, uri, algorithm, algorithmName):
 
 def quit_service(signum, sigframe):
     stop.set()
-    if runva: runva.stop()
 
 signal(SIGTERM, quit_service)
 dba=DBIngest(host=dbhost, index="algorithms", office=office)
