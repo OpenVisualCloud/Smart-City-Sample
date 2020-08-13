@@ -1,21 +1,17 @@
 # smtc_analytics_common_vcac-a_gst
 
-FROM openvisualcloud/vcaca-ubuntu1804-analytics-gst:20.4 as build
+FROM centos:7.6.1810 as build
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get update -qq && apt-get install -qq git ca-certificates
-ARG VA_SERVING_REPO=https://github.com/intel/video-analytics-serving.git
-ARG VA_SERVING_BRANCH="v0.3_preview"
-ARG VA_SERVING_TAG="1b342051b85682beadb1ec173f848697fa2f02b2"
+ARG  VA_SERVING_REPO=https://raw.githubusercontent.com/intel/video-analytics-serving
+ARG  VA_SERVING_TAG="v0.3.0-alpha"
 
-RUN git clone ${VA_SERVING_REPO} -b ${VA_SERVING_BRANCH} --depth 1
-RUN cd video-analytics-serving; git checkout ${VA_SERVING_TAG}
-RUN rm -rf /home/video-analytics-serving/vaserving/__main__.py
-RUN rm -rf /home/video-analytics-serving/vaserving/rest_api
+RUN  mkdir -p /home/vaserving/common/utils && touch /home/vaserving/__init__.py /home/vaserving/common/__init__.py /home/vaserving/common/utils/__init__.py && for x in common/utils/logging.py common/settings.py arguments.py ffmpeg_pipeline.py gstreamer_pipeline.py model_manager.py pipeline.py pipeline_manager.py schema.py vaserving.py; do curl -o /home/vaserving/$x -L ${VA_SERVING_REPO}/${VA_SERVING_TAG}/vaserving/$x; done
+COPY *.py /home/
 
 FROM openvisualcloud/vcaca-ubuntu1804-analytics-gst:20.4
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get update -qq && apt-get install -qq python3-gst-1.0 python3-jsonschema python3-psutil && rm -rf /var/lib/apt/lists/*
+RUN  DEBIAN_FRONTEND=noninteractive apt-get update -qq && apt-get install -qq python3-gst-1.0 python3-jsonschema python3-psutil && rm -rf /var/lib/apt/lists/*
 
-COPY --from=build /home/video-analytics-serving/vaserving /home/vaserving
+COPY --from=build /home/ /home/
 ENV  FRAMEWORK=gstreamer
-COPY *.py /home/
+ENV  PYTHONIOENCODING=UTF-8
