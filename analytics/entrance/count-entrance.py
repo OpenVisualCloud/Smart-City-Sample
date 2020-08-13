@@ -15,7 +15,6 @@ office = list(map(float, os.environ["OFFICE"].split(",")))
 dbhost = os.environ["DBHOST"]
 every_nth_frame = int(os.environ["EVERY_NTH_FRAME"])
 
-runva=None
 stop=Event()
 
 def connect(sensor, location, uri, algorithm, algorithmName):
@@ -25,7 +24,7 @@ def connect(sensor, location, uri, algorithm, algorithmName):
         rec2db=Rec2DB(sensor)
         rec2db.start()
 
-        runva=RunVA("entrance_counting")
+        runva=RunVA("entrance_counting", stop=stop)
         runva.loop(sensor, location, uri, algorithm, algorithmName)
 
         rec2db.stop()
@@ -36,7 +35,6 @@ def connect(sensor, location, uri, algorithm, algorithmName):
 
 def quit_service(signum, sigframe):
     stop.set()
-    if runva: runva.stop()
 
 signal(SIGTERM, quit_service)
 dba=DBIngest(host=dbhost, index="algorithms", office=office)
