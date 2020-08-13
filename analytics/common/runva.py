@@ -29,20 +29,18 @@ class RunVA(object):
         print("mqtt connected", flush=True)
         mqtt.disconnect()
     
-    def __init__(self, pipeline, version="2"):
+    def __init__(self, pipeline, version="2", stop=Event()):
         super(RunVA, self).__init__()
         self._test_mqtt_connection()
 
         self._pipeline = pipeline
         self._version = version
         self._db = DBIngest(host=dbhost, index="algorithms", office=office)
-        self._stop=None
-
+        self._stop=stop
 
     def stop(self):
-        if self._stop: 
-            print("stopping", flush=True)
-            self._stop.set()
+        print("stopping", flush=True)
+        self._stop.set()
 
     def loop(self, sensor, location, uri, algorithm, algorithmName, options={}, topic="analytics"):
         try:
@@ -88,7 +86,7 @@ class RunVA(object):
                     raise Exception("Pipeline {} version {} Failed to Start".format(
                         self._pipeline, self._version))
 
-                self._stop=Event()
+                self._stop.clear()
                 while not self._stop.is_set():
                     status = pipeline.status()
                     print(status, flush=True)
