@@ -22,6 +22,8 @@ spec:
         app: {{ $officeName }}-smart-upload
     spec:
       enableServiceLinks: false
+      securityContext:
+        fsGroup: {{ $.Values.groupId }}
       containers:
         - name: {{ $officeName }}-smart-upload
 {{- if (len $.Values.connector.cloudHost) }}
@@ -71,13 +73,13 @@ spec:
       volumes:
           - name: timezone
             hostPath:
-                path: /etc/localtime
-                type: File
+              path: /etc/localtime
+              type: File
 {{- if (len $.Values.connector.cloudHost) }}
           - name: hostkey
             secret:
-                secretName: tunnel-secret
-                defaultMode: {{ include "smtc.secret.mode" $ }}
+              secretName: tunnel-secret
+              defaultMode: 0440
 {{- end }}
       {{ include "smtc.platform.node-selector" $ }}
 
