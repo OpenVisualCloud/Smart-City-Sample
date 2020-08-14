@@ -3,7 +3,7 @@
 IFS=$(echo -en "\n\b")
 
 mkdir -p ~/.ssh && chmod 700 ~/.ssh
-cp -f /hostkey/known_hosts ~/.ssh
+cp -f /etc/hostkey/known_hosts ~/.ssh
 
 for env1 in $(env); do 
     value="$(echo $env1 | cut -f2 -d=)"
