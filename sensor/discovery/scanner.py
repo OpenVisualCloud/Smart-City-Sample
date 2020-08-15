@@ -29,6 +29,7 @@ class Scanner(object):
         networks=[]
 
         isport=False
+        flags=[]
         for arg1 in re.sub(" +"," ",options).split(" "):
             if arg1=="-p":
                 isport=True
@@ -39,7 +40,7 @@ class Scanner(object):
                 arg1=arg1[2:]
 
             if arg1.startswith("-"):
-                print("Ignore unknown options: "+arg1, flush=True)
+                flags.append(arg1)
                 continue
 
             if isport:
@@ -60,7 +61,7 @@ class Scanner(object):
                     except:
                         print("Ignore invalid IP address: "+arg1, flush=True)
 
-        return (networks, ports)
+        return (networks, ports, flags)
             
     def _scan_batch(self, iqueue):
         items={}
@@ -126,21 +127,28 @@ class Scanner(object):
         oqueue.put(None)
 
     def _target(self, iqueue, hqueue, options):
-        networks,ports=self._parse_options(options)
+        networks,ports,flags=self._parse_options(options)
 
-        for network1 in networks:
-            for host1 in network1:
-                self._lock.acquire()
-                self._nhosts=self._nhosts+1
-                self._lock.release()
-                iqueue.put((host1.exploded, None))
+        if "-Pn" in flags:
+            for network1 in networks:
+                for host1 in network1:
+                    for port_range1 in ports:
+                        for port1 in port_range1:
+                            iqueue.put((host1.exploded, port1))
+        else:
+            for network1 in networks:
+                for host1 in network1:
+                    self._lock.acquire()
+                    self._nhosts=self._nhosts+1
+                    self._lock.release()
+                    iqueue.put((host1.exploded, None))
 
-        while True:
-            host1=hqueue.get()
-            if not host1: break
-            for port_range1 in ports:
-                for port1 in port_range1:
-                    iqueue.put((host1, port1))
+            while True:
+                host1=hqueue.get()
+                if not host1: break
+                for port_range1 in ports:
+                    for port1 in port_range1:
+                        iqueue.put((host1, port1))
 
         for i in range(self._nthreads):
             iqueue.put(None)

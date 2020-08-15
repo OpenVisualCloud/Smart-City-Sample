@@ -30,6 +30,8 @@ spec:
           image: defn(`REGISTRY_PREFIX')smtc_onvif_discovery:latest
           imagePullPolicy: IfNotPresent
           env:
+            - name: PORT_SCAN
+              value: "-Pn"
             - name: SIM_HOST
               value: ifelse(eval(defn(`NCAMERAS')>0),1,"loop(`CAMERAIDX',1,defn(`NCAMERAS'),`defn(`OFFICE_NAME')-cameras-service:eval(defn(`CAMERA_RTSP_PORT')+defn(`CAMERAIDX')*defn(`CAMERA_PORT_STEP')-defn(`CAMERA_PORT_STEP'))/')",":0")
             - name: SIM_PREFIX
@@ -79,6 +81,8 @@ spec:
           image: defn(`REGISTRY_PREFIX')smtc_onvif_discovery:latest
           imagePullPolicy: IfNotPresent
           env:
+            - name: PORT_SCAN
+              value: "-Pn"
             - name: SIM_HOST
               value: ifelse(eval(defn(`NCAMERAS2')>0),1,"loop(`CAMERAIDX',1,defn(`NCAMERAS2'),`defn(`OFFICE_NAME')-cameras-crowd-service:eval(defn(`CAMERA_RTSP_PORT')+defn(`CAMERAIDX')*defn(`CAMERA_PORT_STEP')-defn(`CAMERA_PORT_STEP'))/')",":0")
             - name: SIM_PREFIX
@@ -127,6 +131,8 @@ spec:
           image: defn(`REGISTRY_PREFIX')smtc_onvif_discovery:latest
           imagePullPolicy: IfNotPresent
           env:
+            - name: PORT_SCAN
+              value: "-Pn"
             - name: SIM_HOST
               value: ifelse(eval(defn(`NCAMERAS3')>0),1,"loop(`CAMERAIDX',1,defn(`NCAMERAS3'),`defn(`OFFICE_NAME')-cameras-entrance-service:eval(defn(`CAMERA_RTSP_PORT')+defn(`CAMERAIDX')*defn(`CAMERA_PORT_STEP')-defn(`CAMERA_PORT_STEP'))/')",":0")
             - name: SIM_PREFIX

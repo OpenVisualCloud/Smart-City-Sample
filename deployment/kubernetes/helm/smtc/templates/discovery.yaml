@@ -34,6 +34,8 @@ spec:
           image: {{ $.Values.registryPrefix }}smtc_onvif_discovery:latest
           imagePullPolicy: IfNotPresent
           env:
+            - name: PORT_SCAN
+              value: "-Pn"
             - name: SIM_HOST
               value: "{{- range $i := until $ncameras }}{{ $officeName }}-cameras-service:{{ mul $i $step | add $port }}/{{- end }}"
             - name: SIM_PREFIX
@@ -88,6 +90,8 @@ spec:
           image: {{ $.Values.registryPrefix }}smtc_onvif_discovery:latest
           imagePullPolicy: IfNotPresent
           env:
+            - name: PORT_SCAN
+              value: "-Pn"
             - name: SIM_HOST
               value: "{{- range $i := until (int $.Values.ncameras.crowd) }}{{ $officeName }}-cameras-crowd-service:{{ mul $i $step | add $port }}/{{- end }}"
             - name: SIM_PREFIX
@@ -136,6 +140,8 @@ spec:
           image: {{ $.Values.registryPrefix }}smtc_onvif_discovery:latest
           imagePullPolicy: IfNotPresent
           env:
+            - name: PORT_SCAN
+              value: "-Pn"
             - name: SIM_HOST
               value: "{{- range $i := until (int $.Values.ncameras.entrance) }}{{ $officeName }}-cameras-entrance-service:{{ mul $i $step | add $port }}/{{- end }}"
             - name: OFFICE
