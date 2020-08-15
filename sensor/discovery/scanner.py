@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 from ipaddress import IPv4Network
-from threading import Thread
+from threading import Thread, Lock
 from queue import Queue
 import socket
 import select
@@ -20,6 +20,9 @@ class Scanner(object):
         self._nthreads=nthreads
         self._batch=batch
         self._timeout=timeout
+        self._hports=[80,443,554] # ports for host discovery
+        self._lock=Lock()
+        self._nhosts=0
 
     def _parse_options(self, options):
         ports=[]
@@ -59,7 +62,7 @@ class Scanner(object):
 
         return (networks, ports)
             
-    def _scan_batch(self, iqueue, oqueue):
+    def _scan_batch(self, iqueue):
         items={}
         po = select.poll()
         for item in iqueue:
@@ -77,58 +80,79 @@ class Scanner(object):
             if e==errno.EINPROGRESS: 
                 po.register(s)
             elif not e:
-                oqueue.put(item)
+                yield item
 
-        timebase=time.time()-self._timeout
+        timebase=time.time()
         while True:
-            timeout=time.time()-timebase
-            if timeout<=0: break
-            events = po.poll(timeout)
+            if time.time()-timebase>self._timeout: break
+            events = po.poll(self._timeout)
             if not events: break
 
             for e in events:
                 item=items[e[0]]
                 opt=item["s"].getsockopt(socket.SOL_SOCKET, socket.SO_ERROR)
-                if opt==0: oqueue.put(item["item"])
+                if opt==0: yield item["item"]
                 po.unregister(item["s"])
 
         for fileno in items:
             items[fileno]["s"].close()
                 
-    def _scan(self, iqueue, oqueue):
+    def _scan(self, iqueue, hqueue, oqueue):
         queue=[]
         while True:
             item=iqueue.get()
             if not item: break
             
-            queue.append(item)
-            if len(queue)>self._batch:
-                self._scan_batch(queue, oqueue)
-                queue=[]
+            if not item[1]: # host scan
+                for hp1 in self._scan_batch([(item[0],p1) for p1 in self._hports]):
+                   hqueue.put(item[0])
+                   break
+                self._lock.acquire()
+                self._nhosts=self._nhosts-1
+                nhosts=self._nhosts
+                self._lock.release()
+                if nhosts<=0: hqueue.put(None)
+            else: # port scan
+                queue.append(item)
+                if len(queue)>self._batch:
+                    for hp1 in self._scan_batch(queue):
+                        oqueue.put(hp1)
+                    queue=[]
 
-        if queue: self._scan_batch(queue, oqueue)
+        if queue:
+            for hp1 in self._scan_batch(queue):
+                oqueue.put(hp1)
+
         oqueue.put(None)
 
-    def _target(self, iqueue, options):
+    def _target(self, iqueue, hqueue, options):
         networks,ports=self._parse_options(options)
-        print("Scanning {}:{}".format(networks,ports), flush=True)
 
         for network1 in networks:
             for host1 in network1:
-                print("Scanning {}".format(host1), flush=True)
-                for port_range1 in ports:
-                    for port1 in port_range1:
-                        iqueue.put((host1.exploded, port1))
+                self._lock.acquire()
+                self._nhosts=self._nhosts+1
+                self._lock.release()
+                iqueue.put((host1.exploded, None))
+
+        while True:
+            host1=hqueue.get()
+            if not host1: break
+            for port_range1 in ports:
+                for port1 in port_range1:
+                    iqueue.put((host1, port1))
 
         for i in range(self._nthreads):
             iqueue.put(None)
 
     def scan(self, options):
         iqueue=Queue(self._nthreads*self._batch*2)
+        hqueue=Queue()
         oqueue=Queue()
+        self._nhosts=0
 
-        threads=[Thread(target=self._target,args=(iqueue,options))]
-        threads.extend([Thread(target=self._scan,args=(iqueue,oqueue)) for i in range(self._nthreads)])
+        threads=[Thread(target=self._target,args=(iqueue,hqueue,options))]
+        threads.extend([Thread(target=self._scan,args=(iqueue,hqueue,oqueue)) for i in range(self._nthreads)])
         for t in threads: t.start()
 
         i=0
