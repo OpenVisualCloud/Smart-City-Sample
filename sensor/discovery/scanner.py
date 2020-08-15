@@ -4,12 +4,22 @@ from ipaddress import IPv4Network
 from threading import Thread
 from queue import Queue
 import socket
+import select
+import errno
+import time
 import re
+import os
+
+scan_nthreads=int(os.environ["SCAN_NTHREADS"]) if "SCAN_NTHREADS" in os.environ else 32
+scan_batch=int(os.environ["SCAN_BATCH"]) if "SCAN_BATCH" in os.environ else 64
+scan_timeout=float(os.environ["SCAN_TIMEOUT"]) if "SCAN_TIMEOUT" in os.environ else 200
 
 class Scanner(object):
-    def __init__(self):
+    def __init__(self, nthreads=scan_nthreads, batch=scan_batch, timeout=scan_timeout):
         super(Scanner, self).__init__()
-        self._batch_size=32
+        self._nthreads=nthreads
+        self._batch=batch
+        self._timeout=timeout
 
     def _parse_options(self, options):
         ports=[]
@@ -49,22 +59,54 @@ class Scanner(object):
 
         return (networks, ports)
             
+    def _scan_batch(self, iqueue, oqueue):
+        items={}
+        po = select.poll()
+        for item in iqueue:
+            s=socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            s.setblocking(0)
+            s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+
+            try:
+                items[s.fileno()]={ "s": s, "item": item }
+                e=s.connect_ex(item)
+            except Exception as e1:
+                print("Exception {}".format(e1), flush=True)
+                e=errno.EIO
+
+            if e==errno.EINPROGRESS: 
+                po.register(s)
+            elif not e:
+                oqueue.put(item)
+
+        timebase=time.time()-self._timeout
+        while True:
+            timeout=time.time()-timebase
+            if timeout<=0: break
+            events = po.poll(timeout)
+            if not events: break
+
+            for e in events:
+                item=items[e[0]]
+                opt=item["s"].getsockopt(socket.SOL_SOCKET, socket.SO_ERROR)
+                if opt==0: oqueue.put(item["item"])
+                po.unregister(item["s"])
+
+        for fileno in items:
+            items[fileno]["s"].close()
+                
     def _scan(self, iqueue, oqueue):
+        queue=[]
         while True:
             item=iqueue.get()
             if not item: break
             
-            s=socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-            s.settimeout(0.2)
+            queue.append(item)
+            if len(queue)>self._batch:
+                self._scan_batch(queue, oqueue)
+                queue=[]
 
-            try:
-                if not s.connect_ex(item):
-                    oqueue.put(item)
-            except Exception as e:
-                print(e, flush=True)
-
-            s.close()
+        if queue: self._scan_batch(queue, oqueue)
         oqueue.put(None)
 
     def _target(self, iqueue, options):
@@ -73,23 +115,24 @@ class Scanner(object):
 
         for network1 in networks:
             for host1 in network1:
+                print("Scanning {}".format(host1), flush=True)
                 for port_range1 in ports:
                     for port1 in port_range1:
                         iqueue.put((host1.exploded, port1))
 
-        for i in range(self._batch_size):
+        for i in range(self._nthreads):
             iqueue.put(None)
 
     def scan(self, options):
-        iqueue=Queue(self._batch_size)
+        iqueue=Queue(self._nthreads*self._batch*2)
         oqueue=Queue()
 
         threads=[Thread(target=self._target,args=(iqueue,options))]
-        threads.extend([Thread(target=self._scan,args=(iqueue,oqueue)) for i in range(self._batch_size)])
+        threads.extend([Thread(target=self._scan,args=(iqueue,oqueue)) for i in range(self._nthreads)])
         for t in threads: t.start()
 
         i=0
-        while i<self._batch_size:
+        while i<self._nthreads:
             item=oqueue.get()
             if item: 
                 yield item
