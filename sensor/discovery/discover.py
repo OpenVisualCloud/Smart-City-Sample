@@ -38,7 +38,7 @@ if dbhost and office:
 def get_passcodes(ip, port):
     if office and dbhost:
         def _bucketize(query):
-            r=dbp.bucketize(query,["passcode"])
+            r=dbp.bucketize(query,["passcode"], size=1000)
             if "passcode" in r: 
                 return [k for k in r["passcode"] if r["passcode"][k]]
             return []
@@ -95,17 +95,16 @@ def probe_camera_info(ip, port):
 for simh in sim_hosts:
     if simh[1]=="0": continue
     port_scan.append("-p "+simh[1]+" "+simh[0])
-print("port_scan={}".format(port_scan), flush=True)
 
 scanner=Scanner()
 while True:
 
     options=port_scan
     if dbp and not sim_hosts:
-        r=dbp.bucketize("ip=* and port=*",["ip","port"])
+        r=dbp.bucketize("ip_text:* or port:*",["ip_text","port"],size=1000)
         if r:
-            options.extend([k for k in r["ip"] if r["ip"][k]])
-            options.extend(["-p "+k for k in r["port"] if r["port"][k]])
+            options.extend([k for k in r["ip_text"] if r["ip_text"][k]])
+            options.extend(["-p "+str(k) for k in r["port"] if r["port"][k]])
         
     for ip,port in scanner.scan(" ".join(options)):
         # new or disconnected camera

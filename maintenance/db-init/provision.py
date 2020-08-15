@@ -29,6 +29,7 @@ with open("/run/secrets/sensor-info.json",encoding='utf-8') as fd:
             if "ip" in s: # convert IP to CIDR
                 if s["ip"].find("/")<0:
                     s["ip"]=s["ip"]+"/32"
+                s["ip_text"]=s["ip"]  # dup for terms aggs
         dbp.ingest_bulk(sensors)
 
         office1.pop("scenario")

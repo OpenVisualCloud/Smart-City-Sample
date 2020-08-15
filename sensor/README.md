@@ -168,7 +168,5 @@ Due to Kubernetes limitation, if IP camera is enabled, the discovering service a
 
 ---
 
-If you enable more than 1 office, addtionally check the ```IP_CAMERA_NETWORK``` definition. The default value assumes that each office occupies a block in the ```192.168.x.0/24``` network. Modify as necessary. Also, make sure that the worker node that runs the IP camera discovering service can access to the specified network.     
-
 Restart the sample. Your IP camera(s) should show up in the sample UI.      
 
