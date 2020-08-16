@@ -35,7 +35,7 @@ spec:
           imagePullPolicy: IfNotPresent
           env:
             - name: PORT_SCAN
-              value: "-p T:{{ $port }}-{{ mul $ncameras $step | add $port }} {{ $officeName }}-cameras-service -Pn"
+              value: "-Pn"
             - name: SIM_HOST
               value: "{{- range $i := until $ncameras }}{{ $officeName }}-cameras-service:{{ mul $i $step | add $port }}/{{- end }}"
             - name: SIM_PREFIX
@@ -91,7 +91,7 @@ spec:
           imagePullPolicy: IfNotPresent
           env:
             - name: PORT_SCAN
-              value: "-p T:{{ $port }}-{{ mul $.Values.ncameras.crowd $step | add $port }} {{ $officeName }}-cameras-crowd-service -Pn"
+              value: "-Pn"
             - name: SIM_HOST
               value: "{{- range $i := until (int $.Values.ncameras.crowd) }}{{ $officeName }}-cameras-crowd-service:{{ mul $i $step | add $port }}/{{- end }}"
             - name: SIM_PREFIX
@@ -141,7 +141,7 @@ spec:
           imagePullPolicy: IfNotPresent
           env:
             - name: PORT_SCAN
-              value: "-p T:{{ $port }}-{{ mul $.Values.ncameras.entrance $step | add $port }} {{ $officeName }}-cameras-entrance-service -Pn"
+              value: "-Pn"
             - name: SIM_HOST
               value: "{{- range $i := until (int $.Values.ncameras.entrance) }}{{ $officeName }}-cameras-entrance-service:{{ mul $i $step | add $port }}/{{- end }}"
             - name: OFFICE
@@ -197,8 +197,6 @@ spec:
           image: {{ $.Values.registryPrefix }}smtc_onvif_discovery:latest
           imagePullPolicy: IfNotPresent
           env:
-            - name: PORT_SCAN
-              value: "-p T:80-65535 {{ index $.Values.cameraSubnet $officeIdx }}"
             - name: OFFICE
               {{- $args := dict "scenarioName" $scenarioName "Values" $.Values "officeIdx" $officeIdx }}
               value: {{ include "smtc.env.office" $args | quote }}
