@@ -84,8 +84,7 @@ class Scanner(object):
                 yield item
 
         timebase=time.time()
-        while True:
-            if time.time()-timebase>self._timeout: break
+        while time.time()-timebase<=self._timeout:
             events = po.poll(self._timeout)
             if not events: break
 
@@ -177,5 +176,5 @@ class Scanner(object):
 if __name__ == '__main__':
     import sys
     scanner=Scanner()
-    for result in scanner.scan(sys.argv[1]):
+    for result in scanner.scan(" ".join(sys.argv[1:])):
         print(result, flush=True)
