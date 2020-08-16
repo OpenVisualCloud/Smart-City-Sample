@@ -46,7 +46,7 @@ where `port` includes the camera ONVIF and RTSP ports, which tells the sample no
 read && PORT_SCAN='-p T:80-65535 192.168.1.0/24' PASSCODE=$REPLY make discover
 ```
 
-where `PORT_SCAN` specifies the `nmap` command line arguments. The camera network is `192.168.1.0/24` and the port range is `80-65535`. At the prompt, please enter the passcode of the IP camera as `username:password`. The output is similar to the following lines:    
+where `PORT_SCAN` specifies the port scanning commands (similar to the `nmap` commands, supporting `-p` and `-Pn`). The camera network is `192.168.1.0/24` and the port range is `80-65535`. At the prompt, please enter the passcode of the IP camera as `username:password`. The output is similar to the following lines:    
 
 ```
 ...
@@ -167,8 +167,6 @@ Enable the IP camera discovering service by configuring ```DISCOVER_IP_CAMERA```
 Due to Kubernetes limitation, if IP camera is enabled, the discovering service and the analytics instances will run on the host network for reliably receiving RTP streams.   
 
 ---
-
-If you enable more than 1 office, addtionally check the ```IP_CAMERA_NETWORK``` definition. The default value assumes that each office occupies a block in the ```192.168.x.0/24``` network. Modify as necessary. Also, make sure that the worker node that runs the IP camera discovering service can access to the specified network.     
 
 Restart the sample. Your IP camera(s) should show up in the sample UI.      
 

@@ -60,10 +60,6 @@ cameraRTSPPort:   17000
 cameraRTPPort:    27000
 cameraPortStep:   10
 discoverIPCamera: false
-cameraSubnet:
-  - "192.168.1.0/24"
-  - "192.168.2.0/24"
-  - "192.168.3.0/24"
 
 # optional: provide Linux user id & group permissioned to access cloud storage
 # userID is obtained using command: `$ id -u`
