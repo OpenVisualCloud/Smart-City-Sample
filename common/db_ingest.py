@@ -25,7 +25,7 @@ class DBIngest(object):
             print(traceback.format_exc(), flush=True)
         raise Exception(text["ingest error"])
 
-    def ingest_bulk(self, bulk, batch=500):
+    def ingest_bulk(self, bulk, batch=500, refresh="false"):
         ''' save bulk data to the database
             bulk: list of bulk data
         '''
@@ -42,10 +42,10 @@ class DBIngest(object):
             bulk=bulk[batch:]
                 
             cmds="\n".join([json.dumps(x) for x in cmds])+"\n"
-            self._request(requests.post,self._host+"/_bulk",data=cmds,headers={"content-type":"application/x-ndjson"})
+            self._request(requests.post,self._host+"/_bulk?refresh="+refresh,data=cmds,headers={"content-type":"application/x-ndjson"})
         
-    def ingest(self, info, id1=None):
-        return self._request(requests.put,self._host+"/"+self._index+"/_doc/"+id1,json=info) if id1 else self._request(requests.post,self._host+"/"+self._index+"/_doc",json=info)
+    def ingest(self, info, id1=None, refresh="false"):
+        return self._request(requests.put,self._host+"/"+self._index+"/_doc/"+id1+"?refresh="+refresh,json=info) if id1 else self._request(requests.post,self._host+"/"+self._index+"/_doc?refresh="+refresh,json=info)
 
     def update(self, _id, info, seq_no=None, primary_term=None):
         options={}
