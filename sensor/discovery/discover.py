@@ -148,7 +148,7 @@ while True:
                     print("Ingesting", flush=True)
                     record=template[0]["_source"]
                     record.update(sinfo)
-                    dbi.ingest(record)
+                    dbi.ingest(record,refresh="wait_for")
                 else:
                     print("Template not found", flush=True)
             else: # camera re-connect
