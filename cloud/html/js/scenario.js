@@ -89,17 +89,26 @@ var scenarios={
             sensorctx.update_sensor=function (sensor) {
                 var stat_layer=page.data('stat').layer;
                 if (map.hasLayer(stat_layer)) {
-                    apiHost.histogram("analytics",'sensor="'+sensor._id+'" and '+settings.stats_query(),settings.stats_histogram(),25,sensor._source.office).then(function (data) {
-                        stats.update(stat_layer, sensorctx, map.getZoom(), sensor, data, null);
-                    }).catch(function () {
+                    if (sensor._source.status=="streaming") {
+                        apiHost.histogram("analytics",'sensor="'+sensor._id+'" and '+settings.stats_query(),settings.stats_histogram(),25,sensor._source.office).then(function (data) {
+                            stats.update(stat_layer, sensorctx, map.getZoom(), sensor, data, null);
+                        }).catch(function () {
+                            stats.update(stat_layer, sensorctx, map.getZoom(), sensor, {}, null);
+                        });
+                    } else {
                         stats.update(stat_layer, sensorctx, map.getZoom(), sensor, {}, null);
-                    });
+                    }
                 }
 
                 /* show heatmap */
                 var heatmap_layer=page.data('heatmap').layer;
-                if (map.hasLayer(heatmap_layer))
-                    heatmap.update(heatmap_layer, sensorctx, map.getZoom(), sensor);
+                if (map.hasLayer(heatmap_layer)) {
+                    if (sensor._source.status=="streaming") {
+                        heatmap.update(heatmap_layer, sensorctx, map.getZoom(), sensor);
+                    } else {
+                        heatmap.close(sensorctx);
+                    }
+                }
             };
             sensorctx.close_sensor=function () {
                 stats.close(sensorctx);
