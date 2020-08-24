@@ -22,8 +22,6 @@ spec:
         app: {{ $officeName }}-smart-upload
     spec:
       enableServiceLinks: false
-      securityContext:
-        fsGroup: {{ $.Values.groupId }}
       containers:
         - name: {{ $officeName }}-smart-upload
 {{- if (len $.Values.connector.cloudHost) }}
@@ -79,7 +77,7 @@ spec:
           - name: hostkey
             secret:
               secretName: tunnel-secret
-              defaultMode: {{ include "smtc.hostkey.mode" $ }}
+              defaultMode: {{ if (int $.Values.userId) }}0440{{ else }}0400{{ end }}
 {{- end }}
       {{ include "smtc.platform.node-selector" $ }}
 

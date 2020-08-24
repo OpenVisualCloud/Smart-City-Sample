@@ -161,15 +161,3 @@ Connector DBHost
 {{- "cloud-db-service:9200" }}
 {{- end }}
 {{- end }}
-
-{{/*
-hostkey permission
-*/}}
-{{- define "smtc.hostkey.mode" }}
-{{- if .Values.userId }}
-{{- 0440 }}
-{{- else }}
-{{- 0400 }}
-{{- end }}
-{{- end }}
-
