@@ -3,15 +3,16 @@
 from signal import SIGTERM, signal
 from db_query import DBQuery
 from db_ingest import DBIngest
-from probe import probe, run
+from probe import probe
 from onvif_discover import safe_discover
+from scanner import Scanner
 import traceback
 import socket
 import time
 import json
 import os
 
-port_scan=os.environ['PORT_SCAN']
+port_scan=[os.environ['PORT_SCAN']] if "PORT_SCAN" in os.environ else []
 passcodes=os.environ['PASSCODE'].split(" ") if 'PASSCODE' in os.environ else []
 sim_hosts=[hp.split(":") for hp in os.environ["SIM_HOST"].strip("/").split("/")] if "SIM_HOST" in os.environ else []
 sim_prefix=os.environ["SIM_PREFIX"] if "SIM_PREFIX" in os.environ else ""
@@ -37,7 +38,7 @@ if dbhost and office:
 def get_passcodes(ip, port):
     if office and dbhost:
         def _bucketize(query):
-            r=dbp.bucketize(query,["passcode"])
+            r=dbp.bucketize(query,["passcode"], size=1000)
             if "passcode" in r: 
                 return [k for k in r["passcode"] if r["passcode"][k]]
             return []
@@ -53,16 +54,6 @@ def get_passcodes(ip, port):
             print(traceback.format_exc(), flush=True)
     return []
     
-def probe_camera():
-    command="/usr/bin/nmap "+port_scan+" -n"
-    print(command, flush=True)
-    for line in run(command.split(" ")):
-        if line.startswith("Nmap scan report for"):
-            ip=line.split(" ")[-1].strip("()")
-        if "/tcp" in line and "open" in line:
-            port=int(line.split("/")[0])
-            yield ip,port
-
 def probe_camera_info(ip, port):
     # check to see if ip/port is simulated
     for simh in sim_hosts:
@@ -101,8 +92,21 @@ def probe_camera_info(ip, port):
 
     return (None,[])
 
+for simh in sim_hosts:
+    if simh[1]=="0": continue
+    port_scan.append("-p "+simh[1]+" "+simh[0])
+
+scanner=Scanner()
 while True:
-    for ip,port in probe_camera():
+
+    options=port_scan
+    if dbp and not sim_hosts:
+        r=dbp.bucketize("ip_text:* or port:*",["ip_text","port"],size=1000)
+        if r:
+            options.extend([k for k in r["ip_text"] if r["ip_text"][k]])
+            options.extend(["-p "+str(k) for k in r["port"] if r["port"][k]])
+        
+    for ip,port in scanner.scan(" ".join(options)):
         # new or disconnected camera
         print("Probing "+ip+":"+str(port), flush=True)
         try:
@@ -144,7 +148,7 @@ while True:
                     print("Ingesting", flush=True)
                     record=template[0]["_source"]
                     record.update(sinfo)
-                    dbi.ingest(record)
+                    dbi.ingest(record,refresh="wait_for")
                 else:
                     print("Template not found", flush=True)
             else: # camera re-connect
