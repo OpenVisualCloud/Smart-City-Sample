@@ -90,7 +90,7 @@ spec:
         - name: hostkey
           secret:
             secretName: tunnel-secret
-            defaultMode: 0440
+            defaultMode: {{ include "smtc.hostkey.mode" $ }}
 {{- end }}
       {{ include "smtc.platform.node-selector" . }}
 
