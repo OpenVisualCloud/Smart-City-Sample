@@ -103,17 +103,26 @@ PLATFORM_NODE_SELECTOR(`Xeon')dnl
 
 ')dnl
 
-apiVersion: batch/v1
-kind: Job
+apiVersion: apps/v1
+kind: Deployment
 metadata:
   name: defn(`OFFICE_NAME')-db-init
+  labels:
+      app: defn(`OFFICE_NAME')-db-init
 spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: defn(`OFFICE_NAME')-db-init
   template:
+    metadata:
+      labels:
+        app: defn(`OFFICE_NAME')-db-init
     spec:
       enableServiceLinks: false
       containers:
         - name: defn(`OFFICE_NAME')-db-init
-          image: smtc_db_init:latest
+          image: defn(`REGISTRY_PREFIX')smtc_db_init:latest
           imagePullPolicy: IfNotPresent
           env:
             - name: "OFFICE"
@@ -137,7 +146,6 @@ spec:
             - mountPath: /var/run/secrets
               name: sensor-info
               readOnly: true
-      restartPolicy: Never
       volumes:
           - name: timezone
             hostPath:

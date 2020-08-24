@@ -140,12 +140,21 @@ spec:
 
 ---
 
-apiVersion: batch/v1
-kind: Job
+apiVersion: apps/v1
+kind: Deployment
 metadata:
   name: {{ $officeName }}-db-init
+  labels:
+      app: {{ $officeName }}-db-init
 spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ $officeName }}-db-init
   template:
+    metadata:
+      labels:
+        app: {{ $officeName }}-db-init
     spec:
       enableServiceLinks: false
       containers:
@@ -176,7 +185,6 @@ spec:
             - mountPath: /var/run/secrets
               name: sensor-info
               readOnly: true
-      restartPolicy: Never
       volumes:
           - name: timezone
             hostPath:
