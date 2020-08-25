@@ -6,6 +6,8 @@
 {{- if contains $.Values.buildScope $officeName }}
 {{- $officeIdx2 := add (mul $officeIdx (len $.Values.scenario)) $scenarioIdx }}
 
+{{- if gt (int $.Values.noffices) 1 }}
+
 apiVersion: v1
 kind: Service
 metadata:
@@ -40,6 +42,7 @@ spec:
     metadata:
       labels:
         app: {{ $officeName }}-db
+        database: "yes"
     spec:
       enableServiceLinks: false
       securityContext:
@@ -137,8 +140,20 @@ spec:
                 defaultMode: 0440
 {{- end }}
       {{ include "smtc.platform.node-selector" $ }}
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: database
+                  operator: In
+                  values:
+                  - "yes"
+              topologyKey: "kubernetes.io/hostname"
 
 ---
+{{- end }}
 
 apiVersion: apps/v1
 kind: Deployment
@@ -194,6 +209,15 @@ spec:
             configMap:
                 name: sensor-info
       {{ include "smtc.platform.node-selector" $ }}
+        podAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - {{ if eq (int $.Values.noffices) 1 }}db{{ else }}{{ $officeName }}-db{{ end }}
+            topologyKey: "kubernetes.io/hostname"
 
 {{- end }}
 ---

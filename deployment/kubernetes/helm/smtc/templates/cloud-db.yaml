@@ -35,6 +35,7 @@ spec:
     metadata:
       labels:
         app: {{ include "smtc.db.name" . }}
+        database: "yes"
     spec:
       enableServiceLinks: false
       securityContext:
@@ -130,5 +131,16 @@ spec:
                 defaultMode: 0440
 {{- end }}
       {{ include "smtc.platform.node-selector" . }}
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: database
+                  operator: In
+                  values:
+                  - "yes"
+              topologyKey: "kubernetes.io/hostname"
 
 {{- end }}
