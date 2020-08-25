@@ -6,6 +6,7 @@ import requests
 import time
 import os
 import json
+import re
 
 dbhost=os.environ["DBHOST"]
 office=list(map(float,os.environ["OFFICE"].split(",")))
@@ -16,6 +17,7 @@ def quit_service():
 
 signal(SIGTERM, quit_service)
 officestr='$'+('$'.join(map(str,office)))
+officestr=re.sub(r'\.?0*\$',r'$',re.sub(r'\.?0*$',r'',officestr))
 
 def defaults():
     return {
