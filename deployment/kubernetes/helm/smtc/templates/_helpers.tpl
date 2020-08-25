@@ -161,4 +161,3 @@ Connector DBHost
 {{- "cloud-db-service:9200" }}
 {{- end }}
 {{- end }}
-

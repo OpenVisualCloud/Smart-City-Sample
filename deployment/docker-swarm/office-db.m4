@@ -47,8 +47,6 @@ ifelse(eval(defn(`NOFFICES')>1),1,`
         networks:
             - appnet
         deploy:
-            restart_policy:
-                condition: none
             placement:
                 constraints:
                     - node.labels.vcac_zone!=yes

@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 
+from signal import SIGTERM, signal
 from db_ingest import DBIngest
 import requests
 import time
@@ -10,6 +11,10 @@ dbhost=os.environ["DBHOST"]
 office=list(map(float,os.environ["OFFICE"].split(",")))
 zone=os.environ["ZONE"]
 
+def quit_service():
+    exit(143)
+
+signal(SIGTERM, quit_service)
 officestr='$'+('$'.join(map(str,office)))
 settings={
     "offices": {
@@ -208,3 +213,10 @@ for index in settings:
 
     r=requests.put(dbhost+"/"+index,json=settings[index],params=_include_type_name)
     r=requests.put(dbhost+"/"+index+"/_settings",json={ routing_key: routing_value })
+
+import provision
+
+# sleep infinitely
+while True:
+    time.sleep(10000)    
+
