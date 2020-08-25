@@ -30,12 +30,9 @@ with open("/run/secrets/sensor-info.json",encoding='utf-8') as fd:
                 if s["ip"].find("/")<0:
                     s["ip"]=s["ip"]+"/32"
                 s["ip_text"]=s["ip"]  # dup for terms aggs
-        dbp.ingest_bulk(sensors)
+        dbp.ingest_bulk(sensors, refresh="wait_for")
 
         office1.pop("scenario")
         office1["uri"]=proxyhost
         office1["zone"]=zone
-        dbo.ingest(office1,officestr)
-
-print("DB Initialized", flush=True)
-
+        dbo.ingest(office1,officestr, refresh="wait_for")
