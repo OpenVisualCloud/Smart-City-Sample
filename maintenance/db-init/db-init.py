@@ -16,178 +16,180 @@ def quit_service():
 
 signal(SIGTERM, quit_service)
 officestr='$'+('$'.join(map(str,office)))
-settings={
-    "offices": {
-        "settings": {
-            "index.routing.allocation.include.zone": "cloud",
-            "index": {
-                "number_of_shards": 1,
-                "number_of_replicas": 0,
+
+def defaults():
+    return {
+        "offices": {
+            "settings": {
+                "index.routing.allocation.include.zone": "cloud",
+                "index": {
+                    "number_of_shards": 1,
+                    "number_of_replicas": 0,
+                },
+            },
+            "mappings": {
+                "properties": {
+                    "location": { "type": "geo_point", },
+                },
             },
         },
-        "mappings": {
-            "properties": {
-                "location": { "type": "geo_point", },
+        "provisions"+officestr: {
+            "settings": {
+                "index.routing.allocation.include.zone": "cloud,"+zone,
+                "index": {
+                    "number_of_shards": 1,
+                    "number_of_replicas": 1,
+                },
+            },
+            "mappings": {
+                "properties": {
+                    "location": { "type": "geo_point", },
+                    "office": { "type": "geo_point", },
+                    "ip": { "type": "ip_range", },
+                },
             },
         },
-    },
-    "provisions"+officestr: {
-        "settings": {
-            "index.routing.allocation.include.zone": "cloud,"+zone,
-            "index": {
-                "number_of_shards": 1,
-                "number_of_replicas": 1,
+        "sensors"+officestr: {
+            "settings": {
+                "index.routing.allocation.include.zone": "cloud,"+zone,
+                "index": {
+                    "number_of_shards": 1,
+                    "number_of_replicas": 1,
+                },
+            },
+            "mappings": {
+                "properties": {
+                    "office": { "type": "geo_point", },
+                    "location": { "type": "geo_point", },
+                    "ip": { "type": "ip_range", },
+                },
             },
         },
-        "mappings": {
-            "properties": {
-                "location": { "type": "geo_point", },
-                "office": { "type": "geo_point", },
-                "ip": { "type": "ip_range", },
+        "sensors": {
+            "settings": {
+                "index.routing.allocation.include.zone": "cloud",
+                "index": {
+                    "number_of_shards": 1,
+                    "number_of_replicas": 0,
+                },
+            },
+            "mappings": {
+                "properties": {
+                    "office": { "type": "geo_point", },
+                    "location": { "type": "geo_point", },
+                    "ip": { "type": "ip_range", },
+                },
             },
         },
-    },
-    "sensors"+officestr: {
-        "settings": {
-            "index.routing.allocation.include.zone": "cloud,"+zone,
-            "index": {
-                "number_of_shards": 1,
-                "number_of_replicas": 1,
+        "recordings"+officestr: {
+            "settings": {
+                "index.routing.allocation.include.zone": "cloud,"+zone,
+                "index": {
+                    "number_of_shards": 1,
+                    "number_of_replicas": 1,
+                },
+            },
+            "mappings": {
+                "properties": {
+                    "office": { "type": "geo_point" },
+                    "time": { "type": "date" },
+                },
             },
         },
-        "mappings": {
-            "properties": {
-                "office": { "type": "geo_point", },
-                "location": { "type": "geo_point", },
-                "ip": { "type": "ip_range", },
+        "recordings": {
+            "settings": {
+                "index.routing.allocation.include.zone": "cloud",
+                "index": {
+                    "number_of_shards": 1,
+                    "number_of_replicas": 0,
+                },
+            },
+            "mappings": {
+                "properties": {
+                    "office": { "type": "geo_point" },
+                    "time": { "type": "date" },
+                },
             },
         },
-    },
-    "sensors": {
-        "settings": {
-            "index.routing.allocation.include.zone": "cloud",
-            "index": {
-                "number_of_shards": 1,
-                "number_of_replicas": 0,
+        "algorithms"+officestr: {
+            "settings": {
+                "index.routing.allocation.include.zone": "cloud,"+zone,
+                "index": {
+                    "number_of_shards": 1,
+                    "number_of_replicas": 1,
+                },
+            },
+            "mappings": {
+                "properties": {
+                    "office": { "type": "geo_point" },
+                },
             },
         },
-        "mappings": {
-            "properties": {
-                "office": { "type": "geo_point", },
-                "location": { "type": "geo_point", },
-                "ip": { "type": "ip_range", },
+        "analytics"+officestr: {
+            "settings": {
+                "index.routing.allocation.include.zone": "cloud,"+zone,
+                "index": {
+                    "number_of_shards": 1,
+                    "number_of_replicas": 1,
+                },
+            },
+            "mappings": {
+                "properties": {
+                    "office": { "type": "geo_point" },
+                    "location": { "type": "geo_point" },
+                    "time": { "type": "date" },
+                    "objects": { "type": "nested" },
+                },
             },
         },
-    },
-    "recordings"+officestr: {
-        "settings": {
-            "index.routing.allocation.include.zone": "cloud,"+zone,
-            "index": {
-                "number_of_shards": 1,
-                "number_of_replicas": 1,
+        "analytics": {
+            "settings": {
+                "index.routing.allocation.include.zone": "cloud",
+                "index": {
+                    "number_of_shards": 1,
+                    "number_of_replicas": 0,
+                },
+            },
+            "mappings": {
+                "properties": {
+                    "office": { "type": "geo_point" },
+                    "location": { "type": "geo_point" },
+                    "time": { "type": "date" },
+                    "objects": { "type": "nested" },
+                },
             },
         },
-        "mappings": {
-            "properties": {
-                "office": { "type": "geo_point" },
-                "time": { "type": "date" },
+        "alerts"+officestr: {
+            "settings": {
+                "index.routing.allocation.include.zone": "cloud,"+zone,
+                "index": {
+                    "number_of_shards": 1,
+                    "number_of_replicas": 1,
+                },
+            },
+            "mappings": {
+                "properties": {
+                    "time": { "type": "date" },
+                    "location": { "type": "geo_point" },
+                    "office": { "type": "geo_point" },
+                },
             },
         },
-    },
-    "recordings": {
-        "settings": {
-            "index.routing.allocation.include.zone": "cloud",
-            "index": {
-                "number_of_shards": 1,
-                "number_of_replicas": 0,
+        "services"+officestr: {
+            "settings": {
+                "index.routing.allocation.include.zone": "cloud,"+zone,
+                "index": {
+                    "number_of_shards": 1,
+                    "number_of_replicas": 1,
+                },
+            },
+            "mappings": {
+                "properties": {
+                    "office": { "type": "geo_point" },
+                },
             },
         },
-        "mappings": {
-            "properties": {
-                "office": { "type": "geo_point" },
-                "time": { "type": "date" },
-            },
-        },
-    },
-    "algorithms"+officestr: {
-        "settings": {
-            "index.routing.allocation.include.zone": "cloud,"+zone,
-            "index": {
-                "number_of_shards": 1,
-                "number_of_replicas": 1,
-            },
-        },
-        "mappings": {
-            "properties": {
-                "office": { "type": "geo_point" },
-            },
-        },
-    },
-    "analytics"+officestr: {
-        "settings": {
-            "index.routing.allocation.include.zone": "cloud,"+zone,
-            "index": {
-                "number_of_shards": 1,
-                "number_of_replicas": 1,
-            },
-        },
-        "mappings": {
-            "properties": {
-                "office": { "type": "geo_point" },
-                "location": { "type": "geo_point" },
-                "time": { "type": "date" },
-                "objects": { "type": "nested" },
-            },
-        },
-    },
-    "analytics": {
-        "settings": {
-            "index.routing.allocation.include.zone": "cloud",
-            "index": {
-                "number_of_shards": 1,
-                "number_of_replicas": 0,
-            },
-        },
-        "mappings": {
-            "properties": {
-                "office": { "type": "geo_point" },
-                "location": { "type": "geo_point" },
-                "time": { "type": "date" },
-                "objects": { "type": "nested" },
-            },
-        },
-    },
-    "alerts"+officestr: {
-        "settings": {
-            "index.routing.allocation.include.zone": "cloud,"+zone,
-            "index": {
-                "number_of_shards": 1,
-                "number_of_replicas": 1,
-            },
-        },
-        "mappings": {
-            "properties": {
-                "time": { "type": "date" },
-                "location": { "type": "geo_point" },
-                "office": { "type": "geo_point" },
-            },
-        },
-    },
-    "services"+officestr: {
-        "settings": {
-            "index.routing.allocation.include.zone": "cloud,"+zone,
-            "index": {
-                "number_of_shards": 1,
-                "number_of_replicas": 1,
-            },
-        },
-        "mappings": {
-            "properties": {
-                "office": { "type": "geo_point" },
-            },
-        },
-    },
-}
+    }
 
 # wait until DB is ready
 while True:
@@ -198,25 +200,36 @@ while True:
         print("Waiting for DB...", flush=True)
     time.sleep(1)
     
-# delete office specific indexes (to start the office afresh)
-for index in settings:
-    if index.endswith(officestr):
-        print("Delete index "+index , flush=True)
-        requests.delete(dbhost+"/"+index)
-
-# initialize db index settings
-_include_type_name={"include_type_name":"false"}
-routing_key="index.routing.allocation.include.zone"
-for index in settings:
-    print("Initialize index "+index, flush=True)
-    routing_value=settings[index]["settings"].pop(routing_key)
-
-    r=requests.put(dbhost+"/"+index,json=settings[index],params=_include_type_name)
-    r=requests.put(dbhost+"/"+index+"/_settings",json={ routing_key: routing_value })
-
-import provision
-
-# sleep infinitely
 while True:
-    time.sleep(10000)    
+    settings=defaults()
+
+    try:
+        # delete office specific indexes (to start the office afresh)
+        for index in settings:
+            if index.endswith(officestr):
+                print("Delete index "+index , flush=True)
+                requests.delete(dbhost+"/"+index)
+
+        # initialize db index settings
+        _include_type_name={"include_type_name":"false"}
+        routing_key="index.routing.allocation.include.zone"
+        for index in settings:
+            print("Initialize index "+index, flush=True)
+            routing_value=settings[index]["settings"].pop(routing_key)
+
+            r=requests.put(dbhost+"/"+index,json=settings[index],params=_include_type_name)
+            r=requests.put(dbhost+"/"+index+"/_settings",json={ routing_key: routing_value })
+
+        import provision
+        break
+
+    except Exception as e:
+        print("Exception: {}".format(e), flush=True)
+        print("Waiting for DB...", flush=True)
+
+    time.sleep(1)
+
+print("DB Initialized", flush=True)
+while True:
+    time.sleep(10000)
 
