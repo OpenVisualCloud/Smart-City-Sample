@@ -37,6 +37,7 @@ spec:
     metadata:
       labels:
         app: defn(`DB_NAME')
+        database: "yes"
     spec:
       enableServiceLinks: false
       containers:
@@ -93,5 +94,16 @@ ifelse(eval(defn(`NOFFICES')>1),1,`dnl
                 path: /etc/localtime
                 type: File
 PLATFORM_NODE_SELECTOR(`Xeon')dnl
+          podAntiAffinity:
+            preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                  - key: database
+                    operator: In
+                    values:
+                    - "yes"
+                topologyKey: "kubernetes.io/hostname"
 
 ')

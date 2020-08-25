@@ -43,6 +43,7 @@ spec:
     metadata:
       labels:
         app: defn(`OFFICE_NAME')-db
+        database: "yes"
     spec:
       enableServiceLinks: false
       containers:
@@ -98,6 +99,17 @@ spec:
                 path: /etc/localtime
                 type: File
 PLATFORM_NODE_SELECTOR(`Xeon')dnl
+          podAntiAffinity:
+            preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                  - key: database
+                    operator: In
+                    values:
+                    - "yes"
+                topologyKey: "kubernetes.io/hostname"
 
 ---
 
@@ -155,6 +167,15 @@ spec:
             configMap:
                 name: sensor-info
 PLATFORM_NODE_SELECTOR(`Xeon')dnl
+          podAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - ifelse(defn(`NOFFICES'),1,db,defn(`OFFICE_NAME')-db)
+              topologyKey: "kubernetes.io/hostname"
 
 ---
 ')')')
