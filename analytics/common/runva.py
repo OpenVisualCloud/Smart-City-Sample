@@ -101,13 +101,18 @@ class RunVA(object):
                         avg_pipeline_latency = status.avg_pipeline_latency
                         if not avg_pipeline_latency: avg_pipeline_latency = 0
 
-                        self._db.update(algorithm, {
-                            "sensor": sensor,
-                            "performance": status.avg_fps,
-                            "latency": avg_pipeline_latency * 1000,
-                            "cpu": psutil.cpu_percent(),
-                            "memory": psutil.virtual_memory().percent,
-                        })
+                        try:
+                            self._db.update(algorithm, {
+                                "sensor": sensor,
+                                "performance": status.avg_fps,
+                                "latency": avg_pipeline_latency * 1000,
+                                "cpu": psutil.cpu_percent(),
+                                "memory": psutil.virtual_memory().percent,
+                            })
+                        except:
+                            print("Failed to update algorithm status", flush=True)
+                            self._stop.set()
+                            raise
 
                     self._stop.wait(3)
 
