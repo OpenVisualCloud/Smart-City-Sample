@@ -30,7 +30,7 @@ function transfer_image {
 
             if test "$sig1" != "$sig2"; then
                 echo "Transfering image..."
-                (docker save $image | ssh -o ConnectTimeout=$CONNECTION_TIMEOUT $worker "docker image rm -f $image 2>/dev/null; docker load") || true
+                (docker save $image | ssh -o ConnectTimeout=$CONNECTION_TIMEOUT $worker "docker load") || true
             fi;;
         *) # access via jump host
             sig2=$(ssh -o ConnectTimeout=$CONNECTION_TIMEOUT $host "ssh -o ConnectTimeout=$CONNECTION_TIMEOUT $worker \"docker image inspect -f {{.ID}} $image 2> /dev/null || echo\"" || true)
@@ -38,7 +38,7 @@ function transfer_image {
 
             if test "$sig1" != "$sig2"; then
                 echo "Transfering image..."
-                (docker save $image | ssh -o ConnectTimeout=$CONNECTION_TIMEOUT $host "ssh -o ConnectTimeout=$CONNECTION_TIMEOUT $worker \"docker image rm -f $image 2>/dev/null; docker load\"") || true
+                (docker save $image | ssh $host "ssh -o ConnectTimeout=$CONNECTION_TIMEOUT $worker \"docker load\"") || true
             fi;;
     esac
     echo ""
@@ -73,8 +73,17 @@ kubectl get node >/dev/null 2>/dev/null && (
         nodeip="$(kubectl describe node $id | grep InternalIP | sed -E 's/[^0-9]+([0-9.]+)$/\1/')"
         labels="$(kubectl describe node $id | awk '/Annotations:/{lf=0}/Labels:/{sub("Labels:","",$0);lf=1}lf==1{sub("=",":",$1);print$1}')"
 
-        for image in $(awk -v labels="$labels" -f "$DIR/scan-yaml.awk" "${DIR}/../deployment/kubernetes/yaml"/*.yaml); do
-            transfer_image $image "$id" "$nodeip" "$labels"
+        image_set=""
+        for image in $(awk -v labels="$labels" -f "$DIR/scan-yaml.awk" "${DIR}/../deployment/kubernetes/yaml"/*.yaml) $(helm >/dev/null 2>/dev/null && (helm install --dry-run --set connector.cloudHost="x@y" _temp "$DIR/../deployment/kubernetes/helm/smtc" | awk -v labels="$labels" -f "$DIR/scan-yaml.awk")); do
+            if docker image inspect $image >/dev/null 2>/dev/null; then
+                case "$image_set" in
+                *" $image "*);;
+                *)
+                    image_set="$image_set $image "
+                    transfer_image $image "$id" "$nodeip" "$labels"
+                    ;;
+                esac
+            fi
         done
     done
 ) || echo -n ""
