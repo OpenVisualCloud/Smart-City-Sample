@@ -184,7 +184,11 @@ spec:
               {{- $args := dict "officeName" $officeName "Values" $.Values }}
               value: {{ include "smtc.env.dbhost" $args | quote }}
             - name: PROXYHOST
+{{- if (len $.Values.connector.cloudHost) }}
+              value: "http://127.0.0.1:{{ add $.Values.connector.officeStoragePort $officeIdx }}"
+{{- else }}
               value: "http://{{ $officeName }}-storage-service.default.svc.cluster.local:8080"
+{{- end }}
             - name: SCENARIO
               value: {{ $scenarioName | quote }}
             - name: "ZONE"
