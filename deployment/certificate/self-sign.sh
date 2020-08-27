@@ -1,6 +1,5 @@
 #!/bin/bash -e
 
-IMAGE="smtc_certificate"
 DIR=$(dirname $(readlink -f "$0"))
 USER="docker"
 
@@ -20,6 +19,7 @@ EOL
     chmod 644 "/home/$USER/self.crt"
     ;;
 *)
+    IMAGE="$1smtc_certificate"
     OPTIONS=("--volume=$DIR:/home/$USER:rw")
     . "$DIR/../../script/shell.sh" /home/$USER/self-sign.sh "$(hostname -f)"
     ;;

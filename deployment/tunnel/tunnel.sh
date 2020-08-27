@@ -1,9 +1,10 @@
-#!/bin/bash
+#!/bin/bash -e
 
 IFS=$(echo -en "\n\b")
 
 mkdir -p ~/.ssh && chmod 700 ~/.ssh
-cp -f /etc/hostkey/known_hosts ~/.ssh
+cp -f /etc/hostkey/known_hosts /etc/hostkey/id_rsa ~/.ssh
+chmod 400 ~/.ssh/id_rsa ~/.ssh/known_hosts
 
 for env1 in $(env); do 
     value="$(echo $env1 | cut -f2 -d=)"
@@ -15,11 +16,11 @@ for env1 in $(env); do
     case "$env1" in
     FORWARD_TUNNEL*)
         echo ssh -4 -f -N -L "$local_host:localhost:$remote_port" "$remote_host"
-        ssh -i /etc/hostkey/id_rsa -4 -f -N -L "$local_host:localhost:$remote_port" "$remote_host"
+        ssh -o TCPKeepAlive=yes -f -N -L "$local_host:localhost:$remote_port" "$remote_host"
         ;;
     REVERSE_TUNNEL*)    
         echo ssh -4 -f -N -R "$remote_port:$local_host" "$remote_host"
-        ssh -i /etc/hostkey/id_rsa -4 -f -N -R "$remote_port:$local_host" "$remote_host"
+        ssh -o TCPKeepAlive=yes -f -N -R "$remote_port:$local_host" "$remote_host"
         ;;
     esac
 done

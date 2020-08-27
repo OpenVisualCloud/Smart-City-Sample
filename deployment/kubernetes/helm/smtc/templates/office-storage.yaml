@@ -37,6 +37,8 @@ spec:
       labels:
         app: {{ $officeName }}-storage
     spec:
+      securityContext:
+        fsGroup: {{ $.Values.groupId }}
       enableServiceLinks: false
       containers:
         - name: {{ $officeName }}-storage
@@ -71,7 +73,7 @@ spec:
               value: "50"
 {{- if (len $.Values.connector.cloudHost) }}
             - name: REVERSE_TUNNEL1
-              value: "{{ $.Values.connector.cloudHost }}:{{ add $.Values.connector.officeStoragePort $officeIdx2 }} {{ $officeName }}-storage-service:8080"
+              value: "{{ $.Values.connector.cloudHost }}:{{ add $.Values.connector.officeStoragePort $officeIdx2 }} localhost:8080"
 {{- end }}
             - name: NO_PROXY
               value: "*"
@@ -95,7 +97,7 @@ spec:
         - name: hostkey
           secret:
             secretName: tunnel-secret
-            defaultMode: {{ if (int $.Values.userId) }}0440{{ else }}0400{{ end }}
+            defaultMode: 0440
 {{- end }}
       {{ include "smtc.platform.node-selector" $ }}
 

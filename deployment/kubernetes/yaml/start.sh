@@ -2,6 +2,7 @@
 
 DIR=$(dirname $(readlink -f "$0"))
 NOFFICES="${4:-1}"
+REGISTRY="$8"
 
 shift
 . "$DIR/build.sh"
@@ -13,7 +14,7 @@ function create_secret {
 case "N$SCOPE" in
     N | Ncloud)
         # create secrets
-        "$DIR/../../certificate/self-sign.sh"
+        "$DIR/../../certificate/self-sign.sh" "${REGISTRY}"
         create_secret 2>/dev/null || (kubectl delete secret self-signed-certificate; create_secret)
 
         # create configmap

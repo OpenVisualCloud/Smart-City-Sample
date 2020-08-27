@@ -2,6 +2,7 @@
 
 DIR=$(dirname $(readlink -f "$0"))
 NOFFICES="${4:-1}"
+REGISTRY="$8"
 
 shift
 . "$DIR/build.sh"
@@ -17,7 +18,7 @@ function create_secret2 {
 case "N$SCOPE" in
     N | Ncloud)
         # create secrets
-        "$DIR/../../certificate/self-sign.sh"
+        "$DIR/../../certificate/self-sign.sh" "${REGISTRY}"
         create_secret self-signed-certificate "${DIR}/../../certificate/self.crt" "${DIR}/../../certificate/self.key"
         ;;
 esac
@@ -29,7 +30,7 @@ if [ -n "${CONNECTOR_CLOUD}" ]; then
     case "N$SCOPE" in
         Ncloud | Noffice*)
             # create secrets
-            "$DIR/../../tunnel/create-key.sh" "${CONNECTOR_CLOUD}"
+            "$DIR/../../tunnel/create-key.sh" "${CONNECTOR_CLOUD}" "${REGISTRY}"
             create_secret2 tunnel-secret "${DIR}/../../tunnel/.key/id_rsa" "${DIR}/../../tunnel/.key/id_rsa.pub" "${DIR}/../../tunnel/.ssh/known_hosts"
         ;;
     esac
