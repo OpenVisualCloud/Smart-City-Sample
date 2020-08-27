@@ -37,6 +37,8 @@ spec:
       labels:
         app: {{ $officeName }}-storage
     spec:
+      securityContext:
+        fsGroup: {{ $.Values.groupId }}
       enableServiceLinks: false
       containers:
         - name: {{ $officeName }}-storage
@@ -95,7 +97,7 @@ spec:
         - name: hostkey
           secret:
             secretName: tunnel-secret
-            defaultMode: {{ if (int $.Values.userId) }}0440{{ else }}0400{{ end }}
+            defaultMode: 0440
 {{- end }}
       {{ include "smtc.platform.node-selector" $ }}
 
