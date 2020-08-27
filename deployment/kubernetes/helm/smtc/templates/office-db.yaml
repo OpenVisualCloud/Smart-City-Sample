@@ -185,7 +185,7 @@ spec:
               value: {{ include "smtc.env.dbhost" $args | quote }}
             - name: PROXYHOST
 {{- if (len $.Values.connector.cloudHost) }}
-              value: "http://localhost:{{ add $.Values.connector.officeStoragePort $officeIdx }}"
+              value: "http://127.0.0.1:{{ add $.Values.connector.officeStoragePort $officeIdx }}"
 {{- else }}
               value: "http://{{ $officeName }}-storage-service.default.svc.cluster.local:8080"
 {{- end }}
