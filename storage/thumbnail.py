@@ -31,9 +31,13 @@ class Thumbnail(object):
             list(run(cmds))
             with open(png,"rb") as fd:
                 image=fd.read()
-            os.remove(png)
         except:
             print(traceback.format_exc(), flush=True)
+
+        try:
+            os.remove(png)
+        except:
+            pass 
 
         if image:
             if len(self._cache)>THUMBNAIL_CACHE: self._cache.shift()
@@ -45,7 +49,7 @@ thumbnail=Thumbnail()
 class ThumbnailHandler(web.RequestHandler):
     def __init__(self, app, request, **kwargs):
         super(ThumbnailHandler, self).__init__(app, request, **kwargs)
-        self.executor= ThreadPoolExecutor(8)
+        self.executor= ThreadPoolExecutor(4)
         self._storage = "/var/www/mp4"
 
     def check_origin(self, origin):
