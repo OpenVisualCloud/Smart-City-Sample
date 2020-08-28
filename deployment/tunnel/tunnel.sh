@@ -15,11 +15,11 @@ for env1 in $(env); do
 
     case "$env1" in
     FORWARD_TUNNEL*)
-        echo ssh -4 -f -N -L "$local_host:localhost:$remote_port" "$remote_host"
+        echo ssh -o TCPKeepAlive=yes -f -N -L "$local_host:localhost:$remote_port" "$remote_host"
         ssh -o TCPKeepAlive=yes -f -N -L "$local_host:localhost:$remote_port" "$remote_host"
         ;;
     REVERSE_TUNNEL*)    
-        echo ssh -4 -f -N -R "$remote_port:$local_host" "$remote_host"
+        echo ssh -o TCPKeepAlive=yes -f -N -R "$remote_port:$local_host" "$remote_host"
         ssh -o TCPKeepAlive=yes -f -N -R "$remote_port:$local_host" "$remote_host"
         ;;
     esac
