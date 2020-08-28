@@ -156,7 +156,7 @@ Connector DBHost
 */}}
 {{- define "smtc.connector.dbhost" }}
 {{- if (len .Values.connector.cloudHost) }}
-{{- printf "localhost:%d" .Values.connector.cloudQueryPort }}
+{{- printf "localhost:%d" (int .Values.connector.cloudQueryPort) }}
 {{- else }}
 {{- "cloud-db-service:9200" }}
 {{- end }}
