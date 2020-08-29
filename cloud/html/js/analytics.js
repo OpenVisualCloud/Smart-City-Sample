@@ -22,7 +22,7 @@ function draw_analytics(video, doc) {
             if (tid!=video.data('last_draw')) {
                 video.data('last_draw',tid);
 
-                svg.empty();
+                svghtml="";
                 if (tid in timed) {
                     var sx=svg.width()/video[0].videoWidth;
                     var sy=svg.height()/video[0].videoHeight;
@@ -41,27 +41,15 @@ function draw_analytics(video, doc) {
                                     var ymin=v1.detection.bounding_box.y_min*sh;
                                     var ymax=v1.detection.bounding_box.y_max*sh;
                                     if (xmin!=xmax && ymin!=ymax) {
-                                        svg.append($(document.createElementNS(svg.attr('xmlns'),"rect")).attr({
-                                            x:sxoff+xmin,
-                                            y:syoff+ymin,
-                                            width:xmax-xmin,
-                                            height:ymax-ymin,
-                                            stroke:colors_label[v1.detection.label],
-                                            "stroke-width":1,
-                                            fill:"none",
-                                        }));
                                         var id=("id" in v1)?":#"+v1.id+":":":";
-                                        svg.append($(document.createElementNS(svg.attr('xmlns'),"text")).attr({
-                                            x:sxoff+xmin,
-                                            y:syoff+ymin,
-                                            fill: ("id" in v1)?colors_id[v1.id%colors_id.length]:"cyan",
-                                        }).text(text.translate(v1.detection.label)+id+Math.floor(v1.detection.confidence*100)+"%"));
+                                        svghtml=svghtml+'<rect x="'+(sxoff+xmin)+'" y="'+(syoff+ymin)+'" width="'+(xmax-xmin)+'" height="'+(ymax-ymin)+'" stroke="'+colors_label[v1.detection.label]+'" stroke-width="1" fill="none"></rect><text x="'+(sxoff+xmin)+'" y="'+(syoff+ymin)+'" fill="'+(("id" in v1)?colors_id[v1.id%colors_id.length]:"cyan")+'">'+(text.translate(v1.detection.label)+id+Math.floor(v1.detection.confidence*100)+"%")+'</text>';
                                     }
                                 }
                             }
                         });
                     });
                 }
+                svg.html(svghtml);
             }
             if (video[0].paused) return video.data("time_offset",0);
             requestAnimationFrame(draw);
