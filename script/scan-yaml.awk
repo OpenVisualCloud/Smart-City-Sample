@@ -62,7 +62,7 @@ function saveim() {
 
 /- key:/ && n_space>0 {
     match($0, /^ */);
-    if (RLENGTH > n_space) key=$3
+    if (RLENGTH > n_space) key=$3;
 }
 
 /operator:/ && n_space>0 {
@@ -77,7 +77,7 @@ function saveim() {
        gsub(/[\" ]/,"",label_eqn);
        i=index(labels,label_eqn);
        if ((operator=="In" && i==0) || (operator=="NotIn" && i!=0)) {
-           im=im2=""; 
+           im=""; 
            matched=0;
        }
     }
@@ -85,6 +85,10 @@ function saveim() {
 
 /nodeAffinity:/ {
     n_space=index($0,"nodeAffinity:");
+}
+
+/podAffinity:/ || /podAntiAffinity/ {
+    n_space=0;
 }
 
 END {
