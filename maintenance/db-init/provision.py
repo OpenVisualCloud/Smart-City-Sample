@@ -3,10 +3,12 @@
 from db_ingest import DBIngest
 import os
 import json
+import re
 
 dbhost=os.environ["DBHOST"]
 office=list(map(float,os.environ["OFFICE"].split(",")))
 officestr='$'.join(map(str,office))
+officestr=re.sub(r'\.?0*\$',r'$',re.sub(r'\.?0*$',r'',officestr))
 proxyhost=os.environ["PROXYHOST"]
 scenario=os.environ["SCENARIO"]
 zone=os.environ["ZONE"]
