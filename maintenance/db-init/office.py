@@ -14,7 +14,7 @@ def _set_remote(host, cluster, seeds, skip=True, ping="30s", compress=True):
         "persistent": {
             "cluster": {
                 "remote": {
-                    cluster: {
+                    cluster[1:]: {
                         "seeds": seeds,
                         "skip_unavailable": skip,
                         "transport": {

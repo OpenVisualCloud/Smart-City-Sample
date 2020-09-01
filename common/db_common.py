@@ -6,17 +6,18 @@ import string
 import re
 
 class DBCommon(object):
-    def __init__(self, index, office, host):
+    def __init__(self, index, office, host, remote=False):
         super(DBCommon,self).__init__()
         self._host=host
-        self._index=index+self.office_str(office)
+        ostr=self.office_str(office)
+        self._index=ostr[1:]+":"+index+ostr if remote else index+ostr
         self._include_type_name={"include_type_name":"false"}
         self._error=""
 
     @staticmethod
     def office_str(office):
         if isinstance(office,list): office='_'+('_'.join(map(str,office)))
-        if isinstance(office,dict): office='_'+str(office["lat"])+"_"+str(office["lon"])
+        if isinstance(office,dict): office='_'+str(office["lat"])+'_'+str(office["lon"])
         return re.sub(r'\.?0*_',r'_',re.sub(r'\.?0*$',r'',office)).translate(str.maketrans("-.","nd"))
 
     def _request(self, op, *args, **kwargs):

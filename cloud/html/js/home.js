@@ -79,7 +79,7 @@ $("#pg-home").on(":initpage", function(e) {
         if (timer) clearTimeout(timer);
 
         var center=map.getCenter();
-        apiHost.search(index,"("+queries+") and location:["+center.lat+","+center.lng+","+settings.radius()+"]","$*").then(function (data) {
+        apiHost.search(index,"("+queries+") and location:["+center.lat+","+center.lng+","+settings.radius()+"]","_*").then(function (data) {
             var offices=page.data('offices');
             var sensors=page.data('sensors');
             var scenario=page.data('scenario');
