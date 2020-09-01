@@ -55,19 +55,17 @@ spec:
             - containerPort: 9300
           env:
             - name: "cluster.name"
-              value: "db-cluster"
+              value: "office-cluster"
             - name: "node.name"
               value: "defn(`OFFICE_NAME')"
             - name: "node.master"
-              value: "false"
+              value: "true"
             - name: "node.data"
               value: "true"
-            - name: "node.attr.zone"
-              value: "defn(`OFFICE_NAME')"
             - name: "discovery.zen.minimum_master_nodes"
               value: "1"
             - name: "discovery.zen.ping.unicast.hosts"
-              value: "cloud-db-service"
+              value: "localhost:9300"
             - name: "action.auto_create_index"
               value: "0"
             - name: "ES_JAVA_OPTS"
@@ -83,7 +81,7 @@ spec:
           lifecycle:
             preStop:
               exec:
-                command: ["/usr/bin/curl","-X","DELETE","http://cloud-db-service:9200/offices/_doc/patsubst(patsubst(translit(defn(`OFFICE_LOCATION'),`,',`$'),`\.?0*\$',`$'),`\.?0*$',`')"]
+                command: ["/usr/bin/curl","-X","DELETE","http://localhost:9200/sensorsZ*,startupZ*"]
           securityContext:
             runAsUser: 1000
             runAsGroup: 1000
@@ -140,13 +138,17 @@ spec:
             - name: "OFFICE"
               value: "defn(`OFFICE_LOCATION')"
             - name: "DBHOST"
-              value: "http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')-db,db)-service:9200"
+              value: "http://ifelse(defn(`NOFFICES'),1,db,defn(`OFFICE_NAME')-db)-service:9200"
+            - name: "DBSEEDS"
+              value: "ifelse(defn(`NOFFICES'),1,db,defn(`OFFICE_NAME')-db)-service:9300"
+            - name: "DBCHOST"
+              value: "http://ifelse(defn(`NOFFICES'),1,db,cloud-db)-service:9200"
+            - name: "DBCSEEDS"
+              value: "ifelse(defn(`NOFFICES'),1,db,cloud-db)-service:9300"
             - name: PROXYHOST
               value: "http://defn(`OFFICE_NAME')-storage-service.default.svc.cluster.local:8080"
             - name: `SCENARIO'
               value: "defn(`SCENARIO_NAME')"
-            - name: "ZONE"
-              value: "defn(`OFFICE_NAME')"
             - name: NO_PROXY
               value: "*"
             - name: no_proxy

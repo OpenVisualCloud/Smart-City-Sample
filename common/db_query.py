@@ -1,32 +1,15 @@
 #!/usr/bin/python3
 
+from db_common import DBCommon
 from dsl_yacc import compile, check_nested_label
-from threading import Event
 from language_dsl import text
-import traceback
 import requests
-import time
 import json
-import re
 
-class DBQuery(object):
+class DBQuery(DBCommon):
     def __init__(self, index, office, host):
-        super(DBQuery,self).__init__()
-        self._host=host
-        if isinstance(office,list): office='$'+('$'.join(map(str,office)))
-        if isinstance(office,dict): office='$'+str(office["lat"])+"$"+str(office["lon"])
-        office=re.sub(r'\.?0*\$',r'$',re.sub(r'\.?0*$',r'',office))
-        self._index=index+office
-        self._include_type_name={"include_type_name":"false"}
-
-    def _request(self, op, *args, **kwargs):
-        try:
-            r=op(*args, **kwargs)
-            if r.status_code==200 or r.status_code==201: return r.json()
-            print("Exception: "+str(r.json()["error"]["reason"]), flush=True)
-        except:
-            print(traceback.format_exc(), flush=True)
-        raise Exception(text["query error"])
+        super(DBQuery,self).__init__(index, office, host)
+        self._error=text["query error"]
 
     def _spec_from_mapping(self, spec, prefix, properties):
         for field in properties:
@@ -150,9 +133,6 @@ class DBQuery(object):
             cmds="\n".join([json.dumps(x) for x in cmds])+"\n"
             self._request(requests.post,self._host+"/_bulk",data=cmds,headers={"content-type":"application/x-ndjson"})
 
-    def delete(self, _id):
-        return self._request(requests.delete,self._host+"/"+self._index+"/_doc/"+_id,headers={'Content-Type':'application/json'})
-
     def hints(self, size=50):
         specs=self._spec_from_index()
         keywords={}
@@ -168,14 +148,3 @@ class DBQuery(object):
         for var in values:
             keywords[var]["values"]=list(values[var].keys())
         return keywords
-
-    def wait(self, stop=Event()):
-        officestr="$".join(self._index.split("$")[1:])
-        while not stop.is_set():
-            try:
-                r=requests.get(self._host+"/offices/_doc/"+officestr)
-                if r.status_code==200: return stop
-            except:
-                print("Waiting for DB...", flush=True)
-            stop.wait(1)
-
