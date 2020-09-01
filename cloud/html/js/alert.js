@@ -7,7 +7,6 @@ var alerts={
         }).on('remove', function () {
             screen.hide();
         });
-        setTimeout(alerts.update,5000,page.data('map'),page.data('offices'),page.data('sensors'));
 
         screen.bind('dragstart',function (e) {
             var screen=$(this);
@@ -44,11 +43,10 @@ var alerts={
         if (screen.find("li").length>50)
             screen.find("li:last").remove();
     },
-    update: function (map, offices,sensors) {
+    update: function (ctx, offices, sensors) {
         var screen=$(".page-home-alert-screen");
         if (screen.is(":visible")) {
-            var center=map.getCenter();
-            apiHost.search("alerts","time>=now-"+settings.alert_window()+" and location:["+center.lat+","+center.lng+","+settings.radius()+"]","$*").then(function (r) {
+            apiHost.search("alerts","time>=now-"+settings.alert_window(),ctx.office).then(function (r) {
                 $.each(r.response, function (x,r1) {
                     var time=new Date(r1._source.time);
                     $.each(["info","warning","fatal"], function (x, level) {
@@ -65,7 +63,6 @@ var alerts={
             }).catch(function () {
             });
         }
-        setTimeout(alerts.update,5000,map,offices,sensors);
     },
 };
 

@@ -5,12 +5,12 @@ from tornado import web,gen
 from tornado.concurrent import run_on_executor
 from concurrent.futures import ThreadPoolExecutor
 from language import text, encode
-import requests
+from db_query import DBQuery
 import os
-import json
 
 dbhost=os.environ["DBHOST"]
-health_check=os.environ["HEALTH_CHECK"]
+office=list(map(float,os.environ["OFFICE"].split(","))) if "OFFICE" in os.environ else ""
+dbq=DBQuery(index="",office=office,host=dbhost)
 
 class HealthHandler(web.RequestHandler):
     def __init__(self, app, request, **kwargs):
@@ -21,11 +21,9 @@ class HealthHandler(web.RequestHandler):
         return True
 
     @run_on_executor
-    def _check_health(self, zone):
+    def _check_health(self):
         try:
-            r=requests.get(dbhost+"/_nodes/"+zone+"/http")
-            if r.json()["_nodes"]["successful"]>0: 
-                return { "state": "online" }
+            if dbq.health(): return { "state": "online" }
             return text["connection error"]
         except Exception as e:
             print("Exception: "+str(e), flush=True)
@@ -33,15 +31,10 @@ class HealthHandler(web.RequestHandler):
 
     @gen.coroutine
     def get(self):
-        zone=unquote(str(self.get_argument("zone")))
-        if health_check=="enabled":
-            r=yield self._check_health(zone)
-            if isinstance(r, str):
-                self.set_status(400, encode(r))
-                return
-        else:
-            r={ "state": "online" }
+        r=yield self._check_health()
+        if isinstance(r, str):
+            self.set_status(400, encode(r))
+            return
 
         self.write({"response":r})
         self.set_status(200, 'OK')
-        self.finish()

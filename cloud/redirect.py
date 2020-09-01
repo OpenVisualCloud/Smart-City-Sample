@@ -41,10 +41,9 @@ class RedirectHandler(web.RequestHandler):
 
     @gen.coroutine
     def get(self):
-        office=self.get_argument("office",None)
-        if office:
-            office=list(map(float,unquote(str(self.get_argument("office"))).split(",")))
-            r=yield self._office_info(office)
+        office=unquote(self.get_argument("office",""))
+        if office.find(",")>=0:
+            r=yield self._office_info(list(map(float,office.split(","))))
         else:
             r={"_source":{"uri":proxyhost}}
 

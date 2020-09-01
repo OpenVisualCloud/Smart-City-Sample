@@ -7,8 +7,8 @@ import requests
 import json
 
 class DBQuery(DBCommon):
-    def __init__(self, index, office, host, remote=False):
-        super(DBQuery,self).__init__(index, office, host, remote)
+    def __init__(self, index, office, host):
+        super(DBQuery,self).__init__(index, office, host)
         self._error=text["query error"]
 
     def _spec_from_mapping(self, spec, prefix, properties):

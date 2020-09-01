@@ -6,27 +6,28 @@ import string
 import re
 
 class DBCommon(object):
-    def __init__(self, index, office, host, remote=False):
+    def __init__(self, index, office, host):
         super(DBCommon,self).__init__()
-        self._host=host
-        ostr=self.office_str(office)
-        self._index=ostr[1:]+":"+index+ostr if remote else index+ostr
-        self._include_type_name={"include_type_name":"false"}
-        self._error=""
-
-    @staticmethod
-    def office_str(office):
         if isinstance(office,list): office='_'+('_'.join(map(str,office)))
         if isinstance(office,dict): office='_'+str(office["lat"])+'_'+str(office["lon"])
-        return re.sub(r'\.?0*_',r'_',re.sub(r'\.?0*$',r'',office)).translate(str.maketrans("-.","nd"))
+        self._office=re.sub(r'\.?0*_',r'_',re.sub(r'\.?0*$',r'',office)).translate(str.maketrans("-.","nd"))
+        self._index=index+self._office
+        self._include_type_name={"include_type_name":"false"}
+        self._host=host
+        self._error=""
+
+    def office(self):
+        return self._office
 
     def _request(self, op, *args, **kwargs):
         try:
             r=op(*args, **kwargs)
             if r.status_code==200 or r.status_code==201: return r.json()
-            print("Exception: "+str(r.json()["error"]["reason"]), flush=True)
+            print("Exception: {}".format(r.json()), flush=True)
         except Exception as e:
             print("Exception: {}".format(e), flush=True)
+            import traceback
+            print(traceback.format_exc(), flush=True)
         raise Exception(self._error)
 
     def delete(self, _id):
@@ -42,3 +43,7 @@ class DBCommon(object):
                 pass
             print("Waiting for DB...", flush=True)
             stop.wait(1)
+
+    def health(self):
+        r=self._request(requests.get,self._host+"/_cluster/health")
+        return r["status"]=="green" or r["status"]=="yellow"

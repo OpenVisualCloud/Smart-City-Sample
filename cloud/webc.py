@@ -2,12 +2,7 @@
 
 from tornado import ioloop, web
 from tornado.options import define, options, parse_command_line
-from search import SearchHandler
-from health import HealthHandler
-from hint import HintHandler
 from redirect import RedirectHandler
-from stats import StatsHandler
-from histogram import HistogramHandler
 from subprocess import Popen
 from signal import signal, SIGTERM, SIGQUIT
 import os
@@ -34,12 +29,13 @@ def quit_service(signum, frame):
     if nginxc: nginxc.send_signal(SIGQUIT)
         
 app = web.Application([
-    (r'/api/health',HealthHandler),
-    (r'/api/search',SearchHandler),
-    (r'/api/stats',StatsHandler),
-    (r'/api/histogram',HistogramHandler),
+    (r'/api/health',RedirectHandler),
+    (r'/api/search',RedirectHandler),
+    (r'/api/stats',RedirectHandler),
+    (r'/api/histogram',RedirectHandler),
     (r'/api/workload',RedirectHandler),
-    (r'/api/hint',HintHandler),
+    (r'/api/mapping',RedirectHandler),
+    (r'/api/hint',RedirectHandler),
     (r'/recording/.*',RedirectHandler),
     (r'/thumbnail/.*',RedirectHandler),
 ])

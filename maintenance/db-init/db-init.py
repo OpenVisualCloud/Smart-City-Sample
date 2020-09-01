@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 from signal import SIGTERM, signal
-from db_ingest import DBIngest
+from db_query import DBQuery
 from provision import Provision
 from office import RegisterOffice
 import traceback
@@ -19,8 +19,17 @@ def quit_service():
     exit(143)
 
 signal(SIGTERM, quit_service)
-officestr=DBIngest.office_str(office)
 
+# wait until DB is ready
+dbq=DBQuery(index="", office=office, host=dbhost)
+while True:
+    try:
+        if dbq.health(): break
+    except:
+        print("Waiting for DB...", flush=True)
+    time.sleep(1)
+    
+officestr=dbq.office()
 settings={
     "offices": {
         "settings": {
@@ -183,15 +192,6 @@ settings={
     },
 }
 
-# wait until DB is ready
-while True:
-    try:
-        r=requests.get(dbhost+"/_cluster/health").json()
-        if r["status"]=="green" or r["status"]=="yellow": break
-    except:
-        print("Waiting for DB...", flush=True)
-    time.sleep(1)
-    
 while True:
     try:
         # delete office specific indexes (to start the office afresh)
