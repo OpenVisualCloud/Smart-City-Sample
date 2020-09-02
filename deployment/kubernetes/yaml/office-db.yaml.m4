@@ -81,7 +81,7 @@ spec:
           lifecycle:
             preStop:
               exec:
-                command: ["/usr/bin/curl","-X","DELETE","http://localhost:9200/sensorsZ*,startupZ*"]
+                command: ["/usr/bin/curl","-X","DELETE","http://localhost:9200/sensors_*,startup_*"]
           securityContext:
             runAsUser: 1000
             runAsGroup: 1000

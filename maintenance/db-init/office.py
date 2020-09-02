@@ -28,12 +28,10 @@ def _set_remote(host, cluster_name, seeds, skip=True, ping="30s", compress=True)
     print(r.json(), flush=True)
 
 def RegisterOffice(officestr, officeinfo):
+    print("Register local DB...", flush=True)
+    _set_remote(dbchost,officestr[1:],dbseeds)
+
     print("Register office...", flush=True)
-    if dbhost!=dbchost:
-        # register the local DB to the remote DB.
-        _set_remote(dbchost,officestr[1:],dbseeds)
-        
-    # register office info
     dbo=DBIngest(index="offices",office="",host=dbchost)
     dbo.ingest(officeinfo, id1=officestr)
 
