@@ -139,9 +139,13 @@ class UploadHandler(web.RequestHandler):
     @gen.coroutine
     def post(self):
         office=list(map(float,self.get_body_argument('office').split(",")))
+        print("office = {}".format(office), flush=True)
         sensor=self.get_body_argument('sensor')
+        print("sensor = {}".format(sensor), flush=True)
         timestamp=int(self.get_body_argument('time'))
+        print("timestamp = {}".format(timestamp), flush=True)
         path=self.get_body_argument('file.path')
+        print("file.path = {}".format(path), flush=True)
         yield self._rec2db(office, sensor, timestamp, path)
         self.set_status(400, "Return 400 to remove this file")
 
