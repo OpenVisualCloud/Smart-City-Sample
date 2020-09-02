@@ -2,7 +2,7 @@
 
 DIR=$(dirname $(readlink -f "$0"))
 NOFFICES="${4:-1}"
-REGISTRY="$8"
+REGISTRY="$9"
 yml="$DIR/docker-compose.yml"
 
 export USER_ID="$(id -u)"
