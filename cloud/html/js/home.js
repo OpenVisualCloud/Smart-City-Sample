@@ -180,8 +180,9 @@ $("#pg-home").on(":initpage", function(e) {
                         sensorctx.line.setStyle({ color: line_color, dashArray: sensorctx.line_dash }).redraw();
                     });
                 }).catch(function (e) {
-                    set_office_status(officectx, e.status!=502);
-                    if (e.status!=502) $("[hint-panel]").trigger(":error", [decodeURIComponent(e.statusText)]);
+                    var online=e.status<500 || e.status>504;
+                    set_office_status(officectx, online);
+                    if (online) $("[hint-panel]").trigger(":error", [decodeURIComponent(e.statusText)]);
                 });
             });
         }).catch(function (e) {
