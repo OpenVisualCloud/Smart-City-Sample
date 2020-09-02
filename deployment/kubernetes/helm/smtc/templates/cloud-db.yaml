@@ -70,7 +70,9 @@ spec:
 {{- $args := dict "scenarioName" $scenarioName "Values" $.Values }}
 {{- range $officeIdx := until ( int ( include "smtc.noffices" $args ) ) }}
 {{- $officeIdx2 := add (mul $officeIdx (len $.Values.scenario)) $scenarioIdx }}
-            - name: "FORWARD_TUNNEL{{ $officeIdx2 }}"
+            - name: "FORWARD_TUNNEL{{ $officeIdx2 }}_1"
+              value: "{{ $.Values.connector.cloudHost }}:{{ add $.Values.connector.officeQueryPort $officeIdx2 }} localhost:{{ add $.Values.connector.officeQueryPort $officeIdx2 }}"
+            - name: "FORWARD_TUNNEL{{ $officeIdx2 }}_2"
               value: "{{ $.Values.connector.cloudHost }}:{{ add $.Values.connector.officeTransportPort $officeIdx2 }} localhost:{{ add $.Values.connector.officeTransportPort $officeIdx2 }}"
 {{- end }}
 {{- end }}

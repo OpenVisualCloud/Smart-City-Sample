@@ -69,6 +69,8 @@ spec:
               value: "true"
 {{- if (len $.Values.connector.cloudHost) }}
             - name: "REVERSE_TUNNEL1"
+              value: "{{ $.Values.connector.cloudHost }}:{{ add $.Values.connector.officeQueryPort $officeIdx2 }} localhost:9200"
+            - name: "REVERSE_TUNNEL2"
               value: "{{ $.Values.connector.cloudHost }}:{{ add $.Values.connector.officeTransportPort $officeIdx2 }} localhost:9300"
 {{- end }}
             - name: "action.auto_create_index"
@@ -167,7 +169,7 @@ spec:
             - name: PROXYHOST
               value: "http://127.0.0.1:{{ add $.Values.connector.officeStoragePort $officeIdx }}"
             - name: DBSEEDS
-              value: "localhost:{{ add $.Values.connector.officeTransportPort $officeIdx2 }}"
+              value: "127.0.0.1:{{ add $.Values.connector.officeTransportPort $officeIdx2 }}"
             - name: DBCHOST
               value: "http://localhost:9200"
             - name: FORWARD_TUNNEL1
