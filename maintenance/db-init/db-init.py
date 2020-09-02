@@ -2,8 +2,8 @@
 
 from signal import SIGTERM, signal
 from db_query import DBQuery
+from db_ingest import DBIngest
 from provision import Provision
-from office import RegisterOffice
 import traceback
 import requests
 import time
@@ -209,7 +209,10 @@ while True:
             print(r.json(), flush=True)
 
         officeinfo=Provision(officestr)
-        RegisterOffice(officestr, officeinfo)
+
+        print("Register office {}".format(office), flush=True)
+        dbo=DBIngest(index="offices",office="",host=dbchost)
+        dbo.ingest(officeinfo, id1=officestr)
         break
 
     except Exception as e:

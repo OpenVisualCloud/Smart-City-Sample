@@ -89,52 +89,12 @@ class UploadHandler(web.RequestHandler):
                     }]
                 })
 
-            # ingest recording local
-            if sinfo:
-                db_rec=DBIngest(host=dbhost, index="recordings", office=office)
-                db_rec.ingest(sinfo)
-        else:
-            # ingest recording cloud
-            if sinfo:
-                db_s=DBQuery(host=dbhost,index="sensors",office=sinfo["office"],remote=True)
-                sensor=list(db_s.search("_id='"+sinfo["sensor"]+"'",size=1,spec={}))
-                if sensor:
-                    # remove status
-                    sensor[0]["_source"].pop("status",None)
-                    # denormalize address
-                    sinfo["address"]=sensor[0]["_source"]["address"]
-
-                    # calcualte hash code for the sensor
-                    m=hashlib.md5()
-                    m.update(json.dumps(sensor[0]["_source"],ensure_ascii=False).encode('utf-8'))
-                    md5=m.hexdigest()
-
-                    # locate the sensor record in cloud
-                    db_sc=DBQuery(host=dbhost, index="sensors", office="")
-                    sensor_c=list(db_sc.search("md5='"+md5+"'",size=1))
-                    if not sensor_c:  # if not available, ingest a sensor record in cloud
-                        sensor_c=[{ "_source": sensor[0]["_source"].copy() }]
-                        sensor_c[0]["_source"]["md5"]=md5
-                        db_sc=DBIngest(host=dbhost, index="sensors", office="")
-                        print("Ingest sensor: {}".format(sensor_c[0]["_source"]), flush=True)
-                        sensor_c[0]=db_sc.ingest(sensor_c[0]["_source"])
-
-                    # replace cloud sensor id and ingest recording
-                    sinfo["sensor"]=sensor_c[0]["_id"]
-
-                    print("Ingest recording: {}".format(sinfo), flush=True)
-                    db_rec=DBIngest(host=dbhost, index="recordings", office="")
-                    db_rec.ingest(sinfo)
-
-                    # copy local analytics to cloud
-                    db_a=DBQuery(host=dbhost,index="analytics",office=sinfo["office"],remote=True)
-                    data=[]
-                    for r in db_a.search('sensor="'+sensor[0]["_id"]+'" and office:['+str(office[0])+','+str(office[1])+'] and time>='+str(sinfo["time"])+' and time<='+str(sinfo["time"]+sinfo["duration"]*1000),size=10000,spec={}):
-                        r["_source"]["sensor"]=sinfo["sensor"]
-                        data.append(r["_source"])
-                    db_ac=DBIngest(host=dbhost, index="analytics", office="")
-                    print("Ingest analytics: {}".format(len(data)), flush=True)
-                    db_ac.ingest_bulk(data)
+        # ingest recording local
+        if sinfo:
+            print("Ingest recording: {}".format(sinfo), flush=True)
+            office1=office if local_office else ""
+            db_rec=DBIngest(host=dbhost, index="recordings", office=office1)
+            db_rec.ingest(sinfo)
                         
     @gen.coroutine
     def post(self):

@@ -39,6 +39,8 @@ spec:
               value: "defn(`OFFICE_LOCATION')"
             - name: DBHOST
               value: "http://ifelse(defn(`NOFFICES'),1,db,defn(`OFFICE_NAME')-db)-service:9200"
+            - name: DBCHOST
+              value: "http://ifelse(defn(`NOFFICES'),1,db,cloud-db)-service:9200"
             - name: STHOSTL
               value: "http://defn(`OFFICE_NAME')-storage-service:8080/recording"
             - name: STHOSTC

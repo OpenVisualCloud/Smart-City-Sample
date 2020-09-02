@@ -49,11 +49,7 @@ spec:
         fsGroup: 1000
       containers:
         - name: {{ $officeName }}-db
-{{- if (len $.Values.connector.cloudHost) }}
-          image: {{ $.Values.registryPrefix }}smtc_database_tunnelled:latest
-{{- else }}
           image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.8.1
-{{- end }}
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 9200
@@ -67,12 +63,6 @@ spec:
               value: "true"
             - name: "node.data"
               value: "true"
-{{- if (len $.Values.connector.cloudHost) }}
-            - name: "REVERSE_TUNNEL1"
-              value: "{{ $.Values.connector.cloudHost }}:{{ add $.Values.connector.officeQueryPort $officeIdx2 }} localhost:9200"
-            - name: "REVERSE_TUNNEL2"
-              value: "{{ $.Values.connector.cloudHost }}:{{ add $.Values.connector.officeTransportPort $officeIdx2 }} localhost:9300"
-{{- end }}
             - name: "action.auto_create_index"
               value: "0"
             - name: "ES_JAVA_OPTS"
@@ -85,11 +75,6 @@ spec:
             - mountPath: /etc/localtime
               name: timezone
               readOnly: true
-{{- if (len $.Values.connector.cloudHost) }}
-            - mountPath: /etc/hostkey
-              name: hostkey
-              readOnly: true
-{{- end }}
           lifecycle:
             preStop:
               exec:
@@ -109,12 +94,6 @@ spec:
             hostPath:
                 path: /etc/localtime
                 type: File
-{{- if (len $.Values.connector.cloudHost) }}
-          - name: hostkey
-            secret:
-                secretName: tunnel-secret
-                defaultMode: 0440
-{{- end }}
       {{ include "smtc.platform.node-selector" $ }}
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
@@ -168,8 +147,6 @@ spec:
 {{- if (len $.Values.connector.cloudHost) }}
             - name: PROXYHOST
               value: "http://127.0.0.1:{{ add $.Values.connector.officeStoragePort $officeIdx }}"
-            - name: DBSEEDS
-              value: "127.0.0.1:{{ add $.Values.connector.officeTransportPort $officeIdx2 }}"
             - name: DBCHOST
               value: "http://localhost:9200"
             - name: FORWARD_TUNNEL1
@@ -177,8 +154,6 @@ spec:
 {{- else }}
             - name: PROXYHOST
               value: "http://{{ $officeName }}-storage-service.default.svc.cluster.local:8080"
-            - name: DBSEEDS
-              value: {{ include "smtc.env.dbseeds" $args | quote }}
             - name: DBCHOST
               value: {{ printf "http://%s-service:9200" (include "smtc.db.name" $) | quote }}
 {{- end }}

@@ -135,8 +135,6 @@ spec:
               value: "defn(`OFFICE_LOCATION')"
             - name: "DBHOST"
               value: "http://ifelse(defn(`NOFFICES'),1,db,defn(`OFFICE_NAME')-db)-service:9200"
-            - name: "DBSEEDS"
-              value: "ifelse(defn(`NOFFICES'),1,db,defn(`OFFICE_NAME')-db)-service:9300"
             - name: "DBCHOST"
               value: "http://ifelse(defn(`NOFFICES'),1,db,cloud-db)-service:9200"
             - name: PROXYHOST
