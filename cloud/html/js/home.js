@@ -18,6 +18,14 @@ function sensor_line_color(officectx, sensor) {
     return (sensor._source.status=="idle")?"black":(sensor._source.status=="streaming")?"green":"red";
 }
 
+function set_office_status(officectx, online) {
+    var online2=officectx.online;
+    officectx.online=online;
+    marker_update_icon(officectx.marker, online?officectx.scenario.icon.office.online:officectx.scenario.icon.office.offline);
+    if (online!=online2) 
+        alerts.append(new Date,officectx.address,online?text["office online"]:text["office offline"],online?"info":"fatal");
+}
+
 $("#pg-home").on(":initpage", function(e) {
     var page=$(this);
     $("#layoutButton").hide();
@@ -110,14 +118,10 @@ $("#pg-home").on(":initpage", function(e) {
                 var officectx=offices[officeid];
                 officectx.used=true;
 
+                alerts.update(officectx, offices, sensors);
                 apiHost.search(index,"("+queries+") and location:["+center.lat+","+center.lng+","+settings.radius()+"]",officectx.office).then(function (sensor_reply) {
 
-                    var online=officectx.online;
-                    officectx.online=true;
-                    marker_update_icon(officectx.marker, officectx.scenario.icon.office.online);
-                    if (!online) alerts.append(new Date,officectx.address,text["office online"],"info");
-                    alerts.update(officectx, offices, sensors);
-
+                    set_office_status(officectx,true);
                     $.each(sensor_reply.response, function (x,sensor) {
                         var sensorid=sensor._source.location.lat+","+sensor._source.location.lon;
                         if (!(sensorid in sensors)) {
@@ -176,10 +180,8 @@ $("#pg-home").on(":initpage", function(e) {
                         sensorctx.line.setStyle({ color: line_color, dashArray: sensorctx.line_dash }).redraw();
                     });
                 }).catch(function (e) {
-                    var online=officectx.online;
-                    officectx.online=false;
-                    marker_update_icon(officectx.marker, officectx.scenario.icon.office.offline);
-                    if (online) alerts.append(new Date,officectx.address,text["office offline"],"fatal");
+                    set_office_status(officectx, e.status!=502);
+                    if (e.status!=502) $("[hint-panel]").trigger(":error", [decodeURIComponent(e.statusText)]);
                 });
             });
         }).catch(function (e) {

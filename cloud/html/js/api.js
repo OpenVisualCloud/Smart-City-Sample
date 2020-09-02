@@ -36,11 +36,4 @@ var apiHost={
         console.log("GET "+url+"?"+$.param(args));
         return $.get(url,args);
     },
-    health: function (office) {
-        var url="api/health";
-        var args={};
-        if (office) args.office=office.lat+","+office.lon;
-        console.log("GET "+url+"?"+$.param(args));
-        return $.get(url,args);
-    },
 };

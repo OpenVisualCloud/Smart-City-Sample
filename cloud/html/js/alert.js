@@ -28,7 +28,7 @@ var alerts={
             dateStyle:'short',timeStyle:'short', hour12:false,
         });
         var colors={info:"#4AFC0B",warning:"#F7FA0C",fatal:"#FF0013"};
-        var li=$('<li>'+timestamp+' @'+address+': '+text+'</li>').css({color:colors[level],"font-size":0});
+        var li=$('<li>'+timestamp+' @'+address+': '+text+'</li>').css({color:colors[level],"font-size":'0em'});
         li.data('time',time);
 
         var exist=false;
@@ -37,6 +37,11 @@ var alerts={
         });
         if (!exist) {
             screen.prepend(li);
+            screen.children('li').sort(function(a,b) {
+                if ($(a).data('time')>$(b).data('time')) return -1;
+                if ($(a).data('time')<$(b).data('time')) return 1;
+                return 0;
+            }).appendTo(screen);
             screen.find("li:first").animate({'font-size':'1em'});
         }
 
