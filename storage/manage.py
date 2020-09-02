@@ -9,7 +9,6 @@ from search import SearchHandler
 from histogram import HistogramHandler
 from hint import HintHandler
 from stats import StatsHandler
-from health import HealthHandler
 from subprocess import Popen
 from signal import signal, SIGTERM, SIGQUIT
 import os
@@ -32,7 +31,6 @@ app = web.Application([
     (r'/api/hint',HintHandler),
     (r'/api/stats',StatsHandler),
     (r'/api/workload',WorkloadHandler),
-    (r'/api/health',HealthHandler),
 ])
 
 if __name__ == "__main__":

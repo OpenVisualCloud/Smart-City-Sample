@@ -29,7 +29,6 @@ def quit_service(signum, frame):
     if nginxc: nginxc.send_signal(SIGQUIT)
         
 app = web.Application([
-    (r'/api/health',RedirectHandler),
     (r'/api/search',RedirectHandler),
     (r'/api/stats',RedirectHandler),
     (r'/api/histogram',RedirectHandler),
