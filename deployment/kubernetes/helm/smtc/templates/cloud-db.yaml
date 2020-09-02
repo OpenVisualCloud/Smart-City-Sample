@@ -64,18 +64,8 @@ spec:
             - name: "ES_JAVA_OPTS"
               value: "-Xms2048m -Xmx2048m"
 {{- if (len .Values.connector.cloudHost) }}
-            - name: "transport.port"
-              value: "9300"
-            - name: "transport.host"
-              value: "0.0.0.0"
-            - name: "transport.publish_host"
-              value: "localhost"
-            - name: "transport.publish_port"
-              value: "{{ $.Values.connector.cloudTransportPort }}"
             - name: "REVERSE_TUNNEL1"
               value: "{{ $.Values.connector.cloudHost }}:{{ $.Values.connector.cloudQueryPort }} localhost:9200"
-            - name: "REVERSE_TUNNEL2"
-              value: "{{ $.Values.connector.cloudHost }}:{{ $.Values.connector.cloudTransportPort }} localhost:9300"
 {{- range $scenarioIdx, $scenarioName := $.Values.scenario }}
 {{- $args := dict "scenarioName" $scenarioName "Values" $.Values }}
 {{- range $officeIdx := until ( int ( include "smtc.noffices" $args ) ) }}

@@ -68,24 +68,8 @@ spec:
             - name: "node.data"
               value: "true"
 {{- if (len $.Values.connector.cloudHost) }}
-            - name: "transport.port"
-              value: "9300"
-            - name: "transport.publish_host"
-              value: "localhost"
-            - name: "transport.publish_port"
-              value: "{{ add $.Values.connector.officeTransportPort $officeIdx2 }}"
             - name: "REVERSE_TUNNEL1"
               value: "{{ $.Values.connector.cloudHost }}:{{ add $.Values.connector.officeTransportPort $officeIdx2 }} localhost:9300"
-            - name: "FORWARD_TUNNEL_CLOUD_TRANSPORT"
-              value: "{{ $.Values.connector.cloudHost }}:{{ $.Values.connector.cloudTransportPort }} localhost:{{ $.Values.connector.cloudTransportPort }}"
-            {{- range $tmpsidx, $tmpsname := $.Values.scenario }}
-            {{- $args := dict "scenarioName" $tmpsname "Values" $.Values }}
-            {{- range $tmpoidx := until ( int ( include "smtc.noffices" $args ) ) }}
-            {{- $tmpoidx2 := add (mul $tmpoidx (len $.Values.scenario)) $tmpsidx }}
-            - name: "FORWARD_TUNNEL_OFFICE_TRANSPORT{{ $tmpoidx2 }}"
-              value: "{{ $.Values.connector.cloudHost }}:{{ add $.Values.connector.officeTransportPort $tmpoidx2 }} localhost:{{ add $.Values.connector.officeTransportPort $tmpoidx2 }}"
-            {{- end }}
-            {{- end }}
 {{- end }}
             - name: "action.auto_create_index"
               value: "0"
@@ -164,7 +148,11 @@ spec:
       enableServiceLinks: false
       containers:
         - name: {{ $officeName }}-db-init
+{{- if (len $.Values.connector.cloudHost) }}
+          image: {{ $.Values.registryPrefix }}smtc_db_init_tunnelled:latest
+{{- else }}
           image: {{ $.Values.registryPrefix }}smtc_db_init:latest
+{{- end }}
           imagePullPolicy: IfNotPresent
           env:
             - name: OFFICE
@@ -173,15 +161,22 @@ spec:
             - name: DBHOST
               {{- $args := dict "officeName" $officeName "Values" $.Values }}
               value: {{ include "smtc.env.dbhost" $args | quote }}
+{{- if (len $.Values.connector.cloudHost) }}
+            - name: PROXYHOST
+              value: "http://127.0.0.1:{{ add $.Values.connector.officeStoragePort $officeIdx }}"
+            - name: DBSEEDS
+              value: "localhost:{{ add $.Values.connector.officeTransportPort $officeIdx2 }}"
+            - name: DBCHOST
+              value: "http://localhost:9200"
+            - name: FORWARD_TUNNEL1
+              value: "{{ $.Values.connector.cloudHost }}:{{ $.Values.connector.cloudQueryPort }} localhost:9200"
+{{- else }}
+            - name: PROXYHOST
+              value: "http://{{ $officeName }}-storage-service.default.svc.cluster.local:8080"
             - name: DBSEEDS
               value: {{ include "smtc.env.dbseeds" $args | quote }}
             - name: DBCHOST
               value: {{ printf "http://%s-service:9200" (include "smtc.db.name" $) | quote }}
-            - name: PROXYHOST
-{{- if (len $.Values.connector.cloudHost) }}
-              value: "http://127.0.0.1:{{ add $.Values.connector.officeStoragePort $officeIdx }}"
-{{- else }}
-              value: "http://{{ $officeName }}-storage-service.default.svc.cluster.local:8080"
 {{- end }}
             - name: SCENARIO
               value: {{ $scenarioName | quote }}
