@@ -41,12 +41,13 @@ rs=dbs.ingest({
 })
 
 dbq=DBQuery(index="recordings",office=office,host=dbhost)
+dbs=DBQuery(index="sensors",office=office,host=dbhost)
 dba=DBQuery(index="analytics",office=office,host=dbhost)
 
 while not stop.is_set():
     print("Searching...",flush=True)
     try:
-        for q in dbq.search("evaluated=false", size=25):
+        for q in dbq.search("not evaluated=true", size=25):
             if stop.is_set(): break
 
             # mark it as evaluated
@@ -70,6 +71,7 @@ while not stop.is_set():
             print("Uploading: "+ sthostc, flush=True)
             sensor=q["_source"]["sensor"]
             timestamp=q["_source"]["time"]
+
             upload(sthostc, mp4file, office, sensor, timestamp)
             os.remove(mp4file)
     except:

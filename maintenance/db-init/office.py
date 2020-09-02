@@ -7,14 +7,13 @@ import requests
 dbhost=os.environ["DBHOST"]
 dbseeds=os.environ["DBSEEDS"].split(",")
 dbchost=os.environ["DBCHOST"]
-dbcseeds=os.environ["DBCSEEDS"].split(",")
 
-def _set_remote(host, cluster, seeds, skip=True, ping="30s", compress=True):
+def _set_remote(host, cluster_name, seeds, skip=True, ping="30s", compress=True):
     r=requests.put(host+"/_cluster/settings",json={
         "persistent": {
             "cluster": {
                 "remote": {
-                    cluster[1:]: {
+                    cluster_name: {
                         "seeds": seeds,
                         "skip_unavailable": skip,
                         "transport": {
@@ -31,11 +30,8 @@ def _set_remote(host, cluster, seeds, skip=True, ping="30s", compress=True):
 def RegisterOffice(officestr, officeinfo):
     print("Register office...", flush=True)
     if dbhost!=dbchost:
-        # register the cloud cluster to local DB.
-        _set_remote(dbhost,"cloud",dbcseeds)
-
-        # register the local cluster to remote DB.
-        _set_remote(dbchost,officestr,dbseeds)
+        # register the local DB to the remote DB.
+        _set_remote(dbchost,officestr[1:],dbseeds)
         
     # register office info
     dbo=DBIngest(index="offices",office="",host=dbchost)

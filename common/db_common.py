@@ -6,12 +6,12 @@ import string
 import re
 
 class DBCommon(object):
-    def __init__(self, index, office, host):
+    def __init__(self, index, office, host, remote=False):
         super(DBCommon,self).__init__()
         if isinstance(office,list): office='_'+('_'.join(map(str,office)))
         if isinstance(office,dict): office='_'+str(office["lat"])+'_'+str(office["lon"])
         self._office=re.sub(r'\.?0*_',r'_',re.sub(r'\.?0*$',r'',office)).translate(str.maketrans("-.","nd"))
-        self._index=index+self._office
+        self._index=self._office[1:]+":"+index+self._office if remote else index+self._office
         self._include_type_name={"include_type_name":"false"}
         self._host=host
         self._error=""
@@ -26,8 +26,6 @@ class DBCommon(object):
             print("Exception: {}".format(r.json()), flush=True)
         except Exception as e:
             print("Exception: {}".format(e), flush=True)
-            import traceback
-            print(traceback.format_exc(), flush=True)
         raise Exception(self._error)
 
     def delete(self, _id):

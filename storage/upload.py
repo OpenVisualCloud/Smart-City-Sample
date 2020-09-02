@@ -3,7 +3,7 @@
 from tornado import web, gen
 from tornado.concurrent import run_on_executor
 from concurrent.futures import ThreadPoolExecutor
-from urllib.parse import unquote_plus
+from urllib.parse import unquote
 from signal import signal, SIGTERM
 from db_query import DBQuery
 from db_ingest import DBIngest
@@ -96,8 +96,8 @@ class UploadHandler(web.RequestHandler):
         else:
             # ingest recording cloud
             if sinfo:
-                db_s=DBQuery(host=dbhost, index="sensors", office=sinfo["office"])
-                sensor=list(db_s.search("_id='"+sinfo["sensor"]+"'",size=1))
+                db_s=DBQuery(host=dbhost,index="sensors",office=sinfo["office"],remote=True)
+                sensor=list(db_s.search("_id='"+sinfo["sensor"]+"'",size=1,spec={}))
                 if sensor:
                     # remove status
                     sensor[0]["_source"].pop("status",None)
@@ -127,9 +127,9 @@ class UploadHandler(web.RequestHandler):
                     db_rec.ingest(sinfo)
 
                     # copy local analytics to cloud
-                    db_a=DBQuery(host=dbhost, index="analytics", office=sinfo["office"])
+                    db_a=DBQuery(host=dbhost,index="analytics",office=sinfo["office"],remote=True)
                     data=[]
-                    for r in db_a.search('sensor="'+sensor[0]["_id"]+'" and office:['+str(office[0])+','+str(office[1])+'] and time>='+str(sinfo["time"])+' and time<='+str(sinfo["time"]+sinfo["duration"]*1000),size=10000):
+                    for r in db_a.search('sensor="'+sensor[0]["_id"]+'" and office:['+str(office[0])+','+str(office[1])+'] and time>='+str(sinfo["time"])+' and time<='+str(sinfo["time"]+sinfo["duration"]*1000),size=10000,spec={}):
                         r["_source"]["sensor"]=sinfo["sensor"]
                         data.append(r["_source"])
                     db_ac=DBIngest(host=dbhost, index="analytics", office="")

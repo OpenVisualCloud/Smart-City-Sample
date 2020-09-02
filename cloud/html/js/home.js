@@ -111,6 +111,9 @@ $("#pg-home").on(":initpage", function(e) {
                 officectx.used=true;
 
                 apiHost.search(index,"("+queries+") and location:["+center.lat+","+center.lng+","+settings.radius()+"]",officectx.office).then(function (sensor_reply) {
+                    officectx.online=true;
+                    marker_update_icon(officectx.marker, officectx.scenario.icon.office.online);    
+                    alerts.update(officectx, offices, sensors);
 
                     $.each(sensor_reply.response, function (x,sensor) {
                         var sensorid=sensor._source.location.lat+","+sensor._source.location.lon;
@@ -170,18 +173,9 @@ $("#pg-home").on(":initpage", function(e) {
                         sensorctx.line.setStyle({ color: line_color, dashArray: sensorctx.line_dash }).redraw();
                     });
                 }).catch(function (e) {
-                    $("[hint-panel]").trigger(":error", [decodeURIComponent(e.statusText)]);
-                });
-            
-                apiHost.health(officectx.office).then(function (e) {
-                    officectx.online=true;
-                    marker_update_icon(officectx.marker, officectx.scenario.icon.office.online);    
-                }).catch(function (e) {
                     officectx.online=false;
                     marker_update_icon(officectx.marker, officectx.scenario.icon.office.offline);
                 });
-                
-                alerts.update(officectx, offices, sensors);
             });
         }).catch(function (e) {
             $("[hint-panel]").trigger(":error", [decodeURIComponent(e.statusText)]);

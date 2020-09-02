@@ -143,8 +143,6 @@ spec:
               value: "ifelse(defn(`NOFFICES'),1,db,defn(`OFFICE_NAME')-db)-service:9300"
             - name: "DBCHOST"
               value: "http://ifelse(defn(`NOFFICES'),1,db,cloud-db)-service:9200"
-            - name: "DBCSEEDS"
-              value: "ifelse(defn(`NOFFICES'),1,db,cloud-db)-service:9300"
             - name: PROXYHOST
               value: "http://defn(`OFFICE_NAME')-storage-service.default.svc.cluster.local:8080"
             - name: `SCENARIO'

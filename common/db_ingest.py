@@ -30,7 +30,10 @@ class DBIngest(DBCommon):
             self._request(requests.post,self._host+"/_bulk?refresh="+refresh,data=cmds,headers={"content-type":"application/x-ndjson"})
         
     def ingest(self, info, id1=None, refresh="false"):
-        return self._request(requests.put,self._host+"/"+self._index+"/_doc/"+id1+"?refresh="+refresh,json=info) if id1 else self._request(requests.post,self._host+"/"+self._index+"/_doc?refresh="+refresh,json=info)
+        if id1:
+            return self._request(requests.put,self._host+"/"+self._index+"/_doc/"+id1+"?refresh="+refresh,json=info)
+        else:
+            return self._request(requests.post,self._host+"/"+self._index+"/_doc?refresh="+refresh,json=info)
 
     def update(self, _id, info, seq_no=None, primary_term=None):
         options={}
