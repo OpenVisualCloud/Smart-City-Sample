@@ -111,8 +111,11 @@ $("#pg-home").on(":initpage", function(e) {
                 officectx.used=true;
 
                 apiHost.search(index,"("+queries+") and location:["+center.lat+","+center.lng+","+settings.radius()+"]",officectx.office).then(function (sensor_reply) {
+
+                    var online=officectx.online;
                     officectx.online=true;
-                    marker_update_icon(officectx.marker, officectx.scenario.icon.office.online);    
+                    marker_update_icon(officectx.marker, officectx.scenario.icon.office.online);
+                    if (!online) alerts.append(new Date,officectx.address,text["office online"],"info");
                     alerts.update(officectx, offices, sensors);
 
                     $.each(sensor_reply.response, function (x,sensor) {
@@ -173,8 +176,10 @@ $("#pg-home").on(":initpage", function(e) {
                         sensorctx.line.setStyle({ color: line_color, dashArray: sensorctx.line_dash }).redraw();
                     });
                 }).catch(function (e) {
+                    var online=officectx.online;
                     officectx.online=false;
                     marker_update_icon(officectx.marker, officectx.scenario.icon.office.offline);
+                    if (online) alerts.append(new Date,officectx.address,text["office offline"],"fatal");
                 });
             });
         }).catch(function (e) {
