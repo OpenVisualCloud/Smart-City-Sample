@@ -64,11 +64,9 @@ spec:
             - name: "node.name"
               value: "{{ $officeName }}"
             - name: "node.master"
-              value: "false"
+              value: "true"
             - name: "node.data"
               value: "true"
-            - name: "node.attr.zone"
-              value: "{{ $officeName }}"
 {{- if (len $.Values.connector.cloudHost) }}
             - name: "transport.port"
               value: "9300"
@@ -88,14 +86,6 @@ spec:
               value: "{{ $.Values.connector.cloudHost }}:{{ add $.Values.connector.officeTransportPort $tmpoidx2 }} localhost:{{ add $.Values.connector.officeTransportPort $tmpoidx2 }}"
             {{- end }}
             {{- end }}
-{{- end }}
-            - name: "discovery.zen.minimum_master_nodes"
-              value: "1"
-            - name: "discovery.zen.ping.unicast.hosts"
-{{- if (len $.Values.connector.cloudHost) }}
-              value: "localhost:{{ $.Values.connector.cloudTransportPort }}"
-{{- else }}
-              value: "cloud-db-service"
 {{- end }}
             - name: "action.auto_create_index"
               value: "0"
@@ -118,7 +108,7 @@ spec:
             preStop:
               exec:
                 {{- $args := dict "scenarioName" $scenarioName "Values" $.Values "officeIdx" $officeIdx }}
-                command: ["/usr/bin/curl","-X","DELETE",{{ regexReplaceAllLiteral "\\.?0*$" (regexReplaceAllLiteral "\\.?0*," (printf "http://%s/offices/_doc/%s" (include "smtc.connector.dbhost" $) (include "smtc.env.office" $args)) ",") "" | replace "," "$" | quote }}]
+                command: ["/usr/bin/curl","-X","DELETE","http://localhost:9200/sensors_*,startup_*"]
           securityContext:
             runAsUser: 1000
             runAsGroup: 1000
@@ -183,6 +173,10 @@ spec:
             - name: DBHOST
               {{- $args := dict "officeName" $officeName "Values" $.Values }}
               value: {{ include "smtc.env.dbhost" $args | quote }}
+            - name: DBSEEDS
+              value: {{ include "smtc.env.dbseeds" $args | quote }}
+            - name: DBCHOST
+              value: {{ printf "http://%s-service:9200" (include "smtc.db.name" $) | quote }}
             - name: PROXYHOST
 {{- if (len $.Values.connector.cloudHost) }}
               value: "http://127.0.0.1:{{ add $.Values.connector.officeStoragePort $officeIdx }}"
@@ -191,8 +185,6 @@ spec:
 {{- end }}
             - name: SCENARIO
               value: {{ $scenarioName | quote }}
-            - name: "ZONE"
-              value: "{{ $officeName }}"
             - name: NO_PROXY
               value: "*"
             - name: no_proxy

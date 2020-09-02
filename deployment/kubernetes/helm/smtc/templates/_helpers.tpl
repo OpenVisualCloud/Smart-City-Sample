@@ -32,6 +32,17 @@ Expand to the office db name
 {{- end }}
 
 {{/*
+Expand to the office db transport
+*/}}
+{{- define "smtc.env.dbseeds" }}
+{{- if gt (int .Values.noffices) 1 }}
+{{- printf "%s-db-service:9300" .officeName }}
+{{- else }}
+{{- "db-service:9300" }}
+{{- end }}
+{{- end }}
+
+{{/*
 Expand to either .Values.ncameras.traffic or .Values.ncameras.svcq
 */}}
 {{- define "smtc.ncameras" }}
