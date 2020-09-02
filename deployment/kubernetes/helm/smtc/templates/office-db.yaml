@@ -145,6 +145,8 @@ spec:
       labels:
         app: {{ $officeName }}-db-init
     spec:
+      securityContext:
+        fsGroup: {{ $.Values.groupId }}
       enableServiceLinks: false
       containers:
         - name: {{ $officeName }}-db-init
@@ -191,6 +193,11 @@ spec:
             - mountPath: /var/run/secrets
               name: sensor-info
               readOnly: true
+{{- if (len $.Values.connector.cloudHost) }}
+            - mountPath: /etc/hostkey
+              name: hostkey
+              readOnly: true
+{{- end }}
       volumes:
           - name: timezone
             hostPath:
@@ -199,6 +206,12 @@ spec:
           - name: sensor-info
             configMap:
                 name: sensor-info
+{{- if (len $.Values.connector.cloudHost) }}
+          - name: hostkey
+            secret:
+                secretName: tunnel-secret
+                defaultMode: 0440
+{{- end }}
       {{ include "smtc.platform.node-selector" $ }}
         podAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:

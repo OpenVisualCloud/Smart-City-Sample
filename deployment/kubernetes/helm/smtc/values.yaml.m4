@@ -74,7 +74,6 @@ buildScope: ""
 connector:
     cloudHost: ""
     cloudQueryPort: 29200
-    cloudTransportPort: 29300
     officeTransportPort: 29301
     cloudStoragePort: 28080
     officeStoragePort: 28081
