@@ -42,7 +42,7 @@ spec:
             - containerPort: 8080
           env:
             - name: DBHOST
-              value: "http://ifelse(eval(defn(`NOFFICES')>1),1,cloud-db,db)-service:9200"
+              value: "http://ifelse(defn(`NOFFICES'),1,db,cloud-db)-service:9200"
             - name: PROXYHOST
               value: "http://cloud-storage-service.default.svc.cluster.local:8080"
             - name: INDEXES

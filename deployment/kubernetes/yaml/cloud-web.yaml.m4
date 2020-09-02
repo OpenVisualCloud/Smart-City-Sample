@@ -45,13 +45,11 @@ spec:
             - containerPort: 8443
           env:
             - name: DBHOST
-              value: "http://ifelse(eval(defn(`NOFFICES')>1),1,cloud-db,db)-service:9200"
+              value: "http://ifelse(defn(`NOFFICES'),1,db,cloud-db)-service:9200"
             - name: `SCENARIO'
               value: "defn(`SCENARIO')"
             - name: PROXYHOST
               value: "http://cloud-storage-service.default.svc.cluster.local:8080"
-            - name: HEALTH_CHECK
-              value: "ifelse(eval(defn(`NOFFICES')>1),1,enabled,disabled)"
             - name: NO_PROXY
               value: "*"
             - name: no_proxy

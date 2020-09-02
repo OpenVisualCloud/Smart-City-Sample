@@ -7,7 +7,7 @@ loop(OFFICEIDX,1,defn(`NOFFICES'),`
 include(office.m4)
 ifelse(len(defn(`OFFICE_LOCATION')),0,,`
 
-ifelse(eval(defn(`NOFFICES')>1),1,`dnl
+ifelse(defn(`NOFFICES'),1,,`dnl
 
 apiVersion: v1
 kind: Service
@@ -62,10 +62,6 @@ spec:
               value: "true"
             - name: "node.data"
               value: "true"
-            - name: "discovery.zen.minimum_master_nodes"
-              value: "1"
-            - name: "discovery.zen.ping.unicast.hosts"
-              value: "localhost:9300"
             - name: "action.auto_create_index"
               value: "0"
             - name: "ES_JAVA_OPTS"
