@@ -37,7 +37,7 @@ ifelse(defn(`DISCOVER_IP_CAMERA'),`true',`dnl
             - name: OFFICE
               value: "defn(`OFFICE_LOCATION')"
             - name: DBHOST
-              value: "http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')-db,db)-service:9200"
+              value: "http://ifelse(defn(`NOFFICES'),1,db,defn(`OFFICE_NAME')-db)-service:9200"
             - name: MQTTHOST
               value: "defn(`OFFICE_NAME')-mqtt-service"
             - name: STHOST
@@ -112,7 +112,7 @@ ifelse(defn(`DISCOVER_IP_CAMERA'),`true',`dnl
             - name: OFFICE
               value: "defn(`OFFICE_LOCATION')"
             - name: DBHOST
-              value: "http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')-db,db)-service:9200"
+              value: "http://ifelse(defn(`NOFFICES'),1,db,defn(`OFFICE_NAME')-db)-service:9200"
             - name: MQTTHOST
               value: "defn(`OFFICE_NAME')-mqtt-service"
             - name: STHOST
@@ -185,7 +185,7 @@ ifelse(defn(`DISCOVER_IP_CAMERA'),`true',`dnl
             - name: OFFICE
               value: "defn(`OFFICE_LOCATION')"
             - name: DBHOST
-              value: "http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')-db,db)-service:9200"
+              value: "http://ifelse(defn(`NOFFICES'),1,db,defn(`OFFICE_NAME')-db)-service:9200"
             - name: MQTTHOST
               value: "defn(`OFFICE_NAME')-mqtt-service"
             - name: STHOST
@@ -258,7 +258,7 @@ ifelse(defn(`DISCOVER_IP_CAMERA'),`true',`dnl
             - name: OFFICE
               value: "defn(`OFFICE_LOCATION')"
             - name: DBHOST
-              value: "http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')-db,db)-service:9200"
+              value: "http://ifelse(defn(`NOFFICES'),1,db,defn(`OFFICE_NAME')-db)-service:9200"
             - name: MQTTHOST
               value: "defn(`OFFICE_NAME')-mqtt-service"
             - name: STHOST

@@ -5,36 +5,37 @@ from tornado import web,gen
 from tornado.concurrent import run_on_executor
 from concurrent.futures import ThreadPoolExecutor
 from db_query import DBQuery
-from language import encode
+from language import text, encode
 import os
 import json
 
 dbhost=os.environ["DBHOST"]
+office=list(map(float, os.environ["OFFICE"].split(','))) if "OFFICE" in os.environ else ""
 
-class StatsHandler(web.RequestHandler):
+class HintHandler(web.RequestHandler):
     def __init__(self, app, request, **kwargs):
-        super(StatsHandler, self).__init__(app, request, **kwargs)
-        self.executor= ThreadPoolExecutor(8)
+        super(HintHandler, self).__init__(app, request, **kwargs)
+        self.executor= ThreadPoolExecutor(2)
 
     def check_origin(self, origin):
         return True
 
     @run_on_executor
-    def _stats(self, index, queries, fields, office):
-        db=DBQuery(index=index,office=office,host=dbhost)
+    def _hint(self, indexes):
         try:
-            return db.stats(queries, fields)
+            hints={}
+            for index in indexes:
+                dbq=DBQuery(index=index,office=office,host=dbhost)
+                hints[index]=dbq.hints(size=100)
+            return hints
         except Exception as e:
             return str(e)
 
     @gen.coroutine
     def get(self):
-        queries=unquote(str(self.get_argument("queries")))
-        index=unquote(str(self.get_argument("index")))
-        fields=unquote(str(self.get_argument("fields"))).split(",")
-        office=list(map(float,unquote(str(self.get_argument("office"))).split(",")))
+        indexes=unquote(str(self.get_argument("index"))).split(",")
 
-        r=yield self._stats(index, queries, fields, office)
+        r=yield self._hint(indexes)
         if isinstance(r,str):
             self.set_status(400, encode(r))
             return

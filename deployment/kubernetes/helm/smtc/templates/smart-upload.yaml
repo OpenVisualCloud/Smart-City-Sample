@@ -51,9 +51,15 @@ spec:
               value: "http://localhost:8080/api/upload"
             - name: FORWARD_TUNNEL1
               value: "{{ $.Values.connector.cloudHost }}:{{ $.Values.connector.cloudStoragePort }} localhost:8080"
+            - name: DBCHOST
+              value: "http://localhost:9200"
+            - name: FORWARD_TUNNEL2
+              value: "{{ $.Values.connector.cloudHost }}:{{ $.Values.connector.cloudQueryPort }} localhost:9200"
 {{- else }}
             - name: STHOSTC
               value: "http://cloud-storage-service:8080/api/upload"
+            - name: DBCHOST
+              value: {{ printf "http://%s-service:9200" (include "smtc.db.name" $) | quote }}
 {{- end }}
             - name: SERVICE_INTERVAL
               value: "30"

@@ -68,7 +68,7 @@ ifelse(defn(`SCENARIO_NAME'),`stadium',`dnl
             - name: OFFICE
               value: "defn(`OFFICE_LOCATION')"
             - name: DBHOST
-              value: "http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')-db,db)-service:9200"
+              value: "http://ifelse(defn(`NOFFICES'),1,db,defn(`OFFICE_NAME')-db)-service:9200"
             - name: `NCAMERAS'
               value: "defn(`NCAMERAS')"
             - name: RTSP_PORT
@@ -135,7 +135,7 @@ loop(`CAMERAIDX',1,defn(`NCAMERAS2'),`dnl
             - name: OFFICE
               value: "defn(`OFFICE_LOCATION')"
             - name: DBHOST
-              value: "http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')-db,db)-service:9200"
+              value: "http://ifelse(defn(`NOFFICES'),1,db,defn(`OFFICE_NAME')-db)-service:9200"
             - name: `NCAMERAS'
               value: "defn(`NCAMERAS2')"
             - name: RTSP_PORT
@@ -201,7 +201,7 @@ loop(`CAMERAIDX',1,defn(`NCAMERAS3'),`dnl
             - name: OFFICE
               value: "defn(`OFFICE_LOCATION')"
             - name: DBHOST
-              value: "http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')-db,db)-service:9200"
+              value: "http://ifelse(defn(`NOFFICES'),1,db,defn(`OFFICE_NAME')-db)-service:9200"
             - name: `NCAMERAS'
               value: "defn(`NCAMERAS3')"
             - name: RTSP_PORT

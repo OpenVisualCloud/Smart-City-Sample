@@ -54,38 +54,18 @@ spec:
           env:
             {{- if gt (int .Values.noffices) 1 }}
             - name: "cluster.name"
-              value: "db-cluster"
+              value: "cloud-cluster"
             - name: "node.name"
               value: "cloud-db"
             - name: "node.master"
               value: "true"
             - name: "node.data"
               value: "true"
-            - name: "node.attr.zone"
-              value: "cloud"
             - name: "ES_JAVA_OPTS"
               value: "-Xms2048m -Xmx2048m"
 {{- if (len .Values.connector.cloudHost) }}
-            - name: "transport.port"
-              value: "9300"
-            - name: "transport.host"
-              value: "0.0.0.0"
-            - name: "transport.publish_host"
-              value: "localhost"
-            - name: "transport.publish_port"
-              value: "{{ $.Values.connector.cloudTransportPort }}"
             - name: "REVERSE_TUNNEL1"
               value: "{{ $.Values.connector.cloudHost }}:{{ $.Values.connector.cloudQueryPort }} localhost:9200"
-            - name: "REVERSE_TUNNEL2"
-              value: "{{ $.Values.connector.cloudHost }}:{{ $.Values.connector.cloudTransportPort }} localhost:9300"
-{{- range $scenarioIdx, $scenarioName := $.Values.scenario }}
-{{- $args := dict "scenarioName" $scenarioName "Values" $.Values }}
-{{- range $officeIdx := until ( int ( include "smtc.noffices" $args ) ) }}
-{{- $officeIdx2 := add (mul $officeIdx (len $.Values.scenario)) $scenarioIdx }}
-            - name: "FORWARD_TUNNEL{{ $officeIdx2 }}"
-              value: "{{ $.Values.connector.cloudHost }}:{{ add $.Values.connector.officeTransportPort $officeIdx2 }} localhost:{{ add $.Values.connector.officeTransportPort $officeIdx2 }}"
-{{- end }}
-{{- end }}
 {{- end }}
             {{- else }}
             - name: "discovery.type"
@@ -116,6 +96,7 @@ spec:
       initContainers:
         - name: init-volume-sysctl
           image: busybox:latest
+          imagePullPolicy: IfNotPresent
           command: ["sh","-c","sysctl -w vm.max_map_count=262144 && ulimit -n 65535 && ulimit -u 4096"]
           securityContext:
             privileged: true

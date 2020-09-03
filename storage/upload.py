@@ -3,19 +3,15 @@
 from tornado import web, gen
 from tornado.concurrent import run_on_executor
 from concurrent.futures import ThreadPoolExecutor
-from urllib.parse import unquote_plus
+from urllib.parse import unquote
 from signal import signal, SIGTERM
 from db_query import DBQuery
 from db_ingest import DBIngest
 from probe import probe, run
 from language import text
-import traceback
-import hashlib
 import datetime
 import time
-import base64
 import psutil
-import json
 import os
 
 dbhost=os.environ["DBHOST"]
@@ -89,59 +85,29 @@ class UploadHandler(web.RequestHandler):
                     }]
                 })
 
-            # ingest recording local
-            if sinfo:
-                db_rec=DBIngest(host=dbhost, index="recordings", office=office)
-                db_rec.ingest(sinfo)
-        else:
-            # ingest recording cloud
-            if sinfo:
-                db_s=DBQuery(host=dbhost, index="sensors", office=sinfo["office"])
-                sensor=list(db_s.search("_id='"+sinfo["sensor"]+"'",size=1))
-                if sensor:
-                    # remove status
-                    sensor[0]["_source"].pop("status",None)
-                    # denormalize address
-                    sinfo["address"]=sensor[0]["_source"]["address"]
+        # ingest recording local
+        if sinfo:
+            print("Ingest recording: {}".format(sinfo), flush=True)
+            office1=office if local_office else ""
 
-                    # calcualte hash code for the sensor
-                    m=hashlib.md5()
-                    m.update(json.dumps(sensor[0]["_source"],ensure_ascii=False).encode('utf-8'))
-                    md5=m.hexdigest()
+            # denormalize sensor address to recordings
+            dbs=DBQuery(host=dbhost, index="sensors", office=office1)
+            r=list(dbs.search("_id='"+sinfo["sensor"]+"'",size=1))
+            if r: sinfo["address"]=r[0]["_source"]["address"]
 
-                    # locate the sensor record in cloud
-                    db_sc=DBQuery(host=dbhost, index="sensors", office="")
-                    sensor_c=list(db_sc.search("md5='"+md5+"'",size=1))
-                    if not sensor_c:  # if not available, ingest a sensor record in cloud
-                        sensor_c=[{ "_source": sensor[0]["_source"].copy() }]
-                        sensor_c[0]["_source"]["md5"]=md5
-                        db_sc=DBIngest(host=dbhost, index="sensors", office="")
-                        print("Ingest sensor: {}".format(sensor_c[0]["_source"]), flush=True)
-                        sensor_c[0]=db_sc.ingest(sensor_c[0]["_source"])
-
-                    # replace cloud sensor id and ingest recording
-                    sinfo["sensor"]=sensor_c[0]["_id"]
-
-                    print("Ingest recording: {}".format(sinfo), flush=True)
-                    db_rec=DBIngest(host=dbhost, index="recordings", office="")
-                    db_rec.ingest(sinfo)
-
-                    # copy local analytics to cloud
-                    db_a=DBQuery(host=dbhost, index="analytics", office=sinfo["office"])
-                    data=[]
-                    for r in db_a.search('sensor="'+sensor[0]["_id"]+'" and office:['+str(office[0])+','+str(office[1])+'] and time>='+str(sinfo["time"])+' and time<='+str(sinfo["time"]+sinfo["duration"]*1000),size=10000):
-                        r["_source"]["sensor"]=sinfo["sensor"]
-                        data.append(r["_source"])
-                    db_ac=DBIngest(host=dbhost, index="analytics", office="")
-                    print("Ingest analytics: {}".format(len(data)), flush=True)
-                    db_ac.ingest_bulk(data)
+            db_rec=DBIngest(host=dbhost, index="recordings", office=office1)
+            db_rec.ingest(sinfo)
                         
     @gen.coroutine
     def post(self):
         office=list(map(float,self.get_body_argument('office').split(",")))
+        print("office = {}".format(office), flush=True)
         sensor=self.get_body_argument('sensor')
+        print("sensor = {}".format(sensor), flush=True)
         timestamp=int(self.get_body_argument('time'))
+        print("timestamp = {}".format(timestamp), flush=True)
         path=self.get_body_argument('file.path')
+        print("file.path = {}".format(path), flush=True)
         yield self._rec2db(office, sensor, timestamp, path)
         self.set_status(400, "Return 400 to remove this file")
 

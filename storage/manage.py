@@ -5,6 +5,10 @@ from tornado.options import define, options, parse_command_line
 from workload import WorkloadHandler
 from upload import UploadHandler
 from thumbnail import ThumbnailHandler
+from search import SearchHandler
+from histogram import HistogramHandler
+from hint import HintHandler
+from stats import StatsHandler
 from subprocess import Popen
 from signal import signal, SIGTERM, SIGQUIT
 import os
@@ -20,9 +24,13 @@ def quit_service(signum, frame):
     if cleanup1: cleanup1.send_signal(SIGTERM)
 
 app = web.Application([
-    (r'/api/workload',WorkloadHandler),
     (r'/api/upload',UploadHandler),
     (r'/api/thumbnail/.*',ThumbnailHandler),
+    (r'/api/search',SearchHandler),
+    (r'/api/histogram',HistogramHandler),
+    (r'/api/hint',HintHandler),
+    (r'/api/stats',StatsHandler),
+    (r'/api/workload',WorkloadHandler),
 ])
 
 if __name__ == "__main__":
