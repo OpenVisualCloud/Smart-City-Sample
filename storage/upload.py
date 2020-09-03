@@ -89,6 +89,12 @@ class UploadHandler(web.RequestHandler):
         if sinfo:
             print("Ingest recording: {}".format(sinfo), flush=True)
             office1=office if local_office else ""
+
+            # denormalize sensor address to recordings
+            dbs=DBQuery(host=dbhost, index="sensors", office=office1)
+            r=list(dbs.search("_id='"+sinfo["sensor"]+"'",size=1))
+            if r: sinfo["address"]=r[0]["_source"]["address"]
+
             db_rec=DBIngest(host=dbhost, index="recordings", office=office1)
             db_rec.ingest(sinfo)
                         
