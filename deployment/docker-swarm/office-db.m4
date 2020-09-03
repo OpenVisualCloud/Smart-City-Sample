@@ -1,16 +1,13 @@
 
-ifelse(eval(defn(`NOFFICES')>1),1,`
+ifelse(defn(`NOFFICES'),1,,`
 
     defn(`OFFICE_NAME')_db:
         image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.8.1
         environment:
-            - "cluster.name=db-cluster"
+            - "cluster.name=office-cluster"
             - "node.name=defn(`OFFICE_NAME')"
-            - "node.master=false"
+            - "node.master=true"
             - "node.data=true"
-            - "node.attr.zone=defn(`OFFICE_NAME')"
-            - "discovery.zen.minimum_master_nodes=1"
-            - "discovery.zen.ping.unicast.hosts=cloud_db"
             - "action.auto_create_index=0"
             - "ES_JAVA_OPTS=-Xms4096m -Xmx4096m"
             - "NO_PROXY=*"
@@ -29,11 +26,11 @@ ifelse(eval(defn(`NOFFICES')>1),1,`
     defn(`OFFICE_NAME')_db_init:
         image: defn(`REGISTRY_PREFIX')smtc_db_init:latest
         environment:
-            DBHOST: "http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')_db,db):9200"
             OFFICE: "defn(`OFFICE_LOCATION')"
+            DBHOST: "http://ifelse(defn(`NOFFICES'),1,db,defn(`OFFICE_NAME')_db):9200"
+            DBCHOST: "http://ifelse(defn(`NOFFICES'),1,db,cloud_db):9200"
             PROXYHOST: "http://defn(`OFFICE_NAME')_storage:8080"
             `SCENARIO': "defn(`SCENARIO_NAME')"
-            ZONE: "defn(`OFFICE_NAME')"
             NO_PROXY: "*"
             no_proxy: "*"
         secrets:

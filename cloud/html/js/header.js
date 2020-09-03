@@ -73,7 +73,8 @@ function showHints() {
 $("#homeSearch").on("focus", function () {
     var page=$(this);
     $("[hint-panel]").hide();
-    apiHost.hint(page.data('index'),page.data('office')).then(function (hints) {
+    var office=page.data('office');
+    apiHost.hint(page.data('index'),office).then(function (hints) {
         page.data('hints',hints);
     });
 }).keydown(function (e) {
@@ -119,6 +120,7 @@ $("#homeSearch").on("focus", function () {
         var candidates=[""];
         ltext=ltext.split(/[\&\|\!\(\)\]\+\-\*\/]/).pop().replace(/\s/g,"");
         $.each(hints, function (w, wc) {
+            if (w=="md5") return;
             if (!wc.values || wc.values.length==0) {
                 if (w.startsWith(ltext)) candidates.push(w);
             }

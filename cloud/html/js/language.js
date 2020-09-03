@@ -52,5 +52,7 @@ text={
     "active": "运行中",
     "processing": "运行中",
     "N/A": "无",
+    "office online": "工作正常",
+    "office offline": "工作异常",
 };
 

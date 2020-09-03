@@ -7,7 +7,6 @@ var alerts={
         }).on('remove', function () {
             screen.hide();
         });
-        setTimeout(alerts.update,5000,page.data('map'),page.data('offices'),page.data('sensors'));
 
         screen.bind('dragstart',function (e) {
             var screen=$(this);
@@ -25,11 +24,11 @@ var alerts={
     },
     append: function (time,address,text,level) {
         var screen=$(".page-home-alert-screen ul");
-        var timestamp=time.toLocaleDateString(undefined,{
+        var timestamp=time.toLocaleString(undefined,{
             dateStyle:'short',timeStyle:'short', hour12:false,
         });
         var colors={info:"#4AFC0B",warning:"#F7FA0C",fatal:"#FF0013"};
-        var li=$('<li>'+timestamp+' @'+address+': '+text+'</li>').css({color:colors[level],"font-size":0});
+        var li=$('<li>'+timestamp+' @'+address+': '+text+'</li>').css({color:colors[level],"font-size":'0em'});
         li.data('time',time);
 
         var exist=false;
@@ -38,17 +37,21 @@ var alerts={
         });
         if (!exist) {
             screen.prepend(li);
+            screen.children('li').sort(function(a,b) {
+                if ($(a).data('time')>$(b).data('time')) return -1;
+                if ($(a).data('time')<$(b).data('time')) return 1;
+                return 0;
+            }).appendTo(screen);
             screen.find("li:first").animate({'font-size':'1em'});
         }
 
         if (screen.find("li").length>50)
             screen.find("li:last").remove();
     },
-    update: function (map, offices,sensors) {
+    update: function (ctx, offices, sensors) {
         var screen=$(".page-home-alert-screen");
         if (screen.is(":visible")) {
-            var center=map.getCenter();
-            apiHost.search("alerts","time>=now-"+settings.alert_window()+" and location:["+center.lat+","+center.lng+","+settings.radius()+"]","$*").then(function (r) {
+            apiHost.search("alerts","time>=now-"+settings.alert_window(),ctx.office).then(function (r) {
                 $.each(r.response, function (x,r1) {
                     var time=new Date(r1._source.time);
                     $.each(["info","warning","fatal"], function (x, level) {
@@ -65,7 +68,6 @@ var alerts={
             }).catch(function () {
             });
         }
-        setTimeout(alerts.update,5000,map,offices,sensors);
     },
 };
 

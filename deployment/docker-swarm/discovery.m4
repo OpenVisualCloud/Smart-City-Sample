@@ -8,7 +8,7 @@ ifelse(defn(`DISCOVER_SIMULATED_CAMERA'),`true',`dnl
             SIM_HOST: ifelse(eval(defn(`NCAMERAS')>0),1,"loop(`CAMERAIDX',1,defn(`NCAMERAS'),`defn(`OFFICE_NAME')_simulated_cameras:eval(defn(`CAMERA_RTSP_PORT')+defn(`CAMERAIDX')*defn(`CAMERA_PORT_STEP')-defn(`CAMERA_PORT_STEP'))/')",":0")
             SIM_PREFIX: "`cams'ifelse(defn(`SCENARIO_NAME'),`traffic',1,2)`o'defn(`OFFICEIDX')ifelse(defn(`SCENARIO_NAME'),`traffic',c,q)"
             OFFICE: "defn(`OFFICE_LOCATION')"
-            DBHOST: "http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')_db,db):9200"
+            DBHOST: "http://ifelse(defn(`NOFFICES'),1,db,defn(`OFFICE_NAME')_db):9200"
             SERVICE_INTERVAL: "30"
             NO_PROXY: "*"
             no_proxy: "*"
@@ -29,7 +29,7 @@ ifelse(defn(`SCENARIO_NAME'),`stadium',`
             SIM_HOST: ifelse(eval(defn(`NCAMERAS2')>0),1,"loop(`CAMERAIDX',1,defn(`NCAMERAS2'),`defn(`OFFICE_NAME')_simulated_cameras_crowd:eval(defn(`CAMERA_RTSP_PORT')+defn(`CAMERAIDX')*defn(`CAMERA_PORT_STEP')-defn(`CAMERA_PORT_STEP'))/')",":0")
             SIM_PREFIX: "`cams2o'defn(`OFFICEIDX')w"
             OFFICE: "defn(`OFFICE_LOCATION')"
-            DBHOST: "http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')_db,db):9200"
+            DBHOST: "http://ifelse(defn(`NOFFICES'),1,db,defn(`OFFICE_NAME')_db):9200"
             SERVICE_INTERVAL: "30"
             NO_PROXY: "*"
             no_proxy: "*"
@@ -49,7 +49,7 @@ ifelse(defn(`SCENARIO_NAME'),`stadium',`
             SIM_HOST: ifelse(eval(defn(`NCAMERAS3')>0),1,"loop(`CAMERAIDX',1,defn(`NCAMERAS3'),`defn(`OFFICE_NAME')_simulated_cameras_entrance:eval(defn(`CAMERA_RTSP_PORT')+defn(`CAMERAIDX')*defn(`CAMERA_PORT_STEP')-defn(`CAMERA_PORT_STEP'))/')",":0")
             SIM_PREFIX: "`cams2o'defn(`OFFICEIDX')e"
             OFFICE: "defn(`OFFICE_LOCATION')"
-            DBHOST: "http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')_db,db):9200"
+            DBHOST: "http://ifelse(defn(`NOFFICES'),1,db,defn(`OFFICE_NAME')_db):9200"
             SERVICE_INTERVAL: "30"
             NO_PROXY: "*"
             no_proxy: "*"
@@ -69,7 +69,7 @@ ifelse(defn(`DISCOVER_IP_CAMERA'),`true',`dnl
         image: defn(`REGISTRY_PREFIX')smtc_onvif_discovery:latest
         environment:
             OFFICE: "defn(`OFFICE_LOCATION')"
-            DBHOST: "http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')_db,db):9200"
+            DBHOST: "http://ifelse(defn(`NOFFICES'),1,db,defn(`OFFICE_NAME')_db):9200"
             SERVICE_INTERVAL: "30"
             NO_PROXY: "*"
             no_proxy: "*"

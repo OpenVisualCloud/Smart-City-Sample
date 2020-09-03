@@ -8,7 +8,7 @@ ifelse(defn(`SCENARIO_NAME'),`traffic',`
 PLATFORM_VOLUME_EXTRA()dnl
         environment:
             PLATFORM_ENV(OFFICE): "defn(`OFFICE_LOCATION')"
-            PLATFORM_ENV(DBHOST): "http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')_db,db):9200"
+            PLATFORM_ENV(DBHOST): "http://ifelse(defn(`NOFFICES'),1,db,defn(`OFFICE_NAME')_db):9200"
             PLATFORM_ENV(MQTTHOST): "defn(`OFFICE_NAME')_mqtt"
             PLATFORM_ENV(EVERY_NTH_FRAME): 6
             PLATFORM_ENV(``SCENARIO''): "defn(`SCENARIO_NAME')"
@@ -35,7 +35,7 @@ ifelse(defn(`SCENARIO_NAME'),`stadium',`
 PLATFORM_VOLUME_EXTRA()dnl
         environment:
             PLATFORM_ENV(OFFICE): "defn(`OFFICE_LOCATION')"
-            PLATFORM_ENV(DBHOST): "http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')_db,db):9200"
+            PLATFORM_ENV(DBHOST): "http://ifelse(defn(`NOFFICES'),1,db,defn(`OFFICE_NAME')_db):9200"
             PLATFORM_ENV(MQTTHOST): "defn(`OFFICE_NAME')_mqtt"
             PLATFORM_ENV(EVERY_NTH_FRAME): 6
             PLATFORM_ENV(``SCENARIO''): "defn(`SCENARIO_NAME')"
@@ -59,7 +59,7 @@ PLATFORM_ENV_EXTRA()dnl
 PLATFORM_VOLUME_EXTRA()dnl
         environment:
             PLATFORM_ENV(OFFICE): "defn(`OFFICE_LOCATION')"
-            PLATFORM_ENV(DBHOST): "http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')_db,db):9200"
+            PLATFORM_ENV(DBHOST): "http://ifelse(defn(`NOFFICES'),1,db,defn(`OFFICE_NAME')_db):9200"
             PLATFORM_ENV(MQTTHOST): "defn(`OFFICE_NAME')_mqtt"
             PLATFORM_ENV(EVERY_NTH_FRAME): "6"
             PLATFORM_ENV(``SCENARIO''): "defn(`SCENARIO_NAME')"
@@ -83,7 +83,7 @@ PLATFORM_ENV_EXTRA()dnl
 PLATFORM_VOLUME_EXTRA()dnl
         environment:
             PLATFORM_ENV(OFFICE): "defn(`OFFICE_LOCATION')"
-            PLATFORM_ENV(DBHOST): "http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')_db,db):9200"
+            PLATFORM_ENV(DBHOST): "http://ifelse(defn(`NOFFICES'),1,db,defn(`OFFICE_NAME')_db):9200"
             PLATFORM_ENV(MQTTHOST): "defn(`OFFICE_NAME')_mqtt"
             PLATFORM_ENV(EVERY_NTH_FRAME): 6
             PLATFORM_ENV(``SCENARIO''): "defn(`SCENARIO_NAME')"

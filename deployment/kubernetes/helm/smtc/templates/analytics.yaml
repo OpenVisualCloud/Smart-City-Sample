@@ -65,6 +65,7 @@ spec:
             {{- include "smtc.platform.mounts" $ }}
       initContainers:
             - image: busybox:latest
+              imagePullPolicy: IfNotPresent
               name: init
               command: ["/bin/chown","{{ $.Values.userId }}:{{ $.Values.groupId }}","/tmp/rec"]
               volumeMounts:
@@ -139,6 +140,7 @@ spec:
             {{- include "smtc.platform.mounts" $ }}
       initContainers:
             - image: busybox:latest
+              imagePullPolicy: IfNotPresent
               name: init
               command: ["/bin/chown","{{ $.Values.userId }}:{{ $.Values.groupId }}","/tmp/rec"]
               volumeMounts:
@@ -211,6 +213,7 @@ spec:
             {{- include "smtc.platform.mounts" $ }}
       initContainers:
             - image: busybox:latest
+              imagePullPolicy: IfNotPresent
               name: init
               command: ["/bin/chown","{{ $.Values.userId }}:{{ $.Values.groupId }}","/tmp/rec"]
               volumeMounts:
@@ -283,6 +286,7 @@ spec:
             {{- include "smtc.platform.mounts" $ }}
       initContainers:
             - image: busybox:latest
+              imagePullPolicy: IfNotPresent
               name: init
               command: ["/bin/chown","{{ $.Values.userId }}:{{ $.Values.groupId }}","/tmp/rec"]
               volumeMounts:

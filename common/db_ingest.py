@@ -1,29 +1,14 @@
 #!/usr/bin/python3
 
+from db_common import DBCommon
 from language_dsl import text
-from threading import Event
-import traceback
 import requests
 import json
-import re
 
-class DBIngest(object):
+class DBIngest(DBCommon):
     def __init__(self, index, office, host):
-        super(DBIngest,self).__init__()
-        self._host=host
-        if isinstance(office,list): office='$'+('$'.join(map(str,office)))
-        if isinstance(office,dict): office='$'+str(office["lat"])+"$"+str(office["lon"])
-        office=re.sub(r'\.?0*\$',r'$',re.sub(r'\.?0*$',r'',office))
-        self._index=index+office
-
-    def _request(self, op, *args, **kwargs):
-        try:
-            r=op(*args, **kwargs)
-            if r.status_code==200 or r.status_code==201: return r.json()
-            print("Exception: "+str(r.json()["error"]["reason"]), flush=True)
-        except:
-            print(traceback.format_exc(), flush=True)
-        raise Exception(text["ingest error"])
+        super(DBIngest,self).__init__(index,office,host)
+        self._error=text["ingest error"]
 
     def ingest_bulk(self, bulk, batch=500, refresh="false"):
         ''' save bulk data to the database
@@ -45,7 +30,10 @@ class DBIngest(object):
             self._request(requests.post,self._host+"/_bulk?refresh="+refresh,data=cmds,headers={"content-type":"application/x-ndjson"})
         
     def ingest(self, info, id1=None, refresh="false"):
-        return self._request(requests.put,self._host+"/"+self._index+"/_doc/"+id1+"?refresh="+refresh,json=info) if id1 else self._request(requests.post,self._host+"/"+self._index+"/_doc?refresh="+refresh,json=info)
+        if id1:
+            return self._request(requests.put,self._host+"/"+self._index+"/_doc/"+id1+"?refresh="+refresh,json=info)
+        else:
+            return self._request(requests.post,self._host+"/"+self._index+"/_doc?refresh="+refresh,json=info)
 
     def update(self, _id, info, seq_no=None, primary_term=None):
         options={}
@@ -53,16 +41,3 @@ class DBIngest(object):
         if primary_term is not None: options["if_primary_term"]=primary_term
         return self._request(requests.post,self._host+"/"+self._index+"/_doc/"+_id+"/_update",params=options,json={"doc":info})  #ES6.8
         #return self._request(requests.post,self._host+"/"+self._index+"/_update/"+_id,params=options,json={"doc":info})  #ES7.4
-
-    def delete(self, _id):
-        return self._request(requests.delete,self._host+"/"+self._index+"/_doc/"+_id,headers={'Content-Type':'application/json'})
-
-    def wait(self, stop=Event()):
-        officestr="$".join(self._index.split("$")[1:])
-        while not stop.is_set():
-            try:
-                r=requests.get(self._host+"/offices/_doc/"+officestr)
-                if r.status_code==200: return stop
-            except:
-                print("Waiting for DB...", flush=True)
-            stop.wait(1)

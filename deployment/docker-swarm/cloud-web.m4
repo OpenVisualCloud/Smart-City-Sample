@@ -7,10 +7,9 @@
               protocol: tcp
               mode: host
         environment:
-            DBHOST: "http://ifelse(eval(defn(`NOFFICES')>1),1,cloud_db,db):9200"
+            DBHOST: "http://ifelse(defn(`NOFFICES'),1,db,cloud_db):9200"
             PROXYHOST: "http://cloud_storage:8080"
             `SCENARIO': "defn(`SCENARIO')"
-            HEALTH_CHECK: "ifelse(eval(defn(`NOFFICES')>1),1,enabled,disabled)"
             NO_PROXY: "*"
             no_proxy: "*"
         volumes:
