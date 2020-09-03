@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
 text={
-    "crowd-counting": "crowd-counting",
+    "crowd-counting": "人群检测",
 }
 

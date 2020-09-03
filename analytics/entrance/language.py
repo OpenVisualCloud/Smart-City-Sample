@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
 text={
-    "entrance-counting": "entrance-counting",
+    "entrance-counting": "通道检测",
 }
 

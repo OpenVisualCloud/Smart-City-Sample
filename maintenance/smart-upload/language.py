@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
 text={
-    "smart-upload": "smart-upload",
-    "maintanence": "maintanence",
+    "smart-upload": "智能上传",
+    "maintanence": "维护服务",
 }
