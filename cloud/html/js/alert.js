@@ -24,7 +24,7 @@ var alerts={
     },
     append: function (time,address,text,level) {
         var screen=$(".page-home-alert-screen ul");
-        var timestamp=time.toLocaleDateString(undefined,{
+        var timestamp=time.toLocaleString(undefined,{
             dateStyle:'short',timeStyle:'short', hour12:false,
         });
         var colors={info:"#4AFC0B",warning:"#F7FA0C",fatal:"#FF0013"};
