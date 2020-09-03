@@ -33,7 +33,6 @@ app = web.Application([
     (r'/api/stats',RedirectHandler),
     (r'/api/histogram',RedirectHandler),
     (r'/api/workload',RedirectHandler),
-    (r'/api/mapping',RedirectHandler),
     (r'/api/hint',RedirectHandler),
     (r'/recording/.*',RedirectHandler),
     (r'/thumbnail/.*',RedirectHandler),
