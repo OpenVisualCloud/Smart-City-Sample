@@ -1,11 +1,11 @@
 #!/usr/bin/python3
 
 text={
-    "syntax error": "Syntax error: {}",
-    "math error": "Math Error: {}/{}",
-    "var first": "Syntax error: First argument must be a VAR",
-    "var!=boolean only": "Syntax Error: only VAR!=BOOLEAN supported",
-    "unexpected eol": "Syntax Error: Unexpected EOL",
-    "query error": "Exception in database queries",
-    "ingest error": "Exception in database ingest",
+    "syntax error": "语法错误: {}",
+    "math error": "数学运算错误: {}/{}",
+    "var first": "第一个参数必须是变量",
+    "var!=boolean only": "只支持VAR!=逻辑变量",
+    "unexpected eol": "搜索字串未完",
+    "query error": "数据库检索错误",
+    "ingest error": "数据库录入错误",
 }

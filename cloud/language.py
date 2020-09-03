@@ -3,7 +3,7 @@
 from urllib.parse import quote
 
 text={
-    "connection error": "Connection Error",
+    "connection error": "链接错误",
 }
 
 def encode(msg):

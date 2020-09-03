@@ -16,15 +16,15 @@
 
     <div sensor-info-template>
         <table><tbody>
-            <tr><td>Type</td><td colspan="3" field="sensor"></td></tr>
-            <tr><td>Model</td><td colspan="3" field="model"></td></tr>
-            <tr><td>Location</td><td colspan="3" location></td></tr>
-            <tr><td>Address</td><td colspan="3" field="address"></td></tr>
-            <tr><td>URL</td><td colspan="3" field="url"></td></tr>
-            <tr><td>MAC</td><td colspan="3" field="MAC"></td></tr>
-            <tr><td>Resolution</td><td resolution></td><td>Alpha</td><td field="alpha"></td></tr>
-            <tr><td>Theta</td><td field="theta"></td><td>Mnt-H</td><td field="mnth"></td></tr>
-            <tr><td>FOV-H</td><td field="fovh"></td><td>FOV-V</td><td field="fovv"></td></tr>
+            <tr><td>类型</td><td colspan="3" field="sensor"></td></tr>
+            <tr><td>型号</td><td colspan="3" field="model"></td></tr>
+            <tr><td>位置</td><td colspan="3" location></td></tr>
+            <tr><td>地址</td><td colspan="3" field="address"></td></tr>
+            <tr><td>网址</td><td colspan="3" field="url"></td></tr>
+            <tr><td>网卡地址</td><td colspan="3" field="MAC"></td></tr>
+            <tr><td>分辨率</td><td resolution></td><td>纵向仰角</td><td field="alpha"></td></tr>
+            <tr><td>横向仰角</td><td field="theta"></td><td>相机高度</td><td field="mnth"></td></tr>
+            <tr><td>横向视角</td><td field="fovh"></td><td>纵向视角</td><td field="fovv"></td></tr>
         </tbody></table>
     </div>
 </div>
