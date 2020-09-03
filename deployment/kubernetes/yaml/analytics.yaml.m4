@@ -63,6 +63,7 @@ ifelse(defn(`DISCOVER_IP_CAMERA'),`true',`dnl
 defn(`PLATFORM_VOLUME_MOUNTS')dnl
       initContainers:
             - image: busybox:latest
+              imagePullPolicy: IfNotPresent
               name: init
               command: ["/bin/chown","defn(`USERID'):defn(`GROUPID')","/tmp/rec"]
               volumeMounts:
@@ -135,6 +136,7 @@ ifelse(defn(`DISCOVER_IP_CAMERA'),`true',`dnl
 defn(`PLATFORM_VOLUME_MOUNTS')dnl
       initContainers:
             - image: busybox:latest
+              imagePullPolicy: IfNotPresent
               name: init
               command: ["/bin/chown","defn(`USERID'):defn(`GROUPID')","/tmp/rec"]
               volumeMounts:
@@ -207,6 +209,7 @@ ifelse(defn(`DISCOVER_IP_CAMERA'),`true',`dnl
 defn(`PLATFORM_VOLUME_MOUNTS')dnl
       initContainers:
             - image: busybox:latest
+              imagePullPolicy: IfNotPresent
               name: init
               command: ["/bin/chown","defn(`USERID'):defn(`GROUPID')","/tmp/rec"]
               volumeMounts:
@@ -279,6 +282,7 @@ ifelse(defn(`DISCOVER_IP_CAMERA'),`true',`dnl
 defn(`PLATFORM_VOLUME_MOUNTS')dnl
       initContainers:
             - image: busybox:latest
+              imagePullPolicy: IfNotPresent
               name: init
               command: ["/bin/chown","defn(`USERID'):defn(`GROUPID')","/tmp/rec"]
               volumeMounts:
