@@ -7,8 +7,8 @@ import requests
 import json
 
 class DBQuery(DBCommon):
-    def __init__(self, index, office, host, remote=False):
-        super(DBQuery,self).__init__(index, office, host, remote)
+    def __init__(self, index, office, host):
+        super(DBQuery,self).__init__(index, office, host)
         self._error=text["query error"]
 
     def _spec_from_mapping(self, spec, prefix, properties):
@@ -143,7 +143,8 @@ class DBQuery(DBCommon):
             for var in types:
                 keywords[var]={"type":types[var]}
                 if types[var]=="text": 
-                    fields.append(var)
+                    if var!="md5" and var!="passcode": #exclude from hints
+                        fields.append(var)
 
         values=self._bucketize(None,fields,size,spec)
         for var in values:

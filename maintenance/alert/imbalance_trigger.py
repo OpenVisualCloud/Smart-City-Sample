@@ -21,9 +21,9 @@ class ImbalanceTrigger(Trigger):
 
         try:
             nsensors={
-                "total": self._dbs.count("sensor:*"),
-                "streaming": self._dbs.count("status:'streaming'"),
-                "idle": self._dbs.count("status:'idle'"),
+                "total": self._dbs.count("sensor='camera'"),
+                "streaming": self._dbs.count("sensor='camera' and status='streaming'"),
+                "idle": self._dbs.count("sensor='camera' and status='idle'"),
             }
             nalgorithms={
                 "total": self._dba.count("name:*"),

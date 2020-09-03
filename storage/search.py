@@ -24,9 +24,9 @@ class SearchHandler(web.RequestHandler):
     def _search(self, index, queries, size):
         try:
             dbq=DBQuery(index=index,office=office,host=dbhost)
-            return list(dbq.search(queries,size))
+            return {"response":list(dbq.search(queries,size))}
         except Exception as e:
-            return str(e)
+            return {"response":[], "status":str(e)}
 
     @gen.coroutine
     def get(self):
@@ -35,10 +35,4 @@ class SearchHandler(web.RequestHandler):
         size=int(self.get_argument("size"))
 
         r=yield self._search(index, queries, size)
-        if isinstance(r, str):
-            self.set_status(400, encode(r))
-            return
-
-        self.write({"response":r})
-        self.set_status(200, 'OK')
-        self.finish()
+        self.write(r)

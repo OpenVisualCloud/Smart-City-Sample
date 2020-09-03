@@ -49,7 +49,9 @@ text={
     "workload title": "{} Workload",
     "N/A": "N/A",
 
-    "office online": "online",
-    "office offline": "offline",
+    "office online": "Online",
+    "office offline": "Offline",
+    "connection error": "Connection Error",
+    "central office": "Central Office",
 };
 
