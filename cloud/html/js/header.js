@@ -120,7 +120,6 @@ $("#homeSearch").on("focus", function () {
         var candidates=[""];
         ltext=ltext.split(/[\&\|\!\(\)\]\+\-\*\/]/).pop().replace(/\s/g,"");
         $.each(hints, function (w, wc) {
-            if (w=="md5") return;
             if (!wc.values || wc.values.length==0) {
                 if (w.startsWith(ltext)) candidates.push(w);
             }

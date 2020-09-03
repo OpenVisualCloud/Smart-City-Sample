@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 
 from signal import SIGTERM, signal
-from db_query import DBQuery
 from db_ingest import DBIngest
 from provision import Provision
 import traceback
@@ -21,15 +20,15 @@ def quit_service():
 signal(SIGTERM, quit_service)
 
 # wait until DB is ready
-dbq=DBQuery(index="", office=office, host=dbhost)
+dbs=DBIngest(index="sensors", office=office, host=dbhost)
 while True:
     try:
-        if dbq.health(): break
+        if dbs.health(): break
     except:
         print("Waiting for DB...", flush=True)
     time.sleep(1)
     
-officestr=dbq.office()
+officestr=dbs.office()
 settings={
     "offices": {
         "settings": {
@@ -71,6 +70,38 @@ settings={
                 "office": { "type": "geo_point", },
                 "location": { "type": "geo_point", },
                 "ip": { "type": "ip_range", },
+                "sensor": {
+                    "type" : "text",
+                    "fields" : {
+                        "keyword" : {
+                            "type" : "keyword",
+                            "ignore_above" : 256,
+                        },
+                    },
+                },
+                "algorithm": {
+                    "type" : "text",
+                    "fields" : {
+                        "keyword" : {
+                            "type" : "keyword",
+                            "ignore_above" : 256,
+                        },
+                    },
+                },
+                "address": {
+                    "type" : "text",
+                    "fields" : {
+                        "keyword" : {
+                            "type" : "keyword",
+                            "ignore_above" : 256,
+                        },
+                    },
+                },
+                "mnth": { "type": "float" },
+                "alpha": { "type": "float" },
+                "fovh": { "type": "float" },
+                "fovv": { "type": "float" },
+                "theta": { "type": "float" },
             },
         },
     },
@@ -86,6 +117,38 @@ settings={
                 "office": { "type": "geo_point", },
                 "location": { "type": "geo_point", },
                 "ip": { "type": "ip_range", },
+                "sensor": {
+                    "type" : "text",
+                    "fields" : {
+                        "keyword" : {
+                            "type" : "keyword",
+                            "ignore_above" : 256,
+                        },
+                    },
+                },
+                "algorithm": {
+                    "type" : "text",
+                    "fields" : {
+                        "keyword" : {
+                            "type" : "keyword",
+                            "ignore_above" : 256,
+                        },
+                    },
+                },
+                "address": {
+                    "type" : "text",
+                    "fields" : {
+                        "keyword" : {
+                            "type" : "keyword",
+                            "ignore_above" : 256,
+                        },
+                    },
+                },
+                "mnth": { "type": "float" },
+                "alpha": { "type": "float" },
+                "fovh": { "type": "float" },
+                "fovv": { "type": "float" },
+                "theta": { "type": "float" },
             },
         },
     },
@@ -211,8 +274,11 @@ while True:
         officeinfo=Provision(officestr)
 
         print("Register office {}".format(office), flush=True)
-        dbo=DBIngest(index="offices",office="",host=dbchost)
-        dbo.ingest(officeinfo, id1=officestr)
+        dbo_c=DBIngest(index="offices",office="",host=dbchost)
+        dbo_c.ingest(officeinfo, id1=officestr)
+
+        print("Signal starting up", flush=True)
+        dbs.ingest({"sensor":"startup"})
         break
 
     except Exception as e:
@@ -222,7 +288,6 @@ while True:
     time.sleep(1)
 
 print("DB Initialized", flush=True)
-r=requests.put(dbhost+"/startup"+officestr)
 
 while True:
     time.sleep(10000)
