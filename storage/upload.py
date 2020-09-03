@@ -9,13 +9,9 @@ from db_query import DBQuery
 from db_ingest import DBIngest
 from probe import probe, run
 from language import text
-import traceback
-import hashlib
 import datetime
 import time
-import base64
 import psutil
-import json
 import os
 
 dbhost=os.environ["DBHOST"]
