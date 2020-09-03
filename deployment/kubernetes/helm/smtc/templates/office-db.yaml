@@ -79,7 +79,7 @@ spec:
             preStop:
               exec:
                 {{- $args := dict "scenarioName" $scenarioName "Values" $.Values "officeIdx" $officeIdx }}
-                command: ["/usr/bin/curl","-X","DELETE","http://localhost:9200/sensors_*,startup_*"]
+                command: ["/usr/bin/curl","-X","DELETE","http://localhost:9200/sensors_*"]
           securityContext:
             runAsUser: 1000
             runAsGroup: 1000

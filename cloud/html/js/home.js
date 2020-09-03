@@ -91,6 +91,8 @@ $("#pg-home").on(":initpage", function(e) {
         var sensors=page.data('sensors');
         var scenario=page.data('scenario');
         apiHost.search("offices","location:["+center.lat+","+center.lng+","+settings.radius()+"]",null).then(function (office_reply) {
+            if ("status" in office_reply) 
+                $("[hint-panel]").trigger(":error",[office_reply.status]);
 
             $.each(office_reply.response, function (x, office_data) {
                 var officeid=office_data._source.location.lat+","+office_data._source.location.lon;
@@ -120,6 +122,9 @@ $("#pg-home").on(":initpage", function(e) {
 
                 alerts.update(officectx, offices, sensors);
                 apiHost.search(index,"("+queries+") and location:["+center.lat+","+center.lng+","+settings.radius()+"]",officectx.office).then(function (sensor_reply) {
+
+                    if ("status" in sensor_reply) 
+                        $("[hint-panel]").trigger(":error",[sensor_reply.status]);
 
                     set_office_status(officectx,true);
                     $.each(sensor_reply.response, function (x,sensor) {
@@ -182,11 +187,10 @@ $("#pg-home").on(":initpage", function(e) {
                 }).catch(function (e) {
                     var online=e.status<500 || e.status>504;
                     set_office_status(officectx, online);
-                    if (online) $("[hint-panel]").trigger(":error", [decodeURIComponent(e.statusText)]);
                 });
             });
         }).catch(function (e) {
-            $("[hint-panel]").trigger(":error", [decodeURIComponent(e.statusText)]);
+            alerts.append(new Date,text["central office"],text["connection error"],"fatal");
         });
 
         /* remove obsolete markers */

@@ -54,5 +54,7 @@ text={
     "N/A": "无",
     "office online": "工作正常",
     "office offline": "工作异常",
+    "connection error": "连接出错",
+    "central office": "数据库",
 };
 

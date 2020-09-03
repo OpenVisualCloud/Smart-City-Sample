@@ -6,12 +6,12 @@ import string
 import re
 
 class DBCommon(object):
-    def __init__(self, index, office, host, remote=False):
+    def __init__(self, index, office, host):
         super(DBCommon,self).__init__()
         if isinstance(office,list): office='_'+('_'.join(map(str,office)))
         if isinstance(office,dict): office='_'+str(office["lat"])+'_'+str(office["lon"])
         self._office=re.sub(r'\.?0*_',r'_',re.sub(r'\.?0*$',r'',office)).translate(str.maketrans("-.","nd"))
-        self._index=self._office[1:]+":"+index+self._office if remote else index+self._office
+        self._index=index+self._office
         self._include_type_name={"include_type_name":"false"}
         self._host=host
         self._error=""
@@ -32,11 +32,10 @@ class DBCommon(object):
         return self._request(requests.delete,self._host+"/"+self._index+"/_doc/"+_id,headers={'Content-Type':'application/json'})
 
     def wait(self, stop=Event()):
-        officestr="_"+"_".join(self._index.split("_")[1:])
         while not stop.is_set():
             try:
-                r=requests.get(self._host+"/startup"+officestr)
-                if r.status_code==200: return stop
+                r=self._request(requests.get, self._host+"/sensors"+self._office+"/_doc/_search",json={"query":{"term":{"sensor.keyword":"startup"}},"size":1})
+                if r["hits"]["hits"]: return stop
             except:
                 pass
             print("Waiting for DB...", flush=True)
