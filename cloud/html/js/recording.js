@@ -19,6 +19,10 @@ $("#pg-recording").on(":initpage", function(e, queries, office) {
         var plist=page.find("[play-list]");
         plist.empty();
         apiHost.search($("#homeSearch").data('index'),queries,office).then(function (data) {
+            
+            if ("status" in data)
+                $("[hint-panel]").trigger(":error", [data.status]);
+
             data.response.sort(function(a,b){return a._source.time-b._source.time});
             $.each(data.response, function (k,v) {
                 var time=new Date(v._source.time).toLocaleString();
@@ -42,7 +46,7 @@ $("#pg-recording").on(":initpage", function(e, queries, office) {
                 plist.append(line);
             });
         }).catch(function (e) {
-            $("[hint-panel]").trigger(":error", [decodeURIComponent(e.statusText)]);
+            $("[hint-panel]").trigger(":error", [text["connection error"]]);
         });
     });
 

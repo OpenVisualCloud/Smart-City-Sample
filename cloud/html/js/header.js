@@ -76,6 +76,7 @@ $("#homeSearch").on("focus", function () {
     var office=page.data('office');
     apiHost.hint(page.data('index'),office).then(function (hints) {
         page.data('hints',hints);
+    }).catch(function (e) {
     });
 }).keydown(function (e) {
     var page=$(this);
