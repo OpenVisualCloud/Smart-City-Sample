@@ -13,10 +13,6 @@ spec:
   ports:
   - port: 9200
     protocol: TCP
-    name: dsl
-  - port: 9300
-    protocol: TCP
-    name: transport
   selector:
     app: defn(`DB_NAME')
 
