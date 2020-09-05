@@ -1,5 +1,4 @@
 include(platform.m4)
-include(../../../script/loop.m4)
 define(`DB_NAME',ifelse(defn(`NOFFICES'),1,db,cloud-db))dnl
 
 ifelse(index(`cloud',defn(`BUILD_SCOPE')),-1,,`
