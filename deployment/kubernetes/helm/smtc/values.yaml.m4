@@ -21,6 +21,11 @@ looplist(`SCENARIO_NAME',defn(`SCENARIO'),`dnl
 # offices in the traffic scenario and 1 office in the stadium scenario.
 noffices: defn(`NOFFICES')
 
+# specify the high availability options for databases
+database:
+    haCloud: defn(`HA_CLOUD')
+    haOffice: defn(`HA_OFFICE')
+
 # nCameras specifies the number of cameras served in each office. Currently
 # support 1-8 cameras. 
 ncameras: 
@@ -78,3 +83,4 @@ connector:
     officeTransportPort: 29301
     cloudStoragePort: 28080
     officeStoragePort: 28081
+

@@ -125,3 +125,24 @@ SCOPE=office1 CONNECTOR_CLOUD=<user>@<connect-host> make stop_helm
 SCOPE=office2 CONNECTOR_CLOUD=<user>@<connect-host> make stop_helm
 SCOPE=cloud   CONNECTOR_CLOUD=<user>@<connect-host> make stop_helm
 ```
+
+### Database High Availability
+
+Specify the following optional parameters for cloud or office database high-availability settings:
+
+```
+HA_CLOUD=3 make start_helm
+...
+HA_CLOUD=3 make stop_helm
+
+HA_CLOUD=3 HA_OFFICE=3 make start_helm
+...
+HA_CLOUD=3 HA_OFFICE=3 make stop_helm
+```
+
+---
+
+Each database instance requires about 2GB memory.   
+
+---
+

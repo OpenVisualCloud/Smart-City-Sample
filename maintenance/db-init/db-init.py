@@ -13,6 +13,7 @@ import re
 dbhost=os.environ["DBHOST"]
 dbchost=os.environ["DBCHOST"]
 office=list(map(float,os.environ["OFFICE"].split(",")))
+replicas=list(map(int,os.environ["REPLICAS"].split(",")))
 
 def quit_service():
     exit(143)
@@ -34,7 +35,7 @@ settings={
         "settings": {
             "index": {
                 "number_of_shards": 1,
-                "number_of_replicas": 0,
+                "number_of_replicas": replicas[0],
             },
         },
         "mappings": {
@@ -47,7 +48,7 @@ settings={
         "settings": {
             "index": {
                 "number_of_shards": 1,
-                "number_of_replicas": 0,
+                "number_of_replicas": replicas[1],
             },
         },
         "mappings": {
@@ -62,7 +63,7 @@ settings={
         "settings": {
             "index": {
                 "number_of_shards": 1,
-                "number_of_replicas": 0,
+                "number_of_replicas": replicas[1],
             },
         },
         "mappings": {
@@ -109,7 +110,7 @@ settings={
         "settings": {
             "index": {
                 "number_of_shards": 1,
-                "number_of_replicas": 0,
+                "number_of_replicas": replicas[0],
             },
         },
         "mappings": {
@@ -156,7 +157,7 @@ settings={
         "settings": {
             "index": {
                 "number_of_shards": 1,
-                "number_of_replicas": 0,
+                "number_of_replicas": replicas[1],
             },
         },
         "mappings": {
@@ -170,7 +171,7 @@ settings={
         "settings": {
             "index": {
                 "number_of_shards": 1,
-                "number_of_replicas": 0,
+                "number_of_replicas": replicas[0],
             },
         },
         "mappings": {
@@ -184,7 +185,7 @@ settings={
         "settings": {
             "index": {
                 "number_of_shards": 1,
-                "number_of_replicas": 0,
+                "number_of_replicas": replicas[1],
             },
         },
         "mappings": {
@@ -197,7 +198,7 @@ settings={
         "settings": {
             "index": {
                 "number_of_shards": 1,
-                "number_of_replicas": 0,
+                "number_of_replicas": replicas[1],
             },
         },
         "mappings": {
@@ -213,7 +214,7 @@ settings={
         "settings": {
             "index": {
                 "number_of_shards": 1,
-                "number_of_replicas": 0,
+                "number_of_replicas": replicas[0],
             },
         },
         "mappings": {
@@ -229,7 +230,7 @@ settings={
         "settings": {
             "index": {
                 "number_of_shards": 1,
-                "number_of_replicas": 0,
+                "number_of_replicas": replicas[1],
             },
         },
         "mappings": {
@@ -244,7 +245,7 @@ settings={
         "settings": {
             "index": {
                 "number_of_shards": 1,
-                "number_of_replicas": 0,
+                "number_of_replicas": replicas[1],
             },
         },
         "mappings": {

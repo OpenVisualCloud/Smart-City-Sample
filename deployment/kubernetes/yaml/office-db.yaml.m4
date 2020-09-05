@@ -16,26 +16,24 @@ metadata:
   labels:
     app: defn(`OFFICE_NAME')-db
 spec:
+  clusterIP: None
   ports:
   - port: 9200
     protocol: TCP
-    name: dsl
-  - port: 9300
-    protocol: TCP
-    name: transport
   selector:
     app: defn(`OFFICE_NAME')-db
 
 ---
 
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: defn(`OFFICE_NAME')-db
   labels:
      app: defn(`OFFICE_NAME')-db
 spec:
-  replicas: 1
+  serviceName: defn(`OFFICE_NAME')-db
+  replicas: defn(`HA_OFFICE')
   selector:
     matchLabels:
       app: defn(`OFFICE_NAME')-db
@@ -62,6 +60,10 @@ spec:
               value: "true"
             - name: "node.data"
               value: "true"
+            - name: "discovery.zen.minimum_master_nodes"
+              value: "eval(defn(`HA_OFFICE')ifelse(eval(defn(`HA_OFFICE')%2),0,-1))"
+            - name: "discovery.zen.ping.unicast.hosts"
+              value: "defn(`OFFICE_NAME')-db-service"
             - name: "action.auto_create_index"
               value: "0"
             - name: "ES_JAVA_OPTS"
@@ -142,6 +144,8 @@ spec:
               value: "http://defn(`OFFICE_NAME')-storage-service.default.svc.cluster.local:8080"
             - name: `SCENARIO'
               value: "defn(`SCENARIO_NAME')"
+            - name: REPLICAS
+              value: "ifelse(defn(`HA_CLOUD'),1,0,1),ifelse(defn(`HA_OFFICE'),1,0,1)"
             - name: NO_PROXY
               value: "*"
             - name: no_proxy
