@@ -1,4 +1,5 @@
 include(platform.m4)
+include(../../../script/loop.m4)
 define(`DB_NAME',ifelse(defn(`NOFFICES'),1,db,cloud-db))dnl
 
 ifelse(index(`cloud',defn(`BUILD_SCOPE')),-1,,`
@@ -10,6 +11,7 @@ metadata:
   labels:
     app: defn(`DB_NAME')
 spec:
+  clusterIP: None
   ports:
   - port: 9200
     protocol: TCP
@@ -19,13 +21,12 @@ spec:
 ---
 
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: defn(`DB_NAME')
-  labels:
-     app: defn(`DB_NAME')
 spec:
-  replicas: 1
+  serviceName: defn(`DB_NAME')
+  replicas: defn(`HA_CLOUD')
   selector:
     matchLabels:
       app: defn(`DB_NAME')
@@ -35,7 +36,7 @@ spec:
         app: defn(`DB_NAME')
         database: "yes"
     spec:
-      enableServiceLinks: false
+      enableServiceLinks: true
       containers:
         - name: defn(`DB_NAME')
           image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.8.1
@@ -44,7 +45,7 @@ spec:
             - containerPort: 9200
             - containerPort: 9300
           env:
-ifelse(defn(`NOFFICES'),1,`dnl
+ifelse(defn(`NOFFICES')defn(`HA_CLOUD'),11,`dnl
             - name: "discovery.type"
               value: "single-node"
 ',`dnl
@@ -58,6 +59,10 @@ ifelse(defn(`NOFFICES'),1,`dnl
               value: "true"
             - name: "ES_JAVA_OPTS"
               value: "-Xms2048m -Xmx2048m"
+            - name: "discovery.zen.minimum_master_nodes"
+              value: "eval(defn(`HA_CLOUD')ifelse(eval(defn(`HA_CLOUD')%2),0,-1))"
+            - name: "discovery.zen.ping.unicast.hosts"
+              value: "defn(`DB_NAME')-service"
 ')dnl
             - name: "action.auto_create_index"
               value: "0"

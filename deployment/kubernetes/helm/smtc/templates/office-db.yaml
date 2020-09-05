@@ -15,26 +15,24 @@ metadata:
   labels:
     app: {{ $officeName }}-db
 spec:
+  clusterIP: None
   ports:
   - port: 9200
     protocol: TCP
-    name: dsl
-  - port: 9300
-    protocol: TCP
-    name: transport
   selector:
     app: {{ $officeName }}-db
 
 ---
 
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: {{ $officeName }}-db
   labels:
      app: {{ $officeName }}-db
 spec:
-  replicas: 1
+  serviceName: {{ $officeName }}-db
+  replicas: {{ int $.Values.database.haOffice }}
   selector:
     matchLabels:
       app: {{ $officeName }}-db
@@ -56,7 +54,7 @@ spec:
             - containerPort: 9300
           env:
             - name: "cluster.name"
-              value: "db-cluster"
+              value: "office-cluster"
             - name: "node.name"
               value: "{{ $officeName }}"
             - name: "node.master"
@@ -67,6 +65,10 @@ spec:
               value: "0"
             - name: "ES_JAVA_OPTS"
               value: "-Xms2048m -Xmx2048m"
+            - name: "discovery.zen.minimum_master_nodes"
+              value: "{{ if eq (mod (int $.Values.database.haOffice) 2) 0 }}{{ sub (int $.Values.database.haOffice) 1 }}{{ else }}{{ int $.Values.database.haOffice }}{{ end }}"
+            - name: "discovery.zen.ping.unicast.hosts"
+              value: "{{ $officeName }}-db-service"
             - name: NO_PROXY
               value: "*"
             - name: no_proxy
@@ -160,6 +162,8 @@ spec:
 {{- end }}
             - name: SCENARIO
               value: {{ $scenarioName | quote }}
+            - name: REPLICAS
+              value: "{{ if gt (int $.Values.database.haCloud) 1 }}1{{ else }}0{{ end }},{{ if gt (int $.Values.database.haOffice) 1 }}1{{ else }}0{{ end }}"
             - name: NO_PROXY
               value: "*"
             - name: no_proxy

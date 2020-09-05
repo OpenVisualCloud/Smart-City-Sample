@@ -31,6 +31,7 @@ ifelse(defn(`NOFFICES'),1,,`
             DBCHOST: "http://ifelse(defn(`NOFFICES'),1,db,cloud_db):9200"
             PROXYHOST: "http://defn(`OFFICE_NAME')_storage:8080"
             `SCENARIO': "defn(`SCENARIO_NAME')"
+            REPLICAS: "0,0"
             NO_PROXY: "*"
             no_proxy: "*"
         secrets:

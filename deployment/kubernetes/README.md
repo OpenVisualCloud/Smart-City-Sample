@@ -49,9 +49,29 @@ SCOPE=office1 make start_kubernetes
 make stop_kubernetes  # cleanup all
 ```
 
+### Database High Availability 
+
+Specify the following optional parameters for cloud or office database high-availability settings:   
+
+```
+HA_CLOUD=3 make start_kubernetes
+...
+HA_CLOUD=3 make stop_kubernetes
+
+HA_CLOUD=3 HA_OFFICE=3 make start_kubernetes
+...
+HA_CLOUD=3 HA_OFFICE=3 make stop_kubernetes
+```
+
+---
+
+Each database instance requires about 2GB memory.
+
+---
+
 ### See Also 
 
+- [Helm Charts](helm/smtc/README.md)
 - [Utility Scripts](../../doc/script.md)   
 - [CMake Options](../../doc/cmake.md)
-- [Helm Charts](helm/smtc/README.md)
 
