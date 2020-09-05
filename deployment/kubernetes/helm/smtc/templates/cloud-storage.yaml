@@ -72,7 +72,7 @@ spec:
             - name: REVERSE_TUNNEL1
               value: "{{ $.Values.connector.cloudHost }}:{{ $.Values.connector.cloudStoragePort }} cloud-storage-service:8080"
             - name: "REVERSE_TUNNEL2"
-              value: "{{ $.Values.connector.cloudHost }}:{{ $.Values.connector.cloudQueryPort }} {{ include "smtc.db.name" $ }}:9200"
+              value: "{{ $.Values.connector.cloudHost }}:{{ $.Values.connector.cloudQueryPort }} {{ include "smtc.db.name" $ }}-service:9200"
 {{- end }}
           volumeMounts:
             - mountPath: /etc/localtime
