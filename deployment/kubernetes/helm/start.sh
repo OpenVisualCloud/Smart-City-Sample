@@ -1,11 +1,7 @@
 #!/bin/bash -e
 
 DIR=$(dirname $(readlink -f "$0"))
-NOFFICES="${4:-1}"
 REGISTRY="$9"
-
-shift
-. "$DIR/build.sh"
 
 function create_secret {
     kubectl create secret generic $1 "--from-file=$2" "--from-file=$3"
@@ -18,7 +14,6 @@ function create_secret2 {
 case "N$SCOPE" in
     N | Ncloud)
         # create secrets
-        "$DIR/../../certificate/self-sign.sh" "${REGISTRY}"
         create_secret self-signed-certificate "${DIR}/../../certificate/self.crt" "${DIR}/../../certificate/self.key"
         ;;
 esac

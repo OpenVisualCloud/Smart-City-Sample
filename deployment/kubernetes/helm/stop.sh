@@ -2,9 +2,6 @@
 
 DIR=$(dirname $(readlink -f "$0"))
 
-shift
-. "$DIR/build.sh"
-
 helm uninstall smtc${SCOPE}
 
 case "N$SCOPE" in
