@@ -37,8 +37,8 @@ ifelse(defn(`NOFFICES'),1,,`
         secrets:
             - source: sensor_info
               target: sensor-info.json
-              uid: "${USER_ID}"
-              gid: "${GROUP_ID}"
+              uid: "defn(`USER_ID')"
+              gid: "defn(`GROUP_ID')"
               mode: 0444
         volumes:
             - /etc/localtime:/etc/localtime:ro

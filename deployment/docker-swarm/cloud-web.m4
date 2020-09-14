@@ -3,7 +3,7 @@
         image: defn(`REGISTRY_PREFIX')smtc_web_cloud:latest
         ports:
             - target: 8443
-              published: 443
+              published: 8443
               protocol: tcp
               mode: host
         environment:
@@ -17,13 +17,13 @@
         secrets:
             - source: self_crt
               target: self.crt
-              uid: ${USER_ID}
-              gid: ${GROUP_ID}
+              uid: "defn(`USER_ID')"
+              gid: "defn(`GROUP_ID')"
               mode: 0444
             - source: self_key
               target: self.key
-              uid: ${USER_ID}
-              gid: ${GROUP_ID}
+              uid: "defn(`USER_ID')"
+              gid: "defn(`GROUP_ID')"
               mode: 0440
         networks:
             - appnet
