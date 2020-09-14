@@ -17,13 +17,13 @@
         secrets:
             - source: self_crt
               target: self.crt
-              uid: ${USER_ID}
-              gid: ${GROUP_ID}
+              uid: "defn(`USER_ID')"
+              gid: "defn(`GROUP_ID')"
               mode: 0444
             - source: self_key
               target: self.key
-              uid: ${USER_ID}
-              gid: ${GROUP_ID}
+              uid: "defn(`USER_ID')"
+              gid: "defn(`GROUP_ID')"
               mode: 0440
         networks:
             - appnet
