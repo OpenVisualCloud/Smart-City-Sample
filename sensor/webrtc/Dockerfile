@@ -1,0 +1,31 @@
+
+FROM openvisualcloud/xeon-ubuntu1804-service-owt:20.7.1
+
+RUN  apt-get update -q && apt-get install -y -q nginx python3-tornado python3-requests python3-ply && rm -rf /var/lib/apt/lists/*
+
+COPY *.conf /etc/nginx/
+COPY html/ /var/www/html/
+RUN  cp /home/owt/extras/basic_example/public/scripts/owt.js /var/www/html/js/vendor/owt.js && \
+     sed -i "s/io(e,a)/io(undefined,a)/" /var/www/html/js/vendor/owt.js && \
+     sed -i "s/^ssl =.*/ssl = false/" /home/owt/portal/portal.toml && \
+     sed -i "s/^ssl =.*/ssl = false/" /home/owt/management_api/management_api.toml
+COPY --from=smtc_common /home/*.py /home/
+COPY launch.sh /home/
+COPY *.py /home/
+
+CMD  ["/bin/bash","-c","/home/launch.sh && /home/webs.py"]
+ENV  PYTHONIOENCODING=UTF-8
+
+####
+ARG  USER=docker
+ARG  GROUP=docker
+ARG  UID
+ARG  GID
+## must use ; here to ignore user exist status code
+RUN  [ ${GID} -gt 0 ] && groupadd -f -g ${GID} ${GROUP}; \
+     [ ${UID} -gt 0 ] && useradd -d /home -M -g ${GID} -K UID_MAX=${UID} -K UID_MIN=${UID} ${USER}; \
+     touch /var/run/nginx.pid && \
+     mkdir -p /var/log/nginx /var/lib/nginx /var/www/cache /var/www/thumbnail && \
+     chown -R ${UID}:${GID} /home/*.py /var/run/nginx.pid /var/www /var/log/nginx /var/lib/nginx
+#USER ${UID}
+####
