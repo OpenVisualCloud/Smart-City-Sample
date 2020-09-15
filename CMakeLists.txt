@@ -1,7 +1,6 @@
 cmake_minimum_required (VERSION 2.8)
 
 Project(smart_city NONE)
-set_property(DIRECTORY APPEND PROPERTY ADDITIONAL_MAKE_CLEAN_FILES "${CMAKE_HOME_DIRECTORY}/dist")
 
 if (NOT DEFINED REGISTRY)
     set(REGISTRY "")
@@ -65,7 +64,6 @@ if(PLATFORM STREQUAL "VCAC-A")
 endif()
 string(REGEX REPLACE ",$" "" NETWORK ${NETWORK})
 
-add_custom_target(dist  ${CMAKE_HOME_DIRECTORY}/script/mk-dist.sh)
 if(NOT REGISTRY)
     add_custom_target(update ${CMAKE_HOME_DIRECTORY}/script/update-image.sh)
 endif()

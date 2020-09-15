@@ -37,12 +37,8 @@ cmake -DPLATFORM=Xeon -DSCENARIO=stadium -DNOFFICES=1 -DNCAMERAS=5,1,3 -DNANALYT
 
 - **build**: Build the sample (docker) images.  
 - **update**: Distribute the sample images to worker nodes.  
-- **dist**: Create the sample distribution package.   
 - **start/stop_docker_compose**: Start/stop the sample orchestrated by docker-compose.  
 - **start/stop_docker_swarm**: Start/stop the sample orchestrated by docker swarm.   
 - **start/stop_kubernetes**: Start/stop the sample orchestrated by Kubernetes.   
 - **discover**: Scan the network specified by `PORT_SCAN` for IP cameras, and print out the IP camera profiles.    
 
-### See Also:
-
-- [Sample Distribution](dist.md)   
