@@ -237,7 +237,11 @@ var scenarios={
                     } else if (sensor._source.algorithm=="entrance-counting" || sensor._source.algorithm=="svcq-counting") {
                         fields.push("count.people");
                     } else if (sensor._source.algorithm=="crowd-counting") {
-                        iconloc=sensorctx.zonemap.getBounds().getCenter();
+                        try {
+                            iconloc=sensorctx.zonemap.getBounds().getCenter();
+                        } catch (e) {
+                            iconloc=null;
+                        }
                         $.each(sensor._source.zones,function (x,v) {
                             fields.push("count.zone"+v);
                         });
