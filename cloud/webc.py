@@ -5,10 +5,10 @@ from tornado.options import define, options, parse_command_line
 from redirect import RedirectHandler
 from subprocess import Popen
 from signal import signal, SIGTERM, SIGQUIT
-import os
+from configuration import env
 import json
 
-scenario=os.environ["SCENARIO"]
+scenario=env["SCENARIO"]
 tornadoc=None
 nginxc=None
 

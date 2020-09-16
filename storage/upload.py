@@ -9,16 +9,17 @@ from db_query import DBQuery
 from db_ingest import DBIngest
 from probe import probe, run
 from language import text
+from configuration import env
 import datetime
 import time
 import psutil
 import os
 
-dbhost=os.environ["DBHOST"]
-local_office=True if "OFFICE" in os.environ else False
-halt_rec_th=float(os.environ["HALT_REC"])
-fatal_disk_th=float(os.environ["FATAL_DISK"])
-warn_disk_th=float(os.environ["WARN_DISK"])
+dbhost=env["DBHOST"]
+local_office=True if "OFFICE" in env else False
+halt_rec_th=float(env["HALT_REC"])
+fatal_disk_th=float(env["FATAL_DISK"])
+warn_disk_th=float(env["WARN_DISK"])
 
 class UploadHandler(web.RequestHandler):
     def __init__(self, app, request, **kwargs):

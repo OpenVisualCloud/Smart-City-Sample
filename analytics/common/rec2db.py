@@ -2,11 +2,12 @@
 
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
+from configuration import env
 import requests
 import os
 
-office=list(map(float,os.environ["OFFICE"].split(",")))
-sthost=os.environ["STHOST"]
+office=list(map(float,env["OFFICE"].split(",")))
+sthost=env["STHOST"]
 
 class Handler(FileSystemEventHandler):
     def __init__(self, sensor):

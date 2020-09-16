@@ -3,12 +3,12 @@
 from db_query import DBQuery
 from trigger import Trigger
 from language import text
-import os
+from configuration import env
 
-office=list(map(float,os.environ["OFFICE"].split(",")))
-service_interval=list(map(float,os.environ["SERVICE_INTERVAL"].split(",")))
-args=os.environ["OCCUPENCY_ARGS"].split(",")
-dbhost=os.environ["DBHOST"]
+office=list(map(float,env["OFFICE"].split(",")))
+service_interval=list(map(float,env["SERVICE_INTERVAL"].split(",")))
+args=env["OCCUPENCY_ARGS"].split(",")
+dbhost=env["DBHOST"]
 
 class OccupencyTrigger(Trigger):
    def __init__(self):

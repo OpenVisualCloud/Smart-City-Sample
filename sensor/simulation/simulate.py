@@ -3,6 +3,7 @@
 from signal import signal, SIGTERM
 from concurrent.futures import ThreadPoolExecutor
 from db_query import DBQuery
+from configuration import env
 import subprocess
 import socket
 import random
@@ -11,14 +12,14 @@ import os
 import re
 
 simulated_root="/mnt/simulated"
-pattern=os.environ["FILES"]
-rtsp_port=int(os.environ["RTSP_PORT"])
-rtp_port=int(os.environ["RTP_PORT"])
-port_step=int(os.environ["PORT_STEP"]) if "PORT_STEP" in os.environ else 100
-ncameras=int(os.environ["NCAMERAS"])
-algorithm=os.environ["ALGORITHM"]
-dbhost=os.environ["DBHOST"] if "DBHOST" in os.environ else None
-office=list(map(float,os.environ["OFFICE"].split(","))) if "OFFICE" in os.environ else None
+pattern=env["FILES"]
+rtsp_port=int(env["RTSP_PORT"])
+rtp_port=int(env["RTP_PORT"])
+port_step=int(env.get("PORT_STEP","100"))
+ncameras=int(env["NCAMERAS"])
+algorithm=env["ALGORITHM"]
+dbhost=env.get("DBHOST",None)
+office=list(map(float,env["OFFICE"].split(","))) if "OFFICE" in env else None
 
 def serve_stream(file1, rtsp_port1, rtp_port1):
     rtsp="rtsp://@:"+str(rtsp_port1)+"/live.sdp"

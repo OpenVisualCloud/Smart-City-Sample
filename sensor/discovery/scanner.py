@@ -3,16 +3,16 @@
 from ipaddress import IPv4Network
 from threading import Thread, Lock
 from queue import Queue
+from configuration import env
 import socket
 import select
 import errno
 import time
 import re
-import os
 
-scan_nthreads=int(os.environ["SCAN_NTHREADS"]) if "SCAN_NTHREADS" in os.environ else 32
-scan_batch=int(os.environ["SCAN_BATCH"]) if "SCAN_BATCH" in os.environ else 64
-scan_timeout=float(os.environ["SCAN_TIMEOUT"]) if "SCAN_TIMEOUT" in os.environ else 200
+scan_nthreads=int(env.get("SCAN_NTHREADS","32"))
+scan_batch=int(env.get("SCAN_BATCH","64"))
+scan_timeout=float(env.get("SCAN_TIMEOUT","200"))
 
 class Scanner(object):
     def __init__(self, nthreads=scan_nthreads, batch=scan_batch, timeout=scan_timeout):
