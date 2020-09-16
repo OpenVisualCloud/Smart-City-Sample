@@ -5,13 +5,14 @@ from db_query import DBQuery
 from signal import signal, SIGTERM
 from language import text
 from threading import Event
+from configuration import env
 import os
 
-retention_time=float(os.environ["RETENTION_TIME"])  # in seconds
-service_interval=float(os.environ["SERVICE_INTERVAL"])  # in seconds
-indexes=os.environ["INDEXES"].split(",")
-office=list(map(float, os.environ["OFFICE"].split(","))) if "OFFICE" in os.environ else "*"
-dbhost=os.environ["DBHOST"]
+retention_time=float(env["RETENTION_TIME"])  # in seconds
+service_interval=float(env["SERVICE_INTERVAL"])  # in seconds
+indexes=env["INDEXES"].split(",")
+office=list(map(float, env["OFFICE"].split(","))) if "OFFICE" in env else "*"
+dbhost=env["DBHOST"]
 storage="/var/www/mp4"
 
 stop=Event()

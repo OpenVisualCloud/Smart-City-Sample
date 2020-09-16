@@ -6,11 +6,11 @@ from tornado.concurrent import run_on_executor
 from concurrent.futures import ThreadPoolExecutor
 from db_query import DBQuery
 from language import text, encode
+from configuration import env
 import datetime
-import os
 
-dbhost=os.environ["DBHOST"]
-proxyhost=os.environ["PROXYHOST"]
+dbhost=env["DBHOST"]
+proxyhost=env["PROXYHOST"]
 
 db=DBQuery(index="offices",office="",host=dbhost)
 offices={}

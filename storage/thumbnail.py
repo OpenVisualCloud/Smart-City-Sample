@@ -4,11 +4,12 @@ from tornado import web, gen
 from tornado.concurrent import run_on_executor
 from concurrent.futures import ThreadPoolExecutor
 from probe import run
+from configuration import env
 import traceback
 import uuid
 import os
 
-THUMBNAIL_CACHE=int(os.environ["THUMBNAIL_CACHE"])
+THUMBNAIL_CACHE=int(env["THUMBNAIL_CACHE"])
 
 class Thumbnail(object):
     def __init__(self):

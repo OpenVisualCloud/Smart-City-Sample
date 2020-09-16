@@ -2,10 +2,10 @@
 
 from trigger import Trigger
 from language import text
+from configuration import env
 import psutil
-import os
 
-service_interval=list(map(float,os.environ["SERVICE_INTERVAL"].split(",")))
+service_interval=list(map(float,env["SERVICE_INTERVAL"].split(",")))
 
 class CPUTrigger(Trigger):
     def __init__(self):

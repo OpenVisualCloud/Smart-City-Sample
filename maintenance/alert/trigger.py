@@ -1,11 +1,11 @@
 #!/usr/bin/python3
 
 from db_ingest import DBIngest
+from configuration import env
 import time
-import os
 
-office=list(map(float, os.environ["OFFICE"].split(",")))
-dbhost=os.environ["DBHOST"]
+office=list(map(float, env["OFFICE"].split(",")))
+dbhost=env["DBHOST"]
 
 class Trigger(object):
     def __init__(self):

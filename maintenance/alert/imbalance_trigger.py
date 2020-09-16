@@ -3,11 +3,11 @@
 from db_query import DBQuery
 from trigger import Trigger
 from language import text
-import os
+from configuration import env
 
-service_interval=list(map(float,os.environ["SERVICE_INTERVAL"].split(",")))
-office=list(map(float, os.environ["OFFICE"].split(",")))
-dbhost=os.environ["DBHOST"]
+service_interval=list(map(float,env["SERVICE_INTERVAL"].split(",")))
+office=list(map(float, env["OFFICE"].split(",")))
+dbhost=env["DBHOST"]
 
 class ImbalanceTrigger(Trigger):
     def __init__(self):
