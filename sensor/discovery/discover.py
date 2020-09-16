@@ -6,19 +6,19 @@ from db_ingest import DBIngest
 from probe import probe
 from onvif_discover import safe_discover
 from scanner import Scanner
+from configuration import env
 import traceback
 import socket
 import time
 import json
-import os
 
-port_scan=[os.environ['PORT_SCAN']] if "PORT_SCAN" in os.environ else []
-passcodes=os.environ['PASSCODE'].split(" ") if 'PASSCODE' in os.environ else []
-sim_hosts=[hp.split(":") for hp in os.environ["SIM_HOST"].strip("/").split("/")] if "SIM_HOST" in os.environ else []
-sim_prefix=os.environ["SIM_PREFIX"] if "SIM_PREFIX" in os.environ else ""
-service_interval = float(os.environ["SERVICE_INTERVAL"]) if "SERVICE_INTERVAL" in os.environ else 30
-office = list(map(float,os.environ["OFFICE"].split(","))) if "OFFICE" in os.environ else None
-dbhost= os.environ["DBHOST"] if "DBHOST" in os.environ else None
+port_scan=[env['PORT_SCAN']] if "PORT_SCAN" in env else []
+passcodes=env['PASSCODE'].split(" ") if 'PASSCODE' in env else []
+sim_hosts=[hp.split(":") for hp in env["SIM_HOST"].strip("/").split("/")] if "SIM_HOST" in env else []
+sim_prefix=env.get("SIM_PREFIX","")
+service_interval = float(env.get("SERVICE_INTERVAL","30"))
+office = list(map(float,env["OFFICE"].split(","))) if "OFFICE" in env else None
+dbhost= env.get("DBHOST",None)
 sim_cameras={}
 
 def quit_service(signum, sigframe):

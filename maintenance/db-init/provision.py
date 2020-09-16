@@ -1,13 +1,13 @@
 #!/usr/bin/python3
 
 from db_ingest import DBIngest
-import os
+from configuration import env
 import json
 
-dbhost=os.environ["DBHOST"]
-office=list(map(float,os.environ["OFFICE"].split(",")))
-proxyhost=os.environ["PROXYHOST"]
-scenario=os.environ["SCENARIO"]
+dbhost=env["DBHOST"]
+office=list(map(float,env["OFFICE"].split(",")))
+proxyhost=env["PROXYHOST"]
+scenario=env["SCENARIO"]
 
 def Provision(officestr):
     print("Provisioning...", flush=True)

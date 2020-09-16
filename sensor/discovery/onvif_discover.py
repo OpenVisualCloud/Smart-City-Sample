@@ -1,12 +1,13 @@
 #!/usr/bin/python3
 
 from onvif import ONVIFCamera
+from configuration import env
 import subprocess
 import time
 import sys
 import os
 
-no_proxy=os.environ["no_proxy"].split(",") if "no_proxy" in os.environ else []
+no_proxy=env["no_proxy"].split(",") if "no_proxy" in env else []
 
 # A fix for 'NotImplementedError: AnySimpleType.pytonvalue() not implemented'
 # https://github.com/FalkTannhaeuser/python-onvif-zeep/issues/4

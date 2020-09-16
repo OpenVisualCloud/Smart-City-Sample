@@ -8,10 +8,10 @@ from imbalance_trigger import ImbalanceTrigger
 from occupency_trigger import OccupencyTrigger
 from language import text
 from threading import Event
-import os
+from configuration import env
 
-office=list(map(float, os.environ["OFFICE"].split(",")))
-dbhost=os.environ["DBHOST"]
+office=list(map(float, env["OFFICE"].split(",")))
+dbhost=env["DBHOST"]
 
 stop=Event()
 def quit_service(signum, sigframe):

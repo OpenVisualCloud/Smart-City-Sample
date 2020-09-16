@@ -6,11 +6,11 @@ from tornado.concurrent import run_on_executor
 from concurrent.futures import ThreadPoolExecutor
 from db_query import DBQuery
 from language import encode
-import os
+from configuration import env
 import json
 
-dbhost=os.environ["DBHOST"]
-office=list(map(float,os.environ["OFFICE"].split(","))) if "OFFICE" in os.environ else ""
+dbhost=env["DBHOST"]
+office=list(map(float,env["OFFICE"].split(","))) if "OFFICE" in env else ""
 
 class HistogramHandler(web.RequestHandler):
     def __init__(self, app, request, **kwargs):

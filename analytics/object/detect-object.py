@@ -7,14 +7,13 @@ from rec2db import Rec2DB
 from runva import RunVA
 from language import text
 from threading import Event
+from configuration import env
 import traceback
-import os
-import uuid
 
-scenario = os.environ["SCENARIO"]
-office = list(map(float, os.environ["OFFICE"].split(",")))
-dbhost = os.environ["DBHOST"]
-every_nth_frame = int(os.environ["EVERY_NTH_FRAME"])
+scenario = env["SCENARIO"]
+office = list(map(float, env["OFFICE"].split(",")))
+dbhost = env["DBHOST"]
+every_nth_frame = int(env["EVERY_NTH_FRAME"])
 
 stop=Event()
 myAlgorithm=""

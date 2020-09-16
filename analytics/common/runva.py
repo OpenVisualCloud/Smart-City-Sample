@@ -1,19 +1,19 @@
 #!/usr/bin/python3
 
-import os
 from paho.mqtt.client import Client
 from db_ingest import DBIngest
 from threading import Event
 from vaserving.vaserving import VAServing
 from vaserving.pipeline import Pipeline
+from configuration import env
 import time
 import traceback
 import psutil
 
-mqtthost = os.environ["MQTTHOST"]
-dbhost = os.environ["DBHOST"]
-every_nth_frame = int(os.environ["EVERY_NTH_FRAME"])
-office = list(map(float, os.environ["OFFICE"].split(",")))
+mqtthost = env["MQTTHOST"]
+dbhost = env["DBHOST"]
+every_nth_frame = int(env["EVERY_NTH_FRAME"])
+office = list(map(float, env["OFFICE"].split(",")))
 
 class RunVA(object):
     def _test_mqtt_connection(self):
