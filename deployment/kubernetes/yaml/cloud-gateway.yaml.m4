@@ -5,51 +5,46 @@ ifelse(index(`cloud',defn(`BUILD_SCOPE')),-1,,`
 apiVersion: v1
 kind: Service
 metadata:
-  name: cloud-web-service
+  name: cloud-gateway-service
   labels:
-    app: cloud-web
+    app: cloud-gateway
 spec:
   ports:
-    - port: 443
-      targetPort: 8443
-      name: https
-  externalIPs:
-    - defn(`HOSTIP')
+  - port: 8080
+    protocol: TCP
   selector:
-    app: cloud-web
+    app: cloud-gateway
 
 ---
 
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: cloud-web
+  name: cloud-gateway
   labels:
-     app: cloud-web
+     app: cloud-gateway
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: cloud-web
+      app: cloud-gateway
   template:
     metadata:
       labels:
-        app: cloud-web
+        app: cloud-gateway
     spec:
       enableServiceLinks: false
       containers:
-        - name: cloud-web
-          image: defn(`REGISTRY_PREFIX')smtc_web_cloud:latest
+        - name: cloud-gateway
+          image: defn(`REGISTRY_PREFIX')smtc_api_gateway:latest
           imagePullPolicy: IfNotPresent
           ports:
-            - containerPort: 8443
+            - containerPort: 8080
           env:
             - name: DBHOST
               value: "http://ifelse(defn(`NOFFICES'),1,db,cloud-db)-service:9200"
-            - name: `SCENARIO'
-              value: "defn(`SCENARIO')"
-            - name: PROXYHOST
-              value: "http://cloud-gateway-service.default.svc.cluster.local:8080"
+            - name: STHOST
+              value: "http://cloud-storage-service.default.svc.cluster.local:8080"
             - name: NO_PROXY
               value: "*"
             - name: no_proxy
@@ -58,17 +53,11 @@ spec:
             - mountPath: /etc/localtime
               name: timezone
               readOnly: true
-            - mountPath: /var/run/secrets
-              name: self-signed-certificate
-              readOnly: true
       volumes:
         - name: timezone
           hostPath:
             path: /etc/localtime
             type: File
-        - name: self-signed-certificate
-          secret:
-            secretName: self-signed-certificate
 PLATFORM_NODE_SELECTOR(`Xeon')dnl
 
 ')

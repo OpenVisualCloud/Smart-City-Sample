@@ -5,13 +5,8 @@ from tornado.options import define, options, parse_command_line
 from workload import WorkloadHandler
 from upload import UploadHandler
 from thumbnail import ThumbnailHandler
-from search import SearchHandler
-from histogram import HistogramHandler
-from hint import HintHandler
-from stats import StatsHandler
 from subprocess import Popen
 from signal import signal, SIGTERM, SIGQUIT
-import os
 import time
 
 tornado1=None
@@ -26,10 +21,6 @@ def quit_service(signum, frame):
 app = web.Application([
     (r'/api/upload',UploadHandler),
     (r'/api/thumbnail/.*',ThumbnailHandler),
-    (r'/api/search',SearchHandler),
-    (r'/api/histogram',HistogramHandler),
-    (r'/api/hint',HintHandler),
-    (r'/api/stats',StatsHandler),
     (r'/api/workload',WorkloadHandler),
 ])
 

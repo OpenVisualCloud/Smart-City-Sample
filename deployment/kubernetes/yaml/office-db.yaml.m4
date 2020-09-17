@@ -141,7 +141,7 @@ spec:
             - name: "DBCHOST"
               value: "http://ifelse(defn(`NOFFICES'),1,db,cloud-db)-service:9200"
             - name: PROXYHOST
-              value: "http://defn(`OFFICE_NAME')-storage-service.default.svc.cluster.local:8080"
+              value: "http://defn(`OFFICE_NAME')-gateway-service.default.svc.cluster.local:8080"
             - name: `SCENARIO'
               value: "defn(`SCENARIO_NAME')"
             - name: REPLICAS
