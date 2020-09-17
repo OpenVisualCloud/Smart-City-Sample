@@ -1,15 +1,9 @@
 
-    cloud_storage:
-        image: defn(`REGISTRY_PREFIX')smtc_storage_manager:latest
+    cloud_gateway:
+        image: defn(`REGISTRY_PREFIX')smtc_api_gateway:latest
         environment:
             DBHOST: "http://ifelse(defn(`NOFFICES'),1,db,cloud_db):9200"
-            INDEXES: "recordings"
-            RETENTION_TIME: "7200"
-            SERVICE_INTERVAL: "3600"
-            WARN_DISK: "75"
-            FATAL_DISK: "85"
-            HALT_REC: "95"
-            THUMBNAIL_CACHE: "50"
+            STHOST: "http://cloud_storage:8080"
             NO_PROXY: "*"
             no_proxy: "*"
         volumes:
