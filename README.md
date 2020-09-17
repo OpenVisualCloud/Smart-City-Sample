@@ -36,10 +36,10 @@ The sample is powered by the following Open Visual Cloud software stacks:
 
 - **Time Zone**: Check that the timezone setting of your host machine is correctly configured. Timezone is used during build. If you plan to run the sample on a cluster of machines managed by Docker Swarm or Kubernetes, please make sure to synchronize time among the manager/master node and worker nodes.    
 
-- **Build Tools**: Install `cmake`, `m4` and `gawk` if they are not available on your system.        
+- **Build Tools**: Install `cmake`, `make`, `m4`, `wget` and `gawk` if they are not available on your system.        
 
 - **Docker Engine**:        
-  - Install [docker engine](https://docs.docker.com/install). Make sure you [setup](https://docs.docker.com/install/linux/linux-postinstall) docker to run as a regular user.   
+  - Install [docker engine](https://docs.docker.com/install). Minimum version required: `17.05`. Make sure you [setup](https://docs.docker.com/install/linux/linux-postinstall) docker to run as a regular user.        
   - Setup [docker swarm](https://docs.docker.com/engine/swarm), if you plan to deploy through docker swarm. See [Docker Swarm Setup](deployment/docker-swarm/README.md) for additional setup details.  
   - Setup [Kubernetes](https://kubernetes.io/docs/setup), if you plan to deploy through Kubernetes. See [Kubernetes Setup](deployment/kubernetes/README.md) for additional setup details.     
   - Setup docker proxy as follows if you are behind a firewall:   
