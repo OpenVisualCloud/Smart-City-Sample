@@ -3,22 +3,14 @@
 from tornado import ioloop, web
 from tornado.options import define, options, parse_command_line
 from redirect import RedirectHandler
-from subprocess import Popen
 from signal import signal, SIGTERM, SIGQUIT
 from configuration import env
+from nginx import NGINX
 import json
 
 scenario=env["SCENARIO"]
 tornadoc=None
-nginxc=None
-
-def setup_nginx_resolver():
-    with open("/etc/resolv.conf","rt") as fd:
-        for line in fd:
-            if not line.startswith("nameserver"): continue
-            with open("/etc/nginx/resolver.conf","wt") as fdr:
-                fdr.write("resolver "+line.strip().split(" ")[1]+";")
-            return
+nginxc=NGINX()
 
 def setup_scenarios():
     with open("/var/www/html/js/scenario.js","at") as fd:
@@ -26,7 +18,7 @@ def setup_scenarios():
 
 def quit_service(signum, frame):
     if tornadoc: tornadoc.add_callback(tornadoc.stop)
-    if nginxc: nginxc.send_signal(SIGQUIT)
+    nginxc.stop()
         
 app = web.Application([
     (r'/api/search',RedirectHandler),
@@ -40,7 +32,6 @@ app = web.Application([
 
 if __name__ == "__main__":
     signal(SIGTERM, quit_service)
-    setup_nginx_resolver()
     setup_scenarios()
 
     define("port", default=2222, help="the binding port", type=int)
@@ -50,6 +41,6 @@ if __name__ == "__main__":
     app.listen(options.port, address=options.ip)
 
     tornadoc=ioloop.IOLoop.instance();
-    nginxc=Popen(["/usr/local/sbin/nginx"])
+    nginxc.start()
     tornadoc.start()
-    nginxc.wait()
+    nginxc.stop()

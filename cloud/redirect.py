@@ -8,6 +8,7 @@ from db_query import DBQuery
 from language import text, encode
 from configuration import env
 import datetime
+import socket
 
 dbhost=env["DBHOST"]
 proxyhost=env["PROXYHOST"]
@@ -53,7 +54,9 @@ class RedirectHandler(web.RequestHandler):
             uri=r["_source"]["uri"]+self.request.uri
             protocol=uri.split("://")[0]
             host=uri.split("/")[2]
+            port=":"+host.split(":")[1] if uri.find(":")>=0 else ""
+            host=socket.gethostbyname(host.partition(":")[0])
             path="/".join(uri.split("/")[3:])
 
-            self.add_header('X-Accel-Redirect','/redirect/'+protocol+"/"+host+"/"+path)
+            self.add_header('X-Accel-Redirect','/redirect/'+protocol+"/"+host+port+"/"+path)
             self.set_status(200,'OK')
