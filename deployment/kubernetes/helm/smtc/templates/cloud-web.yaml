@@ -50,7 +50,7 @@ spec:
             - name: DBHOST
               value: {{ printf "http://%s-service:9200" (include "smtc.db.name" .) | quote }}
             - name: PROXYHOST
-              value: "http://cloud-gateway-service.default.svc.cluster.local:8080"
+              value: "http://cloud-gateway-service:8080"
             - name: SCENARIO
               value: {{ join "," $.Values.scenario | quote }}
 {{- if (len $.Values.connector.cloudHost) }}

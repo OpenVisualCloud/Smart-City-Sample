@@ -49,17 +49,15 @@ spec:
 {{- if (len $.Values.connector.cloudHost) }}
             - name: GWHOST
               value: "http://localhost:8080/api/upload"
+            - name: DBCHOST
+              value: "http://localhost:8080/api/db"
             - name: FORWARD_TUNNEL1
               value: "{{ $.Values.connector.cloudHost }}:{{ $.Values.connector.cloudGatewayPort }} localhost:8080"
-            - name: DBCHOST
-              value: "http://localhost:9200"
-            - name: FORWARD_TUNNEL2
-              value: "{{ $.Values.connector.cloudHost }}:{{ $.Values.connector.cloudQueryPort }} localhost:9200"
 {{- else }}
             - name: GWHOST
               value: "http://cloud-gateway-service:8080/api/upload"
             - name: DBCHOST
-              value: {{ printf "http://%s-service:9200" (include "smtc.db.name" $) | quote }}
+              value: "http://cloud-gateway-service:8080/api/db"
 {{- end }}
             - name: SERVICE_INTERVAL
               value: "30"

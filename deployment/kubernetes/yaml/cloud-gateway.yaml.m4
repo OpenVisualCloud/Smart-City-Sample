@@ -44,7 +44,7 @@ spec:
             - name: DBHOST
               value: "http://ifelse(defn(`NOFFICES'),1,db,cloud-db)-service:9200"
             - name: STHOST
-              value: "http://cloud-storage-service.default.svc.cluster.local:8080"
+              value: "http://cloud-storage-service:8080"
             - name: NO_PROXY
               value: "*"
             - name: no_proxy

@@ -49,7 +49,7 @@ spec:
             - name: `SCENARIO'
               value: "defn(`SCENARIO')"
             - name: PROXYHOST
-              value: "http://cloud-gateway-service.default.svc.cluster.local:8080"
+              value: "http://cloud-gateway-service:8080"
             - name: NO_PROXY
               value: "*"
             - name: no_proxy

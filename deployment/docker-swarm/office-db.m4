@@ -28,7 +28,7 @@ ifelse(defn(`NOFFICES'),1,,`
         environment:
             OFFICE: "defn(`OFFICE_LOCATION')"
             DBHOST: "http://ifelse(defn(`NOFFICES'),1,db,defn(`OFFICE_NAME')_db):9200"
-            DBCHOST: "http://ifelse(defn(`NOFFICES'),1,db,cloud_db):9200"
+            DBCHOST: "http://cloud_gateway:8080/api/db"
             PROXYHOST: "http://defn(`OFFICE_NAME')_gateway:8080"
             `SCENARIO': "defn(`SCENARIO_NAME')"
             REPLICAS: "0,0"

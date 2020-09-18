@@ -7,16 +7,16 @@ from upload import UploadHandler
 from thumbnail import ThumbnailHandler
 from subprocess import Popen
 from signal import signal, SIGTERM, SIGQUIT
-import time
+from nginx import NGINX
 
 tornado1=None
-nginx1=None
+nginx1=NGINX()
 cleanup1=None
 
 def quit_service(signum, frame):
     if tornado1: tornado1.add_callback(tornado1.stop)
-    if nginx1: nginx1.send_signal(SIGQUIT)
     if cleanup1: cleanup1.send_signal(SIGTERM)
+    nginx1.stop()
 
 app = web.Application([
     (r'/api/upload',UploadHandler),
@@ -34,9 +34,9 @@ if __name__ == "__main__":
     app.listen(options.port, address=options.ip)
 
     tornado1=ioloop.IOLoop.instance();
-    nginx1=Popen(["/usr/local/sbin/nginx"])
+    nginx1.start()
     cleanup1=Popen(["/home/cleanup.py"])
     
     tornado1.start()
     cleanup1.wait()
-    nginx1.wait()
+    nginx1.stop()

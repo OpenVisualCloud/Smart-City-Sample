@@ -6,37 +6,21 @@ from search import SearchHandler
 from histogram import HistogramHandler
 from hint import HintHandler
 from stats import StatsHandler
-from subprocess import Popen
 from signal import signal, SIGTERM, SIGQUIT
-from threading import Event
 from configuration import env
-import requests
-import time
+from nginx import NGINX
 
-stHost=env["STHOST"]
+sthost=env["STHOST"]
+dbhost=env["DBHOST"]
 tornado1=None
-nginx1=None
-stop=Event()
+nginx1=NGINX(upstreams=[
+    ("storage-service", sthost.partition("://")[2]),
+    ("database-service", dbhost.partition("://")[2]),
+])
 
 def quit_service(signum, frame):
-    stop.set()
     if tornado1: tornado1.add_callback(tornado1.stop)
-    if nginx1: nginx1.send_signal(SIGQUIT)
-
-def setup_nginx_upstream():
-    while True:
-        if stop.is_set(): exit(143)
-        try:
-            r=requests.get(stHost+"/api/workload")
-            r.raise_for_status()
-            break
-        except:
-            print("Wait for upstream...", flush=True)
-            time.sleep(2)
-            continue
-
-    with open("/etc/nginx/upstream.conf","wt") as fd:
-        fd.write("upstream storage-service { server "+stHost.partition("://")[2]+"; }")
+    nginx1.stop()
 
 app = web.Application([
     (r'/api/search',SearchHandler),
@@ -47,7 +31,6 @@ app = web.Application([
 
 if __name__ == "__main__":
     signal(SIGTERM, quit_service)
-    setup_nginx_upstream()
 
     define("port", default=2222, help="the binding port", type=int)
     define("ip", default="127.0.0.1", help="the binding ip")
@@ -56,7 +39,7 @@ if __name__ == "__main__":
     app.listen(options.port, address=options.ip)
 
     tornado1=ioloop.IOLoop.instance();
-    nginx1=Popen(["/usr/local/sbin/nginx"])
+    nginx1.start()
     
     tornado1.start()
-    nginx1.wait()
+    nginx1.stop()

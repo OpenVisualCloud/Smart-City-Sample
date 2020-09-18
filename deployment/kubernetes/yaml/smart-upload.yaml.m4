@@ -40,7 +40,7 @@ spec:
             - name: DBHOST
               value: "http://ifelse(defn(`NOFFICES'),1,db,defn(`OFFICE_NAME')-db)-service:9200"
             - name: DBCHOST
-              value: "http://ifelse(defn(`NOFFICES'),1,db,cloud-db)-service:9200"
+              value: "http://cloud-gateway-service:8080/api/db"
             - name: STHOST
               value: "http://defn(`OFFICE_NAME')-storage-service:8080/recording"
             - name: GWHOST

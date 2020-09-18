@@ -58,7 +58,7 @@ spec:
               {{- $args := dict "officeName" $officeName "Values" $.Values }}
               value: {{ include "smtc.env.dbhost" $args | quote }}
             - name: STHOST
-              value: "http://{{ $officeName }}-storage-service.default.svc.cluster.local:8080"
+              value: "http://{{ $officeName }}-storage-service:8080"
 {{- if (len $.Values.connector.cloudHost) }}
             - name: REVERSE_TUNNEL1
               value: "{{ $.Values.connector.cloudHost }}:{{ add $.Values.connector.officeGatewayPort $officeIdx2 }} localhost:8080"

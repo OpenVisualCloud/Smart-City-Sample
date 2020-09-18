@@ -27,7 +27,7 @@ Expand to the office db name
 {{- if gt (int .Values.noffices) 1 }}
 {{- printf "http://%s-db-service:9200" .officeName }}
 {{- else }}
-{{- "http://db-service:9200" }}
+{{- "http://db-service:9200.default.svc.cluster.local" }}
 {{- end }}
 {{- end }}
 
@@ -160,15 +160,4 @@ Extract the hostname from connector.host
 */}}
 {{- define "smtc.connector.cloud.hostname" }}
 {{- regexReplaceAll ".*@" .Values.connector.cloudHost "" }}
-{{- end }}
-
-{{/*
-Connector DBHost
-*/}}
-{{- define "smtc.connector.dbhost" }}
-{{- if (len .Values.connector.cloudHost) }}
-{{- printf "localhost:%d" (int .Values.connector.cloudQueryPort) }}
-{{- else }}
-{{- "cloud-db-service:9200" }}
-{{- end }}
 {{- end }}
