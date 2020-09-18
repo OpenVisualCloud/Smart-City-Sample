@@ -37,19 +37,13 @@ spec:
       enableServiceLinks: false
       containers:
         - name: cloud-storage
-{{- if (len $.Values.connector.cloudHost) }}
-          image: {{ $.Values.registryPrefix }}smtc_storage_manager_tunnelled:latest
-{{- else }}
           image: {{ $.Values.registryPrefix }}smtc_storage_manager:latest
-{{- end }}
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
           env:
             - name: DBHOST
               value: {{ printf "http://%s-service:9200" (include "smtc.db.name" .) | quote }}
-            - name: PROXYHOST
-              value: "http://cloud-storage-service.default.svc.cluster.local:8080"
             - name: INDEXES
               value: "recordings"
             - name: RETENTION_TIME
@@ -68,32 +62,15 @@ spec:
               value: "*"
             - name: no_proxy
               value: "*"
-{{- if (len $.Values.connector.cloudHost) }}
-            - name: REVERSE_TUNNEL1
-              value: "{{ $.Values.connector.cloudHost }}:{{ $.Values.connector.cloudStoragePort }} cloud-storage-service:8080"
-            - name: "REVERSE_TUNNEL2"
-              value: "{{ $.Values.connector.cloudHost }}:{{ $.Values.connector.cloudQueryPort }} {{ include "smtc.db.name" $ }}-service:9200"
-{{- end }}
           volumeMounts:
             - mountPath: /etc/localtime
               name: timezone
               readOnly: true
-{{- if (len $.Values.connector.cloudHost) }}
-            - mountPath: /etc/hostkey
-              name: hostkey
-              readOnly: true
-{{- end }}
       volumes:
         - name: timezone
           hostPath:
             path: /etc/localtime
             type: File
-{{- if (len $.Values.connector.cloudHost) }}
-        - name: hostkey
-          secret:
-            secretName: tunnel-secret
-            defaultMode: 0440
-{{- end }}
       {{ include "smtc.platform.node-selector" . }}
 
 {{- end }}

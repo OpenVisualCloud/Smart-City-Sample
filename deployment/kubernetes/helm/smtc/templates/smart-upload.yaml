@@ -44,20 +44,20 @@ spec:
             - name: DBHOST
               {{- $args := dict "officeName" $officeName "Values" $.Values }}
               value: {{ include "smtc.env.dbhost" $args | quote }}
-            - name: STHOSTL
+            - name: STHOST
               value: "http://{{ $officeName }}-storage-service:8080/recording"
 {{- if (len $.Values.connector.cloudHost) }}
-            - name: STHOSTC
+            - name: GWHOST
               value: "http://localhost:8080/api/upload"
             - name: FORWARD_TUNNEL1
-              value: "{{ $.Values.connector.cloudHost }}:{{ $.Values.connector.cloudStoragePort }} localhost:8080"
+              value: "{{ $.Values.connector.cloudHost }}:{{ $.Values.connector.cloudGatewayPort }} localhost:8080"
             - name: DBCHOST
               value: "http://localhost:9200"
             - name: FORWARD_TUNNEL2
               value: "{{ $.Values.connector.cloudHost }}:{{ $.Values.connector.cloudQueryPort }} localhost:9200"
 {{- else }}
-            - name: STHOSTC
-              value: "http://cloud-storage-service:8080/api/upload"
+            - name: GWHOST
+              value: "http://cloud-gateway-service:8080/api/upload"
             - name: DBCHOST
               value: {{ printf "http://%s-service:9200" (include "smtc.db.name" $) | quote }}
 {{- end }}

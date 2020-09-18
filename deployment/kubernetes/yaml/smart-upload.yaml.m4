@@ -41,10 +41,10 @@ spec:
               value: "http://ifelse(defn(`NOFFICES'),1,db,defn(`OFFICE_NAME')-db)-service:9200"
             - name: DBCHOST
               value: "http://ifelse(defn(`NOFFICES'),1,db,cloud-db)-service:9200"
-            - name: STHOSTL
+            - name: STHOST
               value: "http://defn(`OFFICE_NAME')-storage-service:8080/recording"
-            - name: STHOSTC
-              value: "http://cloud-storage-service:8080/api/upload"
+            - name: GWHOST
+              value: "http://cloud-gateway-service:8080/api/upload"
             - name: SERVICE_INTERVAL
               value: "30"
             - name: NO_PROXY

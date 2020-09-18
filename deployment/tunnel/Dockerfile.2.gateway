@@ -1,11 +1,11 @@
-# smtc_storage_manager_tunnelled
+# smtc_api_gateway_tunnelled
 
-FROM smtc_storage_manager
+FROM smtc_api_gateway
 USER root
 
 RUN  yum install -y -q openssh-clients && rm -rf /var/cache/yum/*
 COPY *.sh /home/
-CMD  ["/home/tunnel.sh","/home/manage.py"]
+CMD  ["/home/tunnel.sh","/home/gateway.py"]
 WORKDIR /home
 
 ####
