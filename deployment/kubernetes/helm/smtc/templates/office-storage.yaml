@@ -42,11 +42,7 @@ spec:
       enableServiceLinks: false
       containers:
         - name: {{ $officeName }}-storage
-{{- if (len $.Values.connector.cloudHost) }}
-          image: {{ $.Values.registryPrefix }}smtc_storage_manager_tunnelled:latest
-{{- else }}
           image: {{ $.Values.registryPrefix }}smtc_storage_manager:latest
-{{- end }}
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
@@ -71,10 +67,6 @@ spec:
               value: "95"
             - name: THUMBNAIL_CACHE
               value: "50"
-{{- if (len $.Values.connector.cloudHost) }}
-            - name: REVERSE_TUNNEL1
-              value: "{{ $.Values.connector.cloudHost }}:{{ add $.Values.connector.officeStoragePort $officeIdx2 }} localhost:8080"
-{{- end }}
             - name: NO_PROXY
               value: "*"
             - name: no_proxy
@@ -83,22 +75,11 @@ spec:
             - mountPath: /etc/localtime
               name: timezone
               readOnly: true
-{{- if (len $.Values.connector.cloudHost) }}
-            - mountPath: /etc/hostkey
-              name: hostkey
-              readOnly: true
-{{- end }}
       volumes:
         - name: timezone
           hostPath:
             path: /etc/localtime
             type: File
-{{- if (len $.Values.connector.cloudHost) }}
-        - name: hostkey
-          secret:
-            secretName: tunnel-secret
-            defaultMode: 0440
-{{- end }}
       {{ include "smtc.platform.node-selector" $ }}
 
 {{- end }}

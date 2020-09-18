@@ -2,35 +2,31 @@
 
 from tornado import ioloop, web
 from tornado.options import define, options, parse_command_line
-from workload import WorkloadHandler
-from upload import UploadHandler
-from thumbnail import ThumbnailHandler
 from search import SearchHandler
 from histogram import HistogramHandler
 from hint import HintHandler
 from stats import StatsHandler
-from subprocess import Popen
 from signal import signal, SIGTERM, SIGQUIT
-import os
-import time
+from configuration import env
+from nginx import NGINX
 
+sthost=env["STHOST"]
+dbhost=env["DBHOST"]
 tornado1=None
-nginx1=None
-cleanup1=None
+nginx1=NGINX(upstreams=[
+    ("storage-service", sthost.partition("://")[2]),
+    ("database-service", dbhost.partition("://")[2]),
+])
 
 def quit_service(signum, frame):
     if tornado1: tornado1.add_callback(tornado1.stop)
-    if nginx1: nginx1.send_signal(SIGQUIT)
-    if cleanup1: cleanup1.send_signal(SIGTERM)
+    nginx1.stop()
 
 app = web.Application([
-    (r'/api/upload',UploadHandler),
-    (r'/api/thumbnail/.*',ThumbnailHandler),
     (r'/api/search',SearchHandler),
     (r'/api/histogram',HistogramHandler),
     (r'/api/hint',HintHandler),
     (r'/api/stats',StatsHandler),
-    (r'/api/workload',WorkloadHandler),
 ])
 
 if __name__ == "__main__":
@@ -43,9 +39,7 @@ if __name__ == "__main__":
     app.listen(options.port, address=options.ip)
 
     tornado1=ioloop.IOLoop.instance();
-    nginx1=Popen(["/usr/local/sbin/nginx"])
-    cleanup1=Popen(["/home/cleanup.py"])
+    nginx1.start()
     
     tornado1.start()
-    cleanup1.wait()
-    nginx1.wait()
+    nginx1.stop()

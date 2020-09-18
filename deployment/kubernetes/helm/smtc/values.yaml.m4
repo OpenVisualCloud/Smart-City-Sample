@@ -78,9 +78,6 @@ buildScope: ""
 # optional: specify connector hosts if they are from different Kubernetes clusters.
 connector:
     cloudHost: ""
-    cloudQueryPort: 29200
-    officeQueryPort: 29201
-    officeTransportPort: 29301
-    cloudStoragePort: 28080
-    officeStoragePort: 28081
+    cloudGatewayPort: 28080
+    officeGatewayPort: 28081
 
