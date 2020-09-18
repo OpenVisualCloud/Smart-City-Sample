@@ -7,7 +7,7 @@
             DBHOST: "http://ifelse(defn(`NOFFICES'),1,db,defn(`OFFICE_NAME')_db):9200"
             DBCHOST: "http://ifelse(defn(`NOFFICES'),1,db,cloud_db):9200"
             STHOST: "http://defn(`OFFICE_NAME')_storage:8080/recording"
-            GWHOST: "http://cloud_getway:8080/api/upload"
+            GWHOST: "http://cloud_gateway:8080/api/upload"
             SERVICE_INTERVAL: "30"
             NO_PROXY: "*"
             no_proxy: "*"
