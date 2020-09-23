@@ -57,7 +57,7 @@ var preview={
                     div.append(error);
                     return setTimeout(update,5000);
                 }
-                var video=$('<video class="max-size" autoplay muted><source src="recording/'+r[0]._source.path+'?'+$.param({office:sensor._source.office.lat+","+sensor._source.office.lon})+'"></source></video>').bind('ended',update).bind('error',function () {
+                var video=$('<video class="max-size" autoplay muted><source src="'+api_host_url(r[0]._source.office,"recording/"+r[0]._source.path)+'"></source></video>').bind('ended',update).bind('error',function () {
                     setTimeout(update,5000);
                 });
                 div.append(video);

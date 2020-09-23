@@ -40,11 +40,11 @@ spec:
             - name: DBHOST
               value: "http://ifelse(defn(`NOFFICES'),1,db,defn(`OFFICE_NAME')-db)-service:9200"
             - name: DBCHOST
-              value: "http://cloud-gateway-service:8080/api/db"
+              value: "http://cloud-gateway-service:8080/cloud/api/db"
             - name: STHOST
               value: "http://defn(`OFFICE_NAME')-storage-service:8080/recording"
-            - name: GWHOST
-              value: "http://cloud-gateway-service:8080/api/upload"
+            - name: STCHOST
+              value: "http://cloud-gateway-service:8080/cloud/api/upload"
             - name: SERVICE_INTERVAL
               value: "30"
             - name: NO_PROXY

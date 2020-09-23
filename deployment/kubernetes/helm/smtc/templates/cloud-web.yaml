@@ -49,7 +49,7 @@ spec:
           env:
             - name: DBHOST
               value: {{ printf "http://%s-service:9200" (include "smtc.db.name" .) | quote }}
-            - name: PROXYHOST
+            - name: GWHOST
               value: "http://cloud-gateway-service:8080"
             - name: SCENARIO
               value: {{ join "," $.Values.scenario | quote }}
