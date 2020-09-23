@@ -8,7 +8,7 @@
               mode: host
         environment:
             DBHOST: "http://ifelse(defn(`NOFFICES'),1,db,cloud_db):9200"
-            PROXYHOST: "http://cloud_gateway:8080"
+            GWHOST: "http://cloud_gateway:8080"
             `SCENARIO': "defn(`SCENARIO')"
             NO_PROXY: "*"
             no_proxy: "*"

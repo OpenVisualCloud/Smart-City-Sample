@@ -148,17 +148,17 @@ spec:
               {{- $args := dict "officeName" $officeName "Values" $.Values }}
               value: {{ include "smtc.env.dbhost" $args | quote }}
 {{- if (len $.Values.connector.cloudHost) }}
-            - name: PROXYHOST
+            - name: GWHOST
               value: "http://127.0.0.1:{{ add $.Values.connector.officeGatewayPort $officeIdx }}"
             - name: DBCHOST
-              value: "http://localhost:8080/api/db"
+              value: "http://localhost:8080/cloud/api/db"
             - name: FORWARD_TUNNEL1
               value: "{{ $.Values.connector.cloudHost }}:{{ $.Values.connector.cloudGatewayPort }} localhost:8080"
 {{- else }}
-            - name: PROXYHOST
+            - name: GWHOST
               value: "http://{{ $officeName }}-gateway-service:8080"
             - name: DBCHOST
-              value: "http://cloud-gateway-service:8080/api/db"
+              value: "http://cloud-gateway-service:8080/cloud/api/db"
 {{- end }}
             - name: SCENARIO
               value: {{ $scenarioName | quote }}

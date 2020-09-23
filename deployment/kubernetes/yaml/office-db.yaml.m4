@@ -139,8 +139,8 @@ spec:
             - name: "DBHOST"
               value: "http://ifelse(defn(`NOFFICES'),1,db,defn(`OFFICE_NAME')-db)-service:9200"
             - name: "DBCHOST"
-              value: "http://cloud-gateway-service:8080/api/db"
-            - name: PROXYHOST
+              value: "http://cloud-gateway-service:8080/cloud/api/db"
+            - name: GWHOST
               value: "http://defn(`OFFICE_NAME')-gateway-service:8080"
             - name: `SCENARIO'
               value: "defn(`SCENARIO_NAME')"
