@@ -47,17 +47,17 @@ spec:
             - name: STHOST
               value: "http://{{ $officeName }}-storage-service:8080/recording"
 {{- if (len $.Values.connector.cloudHost) }}
-            - name: GWHOST
-              value: "http://localhost:8080/api/upload"
+            - name: STCHOST
+              value: "http://localhost:8080/cloud/api/upload"
             - name: DBCHOST
-              value: "http://localhost:8080/api/db"
+              value: "http://localhost:8080/cloud/api/db"
             - name: FORWARD_TUNNEL1
               value: "{{ $.Values.connector.cloudHost }}:{{ $.Values.connector.cloudGatewayPort }} localhost:8080"
 {{- else }}
-            - name: GWHOST
-              value: "http://cloud-gateway-service:8080/api/upload"
+            - name: STCHOST
+              value: "http://cloud-gateway-service:8080/cloud/api/upload"
             - name: DBCHOST
-              value: "http://cloud-gateway-service:8080/api/db"
+              value: "http://cloud-gateway-service:8080/cloud/api/db"
 {{- end }}
             - name: SERVICE_INTERVAL
               value: "30"
