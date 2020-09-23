@@ -6,7 +6,7 @@ import json
 
 dbhost=env["DBHOST"]
 office=list(map(float,env["OFFICE"].split(",")))
-proxyhost=env["PROXYHOST"]
+gwhost=env["GWHOST"]
 scenario=env["SCENARIO"]
 
 def Provision(officestr):
@@ -31,7 +31,7 @@ def Provision(officestr):
             dbp.ingest_bulk(sensors, refresh="wait_for")
 
             office1.pop("scenario")
-            office1["uri"]=proxyhost
+            office1["uri"]=gwhost
             return office1
 
     raise Exception("Should not be here.")

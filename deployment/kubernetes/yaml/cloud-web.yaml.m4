@@ -48,7 +48,7 @@ spec:
               value: "http://ifelse(defn(`NOFFICES'),1,db,cloud-db)-service:9200"
             - name: `SCENARIO'
               value: "defn(`SCENARIO')"
-            - name: PROXYHOST
+            - name: GWHOST
               value: "http://cloud-gateway-service:8080"
             - name: NO_PROXY
               value: "*"

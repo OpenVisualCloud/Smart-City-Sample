@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 
+from signal import SIGQUIT
 from subprocess import Popen, call
 from threading import Thread, Event
 import socket
@@ -11,46 +12,50 @@ class NGINX(object):
         self._stop=stop
         self._thread=None
         self._pid=None
-
-        self._upstreams=[]
+        self._upstreams={}
         for s in upstreams:
-            hostport=s[1].split(":")
-            self._upstreams.append([s[0],hostport[0],hostport[1],"127.0.0.1"])
+            host,c,port=s[1].partition(":")
+            self._upstreams[s[0]]=[host,c+port,"127.0.0.1"]
+
+    def _update_upstreams(self):
+        changed=False
+        for s in self._upstreams:
+            tmp=self._upstreams[s]
+            try:
+                ip=socket.gethostbyname(tmp[0])
+            except:
+                ip="127.0.0.1"
+            if ip!=tmp[2]:
+                tmp[2]=ip
+                changed=True
+        return changed
 
     def _monitor_ip_change(self):
         while not self._stop.is_set():
-            changed=False
-            for s in self._upstreams:
-                try:
-                    ip=socket.gethostbyname(s[1])
-                except:
-                    ip="127.0.0.1"
-                if ip!=s[3]:
-                    s[3]=ip
-                    changed=True
-
-            if changed:
+            if self._update_upstreams():
+                print(self._upstreams, flush=True)
                 with open("/etc/nginx/upstream.conf","wt") as fd:
                     for s in self._upstreams:
-                        fd.write("upstream "+s[0]+" { server "+s[3]+":"+s[2]+"; }\n")
+                        tmp=self._upstreams[s]
+                        fd.write("upstream "+s+" { server "+tmp[2]+tmp[1]+"; }\n")
                 call([self._nginx,"-s","reload"])
-
-            self._stop.wait(5)
+            self._stop.wait(10)
 
     def start(self):
         self._pid=Popen([self._nginx])
-        if self._upstreams:
-            self._thread=Thread(target=self._monitor_ip_change)
-            self._thread.start()
+        self._thread=Thread(target=self._monitor_ip_change)
+        self._thread.start()
+
 
     def stop(self):
         self._stop.set()
-
         if self._pid: 
             self._pid.send_signal(SIGQUIT)
+        self.wait()
 
+    def wait(self):
         if self._thread: 
-            self._thread.wait()
+            self._thread.join()
             self._thread=None
 
         if self._pid: 
