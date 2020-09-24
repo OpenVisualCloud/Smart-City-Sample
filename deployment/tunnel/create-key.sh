@@ -14,9 +14,7 @@ case "$(cat /proc/1/sched | head -n 1)" in
     ssh-copy-id -o CheckHostIP=yes -o StrictHostKeyChecking=ask -o UserKnownHostsFile=/home/.ssh/known_hosts -i /home/.key/id_rsa "$1"
     ;;
 *)
-    IMAGE="$2smtc_db_init_tunnelled"
     DIR=$(dirname $(readlink -f "$0"))
-    OPTIONS=(-v "$DIR:/home:rw")
-    . "$DIR/../../script/shell.sh" /home/create-key.sh "$1"
+    . "$DIR/shell.sh" /home/create-key.sh "$1"
     ;;
 esac

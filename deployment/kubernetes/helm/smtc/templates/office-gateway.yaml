@@ -42,11 +42,7 @@ spec:
       enableServiceLinks: false
       containers:
         - name: {{ $officeName }}-gateway
-{{- if (len $.Values.connector.cloudHost) }}
-          image: {{ $.Values.registryPrefix }}smtc_api_gateway_tunnelled:latest
-{{- else }}
           image: {{ $.Values.registryPrefix }}smtc_api_gateway:latest
-{{- end }}
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
@@ -59,10 +55,6 @@ spec:
               value: {{ include "smtc.env.dbhost" $args | quote }}
             - name: STHOST
               value: "http://{{ $officeName }}-storage-service:8080"
-{{- if (len $.Values.connector.cloudHost) }}
-            - name: REVERSE_TUNNEL1
-              value: "{{ $.Values.connector.cloudHost }}:{{ add $.Values.connector.officeGatewayPort $officeIdx2 }} localhost:8080"
-{{- end }}
             - name: NO_PROXY
               value: "*"
             - name: no_proxy
@@ -72,6 +64,16 @@ spec:
               name: timezone
               readOnly: true
 {{- if (len $.Values.connector.cloudHost) }}
+        - name: {{ $officeName }}-gateway-tunnel
+          image: {{ $.Values.registryPrefix }}smtc_ssh_tunnel:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: REVERSE_TUNNEL1
+              value: "{{ $.Values.connector.cloudHost }}:{{ add $.Values.connector.officeGatewayPort $officeIdx2 }} localhost:8080"
+          volumeMounts:
+            - mountPath: /etc/localtime
+              name: timezone
+              readOnly: true
             - mountPath: /etc/hostkey
               name: hostkey
               readOnly: true
