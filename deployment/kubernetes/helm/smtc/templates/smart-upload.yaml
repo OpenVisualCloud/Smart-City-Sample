@@ -26,11 +26,7 @@ spec:
       enableServiceLinks: false
       containers:
         - name: {{ $officeName }}-smart-upload
-{{- if (len $.Values.connector.cloudHost) }}
-          image: {{ $.Values.registryPrefix }}smtc_smart_upload_tunnelled:latest
-{{- else }}
           image: {{ $.Values.registryPrefix }}smtc_smart_upload:latest
-{{- end }}
           imagePullPolicy: IfNotPresent
           resources:
             limits:
@@ -51,8 +47,6 @@ spec:
               value: "http://localhost:8080/cloud/api/upload"
             - name: DBCHOST
               value: "http://localhost:8080/cloud/api/db"
-            - name: FORWARD_TUNNEL1
-              value: "{{ $.Values.connector.cloudHost }}:{{ $.Values.connector.cloudGatewayPort }} localhost:8080"
 {{- else }}
             - name: STCHOST
               value: "http://cloud-gateway-service:8080/cloud/api/upload"
@@ -70,6 +64,16 @@ spec:
               name: timezone
               readOnly: true
 {{- if (len $.Values.connector.cloudHost) }}
+        - name: {{ $officeName }}-smart-upload-tunnel
+          image: {{ $.Values.registryPrefix }}smtc_ssh_tunnel:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: FORWARD_TUNNEL1
+              value: "{{ $.Values.connector.cloudHost }}:{{ $.Values.connector.cloudGatewayPort }} localhost:8080"
+          volumeMounts:
+            - mountPath: /etc/localtime
+              name: timezone
+              readOnly: true
             - mountPath: /etc/hostkey
               name: hostkey
               readOnly: true

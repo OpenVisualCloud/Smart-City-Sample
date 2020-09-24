@@ -1,7 +1,13 @@
 #!/bin/bash -e
 
-IFS=$(echo -en "\n\b")
+function gracefully_exit {
+    exit 0
+}
 
+# gracefully exit
+trap gracefully_exit SIGTERM
+
+IFS=$(echo -en "\n\b")
 mkdir -p ~/.ssh && chmod 700 ~/.ssh
 cp -f /etc/hostkey/known_hosts /etc/hostkey/id_rsa ~/.ssh
 chmod 400 ~/.ssh/id_rsa ~/.ssh/known_hosts
@@ -25,4 +31,6 @@ for env1 in $(env); do
     esac
 done
 
-exec "${@}"
+while true; do
+    sleep 10000
+done

@@ -2,6 +2,6 @@
 
 DIR=$(dirname $(readlink -f "$0"))
 IMAGE="smtc_ssh_tunnel"
+OPTIONS=(-v "$DIR:/home:rw")
 
-. "$DIR/../../script/build.sh"
-
+. "$DIR/../../script/shell.sh"
