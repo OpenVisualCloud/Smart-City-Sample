@@ -76,7 +76,7 @@ ifelse(defn(`NOFFICES')defn(`HA_CLOUD'),11,`dnl
           lifecycle:
             preStop:
               exec:
-                command: ["/usr/bin/curl","-X","DELETE","http://localhost:9200/offices"]
+                command: ["/usr/bin/curl","-X","DELETE","http://localhost:9200/offices,sensors_*"]
           securityContext:
             runAsUser: 1000
             runAsGroup: 1000
