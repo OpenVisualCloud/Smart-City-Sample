@@ -23,10 +23,6 @@ configure_owt_api_py () {
     sed -i "s/key=''/key='${key}'/" /home/owtapi.py
 }
 
-configure_comm_host () {
-    sed -i "s/^host = \"localhost\" .*/host = \"$WEBRTC_COMM_HOST\"/" $1
-}
-
 wait_for_mongod () {
     while ! mongo --quiet --eval "db.adminCommand('listDatabases')"; do
         echo Waiting for monogod
@@ -35,81 +31,27 @@ wait_for_mongod () {
     echo mongodb connected successfully
 }
 
-configure_rabbitmq_user_profile () {
-    echo "[{rabbit, [{loopback_users, []}]}]." > /etc/rabbitmq/rabbitmq.config
-}
-
 configure_hw_acceleration () {
     sed -i "s/^hardwareAccelerated = .*/hardwareAccelerated = true/" $1
 }
 
 trap 'exit 0' SIGTERM
 
-case "N$1" in
-Ncomm)
-    configure_rabbitmq_user_profile 
-    service rabbitmq-server start &
-    ;;
-Ncontrol)
-    service mongodb start &
+wait_for_mongod
+configure_owt_api_py
 
-    wait_for_mongod
-    configure_owt_api_py
+cd /home/owt/bin
+./daemon.sh start management-api
+./daemon.sh start cluster-manager
+./daemon.sh start portal
+./daemon.sh start conference-agent
+./daemon.sh start audio-agent
+configure_hw_acceleration /home/owt/video_agent/agent.toml
+./daemon.sh start video-agent
 
-    cd /home/owt/bin
-    configure_comm_host /home/owt/management_api/management_api.toml
-    ./daemon.sh start management-api
-    configure_comm_host /home/owt/cluster_manager/cluster_manager.toml
-    ./daemon.sh start cluster-manager
-    configure_comm_host /home/owt/portal/portal.toml
-    ./daemon.sh start portal
-    configure_comm_host /home/owt/conference_agent/agent.toml
-    ./daemon.sh start conference-agent
-    ;;
-Ntranscode)
-    cd /home/owt/bin
-    configure_comm_host /home/owt/audio_agent/agent.toml
-    ./daemon.sh start audio-agent
-    configure_comm_host /home/owt/video_agent/agent.toml
-    configure_hw_acceleration /home/owt/video_agent/agent.toml
-    ./daemon.sh start video-agent
-    ;;
-Nio)
-    configure_webrtc_agent
+configure_webrtc_agent
 
-    cd /home/owt/bin
-    configure_comm_host /home/owt/webrtc_agent/agent.toml
-    ./daemon.sh start webrtc-agent
-    configure_comm_host /home/owt/streaming_agent/agent.toml
-    ./daemon.sh start streaming-agent
-    ;;
-N)
-    service rabbitmq-server start &
-    service mongodb start &
+./daemon.sh start webrtc-agent
+./daemon.sh start streaming-agent
 
-    wait_for_mongod
-    configure_owt_api_py
-
-    cd /home/owt/bin
-    ./daemon.sh start management-api
-    ./daemon.sh start cluster-manager
-    ./daemon.sh start portal
-    ./daemon.sh start conference-agent
-    ./daemon.sh start audio-agent
-    configure_hw_acceleration /home/owt/video_agent/agent.toml
-    ./daemon.sh start video-agent
-
-    configure_webrtc_agent
-
-    ./daemon.sh start webrtc-agent
-    ./daemon.sh start streaming-agent
-    ;;
-esac
-
-if [ -z "$2" ]; then
-    while true; do
-       sleep 10000
-    done
-else
-    exec "$2"
-fi
+exec "$1"

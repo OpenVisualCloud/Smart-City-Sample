@@ -63,7 +63,27 @@ spec:
     spec:
       enableServiceLinks: false
       containers:
-        - name: defn(`OFFICE_NAME')-webrtc
+        - name: rabbitmq
+          image: defn(`REGISTRY_PREFIX')smtc_sensor_webrtc:latest
+          imagePullPolicy: IfNotPresent
+          command: [ "/usr/sbin/rabbitmq-server" ]
+          volumeMounts:
+            - mountPath: /etc/localtime
+              name: timezone
+              readOnly: true
+          securityContext:
+            runAsUser: 103
+        - name: mongodb
+          image: defn(`REGISTRY_PREFIX')smtc_sensor_webrtc:latest
+          imagePullPolicy: IfNotPresent
+          command: [ "/usr/bin/mongod","--config","/etc/mongodb.conf" ]
+          volumeMounts:
+            - mountPath: /etc/localtime
+              name: timezone
+              readOnly: true
+          securityContext:
+            runAsUser: 102
+        - name: webrtc
           image: defn(`REGISTRY_PREFIX')smtc_sensor_webrtc:latest
           imagePullPolicy: IfNotPresent
           ports:
@@ -100,6 +120,8 @@ loop(PORTIDX,1,defn(`WEBRTC_STREAMING_LIMIT'),`dnl
               cpu: "4"
             requests:
               cpu: "0.5"
+          securityContext:
+            runAsUser: 1000
       volumes:
           - name: timezone
             hostPath:
