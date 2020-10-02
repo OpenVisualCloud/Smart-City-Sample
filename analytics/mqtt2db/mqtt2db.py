@@ -4,16 +4,14 @@ from db_ingest import DBIngest
 import paho.mqtt.client as mqtt
 from threading import Thread, Condition, Timer
 from signal import signal, SIGTERM
+from configuration import env
 import traceback
 import json
-import time
-import sys
-import os
 
-mqtthost = os.environ["MQTTHOST"]
-scenario = os.environ["SCENARIO"]
-dbhost = os.environ["DBHOST"]
-office = list(map(float, os.environ["OFFICE"].split(",")))
+mqtthost = env["MQTTHOST"]
+scenario = env["SCENARIO"]
+dbhost = env["DBHOST"]
+office = list(map(float, env["OFFICE"].split(",")))
 
 class MQTT2DB(object):
     def __init__(self):

@@ -28,8 +28,8 @@ ifelse(defn(`NOFFICES'),1,,`
         environment:
             OFFICE: "defn(`OFFICE_LOCATION')"
             DBHOST: "http://ifelse(defn(`NOFFICES'),1,db,defn(`OFFICE_NAME')_db):9200"
-            DBCHOST: "http://ifelse(defn(`NOFFICES'),1,db,cloud_db):9200"
-            PROXYHOST: "http://defn(`OFFICE_NAME')_storage:8080"
+            DBCHOST: "http://cloud_gateway:8080/cloud/api/db"
+            GWHOST: "http://defn(`OFFICE_NAME')_gateway:8080"
             `SCENARIO': "defn(`SCENARIO_NAME')"
             REPLICAS: "0,0"
             NO_PROXY: "*"
@@ -37,8 +37,8 @@ ifelse(defn(`NOFFICES'),1,,`
         secrets:
             - source: sensor_info
               target: sensor-info.json
-              uid: "${USER_ID}"
-              gid: "${GROUP_ID}"
+              uid: "defn(`USER_ID')"
+              gid: "defn(`GROUP_ID')"
               mode: 0444
         volumes:
             - /etc/localtime:/etc/localtime:ro

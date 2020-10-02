@@ -38,31 +38,17 @@ spec:
       enableServiceLinks: false
       containers:
         - name: cloud-web
-{{- if (len $.Values.connector.cloudHost) }}
-          image: {{ $.Values.registryPrefix }}smtc_web_cloud_tunnelled:latest
-{{- else }}
           image: {{ $.Values.registryPrefix }}smtc_web_cloud:latest
-{{- end }}
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8443
           env:
             - name: DBHOST
               value: {{ printf "http://%s-service:9200" (include "smtc.db.name" .) | quote }}
-            - name: PROXYHOST
-              value: "http://cloud-storage-service.default.svc.cluster.local:8080"
+            - name: GWHOST
+              value: "http://cloud-gateway-service:8080"
             - name: SCENARIO
               value: {{ join "," $.Values.scenario | quote }}
-{{- if (len $.Values.connector.cloudHost) }}
-{{- range $scenarioIdx, $scenarioName := $.Values.scenario }}
-{{- $args := dict "scenarioName" $scenarioName "Values" $.Values }}
-{{- range $officeIdx := until ( int ( include "smtc.noffices" $args ) ) }}
-{{- $officeIdx2 := add (mul $officeIdx (len $.Values.scenario)) $scenarioIdx }}
-            - name: "FORWARD_TUNNEL{{ $officeIdx2 }}"
-              value: "{{ $.Values.connector.cloudHost }}:{{ add $.Values.connector.officeStoragePort $officeIdx2 }} localhost:{{ add $.Values.connector.officeStoragePort $officeIdx2 }}"
-{{- end }}
-{{- end }}
-{{- end }}
             - name: NO_PROXY
               value: "*"
             - name: no_proxy
@@ -75,6 +61,22 @@ spec:
               name: self-signed-certificate
               readOnly: true
 {{- if (len $.Values.connector.cloudHost) }}
+        - name: cloud-web-tunnel
+          image: {{ $.Values.registryPrefix }}smtc_ssh_tunnel:latest
+          imagePullPolicy: IfNotPresent
+          env:
+{{- range $scenarioIdx, $scenarioName := $.Values.scenario }}
+{{- $args := dict "scenarioName" $scenarioName "Values" $.Values }}
+{{- range $officeIdx := until ( int ( include "smtc.noffices" $args ) ) }}
+{{- $officeIdx2 := add (mul $officeIdx (len $.Values.scenario)) $scenarioIdx }}
+            - name: "FORWARD_TUNNEL{{ $officeIdx2 }}"
+              value: "{{ $.Values.connector.cloudHost }}:{{ add $.Values.connector.officeGatewayPort $officeIdx2 }} localhost:{{ add $.Values.connector.officeGatewayPort $officeIdx2 }}"
+{{- end }}
+{{- end }}
+          volumeMounts:
+            - mountPath: /etc/localtime
+              name: timezone
+              readOnly: true
             - mountPath: /etc/hostkey
               name: hostkey
               readOnly: true

@@ -8,7 +8,7 @@
               mode: host
         environment:
             DBHOST: "http://ifelse(defn(`NOFFICES'),1,db,cloud_db):9200"
-            PROXYHOST: "http://cloud_storage:8080"
+            GWHOST: "http://cloud_gateway:8080"
             `SCENARIO': "defn(`SCENARIO')"
             NO_PROXY: "*"
             no_proxy: "*"
@@ -17,13 +17,13 @@
         secrets:
             - source: self_crt
               target: self.crt
-              uid: ${USER_ID}
-              gid: ${GROUP_ID}
+              uid: "defn(`USER_ID')"
+              gid: "defn(`GROUP_ID')"
               mode: 0444
             - source: self_key
               target: self.key
-              uid: ${USER_ID}
-              gid: ${GROUP_ID}
+              uid: "defn(`USER_ID')"
+              gid: "defn(`GROUP_ID')"
               mode: 0440
         networks:
             - appnet

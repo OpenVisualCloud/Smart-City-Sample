@@ -4,7 +4,6 @@
         environment:
             DBHOST: "http://ifelse(defn(`NOFFICES'),1,db,cloud_db):9200"
             INDEXES: "recordings"
-            PROXYHOST: "http://cloud_storage:8080"
             RETENTION_TIME: "7200"
             SERVICE_INTERVAL: "3600"
             WARN_DISK: "75"

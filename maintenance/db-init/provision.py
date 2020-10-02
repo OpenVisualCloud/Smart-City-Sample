@@ -1,13 +1,13 @@
 #!/usr/bin/python3
 
 from db_ingest import DBIngest
-import os
+from configuration import env
 import json
 
-dbhost=os.environ["DBHOST"]
-office=list(map(float,os.environ["OFFICE"].split(",")))
-proxyhost=os.environ["PROXYHOST"]
-scenario=os.environ["SCENARIO"]
+dbhost=env["DBHOST"]
+office=list(map(float,env["OFFICE"].split(",")))
+gwhost=env["GWHOST"]
+scenario=env["SCENARIO"]
 
 def Provision(officestr):
     print("Provisioning...", flush=True)
@@ -31,7 +31,7 @@ def Provision(officestr):
             dbp.ingest_bulk(sensors, refresh="wait_for")
 
             office1.pop("scenario")
-            office1["uri"]=proxyhost
+            office1["uri"]=gwhost
             return office1
 
     raise Exception("Should not be here.")

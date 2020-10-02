@@ -2,54 +2,42 @@
 
 from tornado import ioloop, web
 from tornado.options import define, options, parse_command_line
-from redirect import RedirectHandler
-from subprocess import Popen
+from auth import AuthHandler
 from signal import signal, SIGTERM, SIGQUIT
-import os
+from configuration import env
+from redirect import NGINXRedirect
 import json
 
-scenario=os.environ["SCENARIO"]
-tornadoc=None
-nginxc=None
-
-def setup_nginx_resolver():
-    with open("/etc/resolv.conf","rt") as fd:
-        for line in fd:
-            if not line.startswith("nameserver"): continue
-            with open("/etc/nginx/resolver.conf","wt") as fdr:
-                fdr.write("resolver "+line.strip().split(" ")[1]+";")
-            return
+scenario=env["SCENARIO"]
+gwhost=env["GWHOST"]
+nginxc=NGINXRedirect(upstreams=[
+    ("cloud",gwhost.partition("://")[2])
+])
 
 def setup_scenarios():
     with open("/var/www/html/js/scenario.js","at") as fd:
         fd.write("scenarios.setting="+json.dumps(scenario.split(","))+";")
 
+tornado1=None
+
 def quit_service(signum, frame):
-    if tornadoc: tornadoc.add_callback(tornadoc.stop)
-    if nginxc: nginxc.send_signal(SIGQUIT)
+    if tornado1: tornado1.add_callback(tornado1.stop)
+    nginxc.stop()
         
+signal(SIGTERM, quit_service)
+setup_scenarios()
+
 app = web.Application([
-    (r'/api/search',RedirectHandler),
-    (r'/api/stats',RedirectHandler),
-    (r'/api/histogram',RedirectHandler),
-    (r'/api/workload',RedirectHandler),
-    (r'/api/hint',RedirectHandler),
-    (r'/recording/.*',RedirectHandler),
-    (r'/thumbnail/.*',RedirectHandler),
+    (r'/api/auth',AuthHandler),
 ])
 
-if __name__ == "__main__":
-    signal(SIGTERM, quit_service)
-    setup_nginx_resolver()
-    setup_scenarios()
+define("port", default=2222, help="the binding port", type=int)
+define("ip", default="127.0.0.1", help="the binding ip")
+parse_command_line()
+print("Listening to " + options.ip + ":" + str(options.port))
+app.listen(options.port, address=options.ip)
 
-    define("port", default=2222, help="the binding port", type=int)
-    define("ip", default="127.0.0.1", help="the binding ip")
-    parse_command_line()
-    print("Listening to " + options.ip + ":" + str(options.port))
-    app.listen(options.port, address=options.ip)
-
-    tornadoc=ioloop.IOLoop.instance();
-    nginxc=Popen(["/usr/local/sbin/nginx"])
-    tornadoc.start()
-    nginxc.wait()
+tornado1=ioloop.IOLoop.instance();
+nginxc.start()
+tornado1.start()
+nginxc.stop()

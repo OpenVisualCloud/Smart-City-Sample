@@ -134,11 +134,7 @@ spec:
       enableServiceLinks: false
       containers:
         - name: {{ $officeName }}-db-init
-{{- if (len $.Values.connector.cloudHost) }}
-          image: {{ $.Values.registryPrefix }}smtc_db_init_tunnelled:latest
-{{- else }}
           image: {{ $.Values.registryPrefix }}smtc_db_init:latest
-{{- end }}
           imagePullPolicy: IfNotPresent
           env:
             - name: OFFICE
@@ -148,17 +144,15 @@ spec:
               {{- $args := dict "officeName" $officeName "Values" $.Values }}
               value: {{ include "smtc.env.dbhost" $args | quote }}
 {{- if (len $.Values.connector.cloudHost) }}
-            - name: PROXYHOST
-              value: "http://127.0.0.1:{{ add $.Values.connector.officeStoragePort $officeIdx }}"
+            - name: GWHOST
+              value: "http://127.0.0.1:{{ add $.Values.connector.officeGatewayPort $officeIdx }}"
             - name: DBCHOST
-              value: "http://localhost:9200"
-            - name: FORWARD_TUNNEL1
-              value: "{{ $.Values.connector.cloudHost }}:{{ $.Values.connector.cloudQueryPort }} localhost:9200"
+              value: "http://localhost:8080/cloud/api/db"
 {{- else }}
-            - name: PROXYHOST
-              value: "http://{{ $officeName }}-storage-service.default.svc.cluster.local:8080"
+            - name: GWHOST
+              value: "http://{{ $officeName }}-gateway-service:8080"
             - name: DBCHOST
-              value: {{ printf "http://%s-service:9200" (include "smtc.db.name" $) | quote }}
+              value: "http://cloud-gateway-service:8080/cloud/api/db"
 {{- end }}
             - name: SCENARIO
               value: {{ $scenarioName | quote }}
@@ -176,6 +170,16 @@ spec:
               name: sensor-info
               readOnly: true
 {{- if (len $.Values.connector.cloudHost) }}
+        - name: {{ $officeName }}-db-init-tunnel
+          image: {{ $.Values.registryPrefix }}smtc_ssh_tunnel:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: FORWARD_TUNNEL1
+              value: "{{ $.Values.connector.cloudHost }}:{{ $.Values.connector.cloudGatewayPort }} localhost:8080"
+          volumeMounts:
+            - mountPath: /etc/localtime
+              name: timezone
+              readOnly: true
             - mountPath: /etc/hostkey
               name: hostkey
               readOnly: true

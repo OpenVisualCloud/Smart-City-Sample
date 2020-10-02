@@ -6,7 +6,7 @@ RUN yum install -y -q epel-release && yum install -y -q python36-tornado python3
 COPY --from=smtc_common /home/*.py /home/
 COPY    *.py /home/
 COPY    *.conf /etc/nginx/
-CMD     ["/home/manage.py"]
+CMD     ["/home/storage.py"]
 ENV     PYTHONIOENCODING=UTF-8
 
 ####

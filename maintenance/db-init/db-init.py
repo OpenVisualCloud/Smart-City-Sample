@@ -3,17 +3,17 @@
 from signal import SIGTERM, signal
 from db_ingest import DBIngest
 from provision import Provision
+from configuration import env
 import traceback
 import requests
 import time
-import os
 import json
 import re
 
-dbhost=os.environ["DBHOST"]
-dbchost=os.environ["DBCHOST"]
-office=list(map(float,os.environ["OFFICE"].split(",")))
-replicas=list(map(int,os.environ["REPLICAS"].split(",")))
+dbhost=env["DBHOST"]
+dbchost=env["DBCHOST"]
+office=list(map(float,env["OFFICE"].split(",")))
+replicas=list(map(int,env["REPLICAS"].split(",")))
 
 def quit_service():
     exit(143)

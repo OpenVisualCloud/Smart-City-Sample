@@ -6,19 +6,20 @@ from probe import run
 from signal import signal, SIGTERM
 from language import text
 from threading import Event
+from configuration import env
 import traceback
 import requests
 import hashlib
 import json
 import os
 
-query=os.environ["QUERY"]
-service_interval=float(os.environ["SERVICE_INTERVAL"])  # in seconds
-office=list(map(float, os.environ["OFFICE"].split(",")))
-dbhost=os.environ["DBHOST"]
-sthostl=os.environ["STHOSTL"]
-dbchost=os.environ["DBCHOST"]
-sthostc=os.environ["STHOSTC"]
+query=env["QUERY"]
+service_interval=float(env["SERVICE_INTERVAL"])  # in seconds
+office=list(map(float, env["OFFICE"].split(",")))
+dbhost=env["DBHOST"]
+sthost=env["STHOST"]
+dbchost=env["DBCHOST"]
+stchost=env["STCHOST"]
 
 stop=Event()
 def quit_service(signum, sigframe):
@@ -95,7 +96,7 @@ while not stop.is_set():
             print("Ingest analytics: {}".format(len(analytics)), flush=True)
             dba_c.ingest_bulk(analytics)
 
-            url=sthostl+'/'+q["_source"]["path"]
+            url=sthost+'/'+q["_source"]["path"]
             print("url: "+url, flush=True)
 
             mp4file="/tmp/"+str(os.path.basename(url))
@@ -104,11 +105,11 @@ while not stop.is_set():
             # Replace with any transcoding command
             list(run(["/usr/local/bin/ffmpeg","-f","mp4","-i",url,"-c","copy","-f","mp4","-y",mp4file]))
 
-            print("Uploading: "+ sthostc, flush=True)
+            print("Uploading: "+ stchost, flush=True)
             sensor=sensor_c[0]["_id"]
             timestamp=q["_source"]["time"]
 
-            upload(sthostc, mp4file, office, sensor, timestamp)
+            upload(stchost, mp4file, office, sensor, timestamp)
             os.remove(mp4file)
     except:
         print(traceback.format_exc(), flush=True)
