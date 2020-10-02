@@ -37,4 +37,16 @@ var apiHost={
         console.log("GET "+url+"?"+$.param(args));
         return $.get(url,args);
     },
+    sensors: function (sensor, office) {
+        var url=api_host_url(office,"api/sensors");
+        var args={ sensor:sensor };
+        console.log("POST "+url+"?"+$.param(args));
+        return $.post(url,args);
+    },
+    tokens: function (roomid, office) {
+        var url=api_host_url(office,"api/tokens");
+        var args={ room:roomid };
+        console.log("POST "+url+"?"+$.param(args));
+        return $.post(url,args);
+    },
 };

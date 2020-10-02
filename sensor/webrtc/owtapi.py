@@ -43,7 +43,7 @@ class OWTAPI(object):
         raise Exception("OWTAPI error")
 
     def create_room(self,name,p_limit=10,i_limit=1):
-        _options={"name":name,"options":{"participantLimit":p_limit,"inputLimit":i_limit}}
+        _options={"name":name,"options":{"participantLimit":p_limit,"inputLimit":i_limit,"views":[]}}
         uri=self._host+"/v1/rooms"
         r=self._request(requests.post,uri,json=_options,headers=self._headers())
         return r.json()["_id"]
@@ -55,7 +55,12 @@ class OWTAPI(object):
     def list_room(self):
         uri=self._host+"/v1/rooms"
         r=self._request(requests.get,uri,headers=self._headers())
-        return [item["_id"] for item in r.json()]
+        return { item["name"]:item["_id"] for item in r.json() }
+
+    def list_streams(self,room):
+        uri=self._host+"/v1/rooms/"+str(room)+"/streams"
+        r=self._request(requests.get,uri,headers=self._headers())
+        return [item["id"] for item in r.json()]
 
     def delete_stream(self,room,stream):
         uri=self._host+"/v1/rooms/"+str(room)+"/streams/"+str(stream)

@@ -12,10 +12,12 @@ from nginx import NGINX
 
 sthost=env["STHOST"]
 dbhost=env["DBHOST"]
+webrtchost=env.get("WEBRTCHOST","http://127.0.0.1:8888")
 tornado1=None
 nginx1=NGINX(upstreams=[
     ("storage-service", sthost.partition("://")[2]),
     ("database-service", dbhost.partition("://")[2]),
+    ("webrtc-service", webrtchost.partition("://")[2]),
 ])
 
 def quit_service(signum, frame):
