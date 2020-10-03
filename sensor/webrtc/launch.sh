@@ -37,6 +37,9 @@ configure_hw_acceleration () {
 
 trap 'exit 0' SIGTERM
 
+[ $(id -u) = 0 ] && service mongodb start
+[ $(id -u) = 0 ] && service rabbitmq-server start
+
 wait_for_mongod
 configure_owt_api_py
 

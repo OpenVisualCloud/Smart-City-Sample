@@ -10,43 +10,36 @@ var apiHost={
         if (typeof size=="undefined") size=25;
         var url=api_host_url(office,"api/search");
         var args={index:index,queries:queries,size:size};
-        console.log("GET "+url+"?"+$.param(args));
         return $.get(url,args);
     },
     histogram: function (index, queries, field, size, office) {
         var url=api_host_url(office,"api/histogram");
         var args={index:index,queries:queries,field:field,size:size};
-        console.log("GET "+url+"?"+$.param(args));
         return $.get(url,args);
     },
     stats: function (index, queries, fields, office) {
         var url=api_host_url(office,"api/stats");
         var args={index:index,queries:queries,fields:fields.join(",")};
-        console.log("GET "+url+"?"+$.param(args));
         return $.get(url,args);
     },
     workload: function (office) {
         var url=api_host_url(office,"api/workload");
         var args={}
-        console.log("GET "+url+"?"+$.param(args));
         return $.get(url,args);
     },
     hint: function (index, office) {
         var url=api_host_url(office,"api/hint");
         var args={ index:index };
-        console.log("GET "+url+"?"+$.param(args));
         return $.get(url,args);
     },
     sensors: function (sensor, office) {
         var url=api_host_url(office,"api/sensors");
         var args={ sensor:sensor };
-        console.log("POST "+url+"?"+$.param(args));
         return $.post(url,args);
     },
     tokens: function (roomid, office) {
         var url=api_host_url(office,"api/tokens");
         var args={ room:roomid };
-        console.log("POST "+url+"?"+$.param(args));
         return $.post(url,args);
     },
 };

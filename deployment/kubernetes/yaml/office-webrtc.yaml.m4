@@ -1,9 +1,8 @@
 include(platform.m4)
 include(../../../script/loop.m4)
 include(../../../maintenance/db-init/sensor-info.m4)
-define(`WEBRTC_UDP_PORT',10000)
-define(`WEBRTC_STREAMING_LIMIT',10)
 
+define(`UDPBASE',0)
 looplist(SCENARIO_NAME,defn(`SCENARIOS'),`
 loop(OFFICEIDX,1,defn(`NOFFICES'),`
 include(office.m4)
@@ -35,8 +34,8 @@ spec:
 loop(PORTIDX,1,defn(`WEBRTC_STREAMING_LIMIT'),`dnl
     - name: `port'defn(`PORTIDX')
       protocol: UDP
-      port: eval(defn(`WEBRTC_UDP_PORT')+defn(`PORTIDX'))
-      targetPort: eval(defn(`WEBRTC_UDP_PORT')+defn(`PORTIDX'))
+      port: eval(defn(`WEBRTC_UDP_PORT')+defn(`UDPBASE')+defn(`PORTIDX'))
+      targetPort: eval(defn(`WEBRTC_UDP_PORT')+defn(`UDPBASE')+defn(`PORTIDX'))
 ')dnl
   externalIPs:
     - defn(`HOSTIP')
@@ -89,7 +88,7 @@ spec:
           ports:
             - containerPort: 8888
 loop(PORTIDX,1,defn(`WEBRTC_STREAMING_LIMIT'),`dnl
-            - containerPort: eval(defn(`WEBRTC_UDP_PORT')+defn(`PORTIDX'))
+            - containerPort: eval(defn(`WEBRTC_UDP_PORT')+defn(`UDPBASE')+defn(`PORTIDX'))
               protocol: UDP
 ')dnl
           env:
@@ -100,7 +99,7 @@ loop(PORTIDX,1,defn(`WEBRTC_STREAMING_LIMIT'),`dnl
             - name: `WEBRTC_STREAMING_LIMIT'
               value: "defn(`WEBRTC_STREAMING_LIMIT')"
             - name: `WEBRTC_UDP_PORT'
-              value: "defn(`WEBRTC_UDP_PORT')"
+              value: "eval(defn(`WEBRTC_UDP_PORT')+defn(`UDPBASE'))"
             - name: INACTIVE_TIME
               value: "10"
             - name: WEBRTC_HOSTIP
@@ -129,5 +128,5 @@ PLATFORM_NODE_SELECTOR(`Xeon')dnl
 
 ---
 ')
-define(`WEBRTC_UDP_PORT',eval(defn(`WEBRTC_UDP_PORT')+defn(`WEBRTC_STREAMING_LIMIT')))
+define(`UDPBASE',eval(defn(`UDPBASE')+defn(`WEBRTC_STREAMING_LIMIT')))
 ')')
