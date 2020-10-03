@@ -81,3 +81,6 @@ connector:
     cloudGatewayPort: 28080
     officeGatewayPort: 28081
 
+webrtc:
+    udpPort: 10000
+    streamingLimit: 10

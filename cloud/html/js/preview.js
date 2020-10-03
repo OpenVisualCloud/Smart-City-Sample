@@ -89,7 +89,11 @@ var preview={
         }).catch(function () {
             div.append(error);
         });
-        return { close: function () { try { conference.leave(); } catch (e) {} }};
+        return { 
+            close: function () { 
+                conference.leave().catch(function () {});
+            },
+        };
     },
     close: function (sensorctx, page) {
         if ("video" in sensorctx) {
