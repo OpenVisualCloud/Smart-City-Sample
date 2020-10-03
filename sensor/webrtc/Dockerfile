@@ -24,7 +24,7 @@ RUN  [ ${GID} -gt 0 ] && groupadd -f -g ${GID} ${GROUP}; \
      [ ${UID} -gt 0 ] && useradd -d /home -M -g ${GID} -K UID_MAX=${UID} -K UID_MIN=${UID} ${USER}; \
      touch /var/run/nginx.pid && \
      mkdir -p /var/log/nginx /var/lib/nginx && \
-     chown ${UID}:${GID} /home /home/owt /home/owt/* /var/run/nginx.pid /home/owt/management_api/management_api.toml /home/owt/extras/basic_example/samplertcservice.js && \
+     chown ${UID}:${GID} $(find /home -maxdepth 2 -type d -print) /var/run/nginx.pid /home/owt/*/*.toml /home/owt/extras/basic_example/samplertcservice.js && \
      chown -R ${UID}:${GID} /var/log/nginx /var/lib/nginx
 USER ${UID}
 ####
