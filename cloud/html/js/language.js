@@ -28,6 +28,7 @@ text={
     "trunk": "trunk",
 
     "recording-unavailable": "Recording Unavailable",
+    "recording-loading": "Loading...",
 
     "b/s": "b/s",
     "kb/s": "Kb/s",
