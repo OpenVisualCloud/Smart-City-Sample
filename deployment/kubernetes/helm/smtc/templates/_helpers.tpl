@@ -27,7 +27,7 @@ Expand to the office db name
 {{- if gt (int .Values.noffices) 1 }}
 {{- printf "http://%s-db-service:9200" .officeName }}
 {{- else }}
-{{- "http://db-service:9200.default.svc.cluster.local" }}
+{{- "http://db-service:9200" }}
 {{- end }}
 {{- end }}
 

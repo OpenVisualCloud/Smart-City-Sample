@@ -55,6 +55,8 @@ spec:
               value: {{ include "smtc.env.dbhost" $args | quote }}
             - name: STHOST
               value: "http://{{ $officeName }}-storage-service:8080"
+            - name: WEBRTCHOST
+              value: "http://{{ $officeName }}-webrtc-service:8888"
             - name: NO_PROXY
               value: "*"
             - name: no_proxy

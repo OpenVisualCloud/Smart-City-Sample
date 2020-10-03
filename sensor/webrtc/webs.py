@@ -2,33 +2,21 @@
 
 from tornado import ioloop, web
 from tornado.options import define, options, parse_command_line
-from search import SearchHandler
-from histogram import HistogramHandler
-from hint import HintHandler
-from stats import StatsHandler
+from sensors import SensorsHandler
+from tokens import TokensHandler
+from subprocess import Popen
 from signal import signal, SIGTERM, SIGQUIT
-from configuration import env
-from nginx import NGINX
 
-sthost=env["STHOST"]
-dbhost=env["DBHOST"]
-webrtchost=env.get("WEBRTCHOST","http://127.0.0.1:8888")
 tornado1=None
-nginx1=NGINX(upstreams=[
-    ("storage-service", sthost.partition("://")[2]),
-    ("database-service", dbhost.partition("://")[2]),
-    ("webrtc-service", webrtchost.partition("://")[2]),
-])
+nginx1=None
 
 def quit_service(signum, frame):
     if tornado1: tornado1.add_callback(tornado1.stop)
-    nginx1.stop()
+    if nginx1: nginx1.send_signal(SIGQUIT)
 
 app = web.Application([
-    (r'/api/search',SearchHandler),
-    (r'/api/histogram',HistogramHandler),
-    (r'/api/hint',HintHandler),
-    (r'/api/stats',StatsHandler),
+    (r'/api/sensors',SensorsHandler),
+    (r'/api/tokens',TokensHandler),
 ])
 
 if __name__ == "__main__":
@@ -41,7 +29,7 @@ if __name__ == "__main__":
     app.listen(options.port, address=options.ip)
 
     tornado1=ioloop.IOLoop.instance();
-    nginx1.start()
+    nginx1=Popen(["/usr/sbin/nginx"])
     
     tornado1.start()
-    nginx1.stop()
+    nginx1.wait()

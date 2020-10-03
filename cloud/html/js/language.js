@@ -28,6 +28,7 @@ text={
     "trunk": "卡车",
 
     "recording-unavailable": "录像暂时没有",
+    "recording-loading": "载入...",
 
     "b/s": "b/s",
     "kb/s": "Kb/s",

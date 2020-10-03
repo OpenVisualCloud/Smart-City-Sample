@@ -1,16 +1,17 @@
 
 var preview={
     create: function (sensorctx, sensor, page, map) {
-        var div=$("[template] [preview-template]").clone().dblclick(function () {
-            selectPage("recording",['sensor="'+sensor._id+'"',sensor._source.office]);
-        }).addClass("page-home-preview-screen-size");
+        var div=$("[template] [preview-template]").clone().addClass("page-home-preview-screen-size");
 
+        var worker=null;
         sensorctx.marker.bindPopup(div[0],{
             maxWidth:"auto",
             maxHeight:"auto",
-        }).on('click',function () {
+        }).on('popupopen',function () {
             sensorctx.marker.closeTooltip();
-            preview.play(div,sensor);
+
+            if (worker) worker.close();
+            worker=preview.play(div,sensor);
 
             var offset={x:0,y:0};
             div.attr('draggable','true').bind('dragstart',function (e) {
@@ -33,11 +34,13 @@ var preview={
                     $(marker._icon).addClass("page-home-preview-screen");
                     sensorctx.video=marker;
 
+                    var worker1;
                     var sensor1=JSON.parse(e.originalEvent.dataTransfer.getData("application/json"));
                     marker.on('add', function (e) {
-                        preview.play(div,sensor1);
+                        worker1=preview.play(div,sensor1);
                     }).on('remove', function (e) {
-                        div.find("div,video").remove();
+                        div.find("video,div").remove();
+                        worker1.close();
                     }).fire('add');
 
                     div.append('<a class="leaflet-popup-close-button front" href="javascript:void(0)">x</a>').find('a').click(function() {
@@ -45,29 +48,54 @@ var preview={
                     });
                 });
             });
+        }).on('popupclose', function () {
+            if (worker) worker.close();
         });
     },
     play: function (div, sensor) {
-        var update=function () {
-            var error='<div class="page-home-preview-screen-recording-unavailable">'+text["recording-unavailable"]+'</div>';
-            apiHost.search("recordings",settings.preview_query()+" and sensor='"+sensor._id+"'",sensor._source.office,1).then(function (r) {
-                div.find("div,video").remove();
-                r=r.response;
-                if (r.length==0) {
-                    div.append(error);
-                    return setTimeout(update,5000);
-                }
-                var video=$('<video class="max-size" autoplay muted><source src="'+api_host_url(r[0]._source.office,"recording/"+r[0]._source.path)+'"></source></video>').bind('ended',update).bind('error',function () {
-                    setTimeout(update,5000);
-                });
-                div.append(video);
-            }).catch(function () {
-                div.find("div,video").remove();
-                div.append(error);
-                setTimeout(update,5000);
-            });
+        var div_show=function (message) {
+            div.find("div,video").remove();
+            div.append(message);
         };
-        update();
+        div_show('<div class="page-home-preview-screen-recording-unavailable">'+text["recording-loading"]+'</div>');
+
+        var error='<div class="page-home-preview-screen-recording-unavailable">'+text["recording-unavailable"]+'</div>';
+        var conference=new Owt.Conference.ConferenceClient();
+        apiHost.sensors(sensor._id,sensor._source.office).then(function (data) {
+            apiHost.tokens(data.room,sensor._source.office).then(function (token) {
+
+                window.sessionStorage.officePath="/offices/"+(sensor._source.office.lat+"c"+sensor._source.office.lon).replace(/-/g,'n').replace(/\./g,'d');
+
+                conference.join(token).then(function (r) {
+                    var stream1=null;
+                    for (var i in r.remoteStreams) {
+                        var stream=r.remoteStreams[i];
+                        if (data.stream==stream.id) stream1=stream;
+                    }
+                    if (stream1) {
+                        conference.subscribe(stream1,{audio:false}).then(function (s) {
+                            div_show('<video class="max-size" autoplay muted></video>');
+                            div.find("video")[0].srcObject = stream1.mediaStream;
+                        }, function () {
+                            div_show(error);
+                        });
+                    } else {
+                        div_show(error);
+                    }
+                }, function () {
+                    div_show(error);
+                });
+            }).catch(function () {
+                div_show(error);
+            });
+        }).catch(function () {
+            div_show(error);
+        });
+        return { 
+            close: function () { 
+                conference.leave().catch(function () {});
+            },
+        };
     },
     close: function (sensorctx, page) {
         if ("video" in sensorctx) {
