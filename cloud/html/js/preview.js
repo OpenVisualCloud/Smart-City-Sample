@@ -1,9 +1,7 @@
 
 var preview={
     create: function (sensorctx, sensor, page, map) {
-        var div=$("[template] [preview-template]").clone().dblclick(function () {
-            selectPage("recording",['sensor="'+sensor._id+'"',sensor._source.office]);
-        }).addClass("page-home-preview-screen-size");
+        var div=$("[template] [preview-template]").clone().addClass("page-home-preview-screen-size");
 
         var worker=null;
         sensorctx.marker.bindPopup(div[0],{
@@ -41,7 +39,7 @@ var preview={
                     marker.on('add', function (e) {
                         worker1=preview.play(div,sensor1);
                     }).on('remove', function (e) {
-                        div.find("div,video").remove();
+                        div.find("video,div").remove();
                         worker1.close();
                     }).fire('add');
 
@@ -55,9 +53,13 @@ var preview={
         });
     },
     play: function (div, sensor) {
-        var error='<div class="page-home-preview-screen-recording-unavailable">'+text["recording-unavailable"]+'</div>';
-        div.find("div,video").remove();
+        var div_show=function (message) {
+            div.find("div,video").remove();
+            div.append(message);
+        };
+        div_show('<div class="page-home-preview-screen-recording-unavailable">'+text["recording-loading"]+'</div>');
 
+        var error='<div class="page-home-preview-screen-recording-unavailable">'+text["recording-unavailable"]+'</div>';
         var conference=new Owt.Conference.ConferenceClient();
         apiHost.sensors(sensor._id,sensor._source.office).then(function (data) {
             apiHost.tokens(data.room,sensor._source.office).then(function (token) {
@@ -72,22 +74,22 @@ var preview={
                     }
                     if (stream1) {
                         conference.subscribe(stream1,{audio:false}).then(function (s) {
-                            div.append('<video class="max-size" autoplay muted></video>');
+                            div_show('<video class="max-size" autoplay muted></video>');
                             div.find("video")[0].srcObject = stream1.mediaStream;
                         }, function () {
-                            div.append(error);
+                            div_show(error);
                         });
                     } else {
-                        div.append(error);
+                        div_show(error);
                     }
                 }, function () {
-                    div.append(error);
+                    div_show(error);
                 });
             }).catch(function () {
-                div.append(error);
+                div_show(error);
             });
         }).catch(function () {
-            div.append(error);
+            div_show(error);
         });
         return { 
             close: function () { 

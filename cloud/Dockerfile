@@ -19,8 +19,8 @@ ARG  GID
 ## must use ; here to ignore user exist status code
 RUN  [ ${GID} -gt 0 ] && groupadd -f -g ${GID} ${GROUP}; \
      [ ${UID} -gt 0 ] && useradd -d /home -M -g ${GID} -K UID_MAX=${UID} -K UID_MIN=${UID} ${USER}; \
-     touch /var/run/nginx.pid && \
+     touch /var/www/nginx.pid && \
      mkdir -p /var/log/nginx /var/lib/nginx /var/www/cache /var/www/thumbnail && \
-     chown -R ${UID}:${GID} /home /var/run/nginx.pid /var/www /var/log/nginx /var/lib/nginx /etc/nginx/upstream.conf
+     chown -R ${UID}:${GID} /var/www/nginx.pid /var/www/log /var/log/nginx /var/lib/nginx /etc/nginx/upstream.conf /var/www/html/js/scenario.js
 USER ${UID}
 ####
