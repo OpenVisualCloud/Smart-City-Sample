@@ -50,11 +50,11 @@ spec:
             - name: SERVICE_INTERVAL
               value: "3600"
             - name: WARN_DISK
-              value: "75"
+              value: "70"
             - name: FATAL_DISK
-              value: "85"
+              value: "75"
             - name: HALT_REC
-              value: "95"
+              value: "80"
             - name: THUMBNAIL_CACHE
               value: "50"
             - name: NO_PROXY
