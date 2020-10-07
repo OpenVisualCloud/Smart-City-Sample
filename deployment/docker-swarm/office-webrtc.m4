@@ -10,6 +10,7 @@ define(`UDPBASE',ifdef(`UDPBASE',defn(`UDPBASE'),0))dnl
             `WEBRTC_UDP_PORT': "eval(defn(`WEBRTC_UDP_PORT')+defn(`UDPBASE'))"
             INACTIVE_TIME: "10"
             WEBRTC_HOSTIP: "defn(`HOSTIP')"
+            RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS: "+sbwt none"
             NO_PROXY: "*"
             no_proxy: "*"
         ports:

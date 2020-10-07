@@ -66,6 +66,9 @@ spec:
           image: defn(`REGISTRY_PREFIX')smtc_sensor_webrtc:latest
           imagePullPolicy: IfNotPresent
           command: [ "/usr/sbin/rabbitmq-server" ]
+          env:
+            - name: RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS
+              value: "+sbwt none"
           volumeMounts:
             - mountPath: /etc/localtime
               name: timezone
