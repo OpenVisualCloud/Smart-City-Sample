@@ -1,6 +1,6 @@
 # smtc_analytics_common_vcac-a_gst
 
-FROM centos:7.6.1810 as build
+FROM centos:centos7 as build
 
 ARG  VA_SERVING_REPO=https://raw.githubusercontent.com/intel/video-analytics-serving
 ARG  VA_SERVING_TAG="v0.3.0-alpha"
