@@ -1,11 +1,11 @@
 
-{{- $udpPort := int $.Values.webrtc.udpPort }}
 
 {{- range $scenarioIdx, $scenarioName := $.Values.scenario }}
 {{- $args := dict "scenarioName" $scenarioName "Values" $.Values }}
 {{- range $officeIdx := until ( int ( include "smtc.noffices" $args ) ) }}
 {{- $officeName := printf "%s-office%d" $scenarioName (add $officeIdx 1) }}
 {{- if contains $.Values.buildScope $officeName }}
+{{- $udpPort := add (int $.Values.webrtc.udpPort) (mul (int $.Values.webrtc.streamingLimit) (add (mul $officeIdx (len $.Values.scenario)) $scenarioIdx)) }}
 
 apiVersion: v1
 kind: Service
@@ -65,6 +65,9 @@ spec:
           image: {{ $.Values.registryPrefix }}smtc_sensor_webrtc:latest
           imagePullPolicy: IfNotPresent
           command: [ "/usr/sbin/rabbitmq-server" ]
+          env:
+            - name: RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS
+              value: "+sbwt none"
           volumeMounts:
             - mountPath: /etc/localtime
               name: timezone
@@ -129,6 +132,5 @@ spec:
 
 ---
 {{- end }}
-{{- $udpPort := add $udpPort (int $.Values.webrtc.streamingLimit) }}
 {{- end }}
 {{- end }}

@@ -15,7 +15,7 @@ The E2E sample implements aspects of smart city sensing, analytics and managemen
 
 The sample implements the Smart-City [`traffic`](https://github.com/OpenVisualCloud/Smart-City-Sample/wiki/Smart-City:-Traffic-Scenario) and [`stadium`](https://github.com/OpenVisualCloud/Smart-City-Sample/wiki/Smart-City:-Stadium-Scenario) scenarios. The [`traffic`](https://github.com/OpenVisualCloud/Smart-City-Sample/wiki/Smart-City:-Traffic-Scenario) scenario measures vehicle/pedestrian flow for planning purpose. The [`stadium`](https://github.com/OpenVisualCloud/Smart-City-Sample/wiki/Smart-City:-Stadium-Scenario) scenario focuses on different access control techniques, including entrance people counting, service-point queue counting, and stadium seating zone crowd counting.   
 
-| Traffic | Stadium |
+| [Traffic](https://www.youtube.com/watch?v=BWU0SEqEfbo") | Stadium |
 |:-------:|:-------:|
 |<IMG src="doc/traffic-ui.gif" width="100%"></IMG>|<IMG src="doc/stadium-ui.gif" width="100%"></IMG>|
 
@@ -101,4 +101,5 @@ Launch your browser and browse to ```https://<hostname>``` for the sample UI.
 - [Docker Swarm Setup](deployment/docker-swarm/README.md)      
 - [Kubernetes Setup](deployment/kubernetes/README.md)
 - [Intel VCAC-A Setup](doc/vcac-a.md)
+- [Demo Video](https://www.youtube.com/watch?v=BWU0SEqEfbo)
 
