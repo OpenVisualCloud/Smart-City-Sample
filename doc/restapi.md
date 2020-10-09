@@ -1,5 +1,5 @@
 
-The following table describes the REST API implemented at different services:  
+The following table describes the REST API implemented in different services:  
 
 |Type|Path|Descrption|Services|
 |:---:|:---|:---|:---|
