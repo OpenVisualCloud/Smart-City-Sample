@@ -1,14 +1,13 @@
 #!/usr/bin/python3
 
-from signal import SIGQUIT
-from subprocess import Popen, call
+from signal import SIGQUIT, SIGHUP
+from subprocess import Popen
 from threading import Thread, Event
 import socket
 
 class NGINX(object):
     def __init__(self, upstreams=[], stop=Event()):
         super(NGINX, self).__init__()
-        self._nginx="/usr/local/sbin/nginx"
         self._stop=stop
         self._thread=None
         self._pid=None
@@ -38,11 +37,19 @@ class NGINX(object):
                     for s in self._upstreams:
                         tmp=self._upstreams[s]
                         fd.write("upstream "+s+" { server "+tmp[2]+tmp[1]+"; }\n")
-                call([self._nginx,"-s","reload"])
+
+                if self._pid:
+                    self._pid.send_signal(SIGHUP)
+
+            if self._pid is None:
+                self._pid=Popen(["/usr/local/sbin/nginx"])
+            elif self._pid.poll() is not None:
+                self._pid.wait()
+                self._pid=None
+
             self._stop.wait(10)
 
     def start(self):
-        self._pid=Popen([self._nginx])
         self._thread=Thread(target=self._monitor_ip_change)
         self._thread.start()
 
