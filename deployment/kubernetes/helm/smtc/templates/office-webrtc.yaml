@@ -122,7 +122,7 @@ spec:
             requests:
               cpu: "0.5"
           securityContext:
-            runAsUser: 1000
+            runAsUser: {{ $.Values.userId }}
       volumes:
           - name: timezone
             hostPath:
