@@ -121,7 +121,7 @@ loop(PORTIDX,1,defn(`WEBRTC_STREAMING_LIMIT'),`dnl
             requests:
               cpu: "0.5"
           securityContext:
-            runAsUser: 1000
+            runAsUser: defn(`USERID')
       volumes:
           - name: timezone
             hostPath:
