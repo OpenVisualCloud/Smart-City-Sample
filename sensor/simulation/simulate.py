@@ -44,9 +44,10 @@ if dbhost and office:
 
 files=list(os.listdir(simulated_root))
 with ThreadPoolExecutor(ncameras) as e:
+    k=random.randint(0,ncameras)
     for i in range(ncameras):
-        file=[f for f in files if re.search(filters[i],f)]
-        k=random.randint(0,len(file)-1)
-        print("#{} camera: {}".format(i,file[k]),flush=True)
-        e.submit(serve_stream, simulated_root+"/"+file[k],rtsp_port+i*port_step,rtp_port+i*port_step)
+        files1=[f for f in files if re.search(filters[i],f)]
+        file=files1[(i+k)%len(files1)]
+        print("#{} camera: {}".format(i,file),flush=True)
+        e.submit(serve_stream, simulated_root+"/"+file,rtsp_port+i*port_step,rtp_port+i*port_step)
 
