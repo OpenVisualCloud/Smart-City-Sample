@@ -71,7 +71,16 @@ settings={
                 "office": { "type": "geo_point", },
                 "location": { "type": "geo_point", },
                 "ip": { "type": "ip_range", },
-                "sensor": {
+                "type": {
+                    "type" : "text",
+                    "fields" : {
+                        "keyword" : {
+                            "type" : "keyword",
+                            "ignore_above" : 256,
+                        },
+                    },
+                },
+                "subtype": {
                     "type" : "text",
                     "fields" : {
                         "keyword" : {
@@ -118,7 +127,16 @@ settings={
                 "office": { "type": "geo_point", },
                 "location": { "type": "geo_point", },
                 "ip": { "type": "ip_range", },
-                "sensor": {
+                "type": {
+                    "type" : "text",
+                    "fields" : {
+                        "keyword" : {
+                            "type" : "keyword",
+                            "ignore_above" : 256,
+                        },
+                    },
+                },
+                "subtype": {
                     "type" : "text",
                     "fields" : {
                         "keyword" : {
@@ -279,7 +297,7 @@ while True:
         dbo_c.ingest(officeinfo, id1=officestr)
 
         print("Signal starting up", flush=True)
-        dbs.ingest({"sensor":"startup"})
+        dbs.ingest({"type":"startup"})
         break
 
     except Exception as e:
