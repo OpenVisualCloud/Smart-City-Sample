@@ -16,12 +16,13 @@
 
     <div sensor-info-template>
         <table><tbody>
-            <tr><td>类型</td><td colspan="3" field="sensor"></td></tr>
+            <tr><td>类型</td><td colspan="3"><span field="type"></span> : <span field="subtype"></span></td></tr>
+            <tr><td>制造商</td><td colspan="3" field="manufacturer"></td></tr>
             <tr><td>型号</td><td colspan="3" field="model"></td></tr>
+            <tr><td>序列号</td><td colspan="3" field="serial"></td></tr>
             <tr><td>位置</td><td colspan="3" location></td></tr>
             <tr><td>地址</td><td colspan="3" field="address"></td></tr>
             <tr><td>网址</td><td colspan="3" field="url"></td></tr>
-            <tr><td>网卡地址</td><td colspan="3" field="MAC"></td></tr>
             <tr><td>分辨率</td><td resolution></td><td>纵向仰角</td><td field="alpha"></td></tr>
             <tr><td>横向仰角</td><td field="theta"></td><td>相机高度</td><td field="mnth"></td></tr>
             <tr><td>横向视角</td><td field="fovh"></td><td>纵向视角</td><td field="fovv"></td></tr>

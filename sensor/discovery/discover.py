@@ -58,19 +58,23 @@ def probe_camera_info(ip, port):
     # check to see if ip/port is simulated
     for simh in sim_hosts:
         if str(port)!=simh[1]: continue
-        if str(socket.gethostbyname(simh[0]))!=ip: continue
+        try:
+            if str(socket.gethostbyname(simh[0]))!=ip: continue
+        except:
+            continue
 
         global sim_cameras
         rtspuri = "rtsp://"+ip+":"+str(port)+"/live.sdp"
         if rtspuri not in sim_cameras: sim_cameras[rtspuri]=len(sim_cameras.keys())
         camid=("simsn",sim_prefix+str(sim_cameras[rtspuri]))
-        return (rtspuri,[camid])
+        return (rtspuri,[camid],{"manufacturer":"Simulated","serial":camid[1]})
 
     if office and dbhost:
         r=list(dbp.search("ip={} and port={} and rtspurl:*".format(ip,port),size=1))
         if r:
             rtspuri=r[0]["_source"]["rtspurl"]
-            return (rtspuri,[("rtspurl",rtspuri)])
+            dinfo={ k:r[0]["_source"][k] for k in ["manufacturer","model","serial"] if k in r[0]["_source"] }
+            return (rtspuri,[("rtspurl",rtspuri)],dinfo)
 
     for passcode in get_passcodes(ip,port)+passcodes:
         print("OnVIF discovery over {}:{} {}".format(ip,port,passcode), flush=True)
@@ -81,16 +85,23 @@ def probe_camera_info(ip, port):
             if "uri" in desc:
                 rtspuri=desc["uri"][0].replace("rtsp://","rtsp://"+passcode+"@") if passcode!=":" else desc["uri"][0]
                 camids=[]
+                dinfo={}
                 if "device" in desc:
                     if "SerialNumber" in desc['device']:
                         camids.append(("device.SerialNumber",desc['device']['SerialNumber']))
+                    if "Manufacturer" in desc['device']:
+                        dinfo["manufacturer"]=desc['device']['Manufacturer']
+                    if "Model" in desc['device']:
+                        dinfo["model"]=desc['device']['Model']
+                    if "SerialNumber" in desc['device']:
+                        dinfo["serial"]=desc['device']['SerialNumber']
                 if "networks" in desc:
                     for network1 in desc['networks']:
                         if "HwAddress" in network1:
                             camids.append(("networks.HwAddress",network1['HwAddress']))
-                return (rtspuri,camids)
+                return (rtspuri,camids,dinfo)
 
-    return (None,[])
+    return (None,[],{})
 
 for simh in sim_hosts:
     if simh[1]=="0": continue
@@ -110,7 +121,7 @@ while True:
         # new or disconnected camera
         print("Probing "+ip+":"+str(port), flush=True)
         try:
-            rtspuri,camids=probe_camera_info(ip,port)
+            rtspuri,camids,dinfo=probe_camera_info(ip,port)
             if rtspuri is None: continue
         except:
             print(traceback.format_exc(), flush=True)
@@ -130,13 +141,13 @@ while True:
             print("Unknown width & height, skipping", flush=True)
             continue
 
+        sinfo.update(dinfo)
         sinfo.update({
-            'sensor': 'camera',
-            'model': 'ip_camera',
+            'type': 'camera',
+            'subtype': 'ip_camera',
             'url': rtspuri,
             'status': 'idle',
         })
-
         if not dbhost: continue
 
         try:

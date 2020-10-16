@@ -1,7 +1,9 @@
 
 function format_sensor_tooltip(template, sensor) {
-    $.each(template.find("td[field]"),function (x,v) {
-        $(v).text(text.translate(sensor._source[$(v).attr("field")]));
+    $.each(template.find("[field]"),function (x,v) {
+        var value=text.translate(sensor._source[$(v).attr("field")]);
+        if (typeof(value)=="string") value=value.replace(/:\/\/[^:]*:[^@]*@/,'://');
+        $(v).text(text.translate(value));
     });
     template.find("[location]").text("["+sensor._source.location.lat.toFixed(3)+","+sensor._source.location.lon.toFixed(3)+"]");
     template.find("[resolution]").text(sensor._source.resolution.width+"x"+sensor._source.resolution.height);
@@ -36,7 +38,7 @@ $("#pg-home").on(":initpage", function(e) {
         page.data('zoom', 15);
         page.data('offices',{});
         page.data('sensors',{});
-        page.data('queries',"sensor=*");
+        page.data('queries',"type=*");
 
         /* create map */
         map=L.map("mapCanvas",{ zoom: page.data('zoom'), minZoom: 13 });
