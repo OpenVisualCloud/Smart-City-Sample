@@ -56,7 +56,7 @@ var scenarios={
                 }),
             },
             sensor_icon: function (sensor, online) {
-                return scenarios.traffic.icon[sensor._source.model][online?sensor._source.status:"disconnected"];
+                return scenarios.traffic.icon[sensor._source.subtype][online?sensor._source.status:"disconnected"];
             },
             sensor_icon_rotation: function (sensor) {
                 return 90-sensor._source.theta;
@@ -188,7 +188,7 @@ var scenarios={
             sensor_icon: function (sensor, online) {
                 var status=online?sensor._source.status:"disconnected";
                 if (sensor._source.algorithm=="crowd-counting") 
-                    return scenarios.stadium.icon[sensor._source.model][status];
+                    return scenarios.stadium.icon[sensor._source.subtype][status];
                 var lr=(sensor._source.theta>=270 || sensor._source.theta<90)?"right":"left";
                 return scenarios.stadium.icon.queue[lr][status];
             },

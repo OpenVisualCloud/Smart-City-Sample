@@ -16,12 +16,13 @@
 
     <div sensor-info-template>
         <table><tbody>
-            <tr><td>Type</td><td colspan="3" field="sensor"></td></tr>
+            <tr><td>Type</td><td colspan="3"><span field="type"></span> : <span field="subtype"></span></td></tr>
+            <tr><td>Manufacturer</td><td colspan="3" field="manufacturer"></td></tr>
             <tr><td>Model</td><td colspan="3" field="model"></td></tr>
+            <tr><td>Serial</td><td colspan="3" field="serial"></td></tr>
             <tr><td>Location</td><td colspan="3" location></td></tr>
             <tr><td>Address</td><td colspan="3" field="address"></td></tr>
             <tr><td>URL</td><td colspan="3" field="url"></td></tr>
-            <tr><td>MAC</td><td colspan="3" field="MAC"></td></tr>
             <tr><td>Resolution</td><td resolution></td><td>Alpha</td><td field="alpha"></td></tr>
             <tr><td>Theta</td><td field="theta"></td><td>Mnt-H</td><td field="mnth"></td></tr>
             <tr><td>FOV-H</td><td field="fovh"></td><td>FOV-V</td><td field="fovv"></td></tr>

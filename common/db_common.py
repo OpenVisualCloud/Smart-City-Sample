@@ -34,7 +34,7 @@ class DBCommon(object):
     def wait(self, stop=Event()):
         while not stop.is_set():
             try:
-                r=self._request(requests.get, self._host+"/sensors"+self._office+"/_doc/_search",json={"query":{"term":{"sensor.keyword":"startup"}},"size":1})
+                r=self._request(requests.get, self._host+"/sensors"+self._office+"/_doc/_search",json={"query":{"term":{"type.keyword":"startup"}},"size":1})
                 if r["hits"]["hits"]: return stop
             except:
                 pass
