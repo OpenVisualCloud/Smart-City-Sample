@@ -46,6 +46,7 @@ text={
 
     "camera": "摄像机",
     "ip_camera": "网络摄像机",
+    "Simulated": "模拟摄像机",
 
     "error": "连接出错",
     "workload title": "{} 负载",
