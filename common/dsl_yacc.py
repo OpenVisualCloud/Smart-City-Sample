@@ -322,6 +322,15 @@ def p_query_eq_all(p):
     (nested, var)=check_nested_label(p[1]["spec"], p[1]["var"])
     p[0] = nested_query(nested, { "exists": { "field": var }})
     
+def p_query_neq_string(p):
+    """query : expr NOTEQUAL STRING"""
+    if "var" not in p[1]: raise Exception(text["var first"])
+    (nested, var) = check_nested_label(p[1]["spec"], p[1]["var"])
+    if var == "_id":
+        p[0] = {"bool":{"must_not":{"ids":{"values":[p[3]]}}}}
+    else:
+        p[0] = nested_query(nested,{"bool":{"must_not":{"term":{var+".keyword":p[3]}}}})
+
 def p_query_neq(p):
     """query : expr NOTEQUAL expr"""
     if "number" in p[1] and "number" in p[3]:
