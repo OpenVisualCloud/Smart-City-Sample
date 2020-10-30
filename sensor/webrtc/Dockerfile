@@ -1,5 +1,5 @@
 
-FROM openvisualcloud/xeon-ubuntu1804-service-owt:20.7.1
+FROM openvisualcloud/xeon-ubuntu1804-service-owt:20.10
 
 RUN  apt-get update -q && apt-get install -y -q nginx python3-tornado python3-requests python3-ply && rm -rf /var/lib/apt/lists/*
 
