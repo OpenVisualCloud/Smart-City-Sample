@@ -1,5 +1,5 @@
 
-FROM centos:centos7
+FROM centos:7
 
 RUN  yum install -y -q openssh-clients && rm -rf /var/cache/yum/*
 COPY *.sh /home/
