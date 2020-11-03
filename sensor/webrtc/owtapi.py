@@ -71,11 +71,11 @@ class OWTAPI(object):
         r=self._request(requests.get,uri,headers=self._headers())
         return len(r.json())
 
-    def start_streaming_ins(self,room,rtsp_url):
+    def start_streaming_ins(self,room,rtsp_url,protocol="tcp"):
         options={
             "connection": {
                 "url":str(rtsp_url),
-                "transportProtocol": "udp",
+                "transportProtocol": protocol,
                 "bufferSize":212992,
             },
             "media": {
