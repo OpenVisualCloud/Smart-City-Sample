@@ -42,6 +42,7 @@ class SensorsHandler(web.RequestHandler):
         if not r: return (404, "Sensor Not Found")
 
         location=r[0]["_source"]["location"]
+        protocol= "udp" if 'simsn' in  r[0]['_source'].keys() else "tcp"
         name="{},{} - {}".format(location["lat"],location["lon"], sensor)
         room,stream=watcher.get(name)
         if room and stream:
@@ -49,7 +50,7 @@ class SensorsHandler(web.RequestHandler):
 
         room=self._owt.create_room(name=name, p_limit=streaming_limit)
         rtsp_url=r[0]["_source"]["url"]
-        stream=self._owt.start_streaming_ins(room=room,rtsp_url=rtsp_url) if room else None
+        stream=self._owt.start_streaming_ins(room=room,rtsp_url=rtsp_url,protocol=protocol) if room else None
         if not stream: return (503, "Exception when post")
 
         watcher.set(name, room, stream)
