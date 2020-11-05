@@ -13,6 +13,7 @@ import traceback
 scenario = env["SCENARIO"]
 office = list(map(float, env["OFFICE"].split(",")))
 dbhost = env["DBHOST"]
+camera_gateway = env["CAMERA_GATEWAY_ENABLE"]
 every_nth_frame = int(env["EVERY_NTH_FRAME"])
 
 stop=Event()
@@ -42,9 +43,11 @@ dbs=DBQuery(host=dbhost, index="sensors", office=office)
 
 if scenario=="traffic":
     version = 1
+    if camera_gateway=="enable": version = 3
     myAlgorithm="object-detection"
 if scenario=="stadium":
     version = 2
+    if camera_gateway=="enable": version = 4 
     myAlgorithm="svcq-counting"
 
 # register algorithm (while waiting for db to startup)
@@ -63,7 +66,7 @@ algorithm=dba.ingest({
 while not stop.is_set():
     try:
         print("Searching...", flush=True)
-        for sensor in dbs.search("type:'camera' and status:'idle' and algorithm='"+myAlgorithm+"' and office:["+str(office[0])+","+str(office[1])+"]"):
+        for sensor in dbs.search("type:'camera' and status:'idle' and algorithm='"+myAlgorithm+"' and office:["+str(office[0])+","+str(office[1])+"] and url:*"):
             try:
                 # compete (with other va instances) for a sensor
                 r=dbs.update(sensor["_id"],{"status":"streaming"},seq_no=sensor["_seq_no"],primary_term=sensor["_primary_term"])

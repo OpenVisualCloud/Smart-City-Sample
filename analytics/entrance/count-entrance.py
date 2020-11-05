@@ -12,7 +12,11 @@ import traceback
 
 office = list(map(float, env["OFFICE"].split(",")))
 dbhost = env["DBHOST"]
+camera_gateway = env["CAMERA_GATEWAY_ENABLE"]
 every_nth_frame = int(env["EVERY_NTH_FRAME"])
+
+version = 2
+if camera_gateway=="enable": version = 4
 
 stop=Event()
 
@@ -23,7 +27,7 @@ def connect(sensor, location, uri, algorithm, algorithmName):
         rec2db=Rec2DB(sensor)
         rec2db.start()
 
-        runva=RunVA("entrance_counting", stop=stop)
+        runva=RunVA("entrance_counting", version, stop=stop)
         runva.loop(sensor, location, uri, algorithm, algorithmName)
 
         rec2db.stop()
@@ -55,7 +59,7 @@ algorithm=dba.ingest({
 while not stop.is_set():
     try:
         print("Searching...", flush=True)
-        for sensor in dbs.search("type:'camera' and status:'idle' and algorithm='entrance-counting' and office:["+str(office[0])+","+str(office[1])+"]"):
+        for sensor in dbs.search("type:'camera' and status:'idle' and algorithm='entrance-counting' and office:["+str(office[0])+","+str(office[1])+"] and url:*"):
             try:
                 # compete (with other va instances) for a sensor
                 r=dbs.update(sensor["_id"],{"status":"streaming"},seq_no=sensor["_seq_no"],primary_term=sensor["_primary_term"])
