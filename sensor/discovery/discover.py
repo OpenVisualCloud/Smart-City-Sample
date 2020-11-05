@@ -6,6 +6,7 @@ from db_ingest import DBIngest
 from probe import probe
 from onvif_discover import safe_discover
 from scanner import Scanner
+from streamer import Streamer
 from configuration import env
 import traceback
 import socket
@@ -19,6 +20,8 @@ sim_prefix=env.get("SIM_PREFIX","")
 service_interval = float(env.get("SERVICE_INTERVAL","30"))
 office = list(map(float,env["OFFICE"].split(","))) if "OFFICE" in env else None
 dbhost= env.get("DBHOST",None)
+camera_gateway = env["CAMERA_GATEWAY_ENABLE"]
+rtmp_host= env.get("RTMP_HOST",None)
 sim_cameras={}
 
 def quit_service(signum, sigframe):
@@ -34,7 +37,7 @@ if dbhost and office:
     dbs=DBQuery(index="sensors",office=office,host=dbhost)
     dbp=DBQuery(index="provisions",office=office,host=dbhost)
     dbp.wait()
-
+  
 def get_passcodes(ip, port):
     if office and dbhost:
         def _bucketize(query):
@@ -67,14 +70,14 @@ def probe_camera_info(ip, port):
         rtspuri = "rtsp://"+ip+":"+str(port)+"/live.sdp"
         if rtspuri not in sim_cameras: sim_cameras[rtspuri]=len(sim_cameras.keys())
         camid=("simsn",sim_prefix+str(sim_cameras[rtspuri]))
-        return (rtspuri,[camid],{"manufacturer":"Simulated","serial":camid[1]})
+        return (rtspuri,[camid],{"manufacturer":"Simulated","serial":camid[1]},True)
 
     if office and dbhost:
         r=list(dbp.search("ip={} and port={} and rtspurl:*".format(ip,port),size=1))
         if r:
             rtspuri=r[0]["_source"]["rtspurl"]
             dinfo={ k:r[0]["_source"][k] for k in ["manufacturer","model","serial"] if k in r[0]["_source"] }
-            return (rtspuri,[("rtspurl",rtspuri)],dinfo)
+            return (rtspuri,[("rtspurl",rtspuri)],dinfo,False)
 
     for passcode in get_passcodes(ip,port)+passcodes:
         print("OnVIF discovery over {}:{} {}".format(ip,port,passcode), flush=True)
@@ -99,29 +102,35 @@ def probe_camera_info(ip, port):
                     for network1 in desc['networks']:
                         if "HwAddress" in network1:
                             camids.append(("networks.HwAddress",network1['HwAddress']))
-                return (rtspuri,camids,dinfo)
+                return (rtspuri,camids,dinfo,False)
 
-    return (None,[],{})
+    return (None,[],{},Flase)
 
 for simh in sim_hosts:
     if simh[1]=="0": continue
     port_scan.append("-p "+simh[1]+" "+simh[0])
 
 scanner=Scanner()
+streamer=None
+if camera_gateway=="enable": streamer=Streamer()
 while True:
 
     options=port_scan
     if dbp and not sim_hosts:
-        r=dbp.bucketize("ip_text:* or port:*",["ip_text","port"],size=1000)
-        if r:
-            options.extend([k for k in r["ip_text"] if r["ip_text"][k]])
-            options.extend(["-p "+str(k) for k in r["port"] if r["port"][k]])
+        try:
+            r=dbp.bucketize("ip_text:* or port:*",["ip_text","port"],size=1000)
+            if r:
+                options.extend([k for k in r["ip_text"] if r["ip_text"][k]])
+                options.extend(["-p "+str(k) for k in r["port"] if r["port"][k]])
+        except:
+            print(traceback.format_exc(), flush=True)
+            continue
         
     for ip,port in scanner.scan(" ".join(options)):
         # new or disconnected camera
         print("Probing "+ip+":"+str(port), flush=True)
         try:
-            rtspuri,camids,dinfo=probe_camera_info(ip,port)
+            rtspuri,camids,dinfo,simulation=probe_camera_info(ip,port)
             if rtspuri is None: continue
         except:
             print(traceback.format_exc(), flush=True)
@@ -131,10 +140,18 @@ while True:
         r=None
         if dbhost:
             r=list(dbs.search("url='{}'".format(rtspuri),size=1))
-            if r: 
-                if r[0]["_source"]["status"]!="disconnected":
-                    print("Skipping {}:{}:{}".format(ip,port,r[0]["_source"]["status"]),flush=True)
-                    continue
+            try:
+                if camera_gateway=="enable":
+                    r=list(dbs.search("rtspuri='{}'".format(rtspuri),size=1))
+                else:
+                    r=list(dbs.search("url='{}'".format(rtspuri),size=1))
+                if r:
+                    if r[0]["_source"]["status"]!="disconnected":
+                        print("Skipping {}:{}:{}".format(ip,port,r[0]["_source"]["status"]),flush=True)
+                        continue
+            except:
+                print(traceback.format_exc(), flush=True)
+                continue
             
         sinfo=probe(rtspuri)
         if sinfo["resolution"]["width"]==0 or sinfo["resolution"]["height"]==0:
@@ -142,12 +159,21 @@ while True:
             continue
 
         sinfo.update(dinfo)
-        sinfo.update({
-            'type': 'camera',
-            'subtype': 'ip_camera',
-            'url': rtspuri,
-            'status': 'idle',
-        })
+        if camera_gateway=="disable":
+            sinfo.update({
+                'sensor': 'camera',
+                'model': 'ip_camera',
+                'url': rtspuri,
+                'status': 'idle',
+            })
+        else:
+            sinfo.update({
+                'sensor': 'camera',
+                'model': 'ip_camera',
+                'rtspuri': rtspuri,
+                'status': 'idle',
+            })
+
         if not dbhost: continue
 
         try:
@@ -161,12 +187,26 @@ while True:
                     record.update(sinfo)
                     record.pop('passcode',None)
                     dbi.ingest(record,refresh="wait_for")
+                    # query the sensor id with rtspuri
+                    if camera_gateway=="enable":
+                        r=list(dbs.search("rtspuri='{}'".format(rtspuri),size=1))
+                        if r:
+                            sensor=r[0]["_id"]
+                            rtmpuri=rtmp_host+"/"+str(sensor)
+                            # rtsp -> rtmp
+                            streamer.set(sensor,rtspuri,rtmpuri,simulation)
+                            # update the url
+                            sinfo.update({"url":rtmpuri})
+                            dbs.update(sensor,sinfo)
                 else:
                     print("Template not found", flush=True)
             else: # camera re-connect
+                if camera_gateway=="enable":
+                    sinfo.update({"url":r[0]["_source"]["url"]})
                 dbs.update(r[0]["_id"],sinfo)
         except Exception as e:
             print(traceback.format_exc(), flush=True)
+            continue
 
     if not dbhost: break
     time.sleep(service_interval)
