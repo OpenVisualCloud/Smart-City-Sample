@@ -161,15 +161,16 @@ while True:
         sinfo.update(dinfo)
         if camera_gateway=="disable":
             sinfo.update({
-                'sensor': 'camera',
-                'model': 'ip_camera',
+                'type': 'camera',
+                'subtype': 'ip_camera',
+                'rtspuri': rtspuri,
                 'url': rtspuri,
                 'status': 'idle',
             })
         else:
             sinfo.update({
-                'sensor': 'camera',
-                'model': 'ip_camera',
+                'type': 'camera',
+                'subtype': 'ip_camera',
                 'rtspuri': rtspuri,
                 'status': 'idle',
             })
