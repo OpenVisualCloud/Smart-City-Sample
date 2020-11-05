@@ -6,10 +6,15 @@
 {{- $args := dict "scenarioName" $scenarioName "Values" $.Values }}
 {{- range $officeIdx := until ( int ( include "smtc.noffices" $args ) ) }}
 {{- $officeName := printf "%s-office%d" $scenarioName (add $officeIdx 1) }}
-{{- if contains $.Values.buildScope $officeName }}
+
+{{- $scope1 := printf "office%d" (add $officeIdx 1) }}
+{{- $scope2 := printf "office%d-camera" (add $officeIdx 1) }}
+{{- if or ( eq $.Values.buildScope $scope1 ) ( eq $.Values.buildScope $scope2 ) }}
 
 {{- $args := dict "scenarioName" $scenarioName "Values" $.Values }}
 {{- $ncameras := int ( include "smtc.ncameras" $args ) }}
+{{- $args := dict "Values" $.Values }}
+{{- $cameraGateway := include "smtc.cameraGateway" $args }}
 
 {{- if (int $.Values.discoverSimulatedCamera) }}
 apiVersion: apps/v1
@@ -50,8 +55,14 @@ spec:
             - name: DBHOST
               {{- $args := dict "officeName" $officeName "Values" $.Values }}
               value: {{ include "smtc.env.dbhost" $args | quote }}
+{{- if eq $cameraGateway "enable" }}
+            - name: RTMP_HOST
+              value:  "rtmp://{{ $officeName }}-streaming-service:1935/sensors"
+{{- end }}
             - name: SERVICE_INTERVAL
               value: "30"
+            - name: CAMERA_GATEWAY_ENABLE
+              value: "{{ $cameraGateway }}"
             - name: NO_PROXY
               value: "*"
             - name: no_proxy
@@ -66,6 +77,12 @@ spec:
                 path: /etc/localtime
                 type: File
       {{ include "smtc.platform.node-selector" $ }}
+{{- if eq $cameraGateway "enable" }}
+                - key: "camera-zone"
+                  operator: In
+                  values:
+                    - "yes"
+{{- end }}
 
 {{- if eq $scenarioName "stadium" }}
 ---
@@ -102,8 +119,14 @@ spec:
             - name: DBHOST
               {{- $args := dict "officeName" $officeName "Values" $.Values }}
               value: {{ include "smtc.env.dbhost" $args | quote }}
+{{- if eq $cameraGateway "enable" }}
+            - name: RTMP_HOST
+              value:  "rtmp://{{ $officeName }}-streaming-service:1935/sensors"
+{{- end }}
             - name: SERVICE_INTERVAL
               value: "30"
+            - name: CAMERA_GATEWAY_ENABLE
+              value: "{{ $cameraGateway }}"
             - name: NO_PROXY
               value: "*"
             - name: no_proxy
@@ -118,6 +141,13 @@ spec:
                 path: /etc/localtime
                 type: File
       {{ include "smtc.platform.node-selector" $ }}
+{{- if eq $cameraGateway "enable" }}
+                - key: "camera-zone"
+                  operator: In
+                  values:
+                    - "yes"
+{{- end }}
+
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -150,6 +180,14 @@ spec:
             - name: DBHOST
               {{- $args := dict "officeName" $officeName "Values" $.Values }}
               value: {{ include "smtc.env.dbhost" $args | quote }}
+{{- if eq $cameraGateway "enable" }}
+            - name: RTMP_HOST
+              value:  "rtmp://{{ $officeName }}-streaming-service:1935/sensors"
+{{- end }}
+            - name: SERVICE_INTERVAL
+              value: "30"
+            - name: CAMERA_GATEWAY_ENABLE
+              value: "{{ $cameraGateway }}"
             - name: SIM_PREFIX
               value: "cams2o{{ add $officeIdx 1 }}e"
             - name: SERVICE_INTERVAL
@@ -168,6 +206,13 @@ spec:
                 path: /etc/localtime
                 type: File
       {{ include "smtc.platform.node-selector" $ }}
+{{- if eq $cameraGateway "enable" }}
+                - key: "camera-zone"
+                  operator: In
+                  values:
+                    - "yes"
+{{- end }}
+
 {{- end }}
 {{- end }}
 
@@ -203,6 +248,14 @@ spec:
             - name: DBHOST
               {{- $args := dict "officeName" $officeName "Values" $.Values }}
               value: {{ include "smtc.env.dbhost" $args | quote }}
+{{- if eq $cameraGateway "enable" }}
+            - name: RTMP_HOST
+              value:  "rtmp://{{ $officeName }}-streaming-service:1935/sensors"
+{{- end }}
+            - name: SERVICE_INTERVAL
+              value: "30"
+            - name: CAMERA_GATEWAY_ENABLE
+              value: "{{ $cameraGateway }}"
             - name: SERVICE_INTERVAL
               value: "30"
             - name: NO_PROXY
@@ -219,6 +272,12 @@ spec:
                 path: /etc/localtime
                 type: File
       {{ include "smtc.platform.node-selector" $ }}
+{{- if eq $cameraGateway "enable" }}
+                - key: "camera-zone"
+                  operator: In
+                  values:
+                    - "yes"
+{{- end }}
 
 {{- end }}
 {{- end }}

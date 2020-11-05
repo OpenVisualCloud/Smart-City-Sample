@@ -21,6 +21,17 @@ Expand the database name.
 {{- end }}
 
 {{/*
+Extract the camera gateway.
+*/}}
+{{- define "smtc.cameraGateway" }}
+{{- if (regexMatch "-(svc|camera)$" $.Values.buildScope) }}
+{{- "enable" }}
+{{- else }}
+{{- "disable" }}
+{{- end }}
+{{- end }}
+
+{{/*
 Expand to the office db name 
 */}}
 {{- define "smtc.env.dbhost" }}

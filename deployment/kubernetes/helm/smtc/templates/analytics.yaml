@@ -3,10 +3,14 @@
 {{- $args := dict "scenarioName" $scenarioName "Values" $.Values }}
 {{- range $officeIdx := until ( int ( include "smtc.noffices" $args ) ) }}
 {{- $officeName := printf "%s-office%d" $scenarioName (add $officeIdx 1) }}
-{{- if contains $.Values.buildScope $officeName }}
+{{- $scope1 := printf "office%d" (add $officeIdx 1) }}
+{{- $scope2 := printf "office%d-svc" (add $officeIdx 1) }}
+{{- if or ( eq $.Values.buildScope $scope1 ) ( eq $.Values.buildScope $scope2 ) }}
 
 {{- $args := dict "scenarioName" $scenarioName "Values" $.Values }}
 {{- $nanalytics := include "smtc.nanalytics" $args }}
+{{- $args := dict "Values" $.Values }}
+{{- $cameraGateway := include "smtc.cameraGateway" $args }}
 
 {{- if eq $scenarioName "traffic" }}
 
@@ -27,7 +31,7 @@ spec:
         app: {{ $officeName }}-analytics-traffic
     spec:
       enableServiceLinks: false
-      {{- if $.Values.discoverIPCamera }}
+      {{- if and ($.Values.discoverIPCamera) ( eq $cameraGateway "disable" ) }}
       hostNetwork: true
       dnsPolicy: ClusterFirstWithHostNet
       {{- end }}
@@ -52,6 +56,8 @@ spec:
               value: {{ $scenarioName | quote }}
             - name: NETWORK_PREFERENCE
               value: "{\"{{ include "smtc.platform.device" $ }}\":\"{{ $.Values.networkPreference }}\"}"
+            - name: CAMERA_GATEWAY_ENABLE
+              value: "{{ $cameraGateway }}"
             - name: NO_PROXY
               value: "*"
             - name: no_proxy
@@ -102,7 +108,7 @@ spec:
         app: {{ $officeName }}-analytics-entrance
     spec:
       enableServiceLinks: false
-      {{- if $.Values.discoverIPCamera }}
+      {{- if and ($.Values.discoverIPCamera) ( eq $cameraGateway "disable" ) }}
       hostNetwork: true
       dnsPolicy: ClusterFirstWithHostNet
       {{- end }}
@@ -127,6 +133,8 @@ spec:
               value: {{ $scenarioName | quote }}
             - name: NETWORK_PREFERENCE
               value: "{\"{{ include "smtc.platform.device" $ }}\":\"{{ $.Values.networkPreference }}\"}"
+            - name: CAMERA_GATEWAY_ENABLE
+              value: "{{ $cameraGateway }}"
             - name: NO_PROXY
               value: "*"
             - name: no_proxy
@@ -175,7 +183,7 @@ spec:
         app: {{ $officeName }}-analytics-crowd
     spec:
       enableServiceLinks: false
-      {{- if $.Values.discoverIPCamera }}
+      {{- if and ($.Values.discoverIPCamera) ( eq $cameraGateway "disable" ) }}
       hostNetwork: true
       dnsPolicy: ClusterFirstWithHostNet
       {{- end }}
@@ -200,6 +208,8 @@ spec:
               value: {{ $scenarioName | quote }}
             - name: NETWORK_PREFERENCE
               value: "{\"{{ include "smtc.platform.device" $ }}\":\"{{ $.Values.networkPreference }}\"}"
+            - name: CAMERA_GATEWAY_ENABLE
+              value: "{{ $cameraGateway }}"
             - name: NO_PROXY
               value: "*"
             - name: no_proxy
@@ -248,7 +258,7 @@ spec:
         app: {{ $officeName }}-analytics-svcq
     spec:
       enableServiceLinks: false
-      {{- if $.Values.discoverIPCamera }}
+      {{- if and ($.Values.discoverIPCamera) ( eq $cameraGateway "disable" ) }}
       hostNetwork: true
       dnsPolicy: ClusterFirstWithHostNet
       {{- end }}
@@ -273,6 +283,8 @@ spec:
               value: {{ $scenarioName | quote }}
             - name: NETWORK_PREFERENCE
               value: "{\"{{ include "smtc.platform.device" $ }}\":\"{{ $.Values.networkPreference }}\"}"
+            - name: CAMERA_GATEWAY_ENABLE
+              value: "{{ $cameraGateway }}"
             - name: NO_PROXY
               value: "*"
             - name: no_proxy

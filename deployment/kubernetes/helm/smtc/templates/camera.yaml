@@ -6,10 +6,15 @@
 {{- $args := dict "scenarioName" $scenarioName "Values" $.Values }}
 {{- range $officeIdx := until ( int ( include "smtc.noffices" $args ) ) }}
 {{- $officeName := printf "%s-office%d" $scenarioName (add $officeIdx 1) }}
-{{- if contains $.Values.buildScope $officeName }}
+
+{{- $scope1 := printf "office%d" (add $officeIdx 1) }}
+{{- $scope2 := printf "office%d-camera" (add $officeIdx 1) }}
+{{- if or ( eq $.Values.buildScope $scope1 ) ( eq $.Values.buildScope $scope2 ) }}
 
 {{- $args := dict "scenarioName" $scenarioName "Values" $.Values }}
 {{- $ncameras := int ( include "smtc.ncameras" $args ) }}
+{{- $args := dict "Values" $.Values }}
+{{- $cameraGateway := include "smtc.cameraGateway" $args }}
 
 {{- if gt $ncameras 0 }}
 
@@ -84,6 +89,12 @@ spec:
             - name: PORT_STEP
               value: {{ $.Values.cameraPortStep | quote }}
       {{ include "smtc.platform.node-selector" $ }}
+{{- if eq $cameraGateway "enable" }}
+                - key: "camera-zone"
+                  operator: In
+                  values:
+                    - "yes"
+{{- end }}
 
 {{- end }}
 
@@ -154,6 +165,12 @@ spec:
             - name: PORT_STEP
               value: {{ $.Values.cameraPortStep | quote }}
       {{ include "smtc.platform.node-selector" $ }}
+{{- if eq $cameraGateway "enable" }}
+                - key: "camera-zone"
+                  operator: In
+                  values:
+                    - "yes"
+{{- end }}
 
 {{- end }}
 
@@ -223,6 +240,12 @@ spec:
             - name: PORT_STEP
               value: {{ $.Values.cameraPortStep | quote }}
       {{ include "smtc.platform.node-selector" $ }}
+{{- if eq $cameraGateway "enable" }}
+                - key: "camera-zone"
+                  operator: In
+                  values:
+                    - "yes"
+{{- end }}
 
 {{- end }}
 {{- end }}

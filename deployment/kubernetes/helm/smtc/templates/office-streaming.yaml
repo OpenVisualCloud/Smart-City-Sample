@@ -6,43 +6,55 @@
 {{- $scope1 := printf "office%d" (add $officeIdx 1) }}
 {{- $scope2 := printf "office%d-svc" (add $officeIdx 1) }}
 {{- if or ( eq $.Values.buildScope $scope1 ) ( eq $.Values.buildScope $scope2 ) }}
+{{- $officeIdx2 := add (mul $officeIdx (len $.Values.scenario)) $scenarioIdx }}
+
+{{- $args := dict "Values" $.Values }}
+{{- $gateway := include "smtc.gateway" $args }}
+
+{{- if eq $gateway "enable" }}
 
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ $officeName }}-mqtt-service
+  name: {{ $officeName }}-streaming-service
   labels:
-    app: {{ $officeName }}-mqtt
+    app: {{ $officeName }}-streaming
 spec:
   ports:
-  - port: 1883
-    protocol: TCP
+    - port: 1935
+      protocol: TCP
+      targetPort: 1935
+      name: rtmp
   selector:
-    app: {{ $officeName }}-mqtt
+    app: {{ $officeName }}-streaming
+
 ---
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ $officeName }}-mqtt
+  name: {{ $officeName }}-streaming
   labels:
-     app: {{ $officeName }}-mqtt
+     app: {{ $officeName }}-streaming
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: {{ $officeName }}-mqtt
+      app: {{ $officeName }}-streaming
   template:
     metadata:
       labels:
-        app: {{ $officeName }}-mqtt
+        app: {{ $officeName }}-streaming
     spec:
       enableServiceLinks: false
+      securityContext:
+        fsGroup: {{ $.Values.groupId }}
       containers:
-        - name: {{ $officeName }}-mqtt
-          image: eclipse-mosquitto:1.5.8
+        - name: {{ $officeName }}-streaming
+          image: {{ $.Values.registryPrefix }}smtc_streaming:latest
           imagePullPolicy: IfNotPresent
           ports:
-            - containerPort: 1883
+            - containerPort: 1935 
           env:
             - name: NO_PROXY
               value: "*"
@@ -52,17 +64,22 @@ spec:
             - mountPath: /etc/localtime
               name: timezone
               readOnly: true
-          securityContext:
-            runAsUser: 1883
+            - mountPath: /var/www/video
+              name: video-archive
       volumes:
-          - name: timezone
-            hostPath:
-                path: /etc/localtime
-                type: File
+        - name: timezone
+          hostPath:
+            path: /etc/localtime
+            type: File
+        - name: video-archive
+          emptyDir:
+            medium: Memory
+            sizeLimit: 150Mi
       {{ include "smtc.platform.node-selector" $ }}
 
 {{- end }}
 ---
 
+{{- end }}
 {{- end }}
 {{- end }}

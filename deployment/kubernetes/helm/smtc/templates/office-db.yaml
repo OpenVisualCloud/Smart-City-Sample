@@ -3,8 +3,9 @@
 {{- $args := dict "scenarioName" $scenarioName "Values" $.Values }}
 {{- range $officeIdx := until ( int ( include "smtc.noffices" $args ) ) }}
 {{- $officeName := printf "%s-office%d" $scenarioName (add $officeIdx 1) }}
-{{- if contains $.Values.buildScope $officeName }}
-
+{{- $scope1 := printf "office%d" (add $officeIdx 1) }}
+{{- $scope2 := printf "office%d-svc" (add $officeIdx 1) }}
+{{- if or ( eq $.Values.buildScope $scope1 ) ( eq $.Values.buildScope $scope2 ) }}
 {{- if gt (int $.Values.noffices) 1 }}
 
 apiVersion: v1
