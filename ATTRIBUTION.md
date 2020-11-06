@@ -51,3 +51,18 @@ Component: Video Analytics Serving
 Repository: https://github.com/intel/video-analytics-serving   
 License: BSD-3 (https://github.com/intel/video-analytics-serving/blob/master/LICENSE)   
 
+Component: Chartjs-plugin-labels   
+Repository: https://github.com/emn178/chartjs-plugin-labels   
+License: MIT (https://github.com/emn178/chartjs-plugin-labels/blob/master/LICENSE.txt)   
+
+Component: JSON.awk   
+Repository: https://github.com/step-/JSON.awk   
+License: MIT (https://github.com/step-/JSON.awk/blob/master/LICENSE.MIT)   
+
+Component: Open-webrtc-toolkit-owt-server   
+Repository: https://github.com/open-webrtc-toolkit/owt-server   
+License: Apache-2.0 (https://github.com/open-webrtc-toolkit/owt-server/blob/master/LICENSE)   
+
+Component: Socket.io.js   
+Repository: https://github.com/socketio/socket.io/   
+License: MIT (https://github.com/socketio/socket.io/blob/master/LICENSE)
