@@ -4,7 +4,8 @@
 {{- $args := dict "scenarioName" $scenarioName "Values" $.Values }}
 {{- range $officeIdx := until ( int ( include "smtc.noffices" $args ) ) }}
 {{- $officeName := printf "%s-office%d" $scenarioName (add $officeIdx 1) }}
-{{- if contains $.Values.buildScope $officeName }}
+{{- $scope1 := printf "office%d-svc" (add $officeIdx 1) }}
+{{- if contains $.Values.buildScope $scope1 }}
 {{- $udpPort := add (int $.Values.webrtc.udpPort) (mul (int $.Values.webrtc.streamingLimit) (add (mul $officeIdx (len $.Values.scenario)) $scenarioIdx)) }}
 
 apiVersion: v1

@@ -3,15 +3,14 @@
 {{- $args := dict "scenarioName" $scenarioName "Values" $.Values }}
 {{- range $officeIdx := until ( int ( include "smtc.noffices" $args ) ) }}
 {{- $officeName := printf "%s-office%d" $scenarioName (add $officeIdx 1) }}
-{{- $scope1 := printf "office%d" (add $officeIdx 1) }}
-{{- $scope2 := printf "office%d-svc" (add $officeIdx 1) }}
-{{- if or ( eq $.Values.buildScope $scope1 ) ( eq $.Values.buildScope $scope2 ) }}
+{{- $scope1 := printf "office%d-svc" (add $officeIdx 1) }}
+{{- if contains $.Values.buildScope $scope1 }}
 {{- $officeIdx2 := add (mul $officeIdx (len $.Values.scenario)) $scenarioIdx }}
 
 {{- $args := dict "Values" $.Values }}
-{{- $gateway := include "smtc.gateway" $args }}
+{{- $cameraGateway := include "smtc.cameraGateway" $args }}
 
-{{- if eq $gateway "enable" }}
+{{- if eq $cameraGateway "enable" }}
 
 apiVersion: v1
 kind: Service
