@@ -5,7 +5,9 @@ Run DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y -q --no-
 
 COPY *.conf /etc/nginx/
 
-CMD  ["/usr/local/sbin/nginx"]
+COPY --from=smtc_common /home/*.py /home/
+COPY *.py /home/
+CMD  ["/home/rtmp.py"]
 ENV  PYTHONIOENCODING=UTF-8
 
 ####
