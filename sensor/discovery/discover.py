@@ -12,6 +12,7 @@ import traceback
 import socket
 import time
 import json
+import requests
 
 port_scan=[env['PORT_SCAN']] if "PORT_SCAN" in env else []
 passcodes=env['PASSCODE'].split(" ") if 'PASSCODE' in env else []
@@ -20,8 +21,9 @@ sim_prefix=env.get("SIM_PREFIX","")
 service_interval = float(env.get("SERVICE_INTERVAL","30"))
 office = list(map(float,env["OFFICE"].split(","))) if "OFFICE" in env else None
 dbhost= env.get("DBHOST",None)
-camera_gateway = env["CAMERA_GATEWAY_ENABLE"]
+camera_gateway = env.get("CAMERA_GATEWAY_ENABLE","disable")
 rtmp_host= env.get("RTMP_HOST",None)
+web_host=env.get("WEB_HOST",None)
 sim_cameras={}
 
 def quit_service(signum, sigframe):
@@ -106,6 +108,19 @@ def probe_camera_info(ip, port):
 
     return (None,[],{},Flase)
 
+def update_sensors_db(sensor, record):
+    try:
+        # update record to offince sensor db
+        record["status"]="disconnected"
+        options={"sensor": sensor, "source": record}
+        t=(str(office[0])+"c"+str(office[1])).replace(".",'d').replace("-",'n')
+        uri=web_host+"/offices/"+t+"/api/sensorsdb"
+        r=requests.put(uri,data=json.dumps(options),verify=False)
+        if r.status_code==200 or r.status_code==201: return True
+    except Exception as e:
+        print("Exception: "+str(e), flush=True)
+    return False
+
 for simh in sim_hosts:
     if simh[1]=="0": continue
     port_scan.append("-p "+simh[1]+" "+simh[0])
@@ -139,7 +154,6 @@ while True:
         # check database to see if this camera is already registered
         r=None
         if dbhost:
-            r=list(dbs.search("url='{}'".format(rtspuri),size=1))
             try:
                 if camera_gateway=="enable":
                     r=list(dbs.search("rtspuri='{}'".format(rtspuri),size=1))
@@ -188,23 +202,27 @@ while True:
                     record.update(sinfo)
                     record.pop('passcode',None)
                     dbi.ingest(record,refresh="wait_for")
-                    # query the sensor id with rtspuri
-                    if camera_gateway=="enable":
-                        r=list(dbs.search("rtspuri='{}'".format(rtspuri),size=1))
-                        if r:
-                            sensor=r[0]["_id"]
-                            rtmpuri=rtmp_host+"/"+str(sensor)
-                            # rtsp -> rtmp
-                            streamer.set(sensor,rtspuri,rtmpuri,simulation)
-                            # update the url
-                            sinfo.update({"url":rtmpuri})
-                            dbs.update(sensor,sinfo)
                 else:
                     print("Template not found", flush=True)
             else: # camera re-connect
-                if camera_gateway=="enable":
-                    sinfo.update({"url":r[0]["_source"]["url"]})
                 dbs.update(r[0]["_id"],sinfo)
+
+            # query the sensor id with rtspuri
+            if camera_gateway=="enable":
+                r=list(dbs.search("rtspuri='{}'".format(rtspuri),size=1))
+                if r:
+                    sensor=r[0]["_id"]
+                    rtmpuri=rtmp_host+"/"+str(sensor)
+                    # rtsp -> rtmp
+                    streamer.set(sensor,rtspuri,rtmpuri,simulation)
+                    # update the url
+                    sinfo.update({"url":rtmpuri})
+                    # update record to offince sensor db
+                    record=r[0]["_source"]
+                    record.update(sinfo)
+                    if update_sensors_db(sensor,record) == False:
+                        sinfo.update({"status":"disconnected"})
+                    dbs.update(sensor,sinfo)
         except Exception as e:
             print(traceback.format_exc(), flush=True)
             continue

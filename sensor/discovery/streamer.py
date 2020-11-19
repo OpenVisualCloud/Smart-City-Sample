@@ -4,25 +4,37 @@ from concurrent.futures import ThreadPoolExecutor
 from threading import Thread
 import subprocess
 import time
+from configuration import env
+from db_query import DBQuery
+
+office = list(map(float,env["OFFICE"].split(","))) if "OFFICE" in env else None
+dbhost= env.get("DBHOST",None)
 
 class Streamer(object):
     def __init__(self):
         super(Streamer, self).__init__()
         self._sensors={}
         Thread(target=self._watcher_thread).start()
+        self._dbs=DBQuery(index="sensors",office=office,host=dbhost)
 
     def get(self, sensor):
         if sensor not in self._sensors: return (None,None)
         return (self._sensors[sensor]["rtspuri"], self._sensors[sensor]["rtmpuri"])
 
     def set(self, sensor, rtspuri, rtmpuri,simulation):
-        if sensor in self._sensors: return
+        if sensor in self._sensors and self._sensors[sensor]["status"] == "streaming": return
         p = self._spawn(rtspuri, rtmpuri,simulation)
         self._sensors[sensor]={
             "rtspuri": rtspuri,
             "rtmpuri": rtmpuri,
+            "status": "streaming",
             "process": p,
         }
+        self._update(sensor)
+
+    def _update(self, sensor, status="streaming"):
+        sinfo={"status":status}
+        self._dbs.update(sensor, sinfo)
 
     def _spawn(self, rtspuri, rtmpuri,simulation=False):
         cmd = ["ffmpeg", "-i",rtspuri,"-vcodec", "copy", "-an", "-f", "flv", rtmpuri]
@@ -34,14 +46,10 @@ class Streamer(object):
 
     def _watcher_thread(self):
         while True:
-            tospawn=[]
             for sensor1 in self._sensors:
                 if self._sensors[sensor1]["process"].poll() != None:
-                    tospawn.append(sensor1)
+                    self._sensors[sensor1]["status"]="disconnected"
+                    self._update(sensor1, status="disconnected")
 
-            for d1 in tospawn:
-                print("Spawn sensor {} as thread exit".format(d1), flush=True)
-                self._sensors[d1]["process"] = self._spawn(self._sensors[d1]["rtspuri"], self._sensors[d1]["rtmpuri"])
-                
             time.sleep(30)
 

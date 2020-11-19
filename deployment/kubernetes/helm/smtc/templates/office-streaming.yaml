@@ -55,6 +55,14 @@ spec:
           ports:
             - containerPort: 1935 
           env:
+            - name: OFFICE
+              {{- $args := dict "scenarioName" $scenarioName "Values" $.Values "officeIdx" $officeIdx }}
+              value: {{ include "smtc.env.office" $args | quote }}
+            - name: DBHOST
+              {{- $args := dict "officeName" $officeName "Values" $.Values }}
+              value: {{ include "smtc.env.dbhost" $args | quote }}
+            - name: SERVICE_INTERVAL
+              value: "30"
             - name: NO_PROXY
               value: "*"
             - name: no_proxy

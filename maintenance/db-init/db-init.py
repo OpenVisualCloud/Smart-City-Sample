@@ -11,9 +11,10 @@ import json
 import re
 
 dbhost=env["DBHOST"]
-dbchost=env["DBCHOST"]
+dbchost=env.get("DBCHOST",None)
 office=list(map(float,env["OFFICE"].split(",")))
 replicas=list(map(int,env["REPLICAS"].split(",")))
+camera_gateway = env.get("CAMERA_GATEWAY_ENABLE","disable")
 
 def quit_service():
     exit(143)
@@ -274,6 +275,9 @@ settings={
     },
 }
 
+if camera_gateway == "enable":
+    settings={"provisions"+officestr:settings["provisions"+officestr], "sensors"+officestr: settings["sensors"+officestr]}
+
 while True:
     try:
         # delete office specific indexes (to start the office afresh)
@@ -292,9 +296,10 @@ while True:
 
         officeinfo=Provision(officestr)
 
-        print("Register office {}".format(office), flush=True)
-        dbo_c=DBIngest(index="offices",office="",host=dbchost)
-        dbo_c.ingest(officeinfo, id1=officestr)
+        if camera_gateway == "disable":
+            print("Register office {}".format(office), flush=True)
+            dbo_c=DBIngest(index="offices",office="",host=dbchost)
+            dbo_c.ingest(officeinfo, id1=officestr)
 
         print("Signal starting up", flush=True)
         dbs.ingest({"type":"startup"})
