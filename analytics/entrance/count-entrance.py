@@ -12,7 +12,7 @@ import traceback
 
 office = list(map(float, env["OFFICE"].split(",")))
 dbhost = env["DBHOST"]
-camera_gateway = env["CAMERA_GATEWAY_ENABLE"]
+camera_gateway = env.get("CAMERA_GATEWAY_ENABLE","disable")
 every_nth_frame = int(env["EVERY_NTH_FRAME"])
 
 version = 2
