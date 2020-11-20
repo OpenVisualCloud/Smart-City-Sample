@@ -15,42 +15,44 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ $officeName }}-streaming-service
+  name: {{ $officeName }}-rtmp-service
   labels:
-    app: {{ $officeName }}-streaming
+    app: {{ $officeName }}-rtmp
 spec:
   ports:
     - port: 1935
       protocol: TCP
       targetPort: 1935
       name: rtmp
+  externalIPs:
+    - {{ $.Values.cloudWebExternalIP }}
   selector:
-    app: {{ $officeName }}-streaming
+    app: {{ $officeName }}-rtmp
 
 ---
 
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ $officeName }}-streaming
+  name: {{ $officeName }}-rtmp
   labels:
-     app: {{ $officeName }}-streaming
+     app: {{ $officeName }}-rtmp
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: {{ $officeName }}-streaming
+      app: {{ $officeName }}-rtmp
   template:
     metadata:
       labels:
-        app: {{ $officeName }}-streaming
+        app: {{ $officeName }}-rtmp
     spec:
       enableServiceLinks: false
       securityContext:
         fsGroup: {{ $.Values.groupId }}
       containers:
-        - name: {{ $officeName }}-streaming
-          image: {{ $.Values.registryPrefix }}smtc_streaming:latest
+        - name: {{ $officeName }}-rtmp
+          image: {{ $.Values.registryPrefix }}smtc_sensor_rtmp:latest
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 1935 
