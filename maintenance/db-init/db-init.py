@@ -14,7 +14,6 @@ dbhost=env["DBHOST"]
 dbchost=env.get("DBCHOST",None)
 office=list(map(float,env["OFFICE"].split(",")))
 replicas=list(map(int,env["REPLICAS"].split(",")))
-camera_gateway = env.get("CAMERA_GATEWAY_ENABLE","disable")
 
 def quit_service():
     exit(143)
@@ -275,9 +274,6 @@ settings={
     },
 }
 
-if camera_gateway == "enable":
-    settings={"provisions"+officestr:settings["provisions"+officestr], "sensors"+officestr: settings["sensors"+officestr]}
-
 while True:
     try:
         # delete office specific indexes (to start the office afresh)
@@ -291,12 +287,13 @@ while True:
         for index in settings:
             print("Initialize index "+index, flush=True)
             host=dbhost if index.endswith(officestr) else dbchost
-            r=requests.put(host+"/"+index,json=settings[index],params=_include_type_name)
-            print(r.json(), flush=True)
+            if host:
+                r=requests.put(host+"/"+index,json=settings[index],params=_include_type_name)
+                print(r.json(), flush=True)
 
         officeinfo=Provision(officestr)
 
-        if camera_gateway == "disable":
+        if dbchost:
             print("Register office {}".format(office), flush=True)
             dbo_c=DBIngest(index="offices",office="",host=dbchost)
             dbo_c.ingest(officeinfo, id1=officestr)

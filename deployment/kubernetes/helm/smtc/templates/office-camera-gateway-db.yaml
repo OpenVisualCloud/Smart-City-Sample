@@ -148,8 +148,6 @@ spec:
               value: {{ $scenarioName | quote }}
             - name: REPLICAS
               value: "{{ if gt (int $.Values.database.haCloud) 1 }}1{{ else }}0{{ end }},{{ if gt (int $.Values.database.haOffice) 1 }}1{{ else }}0{{ end }}"
-            - name: CAMERA_GATEWAY_ENABLE
-              value: "{{ $cameraGateway }}"
             - name: NO_PROXY
               value: "*"
             - name: no_proxy

@@ -42,7 +42,6 @@ class SensorsDBHandler(web.RequestHandler):
     @gen.coroutine
     def put(self):
         options=json.loads(self.request.body.decode('utf-8'))
-        print(options, flush=True)
         r=yield self._update(sensor=options["sensor"], source=options["source"])
         if isinstance(r,str):
             self.set_status(400, encode(r))

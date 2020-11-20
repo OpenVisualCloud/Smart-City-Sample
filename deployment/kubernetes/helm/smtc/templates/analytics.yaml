@@ -55,8 +55,6 @@ spec:
               value: {{ $scenarioName | quote }}
             - name: NETWORK_PREFERENCE
               value: "{\"{{ include "smtc.platform.device" $ }}\":\"{{ $.Values.networkPreference }}\"}"
-            - name: CAMERA_GATEWAY_ENABLE
-              value: "{{ $cameraGateway }}"
             - name: NO_PROXY
               value: "*"
             - name: no_proxy
@@ -132,8 +130,6 @@ spec:
               value: {{ $scenarioName | quote }}
             - name: NETWORK_PREFERENCE
               value: "{\"{{ include "smtc.platform.device" $ }}\":\"{{ $.Values.networkPreference }}\"}"
-            - name: CAMERA_GATEWAY_ENABLE
-              value: "{{ $cameraGateway }}"
             - name: NO_PROXY
               value: "*"
             - name: no_proxy
@@ -207,8 +203,6 @@ spec:
               value: {{ $scenarioName | quote }}
             - name: NETWORK_PREFERENCE
               value: "{\"{{ include "smtc.platform.device" $ }}\":\"{{ $.Values.networkPreference }}\"}"
-            - name: CAMERA_GATEWAY_ENABLE
-              value: "{{ $cameraGateway }}"
             - name: NO_PROXY
               value: "*"
             - name: no_proxy
@@ -282,8 +276,6 @@ spec:
               value: {{ $scenarioName | quote }}
             - name: NETWORK_PREFERENCE
               value: "{\"{{ include "smtc.platform.device" $ }}\":\"{{ $.Values.networkPreference }}\"}"
-            - name: CAMERA_GATEWAY_ENABLE
-              value: "{{ $cameraGateway }}"
             - name: NO_PROXY
               value: "*"
             - name: no_proxy

@@ -21,7 +21,6 @@ sim_prefix=env.get("SIM_PREFIX","")
 service_interval = float(env.get("SERVICE_INTERVAL","30"))
 office = list(map(float,env["OFFICE"].split(","))) if "OFFICE" in env else None
 dbhost= env.get("DBHOST",None)
-camera_gateway = env.get("CAMERA_GATEWAY_ENABLE","disable")
 rtmp_host= env.get("RTMP_HOST",None)
 web_host=env.get("WEB_HOST",None)
 sim_cameras={}
@@ -127,7 +126,7 @@ for simh in sim_hosts:
 
 scanner=Scanner()
 streamer=None
-if camera_gateway=="enable": streamer=Streamer()
+if rtmp_host: streamer=Streamer()
 while True:
 
     options=port_scan
@@ -155,7 +154,7 @@ while True:
         r=None
         if dbhost:
             try:
-                if camera_gateway=="enable":
+                if rtmp_host:
                     r=list(dbs.search("rtspuri='{}'".format(rtspuri),size=1))
                 else:
                     r=list(dbs.search("url='{}'".format(rtspuri),size=1))
@@ -173,12 +172,11 @@ while True:
             continue
 
         sinfo.update(dinfo)
-        if camera_gateway=="disable":
+        if rtmp_host:
             sinfo.update({
                 'type': 'camera',
                 'subtype': 'ip_camera',
                 'rtspuri': rtspuri,
-                'url': rtspuri,
                 'status': 'idle',
             })
         else:
@@ -186,6 +184,7 @@ while True:
                 'type': 'camera',
                 'subtype': 'ip_camera',
                 'rtspuri': rtspuri,
+                'url': rtspuri,
                 'status': 'idle',
             })
 
@@ -208,7 +207,7 @@ while True:
                 dbs.update(r[0]["_id"],sinfo)
 
             # query the sensor id with rtspuri
-            if camera_gateway=="enable":
+            if rtmp_host:
                 r=list(dbs.search("rtspuri='{}'".format(rtspuri),size=1))
                 if r:
                     sensor=r[0]["_id"]

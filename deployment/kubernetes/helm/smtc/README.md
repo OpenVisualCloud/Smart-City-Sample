@@ -127,11 +127,11 @@ on the gateway:
 cmake -DNOFFICES=2 ..
 make
 
-SCOPE=office1 make start_gateway_camera
-SCOPE=office2 make start_gateway_camera
-
-SCOPE=office1 make stop_gateway_camera
-SCOPE=office2 make stop_gateway_camera
+SCOPE=office1-camera make start_helm
+SCOPE=office2-camera make start_helm
+...
+SCOPE=office1-camera make stop_helm
+SCOPE=office2-camera make stop_helm
 ```
 
 ### Multiple Cluster Setup

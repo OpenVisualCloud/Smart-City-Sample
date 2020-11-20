@@ -12,11 +12,9 @@ import traceback
 
 office = list(map(float, env["OFFICE"].split(",")))
 dbhost = env["DBHOST"]
-camera_gateway = env.get("CAMERA_GATEWAY_ENABLE","disable")
 every_nth_frame = int(env["EVERY_NTH_FRAME"])
 
 version = 2
-if camera_gateway=="enable": version = 4
 
 stop=Event()
 
@@ -63,6 +61,8 @@ while not stop.is_set():
             try:
                 # compete (with other va instances) for a sensor
                 r=dbs.update(sensor["_id"],{"status":"streaming"},seq_no=sensor["_seq_no"],primary_term=sensor["_primary_term"])
+
+                if sensor["_source"]["url"].split(":")[0] == "rtmp": version=4
 
                 # stream from the sensor
                 print("Connected to "+sensor["_id"]+"...",flush=True)
