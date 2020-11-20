@@ -214,15 +214,15 @@ while True:
                     sensor=r[0]["_id"]
                     rtmpuri=rtmp_host+"/"+str(sensor)
                     # rtsp -> rtmp
-                    streamer.set(sensor,rtspuri,rtmpuri,simulation)
-                    # update the url
-                    sinfo.update({"url":rtmpuri})
-                    # update record to offince sensor db
-                    record=r[0]["_source"]
-                    record.update(sinfo)
-                    if update_sensors_db(sensor,record) == False:
-                        sinfo.update({"status":"disconnected"})
-                    dbs.update(sensor,sinfo)
+                    if streamer.set(sensor,rtspuri,rtmpuri,simulation) == "streaming":
+                        # update the url
+                        sinfo.update({"url": rtmpuri, "status": "streaming"})
+                        # update record to offince sensor db
+                        record=r[0]["_source"]
+                        record.update(sinfo)
+                        if update_sensors_db(sensor,record) == False:
+                            sinfo.update({"status":"disconnected"})
+                        dbs.update(sensor,sinfo)
         except Exception as e:
             print(traceback.format_exc(), flush=True)
             continue

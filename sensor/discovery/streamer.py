@@ -22,15 +22,17 @@ class Streamer(object):
         return (self._sensors[sensor]["rtspuri"], self._sensors[sensor]["rtmpuri"])
 
     def set(self, sensor, rtspuri, rtmpuri,simulation):
-        if sensor in self._sensors and self._sensors[sensor]["status"] == "streaming": return
+        if sensor in self._sensors and self._sensors[sensor]["status"] == "streaming": return self._sensors[sensor]["status"]
         p = self._spawn(rtspuri, rtmpuri,simulation)
-        self._sensors[sensor]={
-            "rtspuri": rtspuri,
-            "rtmpuri": rtmpuri,
-            "status": "streaming",
-            "process": p,
-        }
-        self._update(sensor)
+        if p.poll() == None:
+            self._sensors[sensor]={
+                "rtspuri": rtspuri,
+                "rtmpuri": rtmpuri,
+                "status": "streaming",
+                "process": p,
+            }
+            return self._sensors[sensor]["status"]
+        return "disconnected"
 
     def _update(self, sensor, status="streaming"):
         sinfo={"status":status}
