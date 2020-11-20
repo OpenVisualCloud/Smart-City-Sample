@@ -17,7 +17,6 @@ class SensorsDBHandler(web.RequestHandler):
     def __init__(self, app, request, **kwargs):
         super(SensorsDBHandler, self).__init__(app, request, **kwargs)
         self.executor= ThreadPoolExecutor(4)
-        self._dbq=DBQuery(index="sensors",office=office,host=dbhost)
         self._dbi=DBIngest(index="sensors",office=office,host=dbhost)
 
     def check_origin(self, origin):
@@ -26,14 +25,8 @@ class SensorsDBHandler(web.RequestHandler):
     @run_on_executor
     def _update(self, sensor, source):
         try:
-            r=list(self._dbq.search("_id='{}'".format(sensor),size=1))
-            print(r,flush=True)
-            if r:
-                print("Updating", sensor, flush=True)
-                r=self._dbq.update(sensor, source)
-            else:
-                print("Ingesting", sensor, flush=True)
-                r=self._dbi.ingest(source, id1=sensor, refresh="wait_for")
+            print("Ingesting", sensor, flush=True)
+            r=self._dbi.ingest(source, refresh="wait_for")
             return r
         except Exception as e:
             print(str(e),flush=True)

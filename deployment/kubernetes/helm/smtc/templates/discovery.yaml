@@ -57,7 +57,7 @@ spec:
             - name: RTMP_HOST
               value: "rtmp://{{ $officeName }}-rtmp-service:1935/sensors"
             - name: WEB_HOST
-              value: "https://{{ $.Values.cloudWebExternalIP }}"
+              value: "https://{{ $.Values.cloudWebExternalIP }}:8443"
 {{- else }}
             - name: DBHOST
               {{- $args := dict "officeName" $officeName "Values" $.Values }}
@@ -118,7 +118,7 @@ spec:
             - name: RTMP_HOST
               value: "rtmp://{{ $officeName }}-rtmp-service:1935/sensors"
             - name: WEB_HOST
-              value: "https://{{ $.Values.cloudWebExternalIP }}"
+              value: "https://{{ $.Values.cloudWebExternalIP }}:8443"
 {{- else }}
             - name: DBHOST
               {{- $args := dict "officeName" $officeName "Values" $.Values }}
@@ -176,7 +176,7 @@ spec:
             - name: RTMP_HOST
               value: "rtmp://{{ $officeName }}-rtmp-service:1935/sensors"
             - name: WEB_HOST
-              value: "https://{{ $.Values.cloudWebExternalIP }}"
+              value: "https://{{ $.Values.cloudWebExternalIP }}:8443"
 {{- else }}
             - name: DBHOST
               {{- $args := dict "officeName" $officeName "Values" $.Values }}
@@ -241,7 +241,7 @@ spec:
             - name: RTMP_HOST
               value: "rtmp://{{ $officeName }}-rtmp-service:1935/sensors"
             - name: WEB_HOST
-              value: "https://{{ $.Values.cloudWebExternalIP }}"
+              value: "https://{{ $.Values.cloudWebExternalIP }}:8443"
 {{- else }}
             - name: DBHOST
               {{- $args := dict "officeName" $officeName "Values" $.Values }}
