@@ -6,6 +6,7 @@ from search import SearchHandler
 from histogram import HistogramHandler
 from hint import HintHandler
 from stats import StatsHandler
+from sensorsdb import SensorsDBHandler
 from signal import signal, SIGTERM, SIGQUIT
 from configuration import env
 from nginx import NGINX
@@ -29,6 +30,7 @@ app = web.Application([
     (r'/api/histogram',HistogramHandler),
     (r'/api/hint',HintHandler),
     (r'/api/stats',StatsHandler),
+    (r'/api/sensorsdb',SensorsDBHandler),
 ])
 
 if __name__ == "__main__":

@@ -63,10 +63,14 @@ algorithm=dba.ingest({
 while not stop.is_set():
     try:
         print("Searching...", flush=True)
-        for sensor in dbs.search("type:'camera' and status:'idle' and algorithm='"+myAlgorithm+"' and office:["+str(office[0])+","+str(office[1])+"]"):
+        for sensor in dbs.search("type:'camera' and status:'idle' and algorithm='"+myAlgorithm+"' and office:["+str(office[0])+","+str(office[1])+"] and url:*"):
             try:
                 # compete (with other va instances) for a sensor
                 r=dbs.update(sensor["_id"],{"status":"streaming"},seq_no=sensor["_seq_no"],primary_term=sensor["_primary_term"])
+
+                if sensor["_source"]["url"].split(":")[0] == "rtmp":
+                    if scenario=="traffic": version = 3
+                    if scenario=="stadium": version = 4
 
                 # stream from the sensor
                 print("Connected to "+sensor["_id"]+"...",flush=True)

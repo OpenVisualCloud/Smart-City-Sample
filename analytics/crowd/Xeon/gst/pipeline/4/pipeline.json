@@ -1,0 +1,62 @@
+{
+	"name": "crowd_counting",
+	"version": 4,
+	"type": "GStreamer",
+	"template": "urisourcebin buffer_size=4096 name=\"source\" ! flvdemux name=demux demux.video ! h264parse ! video/x-h264 ! tee name=t ! queue2 ! avdec_h264 ! videoconvert name=\"videoconvert\" ! video/x-raw,format=BGRx ! queue leaky=upstream ! gvainference ie-config=CPU_BIND_THREAD=NO model=\"{models[CSRNet_IR_model_2020R2][1][network]}\" model-proc=\"{models[CSRNet_IR_model_2020R2][1][proc]}\" name=\"detection\" ! queue ! gvametaconvert add-empty-results=true name=\"metaconvert\" ! gvapython name=\"crowdcounting\" module=\"custom_transforms/crowd_counting\" class=\"CrowdCounting\" ! queue ! gvametapublish name=\"destination\" ! appsink name=appsink t. ! queue2 max-size-time=60500000000 ! splitmuxsink max-size-time=60500000000 name=\"splitmuxsink\"",
+	"description": "Crowd Counting Pipeline",
+	"parameters": {
+		"type": "object",
+		"properties": {
+			"crowd_count": {
+				"element": {
+					"name": "crowdcounting",
+					"property": "kwarg",
+					"format": "json"
+				},
+				"type": "object",
+				"properties": {
+					"width": {
+						"type": "integer"
+					},
+					"height": {
+						"type": "integer"
+					},
+					"zonemap": {
+						"type": "array",
+						"items": {
+							"type": "object"
+						}
+					}
+				}
+			},
+			"inference-interval": {
+				"element": "detection",
+				"type": "integer",
+				"minimum": 0,
+				"maximum": 4294967295
+			},
+			"cpu-throughput-streams": {
+				"element": "detection",
+				"type": "string"
+			},
+			"n-threads": {
+				"element": "videoconvert",
+				"type": "integer"
+			},
+			"nireq": {
+				"element": "detection",
+				"type": "integer",
+				"minimum": 1,
+				"maximum": 64
+			},
+			"recording_prefix": {
+				"type": "string",
+				"element": {
+					"name": "splitmuxsink",
+					"property": "location"
+				},
+				"default": "recording"
+			}
+		}
+	}
+}

@@ -6,10 +6,14 @@
 {{- $args := dict "scenarioName" $scenarioName "Values" $.Values }}
 {{- range $officeIdx := until ( int ( include "smtc.noffices" $args ) ) }}
 {{- $officeName := printf "%s-office%d" $scenarioName (add $officeIdx 1) }}
-{{- if contains $.Values.buildScope $officeName }}
+
+{{- $scope1 := printf "office%d-camera" (add $officeIdx 1) }}
+{{- if contains $.Values.buildScope $scope1 }}
 
 {{- $args := dict "scenarioName" $scenarioName "Values" $.Values }}
 {{- $ncameras := int ( include "smtc.ncameras" $args ) }}
+{{- $args := dict "Values" $.Values }}
+{{- $cameraGateway := include "smtc.cameraGateway" $args }}
 
 {{- if (int $.Values.discoverSimulatedCamera) }}
 apiVersion: apps/v1
@@ -47,9 +51,18 @@ spec:
             - name: OFFICE
               {{- $args := dict "scenarioName" $scenarioName "Values" $.Values "officeIdx" $officeIdx }}
               value: {{ include "smtc.env.office" $args | quote }}
+{{- if eq $cameraGateway "enable" }}
+            - name: DBHOST
+              value: "http://{{ $officeName }}-camera-gateway-db-service:9200" 
+            - name: RTMP_HOST
+              value: "rtmp://{{ $officeName }}-rtmp-service:1935/sensors"
+            - name: WEB_HOST
+              value: "https://{{ $.Values.cloudWebExternalIP }}:8443"
+{{- else }}
             - name: DBHOST
               {{- $args := dict "officeName" $officeName "Values" $.Values }}
               value: {{ include "smtc.env.dbhost" $args | quote }}
+{{- end }}
             - name: SERVICE_INTERVAL
               value: "30"
             - name: NO_PROXY
@@ -99,9 +112,18 @@ spec:
             - name: OFFICE
               {{- $args := dict "scenarioName" $scenarioName "Values" $.Values "officeIdx" $officeIdx }}
               value: {{ include "smtc.env.office" $args | quote }}
+{{- if eq $cameraGateway "enable" }}
+            - name: DBHOST
+              value: "http://{{ $officeName }}-camera-gateway-db-service:9200"
+            - name: RTMP_HOST
+              value: "rtmp://{{ $officeName }}-rtmp-service:1935/sensors"
+            - name: WEB_HOST
+              value: "https://{{ $.Values.cloudWebExternalIP }}:8443"
+{{- else }}
             - name: DBHOST
               {{- $args := dict "officeName" $officeName "Values" $.Values }}
               value: {{ include "smtc.env.dbhost" $args | quote }}
+{{- end }}
             - name: SERVICE_INTERVAL
               value: "30"
             - name: NO_PROXY
@@ -118,6 +140,7 @@ spec:
                 path: /etc/localtime
                 type: File
       {{ include "smtc.platform.node-selector" $ }}
+
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -147,9 +170,20 @@ spec:
             - name: OFFICE
               {{- $args := dict "scenarioName" $scenarioName "Values" $.Values "officeIdx" $officeIdx }}
               value: {{ include "smtc.env.office" $args | quote }}
+{{- if eq $cameraGateway "enable" }}
+            - name: DBHOST
+              value: "http://{{ $officeName }}-camera-gateway-db-service:9200"
+            - name: RTMP_HOST
+              value: "rtmp://{{ $officeName }}-rtmp-service:1935/sensors"
+            - name: WEB_HOST
+              value: "https://{{ $.Values.cloudWebExternalIP }}:8443"
+{{- else }}
             - name: DBHOST
               {{- $args := dict "officeName" $officeName "Values" $.Values }}
               value: {{ include "smtc.env.dbhost" $args | quote }}
+{{- end }}
+            - name: SERVICE_INTERVAL
+              value: "30"
             - name: SIM_PREFIX
               value: "cams2o{{ add $officeIdx 1 }}e"
             - name: SERVICE_INTERVAL
@@ -168,6 +202,7 @@ spec:
                 path: /etc/localtime
                 type: File
       {{ include "smtc.platform.node-selector" $ }}
+
 {{- end }}
 {{- end }}
 
@@ -200,9 +235,20 @@ spec:
             - name: OFFICE
               {{- $args := dict "scenarioName" $scenarioName "Values" $.Values "officeIdx" $officeIdx }}
               value: {{ include "smtc.env.office" $args | quote }}
+{{- if eq $cameraGateway "enable" }}
+            - name: DBHOST
+              value: "http://{{ $officeName }}-camera-gateway-db-service:9200"
+            - name: RTMP_HOST
+              value: "rtmp://{{ $officeName }}-rtmp-service:1935/sensors"
+            - name: WEB_HOST
+              value: "https://{{ $.Values.cloudWebExternalIP }}:8443"
+{{- else }}
             - name: DBHOST
               {{- $args := dict "officeName" $officeName "Values" $.Values }}
               value: {{ include "smtc.env.dbhost" $args | quote }}
+{{- end }}
+            - name: SERVICE_INTERVAL
+              value: "30"
             - name: SERVICE_INTERVAL
               value: "30"
             - name: NO_PROXY
