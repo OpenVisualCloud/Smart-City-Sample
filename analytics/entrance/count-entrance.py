@@ -14,6 +14,8 @@ office = list(map(float, env["OFFICE"].split(",")))
 dbhost = env["DBHOST"]
 every_nth_frame = int(env["EVERY_NTH_FRAME"])
 
+version = 2
+
 stop=Event()
 
 def connect(sensor, location, uri, algorithm, algorithmName):
@@ -23,7 +25,7 @@ def connect(sensor, location, uri, algorithm, algorithmName):
         rec2db=Rec2DB(sensor)
         rec2db.start()
 
-        runva=RunVA("entrance_counting", stop=stop)
+        runva=RunVA("entrance_counting", version, stop=stop)
         runva.loop(sensor, location, uri, algorithm, algorithmName)
 
         rec2db.stop()
@@ -55,10 +57,12 @@ algorithm=dba.ingest({
 while not stop.is_set():
     try:
         print("Searching...", flush=True)
-        for sensor in dbs.search("type:'camera' and status:'idle' and algorithm='entrance-counting' and office:["+str(office[0])+","+str(office[1])+"]"):
+        for sensor in dbs.search("type:'camera' and status:'idle' and algorithm='entrance-counting' and office:["+str(office[0])+","+str(office[1])+"] and url:*"):
             try:
                 # compete (with other va instances) for a sensor
                 r=dbs.update(sensor["_id"],{"status":"streaming"},seq_no=sensor["_seq_no"],primary_term=sensor["_primary_term"])
+
+                if sensor["_source"]["url"].split(":")[0] == "rtmp": version=4
 
                 # stream from the sensor
                 print("Connected to "+sensor["_id"]+"...",flush=True)

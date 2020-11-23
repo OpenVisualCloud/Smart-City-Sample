@@ -100,6 +100,40 @@ SCOPE=office2 make stop_helm
 SCOPE=cloud make stop_helm
 ```
 
+
+### Multiple Office Start/Stop with cameras deployed in the GATEWAY, GATEWAY is out of office cluster:
+
+The sample supposes dynamic office starting/stopping. You can selectively start and stop any office, as follows:
+
+on the edge cloud/office cluster:
+```
+cmake -DNOFFICES=2 ..
+make
+
+SCOPE=cloud make start_helm
+SCOPE=office1-svc make start_helm
+SCOPE=office2-svc make start_helm
+...
+SCOPE=office1-svc make stop_helm
+...
+SCOPE=office1-svc make start_helm
+...
+SCOPE=office1-svc make stop_helm
+SCOPE=office2-svc make stop_helm
+SCOPE=cloud make stop_helm
+```
+on the gateway:
+```
+cmake -DNOFFICES=2 ..
+make
+
+SCOPE=office1-camera make start_helm
+SCOPE=office2-camera make start_helm
+...
+SCOPE=office1-camera make stop_helm
+SCOPE=office2-camera make stop_helm
+```
+
 ### Multiple Cluster Setup
 
 The sample supports running Cloud and Edge in different Kubernetes clusters. The Cloud cluster hosts the web server, the cloud database, and the cloud storage. Multiple Edge clusters can be present, each of which hosts a local database, camera discovery, camera streaming, and analytics instances. The Edge and the Cloud communicate securely through a connector host.  

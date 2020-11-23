@@ -12,7 +12,7 @@ REGISTRY="$8"
 HOSTIP=$(ip route get 8.8.8.8 | awk '/ src /{split(substr($0,index($0," src ")),f);print f[2];exit}')
 
 case "N$SCOPE" in
-    N | Ncloud | Noffice*) ;;
+    N | Ncloud | Noffice*-svc | Noffice*-camera | Noffice*) ;;
     *)
         echo "Unsupported scope: $SCOPE"
         exit 1 ;;

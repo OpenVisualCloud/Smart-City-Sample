@@ -11,7 +11,10 @@ spec:
   ports:
     - port: 443
       targetPort: 8443
-      name: https
+      name: https1
+    - port: 8443
+      targetPort: 9443
+      name: https2
   externalIPs:
     - {{ .Values.cloudWebExternalIP }}
   selector:
@@ -42,6 +45,7 @@ spec:
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8443
+            - containerPort: 9443
           env:
             - name: DBHOST
               value: {{ printf "http://%s-service:9200" (include "smtc.db.name" .) | quote }}

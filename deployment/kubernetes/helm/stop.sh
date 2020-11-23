@@ -14,7 +14,7 @@ kubectl delete configmap sensor-info 2> /dev/null
 
 if [ -n "${CONNECTOR_CLOUD}" ]; then
     case "N$SCOPE" in
-        Ncloud | Noffice*)
+        Ncloud | Noffice*-svc | Noffice*-camera | Noffice*)
             kubectl delete secret tunnel-secret 2> /dev/null
         ;;
     esac

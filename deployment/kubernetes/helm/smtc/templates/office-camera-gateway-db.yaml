@@ -3,49 +3,53 @@
 {{- $args := dict "scenarioName" $scenarioName "Values" $.Values }}
 {{- range $officeIdx := until ( int ( include "smtc.noffices" $args ) ) }}
 {{- $officeName := printf "%s-office%d" $scenarioName (add $officeIdx 1) }}
-{{- $scope1 := printf "office%d-svc" (add $officeIdx 1) }}
+{{- $scope1 := printf "office%d-camera" (add $officeIdx 1) }}
 {{- if contains $.Values.buildScope $scope1 }}
-{{- if gt (int $.Values.noffices) 1 }}
+
+{{- $args := dict "Values" $.Values }}
+{{- $cameraGateway := include "smtc.cameraGateway" $args }}
+
+{{- if eq $cameraGateway "enable" }}
 
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ $officeName }}-db-service
+  name: {{ $officeName }}-camera-gateway-db-service
   labels:
-    app: {{ $officeName }}-db
+    app: {{ $officeName }}-camera-gateway-db
 spec:
   clusterIP: None
   ports:
   - port: 9200
     protocol: TCP
   selector:
-    app: {{ $officeName }}-db
+    app: {{ $officeName }}-camera-gateway-db
 
 ---
 
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ $officeName }}-db
+  name: {{ $officeName }}-camera-gateway-db
   labels:
-     app: {{ $officeName }}-db
+     app: {{ $officeName }}-camera-gateway-db
 spec:
-  serviceName: {{ $officeName }}-db
+  serviceName: {{ $officeName }}-camera-gateway-db
   replicas: {{ int $.Values.database.haOffice }}
   selector:
     matchLabels:
-      app: {{ $officeName }}-db
+      app: {{ $officeName }}-camera-gateway-db
   template:
     metadata:
       labels:
-        app: {{ $officeName }}-db
+        app: {{ $officeName }}-camera-gateway-db
         database: "yes"
     spec:
       enableServiceLinks: false
       securityContext:
         fsGroup: 1000
       containers:
-        - name: {{ $officeName }}-db
+        - name: {{ $officeName }}-camera-gateway-db
           image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.8.1
           imagePullPolicy: IfNotPresent
           ports:
@@ -67,7 +71,7 @@ spec:
             - name: "discovery.zen.minimum_master_nodes"
               value: "{{ if eq (mod (int $.Values.database.haOffice) 2) 0 }}{{ sub (int $.Values.database.haOffice) 1 }}{{ else }}{{ int $.Values.database.haOffice }}{{ end }}"
             - name: "discovery.zen.ping.unicast.hosts"
-              value: "{{ $officeName }}-db-service"
+              value: "{{ $officeName }}-camera-gateway-db-service"
             - name: NO_PROXY
               value: "*"
             - name: no_proxy
@@ -110,29 +114,28 @@ spec:
               topologyKey: "kubernetes.io/hostname"
 
 ---
-{{- end }}
 
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ $officeName }}-db-init
+  name: {{ $officeName }}-camera-gateway-db-init
   labels:
-      app: {{ $officeName }}-db-init
+      app: {{ $officeName }}-camera-gateway-db-init
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: {{ $officeName }}-db-init
+      app: {{ $officeName }}-camera-gateway-db-init
   template:
     metadata:
       labels:
-        app: {{ $officeName }}-db-init
+        app: {{ $officeName }}-camera-gateway-db-init
     spec:
       securityContext:
         fsGroup: {{ $.Values.groupId }}
       enableServiceLinks: false
       containers:
-        - name: {{ $officeName }}-db-init
+        - name: {{ $officeName }}-camera-gateway-db-init
           image: {{ $.Values.registryPrefix }}smtc_db_init:latest
           imagePullPolicy: IfNotPresent
           env:
@@ -140,19 +143,7 @@ spec:
               {{- $args := dict "scenarioName" $scenarioName "Values" $.Values "officeIdx" $officeIdx }}
               value: {{ include "smtc.env.office" $args | quote }}
             - name: DBHOST
-              {{- $args := dict "officeName" $officeName "Values" $.Values }}
-              value: {{ include "smtc.env.dbhost" $args | quote }}
-{{- if (len $.Values.connector.cloudHost) }}
-            - name: GWHOST
-              value: "http://127.0.0.1:{{ add $.Values.connector.officeGatewayPort $officeIdx }}"
-            - name: DBCHOST
-              value: "http://localhost:8080/cloud/api/db"
-{{- else }}
-            - name: GWHOST
-              value: "http://{{ $officeName }}-gateway-service:8080"
-            - name: DBCHOST
-              value: "http://cloud-gateway-service:8080/cloud/api/db"
-{{- end }}
+              value: "http://{{ $officeName }}-camera-gateway-db-service:9200"
             - name: SCENARIO
               value: {{ $scenarioName | quote }}
             - name: REPLICAS
@@ -168,21 +159,6 @@ spec:
             - mountPath: /var/run/secrets
               name: sensor-info
               readOnly: true
-{{- if (len $.Values.connector.cloudHost) }}
-        - name: {{ $officeName }}-db-init-tunnel
-          image: {{ $.Values.registryPrefix }}smtc_ssh_tunnel:latest
-          imagePullPolicy: IfNotPresent
-          env:
-            - name: FORWARD_TUNNEL1
-              value: "{{ $.Values.connector.cloudHost }}:{{ $.Values.connector.cloudGatewayPort }} localhost:8080"
-          volumeMounts:
-            - mountPath: /etc/localtime
-              name: timezone
-              readOnly: true
-            - mountPath: /etc/hostkey
-              name: hostkey
-              readOnly: true
-{{- end }}
       volumes:
           - name: timezone
             hostPath:
@@ -191,12 +167,6 @@ spec:
           - name: sensor-info
             configMap:
                 name: sensor-info
-{{- if (len $.Values.connector.cloudHost) }}
-          - name: hostkey
-            secret:
-                secretName: tunnel-secret
-                defaultMode: 0440
-{{- end }}
       {{ include "smtc.platform.node-selector" $ }}
         podAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
@@ -205,11 +175,12 @@ spec:
               - key: app
                 operator: In
                 values:
-                - {{ if eq (int $.Values.noffices) 1 }}db{{ else }}{{ $officeName }}-db{{ end }}
+                - {{ $officeName }}-camera-gateway-db
             topologyKey: "kubernetes.io/hostname"
 
 {{- end }}
 ---
 
+{{- end }}
 {{- end }}
 {{- end }}

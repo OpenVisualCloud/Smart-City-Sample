@@ -72,7 +72,7 @@ discoverIPCamera: false
 userId: defn(`USERID')
 groupId: defn(`GROUPID')
 
-# optional: build scope: one of "", "cloud", or "officeN"
+# optional: build scope: one of "", "cloud", or "officeN", or "cameraN"
 buildScope: ""
 
 # optional: specify connector hosts if they are from different Kubernetes clusters.

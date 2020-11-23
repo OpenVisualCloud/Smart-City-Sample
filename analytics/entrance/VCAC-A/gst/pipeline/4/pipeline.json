@@ -1,0 +1,50 @@
+{
+    "name": "entrance_counting",
+    "version": 4,
+    "type": "GStreamer",
+    "template": [
+        "urisourcebin buffer_size=4096  name=\"source\" ! flvdemux name=demux demux.video ! h264parse ! video/x-h264 ! tee name=t ",
+        "! queue2 ! decodebin ! queue leaky=upstream ",
+        "! video/x-raw(memory:VASurface) ! vaapipostproc brightness=0.0001 ",
+        "! gvadetect device=HDDL model=\"{models[person_detection_2020R2][1][network]}\" model-proc=\"{models[person_detection_2020R2][1][proc]}\" name=\"detection\" pre-process-backend=vaapi ",
+        "! queue ! gvaclassify device=HDDL model=\"{models[person_reidentification_2021R1][1][network]}\" model-proc=\"{models[person_reidentification_2021R1][1][proc]}\" name=\"reidentification\" pre-process-backend=vaapi ",
+        "! queue ! gvametaconvert name=\"metaconvert\" ! queue ! gvapython name=\"peoplecounting\" module=\"custom_transforms/people_counting\" class=\"PeopleCounting\" ",
+        "! queue ! gvametapublish name=\"destination\" ",
+        "! appsink name=appsink t. ! queue2 max-size-time=60500000000 ! splitmuxsink max-size-time=60500000000 name=\"splitmuxsink\""
+    ],
+    "description": "People Counting Pipeline",
+    "parameters": {
+        "type": "object",
+        "properties": {
+            "inference-interval": {
+                "element": "detection",
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 4294967295
+            },
+            "cpu-throughput-streams": {
+                "element": "detection",
+                "type": "string"
+            },
+            "n-threads": {
+                "element": "videoconvert",
+                "type": "integer"
+            },
+            "nireq": {
+                "element": "detection",
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 64,
+                "default": 3
+            },
+            "recording_prefix": {
+                "type": "string",
+                "element": {
+                    "name": "splitmuxsink",
+                    "property": "location"
+                },
+                "default": "recording"
+            }
+        }
+    }
+}

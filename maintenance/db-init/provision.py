@@ -6,7 +6,7 @@ import json
 
 dbhost=env["DBHOST"]
 office=list(map(float,env["OFFICE"].split(",")))
-gwhost=env["GWHOST"]
+gwhost=env.get("GWHOST",None)
 scenario=env["SCENARIO"]
 
 def Provision(officestr):
