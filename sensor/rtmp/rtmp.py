@@ -29,12 +29,15 @@ while True:
     try:
         for sensor in dbs.search("type:'camera' and status:'disconnected' and office:["+str(office[0])+","+str(office[1])+"]"):
             try:
+                if sensor["_source"]["url"].split(":")[0] != "rtmp": continue
+                if "start_time" in sensor["_source"] and sensor["_source"]["start_time"] < 0: continue
                 rtmpuri=sensor["_source"]["url"]
                 sinfo=probe(rtmpuri)
-                if sinfo["resolution"]["width"]!=0 or sinfo["resolution"]["height"]!=0:
-                    print("RTMP status disconnected->idle:", sensor["_id"] , flush=True)
+                if sinfo["resolution"]["width"]!=0 and sinfo["resolution"]["height"]!=0:
+                    print("RTMP status disconnected->idle:", sensor["_id"], sensor["_source"]["subtype"], flush=True)
                     # ready for connecting
-                    r=dbs.update(sensor["_id"],{"status":"idle"},seq_no=sensor["_seq_no"],primary_term=sensor["_primary_term"])
+                    sinfo.update({"status":"idle"})
+                r=dbs.update(sensor["_id"],sinfo,seq_no=sensor["_seq_no"],primary_term=sensor["_primary_term"])
             except Exception as e:
                 print("Exception: "+str(e), flush=True)
     except Exception as e:
