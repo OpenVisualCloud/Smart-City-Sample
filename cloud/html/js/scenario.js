@@ -55,6 +55,23 @@ var scenarios={
                     iconAnchor: [16,16],
                 }),
             },
+            mobile_camera: {
+                idle: L.icon({
+                    iconUrl: "images/camera-idle.gif",
+                    iconSize: [32,32],
+                    iconAnchor: [16,16],
+                }),
+                streaming: L.icon({
+                    iconUrl: "images/camera-streaming.gif",
+                    iconSize: [32,32],
+                    iconAnchor: [16,16],
+                }),
+                disconnected: L.icon({
+                    iconUrl: "images/camera-disconnected.gif",
+                    iconSize: [32,32],
+                    iconAnchor: [16,16],
+                }),
+            },
             sensor_icon: function (sensor, online) {
                 return scenarios.traffic.icon[sensor._source.subtype][online?sensor._source.status:"disconnected"];
             },
