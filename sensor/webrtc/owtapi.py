@@ -91,6 +91,32 @@ class OWTAPI(object):
         uri=self._host+"/v1/rooms/"+str(room)+"/streaming-ins/"+str(stream)
         self._request(requests.delete,uri,headers=self._headers())
 
+    def start_streaming_outs(self,room,url,video_from):
+        media_options={
+            "audio": False,
+            "video": {
+                "from": str(video_from)
+            }
+        }
+        options={
+            "protocol": "rtmp",
+            "url": str(url),
+            "media": media_options
+        }
+        print(options,flush=True)
+        uri=self._host+"/v1/rooms/"+str(room)+"/streaming-outs"
+        r=self._request(requests.post,uri,json=options,headers=self._headers())
+        return r.json()
+
+    def stop_streaming_outs(self,room,stream):
+        uri=self._host+"/v1/rooms/"+str(room)+"/streaming-outs/"+str(stream)
+        self._request(requests.delete,uri,headers=self._headers())
+
+    def list_streaming_outs(self,room):
+        uri=self._host+"/v1/rooms/"+str(room)+"/streaming-outs"
+        r=self._request(requests.get,uri,headers=self._headers())
+        return len(r.json())
+
     def create_token(self,room,user,role):
         uri=self._host+"/v1/rooms/"+str(room)+"/tokens"
         options={"user":user,"role":role}
