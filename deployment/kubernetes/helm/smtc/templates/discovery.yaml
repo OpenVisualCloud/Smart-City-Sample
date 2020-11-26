@@ -55,7 +55,7 @@ spec:
             - name: DBHOST
               value: "http://{{ $officeName }}-camera-gateway-db-service:9200" 
             - name: RTMP_HOST
-              value: "rtmp://{{ $officeName }}-rtmp-service:1935/sensors"
+              value: "rtmp://{{ $.Values.cloudWebExternalIP }}:1935/sensors"
             - name: WEB_HOST
               value: "https://{{ $.Values.cloudWebExternalIP }}:8443"
 {{- else }}
@@ -116,7 +116,7 @@ spec:
             - name: DBHOST
               value: "http://{{ $officeName }}-camera-gateway-db-service:9200"
             - name: RTMP_HOST
-              value: "rtmp://{{ $officeName }}-rtmp-service:1935/sensors"
+              value: "rtmp://{{ $.Values.cloudWebExternalIP }}:1935/sensors"
             - name: WEB_HOST
               value: "https://{{ $.Values.cloudWebExternalIP }}:8443"
 {{- else }}
@@ -174,7 +174,7 @@ spec:
             - name: DBHOST
               value: "http://{{ $officeName }}-camera-gateway-db-service:9200"
             - name: RTMP_HOST
-              value: "rtmp://{{ $officeName }}-rtmp-service:1935/sensors"
+              value: "rtmp://{{ $.Values.cloudWebExternalIP }}:1935/sensors"
             - name: WEB_HOST
               value: "https://{{ $.Values.cloudWebExternalIP }}:8443"
 {{- else }}
@@ -239,7 +239,7 @@ spec:
             - name: DBHOST
               value: "http://{{ $officeName }}-camera-gateway-db-service:9200"
             - name: RTMP_HOST
-              value: "rtmp://{{ $officeName }}-rtmp-service:1935/sensors"
+              value: "rtmp://{{ $.Values.cloudWebExternalIP }}:1935/sensors"
             - name: WEB_HOST
               value: "https://{{ $.Values.cloudWebExternalIP }}:8443"
 {{- else }}
