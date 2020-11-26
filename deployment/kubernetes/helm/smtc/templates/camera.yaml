@@ -77,8 +77,12 @@ spec:
               {{- $args := dict "scenarioName" $scenarioName "Values" $.Values "officeIdx" $officeIdx }}
               value: {{ include "smtc.env.office" $args | quote }}
             - name: DBHOST
+{{- if eq $cameraGateway "enable" }}
+              value: "http://{{ $officeName }}-camera-gateway-db-service:9200"
+{{- else }}
               {{- $args := dict "officeName" $officeName "Values" $.Values }}
               value: {{ include "smtc.env.dbhost" $args | quote }}
+{{- end }}
             - name: NCAMERAS
               value: {{ $ncameras | quote}}
             - name: RTSP_PORT
@@ -88,12 +92,6 @@ spec:
             - name: PORT_STEP
               value: {{ $.Values.cameraPortStep | quote }}
       {{ include "smtc.platform.node-selector" $ }}
-{{- if eq $cameraGateway "enable" }}
-                - key: "camera-zone"
-                  operator: In
-                  values:
-                    - "yes"
-{{- end }}
 
 {{- end }}
 
@@ -153,8 +151,12 @@ spec:
               {{- $args := dict "scenarioName" $scenarioName "Values" $.Values "officeIdx" $officeIdx }}
               value: {{ include "smtc.env.office" $args | quote }}
             - name: DBHOST
+{{- if eq $cameraGateway "enable" }}
+              value: "http://{{ $officeName }}-camera-gateway-db-service:9200"
+{{- else }}
               {{- $args := dict "officeName" $officeName "Values" $.Values }}
               value: {{ include "smtc.env.dbhost" $args | quote }}
+{{- end }}
             - name: NCAMERAS
               value: {{ $.Values.ncameras.crowd | quote }}
             - name: RTSP_PORT
@@ -164,12 +166,6 @@ spec:
             - name: PORT_STEP
               value: {{ $.Values.cameraPortStep | quote }}
       {{ include "smtc.platform.node-selector" $ }}
-{{- if eq $cameraGateway "enable" }}
-                - key: "camera-zone"
-                  operator: In
-                  values:
-                    - "yes"
-{{- end }}
 
 {{- end }}
 
@@ -228,8 +224,12 @@ spec:
               {{- $args := dict "scenarioName" $scenarioName "Values" $.Values "officeIdx" $officeIdx }}
               value: {{ include "smtc.env.office" $args | quote }}
             - name: DBHOST
+{{- if eq $cameraGateway "enable" }}
+              value: "http://{{ $officeName }}-camera-gateway-db-service:9200"
+{{- else }}
               {{- $args := dict "officeName" $officeName "Values" $.Values }}
               value: {{ include "smtc.env.dbhost" $args | quote }}
+{{- end }}
             - name: NCAMERAS
               value: {{ $.Values.ncameras.entrance | quote }}
             - name: RTSP_PORT
@@ -239,12 +239,6 @@ spec:
             - name: PORT_STEP
               value: {{ $.Values.cameraPortStep | quote }}
       {{ include "smtc.platform.node-selector" $ }}
-{{- if eq $cameraGateway "enable" }}
-                - key: "camera-zone"
-                  operator: In
-                  values:
-                    - "yes"
-{{- end }}
 
 {{- end }}
 {{- end }}
