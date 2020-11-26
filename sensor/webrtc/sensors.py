@@ -42,8 +42,8 @@ class SensorsHandler(web.RequestHandler):
         if not r: return (404, "Sensor Not Found")
 
         location=r[0]["_source"]["location"]
-        protocol= "udp" if 'simsn' in  r[0]['_source'].keys() else "tcp"
-        name="{},{} - {}".format(location["lat"],location["lon"], sensor)
+        protocol= "udp" if 'simsn' in r[0]['_source'].keys() else "tcp"
+        name="{},{}:{}:{}:{}".format(location["lat"], location["lon"], r[0]["_source"]["type"], r[0]["_source"]["subtype"], r[0]["_id"])
         room,stream=watcher.get(name)
         if room and stream:
             return self._room_details(sensor, name, room, stream)

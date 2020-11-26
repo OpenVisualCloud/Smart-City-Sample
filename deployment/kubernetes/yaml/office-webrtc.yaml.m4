@@ -99,6 +99,8 @@ loop(PORTIDX,1,defn(`WEBRTC_STREAMING_LIMIT'),`dnl
               value: "defn(`OFFICE_LOCATION')"
             - name: DBHOST
               value: "http://ifelse(eval(defn(`NOFFICES')>1),1,defn(`OFFICE_NAME')-db,db)-service:9200"
+            - name: RTMP_HOST
+              value: "rtmp://defn(`OFFICE_NAME')-rtmp-service:1935/sensors"
             - name: `WEBRTC_STREAMING_LIMIT'
               value: "defn(`WEBRTC_STREAMING_LIMIT')"
             - name: `WEBRTC_UDP_PORT'
