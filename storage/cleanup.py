@@ -11,7 +11,7 @@ import os
 retention_time=float(env["RETENTION_TIME"])  # in seconds
 service_interval=float(env["SERVICE_INTERVAL"])  # in seconds
 indexes=env["INDEXES"].split(",")
-office=list(map(float, env["OFFICE"].split(","))) if "OFFICE" in env else "*"
+office=list(map(float, env["OFFICE"].split(","))) if "OFFICE" in env else ""
 dbhost=env["DBHOST"]
 storage="/var/www/mp4"
 
