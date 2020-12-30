@@ -7,3 +7,4 @@ define(`DISCOVER_IP_CAMERA',`false')dnl
 define(`DISCOVER_SIMULATED_CAMERA',`true')dnl
 define(`WEBRTC_UDP_PORT',10000)dnl
 define(`WEBRTC_STREAMING_LIMIT',10)dnl
+define(`OT_TYPE',`iou')dnl
