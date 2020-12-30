@@ -65,6 +65,7 @@ cameraRTSPPort:   17000
 cameraRTPPort:    27000
 cameraPortStep:   10
 discoverIPCamera: false
+otType:           false 
 
 # optional: provide Linux user id & group permissioned to access cloud storage
 # userID is obtained using command: `$ id -u`

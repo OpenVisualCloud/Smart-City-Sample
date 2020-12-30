@@ -47,6 +47,12 @@ spec:
               value: {{ include "smtc.env.dbhost" $args | quote }}
             - name: MQTTHOST
               value: "{{ $officeName }}-mqtt-service"
+            - name: MQTT_TOPIC
+              {{- if (int $.Values.otType) }}
+              value: "analytics"
+              {{- else }}
+              value: "relayanalytics"
+              {{- end }}
             - name: STHOST
               value: "http://{{ $officeName }}-storage-service:8080/api/upload"
             - name: EVERY_NTH_FRAME
@@ -122,6 +128,12 @@ spec:
               value: {{ include "smtc.env.dbhost" $args | quote }}
             - name: MQTTHOST
               value: "{{ $officeName }}-mqtt-service"
+            - name: MQTT_TOPIC
+              {{- if (int $.Values.otType) }}
+              value: "analytics"
+              {{- else }}
+              value: "relayanalytics"
+              {{- end }}
             - name: STHOST
               value: "http://{{ $officeName }}-storage-service:8080/api/upload"
             - name: EVERY_NTH_FRAME
@@ -195,6 +207,8 @@ spec:
               value: {{ include "smtc.env.dbhost" $args | quote }}
             - name: MQTTHOST
               value: "{{ $officeName }}-mqtt-service"
+            - name: MQTT_TOPIC
+              value: "analytics"
             - name: STHOST
               value: "http://{{ $officeName }}-storage-service:8080/api/upload"
             - name: EVERY_NTH_FRAME
@@ -268,6 +282,12 @@ spec:
               value: {{ include "smtc.env.dbhost" $args | quote }}
             - name: MQTTHOST
               value: "{{ $officeName }}-mqtt-service"
+            - name: MQTT_TOPIC
+              {{- if (int $.Values.otType) }}
+              value: "analytics"
+              {{- else }}
+              value: "relayanalytics"
+              {{- end }}
             - name: STHOST
               value: "http://{{ $officeName }}-storage-service:8080/api/upload"
             - name: EVERY_NTH_FRAME

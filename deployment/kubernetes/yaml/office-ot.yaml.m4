@@ -7,6 +7,7 @@ loop(OFFICEIDX,1,defn(`NOFFICES'),`
 include(office.m4)
 
 ifelse(len(defn(`OFFICE_LOCATION')),0,,`
+ifelse(defn(`OT_TYPE'),`false',,`dnl
 
 apiVersion: apps/v1
 kind: Deployment
@@ -54,4 +55,5 @@ spec:
 PLATFORM_NODE_SELECTOR(`Xeon')dnl
 
 ---
+')dnl
 ')')')
