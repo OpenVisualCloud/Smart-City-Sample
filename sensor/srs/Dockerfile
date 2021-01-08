@@ -27,8 +27,6 @@ COPY --from=build /usr/local/bin/ffmpeg /usr/local/srs/objs/ffmpeg/bin/ffmpeg
 # SRS binary, config files and srs-console.
 COPY --from=build /usr/local/srs /usr/local/srs
 # Default workdir and command.
-COPY --from=smtc_common /home/*.py /home/
-COPY *.py /home/
 
 WORKDIR /usr/local/srs
 CMD ["./objs/srs", "-c", "conf/srs.conf"]
