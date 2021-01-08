@@ -84,7 +84,7 @@ def probe_camera_info(ip, port):
         print("OnVIF discovery over {}:{} {}".format(ip,port,passcode), flush=True)
         up=passcode.split(":")
         desc=safe_discover(ip, port, up[0], up[1])
-        print(json.dumps(desc,indent=2), flush=True) 
+        print(json.dumps(desc,indent=2), flush=True)
         if desc:
             if "uri" in desc:
                 rtspuri=desc["uri"][0].replace("rtsp://","rtsp://"+passcode+"@") if passcode!=":" else desc["uri"][0]
