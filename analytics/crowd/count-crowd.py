@@ -13,6 +13,7 @@ import traceback
 office = list(map(float, env["OFFICE"].split(",")))
 dbhost = env["DBHOST"]
 every_nth_frame = int(env["EVERY_NTH_FRAME"])
+mqtt_topic=env.get("MQTT_TOPIC","analytics")
 
 version = 2
 
@@ -30,7 +31,7 @@ def connect(sensor, location, uri, algorithm, algorithmName, resolution, zonemap
                 "height": resolution["height"],
                 "zonemap": zonemap,
             },
-        })
+        }, topic=mqtt_topic)
 
         rec2db.stop()
         raise Exception("VA exited. This should not happen.")
