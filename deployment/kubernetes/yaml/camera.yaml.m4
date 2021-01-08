@@ -7,6 +7,8 @@ loop(OFFICEIDX,1,defn(`NOFFICES'),`
 include(office.m4)
 ifelse(len(defn(`OFFICE_LOCATION')),0,,`
 
+ifelse(defn(`DISCOVER_RTMP'),`false',`dnl
+
 ifelse(eval(defn(`NCAMERAS')>0),1,`dnl
 apiVersion: v1
 kind: Service
@@ -211,6 +213,7 @@ loop(`CAMERAIDX',1,defn(`NCAMERAS3'),`dnl
             - name: PORT_STEP
               value: "defn(`CAMERA_PORT_STEP')"
 PLATFORM_NODE_SELECTOR(`Xeon')dnl
+')dnl
 ')dnl
 ')dnl
 
