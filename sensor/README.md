@@ -13,6 +13,30 @@ If unsure, it is recommended that you transcode your dataset with FFmpeg:
 ffmpeg -i <source>.mp4 -c:v libx264 -profile:v baseline -x264-params keyint=30:bframes=0 -c:a aac -ss 0 <target>.mp4
 ```
 
+### IP Cameras work with GB28181
+
+
+The sample will push IP camera to the SRS server via GB28181 protocol. The SRS(Simple RTMP Server) will take all the inputs and forward.
+
+- Enable the SRS cluster server
+
+In the office.m4:
+
+```
+    define(`DISCOVER_IP_CAMERA',`false')dnl
+    define(`DISCOVER_RTMP',`true')dnl
+    define(`DISCOVER_SIMULATED_CAMERA',`false')dnl
+```
+
+- Uniquely Identifying an IP Camrea in the SRS and configure in the sensor_info.json
+
+```
+    "rtmpid": "34020000001320000003@34020000001320000004",
+    "rtmpuri": "rtmp://xxx.xxx.xxx.xxx:1935/live/34020000001320000003@34020000001320000004"
+```
+
+where rtmpid specify the IP camera sip user id and channel id, which are from IP camera configuration of GB28181. rtmpuri is the final uri link.
+
 ### Extending to IP Cameras
 
 The sample implements the ONVIF protocol to discover IP cameras on the specified IP range. Do the following to add IP cameras to the sample:   
