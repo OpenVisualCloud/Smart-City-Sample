@@ -42,6 +42,8 @@ ifelse(defn(`DISCOVER_IP_CAMERA'),`true',`dnl
               value: "defn(`OFFICE_NAME')-mqtt-service"
             - name: STHOST
               value: "http://defn(`OFFICE_NAME')-storage-service:8080/api/upload"
+            - name: MQTT_TOPIC
+              value: "ifelse(defn(`OT_TYPE'),`false',analytics,relayanalytics)"
             - name: EVERY_NTH_FRAME
               value: "6"
             - name: `SCENARIO'
@@ -117,6 +119,8 @@ ifelse(defn(`DISCOVER_IP_CAMERA'),`true',`dnl
               value: "defn(`OFFICE_NAME')-mqtt-service"
             - name: STHOST
               value: "http://defn(`OFFICE_NAME')-storage-service:8080/api/upload"
+            - name: MQTT_TOPIC
+              value: "ifelse(defn(`OT_TYPE'),`false',analytics,relayanalytics)"
             - name: EVERY_NTH_FRAME
               value: "6"
             - name: `SCENARIO'
@@ -190,6 +194,8 @@ ifelse(defn(`DISCOVER_IP_CAMERA'),`true',`dnl
               value: "defn(`OFFICE_NAME')-mqtt-service"
             - name: STHOST
               value: "http://defn(`OFFICE_NAME')-storage-service:8080/api/upload"
+            - name: MQTT_TOPIC
+              value: "analytics"
             - name: EVERY_NTH_FRAME
               value: "6"
             - name: `SCENARIO'
@@ -263,6 +269,8 @@ ifelse(defn(`DISCOVER_IP_CAMERA'),`true',`dnl
               value: "defn(`OFFICE_NAME')-mqtt-service"
             - name: STHOST
               value: "http://defn(`OFFICE_NAME')-storage-service:8080/api/upload"
+            - name: MQTT_TOPIC
+              value: "ifelse(defn(`OT_TYPE'),`false',analytics,relayanalytics)"
             - name: EVERY_NTH_FRAME
               value: "6"
             - name: `SCENARIO'

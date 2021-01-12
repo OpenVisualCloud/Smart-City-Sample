@@ -42,7 +42,8 @@ function draw_analytics(video, doc) {
                                     var ymax=v1.detection.bounding_box.y_max*sh;
                                     if (xmin!=xmax && ymin!=ymax) {
                                         var id=("id" in v1)?":#"+v1.id+":":":";
-                                        svghtml=svghtml+'<rect x="'+(sxoff+xmin)+'" y="'+(syoff+ymin)+'" width="'+(xmax-xmin)+'" height="'+(ymax-ymin)+'" stroke="'+colors_label[v1.detection.label]+'" stroke-width="1" fill="none"></rect><text x="'+(sxoff+xmin)+'" y="'+(syoff+ymin)+'" fill="'+(("id" in v1)?colors_id[v1.id%colors_id.length]:"cyan")+'">'+(text.translate(v1.detection.label)+id+Math.floor(v1.detection.confidence*100)+"%")+'</text>';
+                                        var track_id=("track_id" in v1)?v1.track_id+":":":";
+                                        svghtml=svghtml+'<rect x="'+(sxoff+xmin)+'" y="'+(syoff+ymin)+'" width="'+(xmax-xmin)+'" height="'+(ymax-ymin)+'" stroke="'+colors_label[v1.detection.label]+'" stroke-width="1" fill="none"></rect><text x="'+(sxoff+xmin)+'" y="'+(syoff+ymin)+'" fill="'+(("id" in v1)?colors_id[v1.id%colors_id.length]:"cyan")+'">'+track_id+(text.translate(v1.detection.label)+id+Math.floor(v1.detection.confidence*100)+"%")+'</text>';
                                     }
                                 }
                             }
