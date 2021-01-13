@@ -5,14 +5,14 @@ ARG url=https://gitee.com/winlinvip/srs.oschina.git
 ############################################################
 # build
 ############################################################
-ARG repo=registry.cn-hangzhou.aliyuncs.com/ossrs/srs:dev
+ARG repo=ossrs/srs:dev
 FROM ${repo} AS build
 ARG tag
 ARG url
 # Install required tools.
 RUN yum install -y gcc make gcc-c++ patch unzip perl git
 RUN cd /tmp && git clone --depth=1 --branch ${tag} ${url} srs
-RUN cd /tmp/srs/trunk && ./configure --with-gb28181 --with-research && make && make install
+RUN cd /tmp/srs/trunk && ./configure --with-gb28181 && make && make install
 ARG docker_url=https://github.com/ossrs/srs-docker.git
 RUN cd /tmp && git clone --depth=1 --branch ${tag} ${docker_url} srs-docker 
 RUN cp /tmp/srs-docker/index.html /usr/local/srs/objs/nginx/html/index.html
