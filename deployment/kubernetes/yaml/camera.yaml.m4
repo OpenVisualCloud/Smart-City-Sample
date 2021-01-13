@@ -7,7 +7,7 @@ loop(OFFICEIDX,1,defn(`NOFFICES'),`
 include(office.m4)
 ifelse(len(defn(`OFFICE_LOCATION')),0,,`
 
-ifelse(defn(`DISCOVER_RTMP'),`false',`dnl
+ifelse(defn(`DISCOVER_SIMULATED_CAMERA'),`true',`dnl
 
 ifelse(eval(defn(`NCAMERAS')>0),1,`dnl
 apiVersion: v1

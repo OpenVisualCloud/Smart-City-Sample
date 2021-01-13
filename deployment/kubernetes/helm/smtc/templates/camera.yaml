@@ -17,6 +17,8 @@
 
 {{- if gt $ncameras 0 }}
 
+{{- if (int $.Values.discoverSimulatedCamera) }}
+
 apiVersion: v1
 kind: Service
 metadata:
@@ -246,5 +248,6 @@ spec:
 
 ---
 
+{{- end }}
 {{- end }}
 {{- end }}
