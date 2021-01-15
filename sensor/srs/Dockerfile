@@ -21,9 +21,9 @@ RUN cp -r /tmp/srs-docker/srs-console/trunk/research/console /usr/local/srs/objs
 ############################################################
 # dist
 ############################################################
-FROM centos:7 AS dist
-# FFMPEG 4.1
-COPY --from=build /usr/local/bin/ffmpeg /usr/local/srs/objs/ffmpeg/bin/ffmpeg
+FROM openvisualcloud/xeon-centos7-media-ffmpeg:20.10
+
+RUN mkdir -p /usr/local/srs/objs/ffmpeg/bin/ && cp /usr/local/bin/ffmpeg /usr/local/srs/objs/ffmpeg/bin/ffmpeg
 # SRS binary, config files and srs-console.
 COPY --from=build /usr/local/srs /usr/local/srs
 # Default workdir and command.
