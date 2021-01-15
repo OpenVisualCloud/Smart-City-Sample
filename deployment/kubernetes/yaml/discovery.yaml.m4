@@ -240,6 +240,8 @@ spec:
             - name: DBHOST
               value: "http://ifelse(defn(`NOFFICES'),1,db,defn(`OFFICE_NAME')-db)-service:9200"
             - name: RTMP_HOST
+              value: "rtmp://defn(`OFFICE_NAME')-srs-origin-service:1935/live"
+            - name: RTMP_HTTP_API
               value: "http://defn(`OFFICE_NAME')-srs-origin-defn(`SRSIDX')-api-service:1985"
             - name: SERVICE_INTERVAL
               value: "30"
