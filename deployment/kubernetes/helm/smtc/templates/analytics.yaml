@@ -49,9 +49,9 @@ spec:
               value: "{{ $officeName }}-mqtt-service"
             - name: MQTT_TOPIC
               {{- if (int $.Values.otType) }}
-              value: "analytics"
-              {{- else }}
               value: "relayanalytics"
+              {{- else }}
+              value: "analytics"
               {{- end }}
             - name: STHOST
               value: "http://{{ $officeName }}-storage-service:8080/api/upload"
@@ -130,9 +130,9 @@ spec:
               value: "{{ $officeName }}-mqtt-service"
             - name: MQTT_TOPIC
               {{- if (int $.Values.otType) }}
-              value: "analytics"
-              {{- else }}
               value: "relayanalytics"
+              {{- else }}
+              value: "analytics"
               {{- end }}
             - name: STHOST
               value: "http://{{ $officeName }}-storage-service:8080/api/upload"
@@ -284,9 +284,9 @@ spec:
               value: "{{ $officeName }}-mqtt-service"
             - name: MQTT_TOPIC
               {{- if (int $.Values.otType) }}
-              value: "analytics"
-              {{- else }}
               value: "relayanalytics"
+              {{- else }}
+              value: "analytics"
               {{- end }}
             - name: STHOST
               value: "http://{{ $officeName }}-storage-service:8080/api/upload"

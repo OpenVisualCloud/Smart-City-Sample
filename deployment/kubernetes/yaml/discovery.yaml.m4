@@ -208,4 +208,57 @@ PLATFORM_NODE_SELECTOR(`Xeon')dnl
 ')
 
 ---
+
+ifelse(defn(`DISCOVER_RTMP'),`true',`dnl
+loop(`SRSIDX',0,eval(defn(`HA_SRS_OFFICE')-1),`dnl
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: defn(`OFFICE_NAME')-rtmp-discovery
+  labels:
+     app: defn(`OFFICE_NAME')-rtmp-discovery
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: defn(`OFFICE_NAME')-rtmp-discovery
+  template:
+    metadata:
+      labels:
+        app: defn(`OFFICE_NAME')-rtmp-discovery
+    spec:
+      enableServiceLinks: false
+      containers:
+        - name: defn(`OFFICE_NAME')-rtmp-discovery
+          image: defn(`REGISTRY_PREFIX')smtc_rtmp_discovery:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: OFFICE
+              value: "defn(`OFFICE_LOCATION')"
+            - name: DBHOST
+              value: "http://ifelse(defn(`NOFFICES'),1,db,defn(`OFFICE_NAME')-db)-service:9200"
+            - name: RTMP_HOST
+              value: "http://defn(`OFFICE_NAME')-srs-origin-defn(`SRSIDX')-api-service:1985"
+            - name: SERVICE_INTERVAL
+              value: "30"
+            - name: NO_PROXY
+              value: "*"
+            - name: no_proxy
+              value: "*"
+          volumeMounts:
+            - mountPath: /etc/localtime
+              name: timezone
+              readOnly: true
+      volumes:
+          - name: timezone
+            hostPath:
+                path: /etc/localtime
+                type: File
+PLATFORM_NODE_SELECTOR(`Xeon')dnl
+')dnl
+')
+
+---                                                         
 ')')')
