@@ -56,6 +56,15 @@ settings={
                 "location": { "type": "geo_point", },
                 "office": { "type": "geo_point", },
                 "ip": { "type": "ip_range", },
+                "rtmpid": {
+                    "type" : "text",
+                    "fields" : {
+                        "keyword" : {
+                            "type" : "keyword",
+                            "ignore_above" : 256,
+                        },
+                    },
+                },
             },
         },
     },

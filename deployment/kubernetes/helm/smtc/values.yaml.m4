@@ -26,6 +26,10 @@ database:
     haCloud: defn(`HA_CLOUD')
     haOffice: defn(`HA_OFFICE')
 
+# specify the high availability options for SRS
+srs:
+    haOffice: defn(`HA_SRS_OFFICE')
+
 # nCameras specifies the number of cameras served in each office. Currently
 # support 1-8 cameras. 
 ncameras: 
@@ -60,11 +64,12 @@ loopifdef(OFFICEIDX,1,`defn(`SCENARIO_NAME')`_office'defn(`OFFICEIDX')`_location
 networkPreference: "defn(`NETWORK_PREFERENCE')"
 
 # default settings for IP camera simulation & discovery.
-discoverSimulatedCamera: true
+discoverSimulatedCamera: true 
 cameraRTSPPort:   17000
 cameraRTPPort:    27000
 cameraPortStep:   10
-discoverIPCamera: false
+discoverIPCamera: false 
+discoverRTMP:     true 
 otType:           false 
 
 # optional: provide Linux user id & group permissioned to access cloud storage
