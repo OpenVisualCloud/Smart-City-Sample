@@ -10,10 +10,17 @@ The sensors and offices data are defined in the following files:
 
 #### Extending Offices
 
-You can extend to use more offices by defining the office locations, for example:   
+You can extend to use more offices by defining the office locations in [sensor-info.json](../maintenance/db-init/sensor-info.json), for example:   
 
 ```
-define(`traffic_office4_location',`45.528462,-122.989766')dnl
+...
+    "scenario": "traffic",
+    "address": "Dawson Creek",    # Office friendly name
+    "location": {
+        "lat": 45.539626,         # Office location
+        "lon": -122.929569        # Office location
+    },
+...
 ```
 
 #### Extending Sensors (Simulated / IP Cameras)
@@ -59,7 +66,8 @@ The scenario map is currently limited to portion of Hillsboro, Oregon, USA. You 
 - Run the [osm-host.sh](../script/osm-host.sh) script, which will setup a local tile server on your machine ```http://localhost:8080```. The script takes the .osm.pbf file as the input argument. You can check if the map is properly rendered by looking at ```http://localhost:8080```.         
 - Run the [osm-totiles.sh](../script/osm-totiles.sh) script, which will extract the tiles from the local tile server. The script takes a rectangular region as input: ```<lon_min> <lon_max> <lat_min> <lat_max>```. This region will be your observable scenario map. The extracted tiles should be copied under [images/traffic](../cloud/html/images/traffic). You can delete any old tiles under [images/traffic](../cloud/html/images/traffic).   
 - Kill the local tile server: ```docker ps``` and ```docker kill```. We don't need it any more.   
-- Modify [scenario.js](../cloud/html/js/scenario.js) with the new display center location.   
+- Modify [scenario.js](../cloud/html/js/scenario.js) with the new display center location.  
+- Modify the office and camera coordinates in [sensor-info.json](../maintenance/db-init/sensor-info.json).  
 
 Rebuild the sample. You are good to go.  
 
