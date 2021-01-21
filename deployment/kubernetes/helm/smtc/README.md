@@ -79,7 +79,7 @@ Launch your browser and browse to `https://<hostname>` for the sample UI.
   
 ---
 
-### Multiple Office Start/Stop with or without GB28181:
+### Multiple Office Start/Stop  
 
 The sample supposes dynamic office starting/stopping. It supports the IP cameras deployed in the gateway and pushed to office via gb28181. You can selectively start and stop any office, as follows:
 
@@ -100,12 +100,14 @@ SCOPE=office2 make stop_helm
 SCOPE=cloud make stop_helm
 ```
 
+### Multiple Office Start/Stop with Camera Gateway  
 
-### Multiple Office Start/Stop with cameras deployed in the GATEWAY, GATEWAY is out of office cluster:
+A camera gateway aggregates the camera streams and pushes the camera streams to the edge offices. This is requred if the link between the cameras and the edge offices is a 5G network. Camera gateway is for legacy IP cameras that do not support GB28181. IP cameras that support GB28181 can push streams to the edge office(s) without a camera gateway.   
 
-The sample supposes dynamic office starting/stopping. You can selectively start and stop any office, as follows:
+The sample supposes dynamic starting/stopping of each office service and camera gateway, as follows:   
 
-on the edge cloud/office cluster:
+At the edge cloud/office cluster:   
+
 ```
 cmake -DNOFFICES=2 ..
 make
@@ -122,7 +124,9 @@ SCOPE=office1-svc make stop_helm
 SCOPE=office2-svc make stop_helm
 SCOPE=cloud make stop_helm
 ```
-on the gateway:
+
+At the camera gateway:  
+
 ```
 cmake -DNOFFICES=2 ..
 make
