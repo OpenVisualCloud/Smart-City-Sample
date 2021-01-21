@@ -79,9 +79,9 @@ Launch your browser and browse to `https://<hostname>` for the sample UI.
   
 ---
 
-### Multiple Office Start/Stop:
+### Multiple Office Start/Stop with or without GB28181:
 
-The sample supposes dynamic office starting/stopping. You can selectively start and stop any office, as follows:
+The sample supposes dynamic office starting/stopping. It supports the IP cameras deployed in the gateway and pushed to office via gb28181. You can selectively start and stop any office, as follows:
 
 ```
 cmake -DNOFFICES=2 ..

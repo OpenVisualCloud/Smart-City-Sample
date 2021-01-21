@@ -16,6 +16,7 @@ service_interval = float(env.get("SERVICE_INTERVAL","30"))
 office = list(map(float,env["OFFICE"].split(","))) if "OFFICE" in env else None
 dbhost= env.get("DBHOST",None)
 rtmp_host= env.get("RTMP_HOST",None)
+rtmp_http_api= env.get("RTMP_HTTP_API",None)
 
 def quit_service(signum, sigframe):
     exit(143)
@@ -30,7 +31,11 @@ if dbhost and office:
     dbs=DBQuery(index="sensors",office=office,host=dbhost)
     dbp=DBQuery(index="provisions",office=office,host=dbhost)
     dbp.wait()
-  
+
+srsapi=None
+if rtmp_http_api:
+    srsapi=SRSAPI(rtmp_http_api)
+
 def probe_info(rtmpid):
     if office and dbhost:
         r=list(dbp.search("rtmpid='"+rtmpid+"'",size=1))
@@ -39,40 +44,18 @@ def probe_info(rtmpid):
             return dinfo
     return {}
 
-srsapi=SRSAPI(rtmp_host)
-
-while True:
-    streams={}
-    options=[]
+def register(rtmpid, rtmpuri, sinfo):
     try:
-        streams={item["name"]: item for item in srsapi.list_stream()}
-    except:
-        print(traceback.format_exc(), flush=True)
-        continue
-
-    if dbp:
-        try:
-            r=dbp.bucketize("rtmpuri:* or rtmpid:*",["rtmpuri","rtmpid"],size=1000)
-            if r:
-                options=[{"rtmpid": item.split("/")[-1],"rtmpuri": item} for item in list(r["rtmpuri"].keys())]
-        except:
-            print(traceback.format_exc(), flush=True)
-            continue
-        
-    for item in options:
-        rtmpid = item["rtmpid"]
-        rtmpuri = item["rtmpuri"]
-        sinfo=streams[rtmpid] if rtmpid in streams else None
-        if sinfo==None:
-            print("Skipping as {} is not active.".format(rtmpid), flush=True)
-            continue
+        if sinfo==None or sinfo["publish"]["active"]=="false":
+            print("{} is not active.".format(rtmpid), flush=True)
+            return None 
 
         print("Probing "+rtmpuri, sinfo["name"],sinfo["publish"],flush=True)
         try:
             dinfo=probe_info(rtmpid)
         except:
             print(traceback.format_exc(), flush=True)
-            continue
+            return None
 
         sinfo.update({
             "duration": 0.0,
@@ -91,25 +74,20 @@ while True:
                 if r:
                     if r[0]["_source"]["status"]!="disconnected":
                         print("Skipping {}:{}".format(rtmpid,r[0]["_source"]["status"]),flush=True)
-                        continue
+                        return None
             except:
                 print(traceback.format_exc(), flush=True)
-                continue
-            
-        if sinfo["publish"]["active"]=="false":
-            print("{} is not active".format(rtmpid), flush=True)
-            continue
+                return None
 
         sinfo.update(dinfo)
-        sinfo.update({
-            'type': 'camera',
-            'subtype': 'ip_camera',
-            'url': rtmpuri,
-            'status': 'idle',
-        })
+        if not r:
+            sinfo.update({
+                'type': 'camera',
+                'subtype': 'ip_camera',
+                'url': rtmpuri,
+            })
 
-        if not dbhost: continue
-
+        sinfo.update({'url': rtmpuri,'status': 'idle'})
         camids=[("rtmpid",rtmpid)]
         try:
             if not r: # new camera
@@ -128,7 +106,40 @@ while True:
 
         except Exception as e:
             print(traceback.format_exc(), flush=True)
+            return None
+    except Exception as e:
+        return None
+
+while True:
+    streams={}
+    options=[]
+    try:
+        streams={item["name"]: item for item in srsapi.list_stream()}
+    except:
+        print(traceback.format_exc(), flush=True)
+        continue
+
+    if dbp:
+        try:
+            r=dbp.bucketize("rtmpuri:* or rtmpid:*",["rtmpuri","rtmpid"],size=1000)
+            if r:
+                options=[{"rtmpid": item.split("/")[-1],"rtmpuri": item} for item in list(r["rtmpuri"].keys())]
+        except:
+            print(traceback.format_exc(), flush=True)
             continue
+
+    for item in options:
+        rtmpid = item["rtmpid"]
+        rtmpuri = item["rtmpuri"]
+        sinfo=streams[rtmpid] if rtmpid in streams else None
+        register(rtmpid, rtmpuri, sinfo)
+        if sinfo: del streams[rtmpid]
+
+    for rtmpid in list(streams.keys()):
+        sinfo=streams[rtmpid]
+        rtmpuri=rtmp_host+"/"+str(rtmpid)
+        register(rtmpid, rtmpuri, sinfo)
+        if sinfo: del streams[rtmpid]
 
     if not dbhost: break
     time.sleep(service_interval)

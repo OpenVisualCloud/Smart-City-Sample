@@ -1,0 +1,80 @@
+# openvisualcloud/xeon-ubuntu2004-media-srs:20.10
+
+FROM ubuntu:20.04 AS build
+
+
+RUN mkdir -p /opt/build && mkdir -p /opt/dist
+
+ENV PKG_CONFIG_PATH=/usr/local/lib/pkgconfig
+
+RUN apt-get update && \
+  DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+    ca-certificates wget tar g++ make libtool autoconf && \
+  rm -rf /var/lib/apt/lists/*
+
+ARG OPENSSL_REPO=https://github.com/openssl/openssl/archive/OpenSSL_1_1_1h.tar.gz
+RUN cd /opt/build && \
+    wget -O - ${OPENSSL_REPO} | tar xz && \
+    cd openssl-OpenSSL_1_1_1h && \
+    ./config no-ssl3 shared --prefix=/usr/local/ssl --openssldir=/usr/local/ssl -fPIC -Wl,-rpath=/usr/local/ssl/lib && \
+    make depend && \
+    make -s V=0 && \
+    make install DESTDIR=/opt/dist && \
+    (cd /opt/dist/usr/local && mkdir -p lib/pkgconfig && mv ssl/lib/pkgconfig/*.pc lib/pkgconfig) && \
+    make install && \
+    (cd /usr/local && mkdir -p lib/pkgconfig && mv ssl/lib/pkgconfig/*.pc lib/pkgconfig)
+
+RUN apt-get update && \
+  DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+    git ca-certificates g++ make unzip patch pkg-config librtmp-dev  && \
+  rm -rf /var/lib/apt/lists/*
+
+ARG SRS_REPO=https://github.com/ossrs/srs.git
+RUN cd /opt/build && \
+    git clone -b v4.0.62 --depth 1 ${SRS_REPO} && \
+    cd srs/trunk && \
+    sed -i "s/^SrsLinkOptions=\"/SrsLinkOptions=\"\$\(pkg-config --libs openssl\) -Wl,-rpath=\/usr\/local\/ssl\/lib /" configure && \
+    cat configure | grep SrsLinkOptions && \
+    ./configure --prefix=/usr/local/srs \
+        --hds=on \
+        --ssl=on --https=on --sys-ssl=on \
+        --stream-caster=on \
+        --librtmp=on \
+        --ffmpeg-fit=off \
+        --research=off \
+        --cherrypy=off \
+        --utest=off \
+        --nasm=off \
+        --srt=off \
+        --rtc=on \
+        --gb28181=on \
+        --extra-flags=$(pkg-config --cflags openssl) \
+        --jobs=$(nproc) && \
+    make -j$(nproc) && touch research/api-server/static-dir/crossdomain.xml && \
+    make install DESTDIR=/opt/dist
+
+RUN echo /opt/dist
+RUN ls /opt/dist
+
+RUN echo "Start cleanup" && \
+    rm -rf /opt/dist//usr/local/include && \
+    rm -rf /opt/dist//usr/local/share/doc && \
+    rm -rf /opt/dist//usr/local/share/gtk-doc && \
+    rm -rf /opt/dist//usr/local/share/man && \
+    ( find /opt/dist -name "*.a" -exec rm -f {} \; ) && \
+    echo "Cleanup done"
+
+FROM openvisualcloud/xeon-ubuntu2004-media-ffmpeg:latest
+LABEL Description="This is the base image for Media SRS ubuntu 20.04"
+LABEL Vendor="Intel Corporation"
+WORKDIR /home
+
+# Install
+RUN apt-get update && \
+  DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+     && \
+  rm -rf /var/lib/apt/lists/*
+
+COPY --from=build /opt/dist /
+RUN echo "/usr/local/lib" >> /etc/ld.so.conf.d/all-libs.conf && ldconfig
+
