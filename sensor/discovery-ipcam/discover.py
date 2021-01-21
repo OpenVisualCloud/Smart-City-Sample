@@ -215,7 +215,7 @@ while True:
                     # rtsp -> rtmp
                     if streamer.set(sensor,rtspuri,rtmpuri,simulation) == "streaming":
                         # update the url
-                        sinfo.update({"url": rtmpuri, "status": "streaming"})
+                        sinfo.update({"url": rtmpuri, "rtmpid":sensor, "rtmpuri": rtmpuri, "status": "streaming"})
                         # update record to offince sensor db
                         record=r[0]["_source"]
                         record.update(sinfo)
