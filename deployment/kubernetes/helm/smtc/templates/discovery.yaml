@@ -7,13 +7,13 @@
 {{- range $officeIdx := until ( int ( include "smtc.noffices" $args ) ) }}
 {{- $officeName := printf "%s-office%d" $scenarioName (add $officeIdx 1) }}
 
-{{- $scope1 := printf "office%d-camera" (add $officeIdx 1) }}
-{{- if contains $.Values.buildScope $scope1 }}
-
 {{- $args := dict "scenarioName" $scenarioName "Values" $.Values }}
 {{- $ncameras := int ( include "smtc.ncameras" $args ) }}
 {{- $args := dict "Values" $.Values }}
 {{- $cameraGateway := include "smtc.cameraGateway" $args }}
+
+{{- $scope1 := printf "office%d-camera" (add $officeIdx 1) }}
+{{- if contains $.Values.buildScope $scope1 }}
 
 {{- if (int $.Values.discoverSimulatedCamera) }}
 apiVersion: apps/v1
@@ -55,7 +55,7 @@ spec:
             - name: DBHOST
               value: "http://{{ $officeName }}-camera-gateway-db-service:9200" 
             - name: RTMP_HOST
-              value: "rtmp://{{ $.Values.cloudWebExternalIP }}:1935/sensors"
+              value: "rtmp://{{ $.Values.cloudWebExternalIP }}:1935/live"
             - name: WEB_HOST
               value: "https://{{ $.Values.cloudWebExternalIP }}:8443"
 {{- else }}
@@ -116,7 +116,7 @@ spec:
             - name: DBHOST
               value: "http://{{ $officeName }}-camera-gateway-db-service:9200"
             - name: RTMP_HOST
-              value: "rtmp://{{ $.Values.cloudWebExternalIP }}:1935/sensors"
+              value: "rtmp://{{ $.Values.cloudWebExternalIP }}:1935/live"
             - name: WEB_HOST
               value: "https://{{ $.Values.cloudWebExternalIP }}:8443"
 {{- else }}
@@ -174,7 +174,7 @@ spec:
             - name: DBHOST
               value: "http://{{ $officeName }}-camera-gateway-db-service:9200"
             - name: RTMP_HOST
-              value: "rtmp://{{ $.Values.cloudWebExternalIP }}:1935/sensors"
+              value: "rtmp://{{ $.Values.cloudWebExternalIP }}:1935/live"
             - name: WEB_HOST
               value: "https://{{ $.Values.cloudWebExternalIP }}:8443"
 {{- else }}
@@ -239,7 +239,7 @@ spec:
             - name: DBHOST
               value: "http://{{ $officeName }}-camera-gateway-db-service:9200"
             - name: RTMP_HOST
-              value: "rtmp://{{ $.Values.cloudWebExternalIP }}:1935/sensors"
+              value: "rtmp://{{ $.Values.cloudWebExternalIP }}:1935/live"
             - name: WEB_HOST
               value: "https://{{ $.Values.cloudWebExternalIP }}:8443"
 {{- else }}
@@ -268,6 +268,10 @@ spec:
 
 {{- end }}
 
+{{- end }}
+
+{{- $scope1 := printf "office%d-svc" (add $officeIdx 1) }}
+{{- if contains $.Values.buildScope $scope1 }}
 {{- if int ( $.Values.discoverRTMP) }}
 {{- range $srsIdx := until ( int ( $.Values.srs.haOffice ) ) }}
 ---
@@ -296,17 +300,16 @@ spec:
             - name: OFFICE
               {{- $args := dict "scenarioName" $scenarioName "Values" $.Values "officeIdx" $officeIdx }}
               value: {{ include "smtc.env.office" $args | quote }}
-{{- if eq $cameraGateway "enable" }}
-            - name: DBHOST
-              value: "http://{{ $officeName }}-camera-gateway-db-service:9200"
-            - name: WEB_HOST
-              value: "https://{{ $.Values.cloudWebExternalIP }}:8443"
-{{- else }}
             - name: DBHOST
               {{- $args := dict "officeName" $officeName "Values" $.Values }}
               value: {{ include "smtc.env.dbhost" $args | quote }}
-{{- end }}
             - name: RTMP_HOST
+{{- if eq $cameraGateway "enable" }}
+              value: "rtmp://{{ $.Values.cloudWebExternalIP }}:1935/live"
+{{- else }}
+              value: "rtmp://{{ $officeName }}-srs-origin-service:1935/live"
+{{- end }}
+            - name: RTMP_HTTP_API
               value: "http://{{ $officeName }}-srs-origin-{{ $srsIdx }}-api-service:1985"
             - name: SERVICE_INTERVAL
               value: "30"

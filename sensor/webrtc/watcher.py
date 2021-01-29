@@ -75,7 +75,6 @@ class RoomWatcher(object):
                 stream1=self._rooms[name]["stream_in"]
                 room1=self._rooms[name]["room"]
                 rtmpurl=self._rooms[name]["stream_out"]["rtmpurl"]
-                for _item in dbs.search("_id='{}'".format(sensor["id"]),size=1): print(_item, flush=True)
                 try:
                     stream1=stream1 if stream1 else owt.list_streams(room1)[0]
                 except:
@@ -87,17 +86,19 @@ class RoomWatcher(object):
                         self._rooms[name]["stream_out"]["stream"] = owt.start_streaming_outs(room=room1,url=rtmpurl,video_from=stream1)["id"]
                     except:
                         continue
-                self._rooms[name]["stream_out"]["status"] = "streaming"
+                else: continue
+
                 try:
                     dbs.update(sensor["id"],{"status":"disconnected", "url":rtmpurl})
                 except:
                     continue
+                self._rooms[name]["stream_out"]["status"] = "streaming"
 
             for name in tostopstreamout:
                 if self._rooms[name]["sensor"]["subtype"] != "mobile_camera": continue
                 stream1=self._rooms[name]["stream_out"]["stream"]
                 room1=self._rooms[name]["room"]
-                if stream1 and rtmpurl:
+                if stream1:
                     try:
                         owt.stop_streaming_outs(room1,stream1)
                     except:

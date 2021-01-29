@@ -1,32 +1,7 @@
 
-ARG tag=v4.0.56
-ARG url=https://gitee.com/winlinvip/srs.oschina.git
-
-############################################################
-# build
-############################################################
-ARG repo=ossrs/srs:dev
-FROM ${repo} AS build
-ARG tag
-ARG url
-# Install required tools.
-RUN yum install -y gcc make gcc-c++ patch unzip perl git
-RUN cd /tmp && git clone --depth=1 --branch ${tag} ${url} srs
-RUN cd /tmp/srs/trunk && ./configure --with-gb28181 && make && make install
-ARG docker_url=https://github.com/ossrs/srs-docker.git
-RUN cd /tmp && git clone --depth=1 --branch ${tag} ${docker_url} srs-docker 
-RUN cp /tmp/srs-docker/index.html /usr/local/srs/objs/nginx/html/index.html
-RUN cp -r /tmp/srs-docker/srs-console/trunk/research/console /usr/local/srs/objs/nginx/html/console
-
-############################################################
-# dist
-############################################################
-FROM openvisualcloud/xeon-centos7-media-ffmpeg:20.10
+FROM openvisualcloud/xeon-ubuntu1804-media-srs:20.10
 
 RUN mkdir -p /usr/local/srs/objs/ffmpeg/bin/ && cp /usr/local/bin/ffmpeg /usr/local/srs/objs/ffmpeg/bin/ffmpeg
-# SRS binary, config files and srs-console.
-COPY --from=build /usr/local/srs /usr/local/srs
-# Default workdir and command.
 
 WORKDIR /usr/local/srs
 CMD ["./objs/srs", "-c", "conf/srs.conf"]
