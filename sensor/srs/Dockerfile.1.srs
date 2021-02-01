@@ -64,7 +64,7 @@ RUN echo "Start cleanup" && \
     ( find /opt/dist -name "*.a" -exec rm -f {} \; ) && \
     echo "Cleanup done"
 
-FROM openvisualcloud/xeon-ubuntu1804-media-ffmpeg:latest
+FROM openvisualcloud/xeon-ubuntu1804-media-ffmpeg:20.10
 LABEL Description="This is the base image for Media SRS ubuntu 18.04"
 LABEL Vendor="Intel Corporation"
 WORKDIR /home
