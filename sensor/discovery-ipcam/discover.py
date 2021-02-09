@@ -200,7 +200,8 @@ while True:
                     record=template[0]["_source"]
                     record.update(sinfo)
                     record.pop('passcode',None)
-                    dbi.ingest(record,refresh="wait_for")
+                    sid=str(record["sensorid"]) if "sensorid" in record else None
+                    dbi.ingest(record, id1=sid, refresh="wait_for")
                 else:
                     print("Template not found", flush=True)
             else: # camera re-connect
