@@ -58,9 +58,10 @@ class UploadHandler(web.RequestHandler):
             sinfo=None
 
         if local_office:
-            if "bandwidth" in sinfo:
-                db_cam=DBQuery(host=dbhost, index="sensors", office=office)
-                db_cam.update(sensor, {"bandwidth": sinfo["bandwidth"]})
+            if sinfo:
+                if "bandwidth" in sinfo:
+                    db_cam=DBQuery(host=dbhost, index="sensors", office=office)
+                    db_cam.update(sensor, {"bandwidth": sinfo["bandwidth"]})
 
             # check disk usage and send alert
             disk_usage=psutil.disk_usage(self._storage).percent
