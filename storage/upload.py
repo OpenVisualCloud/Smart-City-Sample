@@ -58,7 +58,7 @@ class UploadHandler(web.RequestHandler):
             sinfo=None
 
         if local_office:
-            if sinfo["bandwidth"]:
+            if "bandwidth" in sinfo:
                 db_cam=DBQuery(host=dbhost, index="sensors", office=office)
                 db_cam.update(sensor, {"bandwidth": sinfo["bandwidth"]})
 
