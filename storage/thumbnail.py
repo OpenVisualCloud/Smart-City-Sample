@@ -5,7 +5,6 @@ from tornado.concurrent import run_on_executor
 from concurrent.futures import ThreadPoolExecutor
 from probe import run
 from configuration import env
-import traceback
 import uuid
 import os
 
@@ -31,9 +30,18 @@ class Thumbnail(object):
             list(run(cmds))
             with open(png,"rb") as fd:
                 image=fd.read()
-        except:
-            print(traceback.format_exc(), flush=True)
-            return None
+        except Exception as e:
+            print(str(e), flush=True)
+            if not start_time: return None
+            cmds[1:3]=["-sseof","-1"]
+            cmds[-3:-1]=["-update","1","-vsync","0"]
+            try:
+                list(run(cmds))
+                with open(png,"rb") as fd:
+                    image=fd.read()
+            except Exception as e:
+                print(str(e), flush=True)
+                return None
 
         try:
             os.remove(png)
