@@ -27,22 +27,21 @@ class Thumbnail(object):
         if size: cmds.extend(["-vf","scale="+size])
         cmds.extend(["-frames:v","1",png])
 
-        image=None
         try:
             list(run(cmds))
             with open(png,"rb") as fd:
                 image=fd.read()
         except:
             print(traceback.format_exc(), flush=True)
+            return None
 
         try:
             os.remove(png)
         except:
             pass 
 
-        if image:
-            if len(self._cache)>THUMBNAIL_CACHE: self._cache.shift()
-            self._cache.append((mp4,size,start_time,image))
+        if len(self._cache)>THUMBNAIL_CACHE: self._cache.shift()
+        self._cache.append((mp4,size,start_time,image))
         return image
     
 thumbnail=Thumbnail()
@@ -67,7 +66,7 @@ class ThumbnailHandler(web.RequestHandler):
         start_time=float(self.get_argument("start_time","0"))
         png=yield self._mp4ToPNG(mp4,size,start_time)
         if png:
-            self.set_header("Content-Type","image/png")
             self.write(png)
+            self.set_header("Content-Type","image/png")
         else:
             self.set_status(400, "Not Found")
