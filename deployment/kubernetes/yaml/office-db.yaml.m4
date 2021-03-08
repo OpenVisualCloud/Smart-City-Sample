@@ -46,7 +46,7 @@ spec:
       enableServiceLinks: false
       containers:
         - name: defn(`OFFICE_NAME')-db
-          image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.8.1
+          image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.8.13
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 9200
