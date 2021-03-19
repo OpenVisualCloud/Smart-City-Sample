@@ -17,8 +17,8 @@ configure_webrtc_agent () {
 configure_owt_api_py () {
     # patch owtapi.py
     ( cd /home/owt; ./management_api/init.sh )
-    service=$(grep API.init /home/owt/extras/basic_example/samplertcservice.js | cut -d"'" -f2)
-    key=$(grep API.init /home/owt/extras/basic_example/samplertcservice.js | cut -d"'" -f4 | sed 's/\//\\\//g')
+    service=$(grep API.init /home/owt/apps/current_app/main.js | cut -d"'" -f2)
+    key=$(grep API.init /home/owt/apps/current_app/main.js | cut -d"'" -f4 | sed 's/\//\\\//g')
     sed -i "s/service=''/service='${service}'/" /home/owtapi.py
     sed -i "s/key=''/key='${key}'/" /home/owtapi.py
 }
