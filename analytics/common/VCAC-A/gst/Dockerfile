@@ -3,9 +3,9 @@
 FROM centos:7 as build
 
 ARG  VA_SERVING_REPO=https://raw.githubusercontent.com/intel/video-analytics-serving
-ARG  VA_SERVING_TAG="v0.3.0-alpha"
+ARG  VA_SERVING_TAG="v0.4.1-beta"
 
-RUN  mkdir -p /home/vaserving/common/utils && touch /home/vaserving/__init__.py /home/vaserving/common/__init__.py /home/vaserving/common/utils/__init__.py && for x in common/utils/logging.py common/settings.py arguments.py ffmpeg_pipeline.py gstreamer_pipeline.py model_manager.py pipeline.py pipeline_manager.py schema.py vaserving.py; do curl -sSf -o /home/vaserving/$x -L ${VA_SERVING_REPO}/${VA_SERVING_TAG}/vaserving/$x; done
+RUN  mkdir -p /home/vaserving/common/utils && touch /home/vaserving/__init__.py /home/vaserving/common/__init__.py /home/vaserving/common/utils/__init__.py && for x in common/utils/logging.py common/settings.py arguments.py ffmpeg_pipeline.py gstreamer_pipeline.py app_destination.py app_source.py gstreamer_app_destination.py gstreamer_app_source.py model_manager.py pipeline.py pipeline_manager.py pipeline.py schema.py vaserving.py; do curl -sSf -o /home/vaserving/$x -L ${VA_SERVING_REPO}/${VA_SERVING_TAG}/vaserving/$x; done
 COPY *.py /home/
 
 FROM openvisualcloud/vcaca-ubuntu1804-analytics-gst:20.10
@@ -15,6 +15,7 @@ RUN  DEBIAN_FRONTEND=noninteractive apt-get update -qq && apt-get install -qq py
 COPY --from=build /home/ /home/
 ENV  FRAMEWORK=gstreamer
 ENV  PYTHONIOENCODING=UTF-8
+ENV  ENABLE_GVA_FEATURES=compact-meta
 
 ####
 ARG  USER=docker

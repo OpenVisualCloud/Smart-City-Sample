@@ -23,7 +23,7 @@ for s1 in data:
         oi=oi+1
 EOF
 
-    docker run --rm -v "$DIR:/home:ro" -it centos:centos7 python /home/mkm4.py /home/sensor-info.json > "$DIR/sensor-info.m4"
+    docker run --rm -v "$DIR:/home:ro" -it centos:7 python /home/mkm4.py /home/sensor-info.json > "$DIR/sensor-info.m4"
     rm -f "$DIR/mkm4.py"
 fi
 

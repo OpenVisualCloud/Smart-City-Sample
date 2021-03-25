@@ -160,9 +160,9 @@ Expand the platform device name.
 */}}
 {{- define "smtc.platform.device" }}
 {{- if eq "vcac-a" ( include "smtc.platform.suffix" . ) }}
-{{- "hddl" }}
+{{- "HDDL" }}
 {{- else }}
-{{- "cpu" }}
+{{- "CPU" }}
 {{- end }}
 {{- end }}
 
