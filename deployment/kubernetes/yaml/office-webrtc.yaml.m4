@@ -74,7 +74,7 @@ spec:
               name: timezone
               readOnly: true
           securityContext:
-            runAsUser: 103
+            runAsUser: 106
         - name: mongodb
           image: defn(`REGISTRY_PREFIX')smtc_sensor_webrtc:latest
           imagePullPolicy: IfNotPresent
@@ -84,7 +84,7 @@ spec:
               name: timezone
               readOnly: true
           securityContext:
-            runAsUser: 102
+            runAsUser: 105
         - name: webrtc
           image: defn(`REGISTRY_PREFIX')smtc_sensor_webrtc:latest
           imagePullPolicy: IfNotPresent
