@@ -1,9 +1,4 @@
 
----
-
-### <b>Join Hackathon [Open Your Mind to Endless Possibilities](https://software.seek.intel.com/OpenVisualCloudHackathon-contest?cid=diad&source=github_display_int&campid=ww_q1_2021_ovc_iotg&content=cont-reg_all)<br>Registration: Jan 11 - March 12, 2021</b>   
-
----
 
 The E2E sample implements aspects of smart city sensing, analytics and management features as follows:   
 
