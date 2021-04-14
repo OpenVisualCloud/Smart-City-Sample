@@ -15,6 +15,7 @@ class DBCommon(object):
         self._include_type_name={"include_type_name":"false"}
         self._host=host
         self._error=""
+        self._requests=requests.Session()
 
     def office(self):
         return self._office
@@ -29,12 +30,12 @@ class DBCommon(object):
         raise Exception(self._error)
 
     def delete(self, _id):
-        return self._request(requests.delete,self._host+"/"+self._index+"/_doc/"+_id,headers={'Content-Type':'application/json'})
+        return self._request(self._requests.delete,self._host+"/"+self._index+"/_doc/"+_id,headers={'Content-Type':'application/json'})
 
     def wait(self, stop=Event()):
         while not stop.is_set():
             try:
-                r=self._request(requests.get, self._host+"/sensors"+self._office+"/_doc/_search",json={"query":{"term":{"type.keyword":"startup"}},"size":1})
+                r=self._request(self._requests.get, self._host+"/sensors"+self._office+"/_doc/_search",json={"query":{"term":{"type.keyword":"startup"}},"size":1})
                 if r["hits"]["hits"]: return stop
             except:
                 pass
@@ -42,5 +43,5 @@ class DBCommon(object):
             stop.wait(1)
 
     def health(self):
-        r=self._request(requests.get,self._host+"/_cluster/health")
+        r=self._request(self._requests.get,self._host+"/_cluster/health")
         return r["status"]=="green" or r["status"]=="yellow"
