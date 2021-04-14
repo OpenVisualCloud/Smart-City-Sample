@@ -2,7 +2,6 @@
 
 from db_common import DBCommon
 from language_dsl import text
-import requests
 import json
 
 class DBIngest(DBCommon):
@@ -27,17 +26,17 @@ class DBIngest(DBCommon):
             bulk=bulk[batch:]
                 
             cmds="\n".join([json.dumps(x) for x in cmds])+"\n"
-            self._request(requests.post,self._host+"/_bulk?refresh="+refresh,data=cmds,headers={"content-type":"application/x-ndjson"})
+            self._request(self._requests.post,self._host+"/_bulk?refresh="+refresh,data=cmds,headers={"content-type":"application/x-ndjson"})
         
     def ingest(self, info, id1=None, refresh="false"):
         if id1:
-            return self._request(requests.put,self._host+"/"+self._index+"/_doc/"+id1+"?refresh="+refresh,json=info)
+            return self._request(self._requests.put,self._host+"/"+self._index+"/_doc/"+id1+"?refresh="+refresh,json=info)
         else:
-            return self._request(requests.post,self._host+"/"+self._index+"/_doc?refresh="+refresh,json=info)
+            return self._request(self._requests.post,self._host+"/"+self._index+"/_doc?refresh="+refresh,json=info)
 
     def update(self, _id, info, seq_no=None, primary_term=None):
         options={}
         if seq_no is not None: options["if_seq_no"]=seq_no
         if primary_term is not None: options["if_primary_term"]=primary_term
-        return self._request(requests.post,self._host+"/"+self._index+"/_doc/"+_id+"/_update",params=options,json={"doc":info})  #ES6.8
-        #return self._request(requests.post,self._host+"/"+self._index+"/_update/"+_id,params=options,json={"doc":info})  #ES7.4
+        return self._request(self._requests.post,self._host+"/"+self._index+"/_doc/"+_id+"/_update",params=options,json={"doc":info})  #ES6.8
+        #return self._request(self._requests.post,self._host+"/"+self._index+"/_update/"+_id,params=options,json={"doc":info})  #ES7.4

@@ -3,7 +3,6 @@
 from db_common import DBCommon
 from dsl_yacc import compile, check_nested_label
 from language_dsl import text
-import requests
 import json
 
 class DBQuery(DBCommon):
@@ -25,7 +24,7 @@ class DBQuery(DBCommon):
 
     def _spec_from_index(self):
         spec={"nested":[],"types":{}}
-        r=self._request(requests.get,self._host+"/"+self._index+"/_mapping",params=self._include_type_name)
+        r=self._request(self._requests.get,self._host+"/"+self._index+"/_mapping",params=self._include_type_name)
         for index1 in r: 
             self._spec_from_mapping(spec,"",r[index1]["mappings"]["properties"])
         return spec
@@ -33,14 +32,14 @@ class DBQuery(DBCommon):
     def search(self, queries, size=10000, spec=None):
         if spec is None: spec=self._spec_from_index()
         dsl=compile(queries,spec)
-        r=self._request(requests.post,self._host+"/"+self._index+"/_search",json={"query":dsl,"size":size, "seq_no_primary_term": True})
+        r=self._request(self._requests.post,self._host+"/"+self._index+"/_search",json={"query":dsl,"size":size, "seq_no_primary_term": True})
         for x in r["hits"]["hits"]:
             yield x
 
     def count(self, queries, spec=None):
         if spec is None: spec=self._spec_from_index()
         dsl={ "query": compile(queries,spec) }
-        r=self._request(requests.post,self._host+"/"+self._index+"/_count",json=dsl)
+        r=self._request(self._requests.post,self._host+"/"+self._index+"/_count",json=dsl)
         return r["count"]
 
     def stats(self, queries, fields, spec=None):
@@ -55,7 +54,7 @@ class DBQuery(DBCommon):
                 for nest1 in nested:
                     aggs={"nested":{"path":nest1},"aggs":{field:aggs}}
             query["aggs"][field]=aggs
-        r=self._request(requests.post,self._host+"/"+self._index+"/_search",json=query)
+        r=self._request(self._requests.post,self._host+"/"+self._index+"/_search",json=query)
         aggs=r["aggregations"]
         data={}
         for field in fields:
@@ -94,7 +93,7 @@ class DBQuery(DBCommon):
             dsl["aggs"][field]=aggs
 
         # bucketize
-        r=self._request(requests.post,self._host+"/"+self._index+"/_search",json=dsl)
+        r=self._request(self._requests.post,self._host+"/"+self._index+"/_search",json=dsl)
 
         # summariz results
         buckets={}
@@ -112,8 +111,8 @@ class DBQuery(DBCommon):
         options={}
         if seq_no is not None: options["if_seq_no"]=seq_no
         if primary_term is not None: options["if_primary_term"]=primary_term
-        return self._request(requests.post,self._host+"/"+self._index+"/_doc/"+_id+"/_update",params=options,json={"doc":info})  #ES6.8
-        return self._request(requests.post,self._host+"/"+self._index+"/_update/"+_id,params=options,json={"doc":info})  #ES7.4
+        return self._request(self._requests.post,self._host+"/"+self._index+"/_doc/"+_id+"/_update",params=options,json={"doc":info})  #ES6.8
+        return self._request(self._requests.post,self._host+"/"+self._index+"/_update/"+_id,params=options,json={"doc":info})  #ES7.4
 
     def update_bulk(self, updates, batch=500):
         """ update in a bulk:
@@ -131,7 +130,7 @@ class DBQuery(DBCommon):
             updates=updates[batch:]
 
             cmds="\n".join([json.dumps(x) for x in cmds])+"\n"
-            self._request(requests.post,self._host+"/_bulk",data=cmds,headers={"content-type":"application/x-ndjson"})
+            self._request(self._requests.post,self._host+"/_bulk",data=cmds,headers={"content-type":"application/x-ndjson"})
 
     def hints(self, size=50, spec=None):
         if spec is None: spec=self._spec_from_index()
