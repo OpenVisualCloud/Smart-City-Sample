@@ -15,6 +15,7 @@ class OWTAPI(object):
         self._timeout=timeout
         self._serviceid=service
         self._key=key.encode('utf-8')
+        self._requests=requests.Session()
 
     def _headers(self):
         mauth_realm='MAuth realm=http://marte3.dit.upm.es'
@@ -45,30 +46,30 @@ class OWTAPI(object):
     def create_room(self,name,p_limit=10,i_limit=1):
         _options={"name":name,"options":{"participantLimit":p_limit,"inputLimit":i_limit,"views":[]}}
         uri=self._host+"/v1/rooms"
-        r=self._request(requests.post,uri,json=_options,headers=self._headers())
+        r=self._request(self._requests.post,uri,json=_options,headers=self._headers())
         return r.json()["_id"]
 
     def delete_room(self,room):
         uri=self._host+"/v1/rooms/"+str(room)
-        self._request(requests.delete,uri,headers=self._headers())
+        self._request(self._requests.delete,uri,headers=self._headers())
 
     def list_room(self):
         uri=self._host+"/v1/rooms"
-        r=self._request(requests.get,uri,headers=self._headers())
+        r=self._request(self._requests.get,uri,headers=self._headers())
         return { item["name"]:item["_id"] for item in r.json() }
 
     def list_streams(self,room):
         uri=self._host+"/v1/rooms/"+str(room)+"/streams"
-        r=self._request(requests.get,uri,headers=self._headers())
+        r=self._request(self._requests.get,uri,headers=self._headers())
         return [item["id"] for item in r.json()]
 
     def delete_stream(self,room,stream):
         uri=self._host+"/v1/rooms/"+str(room)+"/streams/"+str(stream)
-        self._request(requests.delete,uri,headers=self._headers())
+        self._request(self._requests.delete,uri,headers=self._headers())
 
     def list_participants(self,room):
         uri=self._host+"/v1/rooms/"+str(room)+"/participants"
-        r=self._request(requests.get,uri,headers=self._headers())
+        r=self._request(self._requests.get,uri,headers=self._headers())
         return len(r.json())
 
     def start_streaming_ins(self,room,rtsp_url,protocol="tcp"):
@@ -84,12 +85,12 @@ class OWTAPI(object):
             }
         }
         uri=self._host+"/v1/rooms/"+str(room)+"/streaming-ins"
-        r=self._request(requests.post,uri,json=options,headers=self._headers())
+        r=self._request(self._requests.post,uri,json=options,headers=self._headers())
         return r.json()["id"]
 
     def stop_streaming_ins(self,room,stream):
         uri=self._host+"/v1/rooms/"+str(room)+"/streaming-ins/"+str(stream)
-        self._request(requests.delete,uri,headers=self._headers())
+        self._request(self._requests.delete,uri,headers=self._headers())
 
     def start_streaming_outs(self,room,url,video_from):
         media_options={
@@ -105,22 +106,22 @@ class OWTAPI(object):
         }
         print(options,flush=True)
         uri=self._host+"/v1/rooms/"+str(room)+"/streaming-outs"
-        r=self._request(requests.post,uri,json=options,headers=self._headers())
+        r=self._request(self._requests.post,uri,json=options,headers=self._headers())
         return r.json()
 
     def stop_streaming_outs(self,room,stream):
         uri=self._host+"/v1/rooms/"+str(room)+"/streaming-outs/"+str(stream)
-        self._request(requests.delete,uri,headers=self._headers())
+        self._request(self._requests.delete,uri,headers=self._headers())
 
     def list_streaming_outs(self,room):
         uri=self._host+"/v1/rooms/"+str(room)+"/streaming-outs"
-        r=self._request(requests.get,uri,headers=self._headers())
+        r=self._request(self._requests.get,uri,headers=self._headers())
         return len(r.json())
 
     def create_token(self,room,user,role):
         uri=self._host+"/v1/rooms/"+str(room)+"/tokens"
         options={"user":user,"role":role}
         print(options, flush=True)
-        r=self._request(requests.post,uri,json=options,headers=self._headers())
+        r=self._request(self._requests.post,uri,json=options,headers=self._headers())
         print(r.text, flush=True)
         return r.text

@@ -14,6 +14,7 @@ class Handler(FileSystemEventHandler):
         super(Handler,self).__init__()
         self._sensor = sensor
         self._last_file = None
+        self._requests=requests.Session()
     
     def on_created(self, event):
         print("on_created: "+event.src_path, flush=True)
@@ -29,7 +30,7 @@ class Handler(FileSystemEventHandler):
 
     def _process_file(self, filename):
         with open(filename,"rb") as fd:
-            r=requests.post(sthost,data={
+            r=self._requests.post(sthost,data={
                 "time":str(int(int(os.path.basename(filename).split('_')[-2])/1000000)),
                 "office":str(office[0])+","+str(office[1]),
                 "sensor":self._sensor,

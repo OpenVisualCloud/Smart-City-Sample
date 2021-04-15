@@ -8,6 +8,7 @@ class SRSAPI(object):
         super(SRSAPI,self).__init__()
         self._host=host
         self._timeout=timeout
+        self._requests=requests.Session()
 
     def _request(self, op, *args, **kwargs):
         try:
@@ -20,10 +21,10 @@ class SRSAPI(object):
 
     def list_stream(self):
         uri=self._host+"/api/v1/streams/"
-        r=self._request(requests.get,uri)
+        r=self._request(self._requests.get,uri)
         return r.json()["streams"]
 
     def get_stream(self,stream=""):
         uri=self._host+"/api/v1/streams/"+str(stream)
-        r=self._request(requests.get,uri)
+        r=self._request(self._requests.get,uri)
         return r.json()["stream"]
