@@ -107,6 +107,7 @@ def probe_camera_info(ip, port):
 
     return (None,[],{},Flase)
 
+_requests=requests.Session()
 def update_sensors_db(sensor, record):
     try:
         # update record to offince sensor db
@@ -114,7 +115,7 @@ def update_sensors_db(sensor, record):
         options={"sensor": sensor, "source": record}
         t=(str(office[0])+"c"+str(office[1])).replace(".",'d').replace("-",'n')
         uri=web_host+"/offices/"+t+"/api/sensorsdb"
-        r=requests.put(uri,data=json.dumps(options),verify=False)
+        r=_requests.put(uri,data=json.dumps(options),verify=False)
         if r.status_code==200 or r.status_code==201: return True
     except Exception as e:
         print("Exception: "+str(e), flush=True)

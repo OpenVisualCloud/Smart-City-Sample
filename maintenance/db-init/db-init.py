@@ -283,13 +283,14 @@ settings={
     },
 }
 
+_requests=requests.Session()
 while True:
     try:
         # delete office specific indexes (to start the office afresh)
         for index in settings:
             if index.endswith(officestr):
                 print("Delete index "+index , flush=True)
-                r=requests.delete(dbhost+"/"+index)
+                r=_requests.delete(dbhost+"/"+index)
 
         # initialize db index settings
         _include_type_name={"include_type_name":"false"}
@@ -297,7 +298,7 @@ while True:
             print("Initialize index "+index, flush=True)
             host=dbhost if index.endswith(officestr) else dbchost
             if host:
-                r=requests.put(host+"/"+index,json=settings[index],params=_include_type_name)
+                r=_requests.put(host+"/"+index,json=settings[index],params=_include_type_name)
                 print(r.json(), flush=True)
 
         officeinfo=Provision(officestr)

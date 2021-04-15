@@ -10,7 +10,6 @@ import traceback
 import socket
 import time
 import json
-import requests
 
 service_interval = float(env.get("SERVICE_INTERVAL","30"))
 office = list(map(float,env["OFFICE"].split(","))) if "OFFICE" in env else None
