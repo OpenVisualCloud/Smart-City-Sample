@@ -25,9 +25,10 @@ stop=Event()
 def quit_service(signum, sigframe):
     stop.set()
 
+_requests=requests.Session()
 def upload(cloudhost, filename, office, sensor, timestamp):
     with open(filename,"rb") as fd:
-        r=requests.post(cloudhost,data={
+        r=_requests.post(cloudhost,data={
             "time":timestamp,
             "office":str(office[0])+","+str(office[1]),
             "sensor":sensor,
