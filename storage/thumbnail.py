@@ -48,7 +48,7 @@ class Thumbnail(object):
         except:
             pass 
 
-        if len(self._cache)>THUMBNAIL_CACHE: self._cache.shift()
+        if len(self._cache)>THUMBNAIL_CACHE: self._cache.pop(0)
         self._cache.append((mp4,size,start_time,image))
         return image
     
