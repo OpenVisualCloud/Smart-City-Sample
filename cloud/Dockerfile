@@ -1,5 +1,5 @@
 
-FROM openvisualcloud/xeon-centos7-media-nginx:21.3
+FROM openvisualcloud/xeon-centos7-media-nginx:21.3.1
 
 RUN  yum install -y -q epel-release && yum install -y -q python36-tornado python36-requests python36-ply && rm -rf /var/cache/yum/*
 
