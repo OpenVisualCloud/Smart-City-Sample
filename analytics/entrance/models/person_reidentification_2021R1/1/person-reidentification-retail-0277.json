@@ -1,14 +1,9 @@
 {
   "json_schema_version" : "1.0.0",
-  "input_preproc": [
-    {
-      "layer_name": "data",
-      "color_format": "BGR"
-    }
-  ],
+  "input_preproc": [],
   "output_postproc": [
     {
-      "layer_name": "embd/dim_red/conv",
+      "layer_name": "reid_embedding",
       "attribute_name": "face_feature",
       "format": "cosine_distance"
     }
