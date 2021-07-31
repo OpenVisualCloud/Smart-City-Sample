@@ -1,5 +1,5 @@
 
-FROM openvisualcloud/xeon-centos7-media-ffmpeg:21.3.1
+FROM openvisualcloud/xeon-centos7-media-ffmpeg:21.6
 RUN  yum install -y -q epel-release && yum install -y -q python36-requests python36-ply python36-psutil && rm -rf /var/cache/yum/* curl
 
 COPY --from=smtc_common /home/*.py /home/
