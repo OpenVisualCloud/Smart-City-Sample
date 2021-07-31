@@ -31,7 +31,7 @@ if isinstance(office,list):
     })
 
 while not stop.is_set(): 
-    print("Searching...",flush=True)
+    print("Cleaning...",flush=True)
     for index in indexes:
         if stop.is_set(): break
 
