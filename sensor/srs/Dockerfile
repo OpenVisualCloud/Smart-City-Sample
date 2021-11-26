@@ -1,5 +1,5 @@
 
-FROM openvisualcloud/xeon-ubuntu1804-media-srs:21.6
+FROM openvisualcloud/xeon-ubuntu1804-media-srs:21.6.1
 
 RUN mkdir -p /usr/local/srs/objs/ffmpeg/bin/ && cp /usr/local/bin/ffmpeg /usr/local/srs/objs/ffmpeg/bin/ffmpeg
 
