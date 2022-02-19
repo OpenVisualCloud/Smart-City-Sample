@@ -2,7 +2,7 @@
 ifelse(defn(`NOFFICES'),1,,`
 
     defn(`OFFICE_NAME')_db:
-        image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.8.13
+        image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.8.23
         environment:
             - "cluster.name=office-cluster"
             - "node.name=defn(`OFFICE_NAME')"
