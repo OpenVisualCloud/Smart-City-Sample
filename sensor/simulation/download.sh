@@ -3,7 +3,7 @@
 DIR=$(dirname $(readlink -f "$0"))
 IFS="," read -r -a SCENARIOS <<< "${2:-traffic}"
 
-FFMPEG_IMAGE="openvisualcloud/xeon-centos7-media-ffmpeg:21.6.1"
+FFMPEG_IMAGE="openvisualcloud/xeon-ubuntu2004-media-ffmpeg:21.6.1"
 CLIPS_traffic=($(grep _traffic "$DIR"/streamlist.txt))
 CLIPS_stadium=($(grep -v _traffic "$DIR"/streamlist.txt))
 

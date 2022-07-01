@@ -1,7 +1,7 @@
 
-FROM centos:7
+FROM ubuntu:20.04
 
-RUN  yum install -y -q openssh-clients && rm -rf /var/cache/yum/*
+RUN DEBIAN_FRONTEND=noninteractive apt-get update -qq && apt-get install -qq openssh-client && rm -rf /var/lib/apt/lists/*
 COPY *.sh /home/
 CMD  ["/home/tunnel.sh"]
 WORKDIR /home

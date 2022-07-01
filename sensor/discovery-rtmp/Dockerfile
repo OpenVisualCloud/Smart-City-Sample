@@ -1,7 +1,7 @@
 
-FROM openvisualcloud/xeon-centos7-media-ffmpeg:21.6.1
+FROM openvisualcloud/xeon-ubuntu2004-media-ffmpeg:21.6.1
 
-RUN yum install -y -q epel-release && yum -y -q install python36-ply python36-requests python36-setuptools && rm -rf /var/cache/yum/*
+RUN DEBIAN_FRONTEND=noninteractive apt-get update -qq && apt-get install -qq python3-ply python3-requests python3-setuptools && rm -rf /var/lib/apt/lists/*
 
 COPY --from=smtc_common /home/*.py /home/
 COPY *.py /home/
