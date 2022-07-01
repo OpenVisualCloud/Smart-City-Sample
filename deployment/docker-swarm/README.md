@@ -1,5 +1,5 @@
 
-### Docker Swam Single Office Deployment
+### Docker Swarm Single Office Deployment
 
 Initialize docker swarm if you have not:
 ```
@@ -11,7 +11,7 @@ make start_docker_swarm
 make stop_docker_swarm
 ```
 
-### Docker Swam Multiple-Office/Node Deployment
+### Docker Swarm Multiple-Office/Node Deployment
 
 Follow the [instructions](https://docs.docker.com/engine/swarm/swarm-tutorial/create-swarm) to create a swarm. Then setup the swarm as follows:     
 
