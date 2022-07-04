@@ -2,7 +2,11 @@
 
 DIR=$(dirname $(readlink -f "$0"))
 
-helm uninstall smtc${SCOPE}
+helm version >/dev/null 2>/dev/null && (
+    helm uninstall smtc$SCOPE
+) || (
+    kubectl delete -f <(docker run --rm -v "$DIR/smtc":/apps:ro alpine/helm template smtc /apps --set buildScope=$SCOPE)
+)
 
 case "N$SCOPE" in
     N | Ncloud)

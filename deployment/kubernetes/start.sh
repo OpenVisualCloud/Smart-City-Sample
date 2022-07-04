@@ -17,4 +17,8 @@ esac
 # create configmap
 kubectl create configmap sensor-info "--from-file=${DIR}/../../maintenance/db-init/sensor-info.json" || echo -n ""
 
-helm install smtc${SCOPE} "$DIR/smtc" --set buildScope=${SCOPE} --set "connector.cloudHost=${CONNECTOR_CLOUD}" --set "connector.cameraHost=${CONNECTOR_CAMERA}"
+helm version >/dev/null 2>/dev/null && (
+    helm install smtc${SCOPE} "$DIR/smtc" --set buildScope=${SCOPE}
+) || (
+    kubectl apply -f <(docker run --rm -v "$DIR/smtc":/apps:ro alpine/helm template smtc /apps --set buildScope=$SCOPE)
+)

@@ -78,7 +78,7 @@ kubectl get node >/dev/null 2>/dev/null && (
         nodeip="$(kubectl describe node $id | grep InternalIP | sed -E 's/[^0-9]+([0-9.]+)$/\1/')"
         labels="$(kubectl describe node $id | awk '/Annotations:/{lf=0}/Labels:/{sub("Labels:","",$0);lf=1}lf==1{sub("=",":",$1);print$1}')"
 
-        for image in $(helm >/dev/null 2>/dev/null && (helm template smtc "$DIR/../deployment/kubernetes/smtc" | awk -v labels="$labels" -f "$DIR/scan-yaml.awk")); do
+        for image in $( (helm version >/dev/null 2>/dev/null && helm template smtc "$DIR/../deployment/kubernetes/smtc" || docker run --rm -v "$DIR/../deployment/kubernetes/smtc":/apps:ro alpine/helm template smtc /apps) | awk -v labels="$labels" -f "$DIR/scan-yaml.awk"); do
             image_digest=$(digest $image)
             if [ -n "$image_digest" ]; then
                 if is_new $image $image_digest; then
