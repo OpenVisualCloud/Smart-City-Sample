@@ -25,7 +25,3 @@ sudo systemctl restart docker
 
 Login to your dockerhub account so that you can pull images from dockerhub. 
 
-### See Also
-
-- [Setup Kubernetes](setup-kubernetes.md)  
-

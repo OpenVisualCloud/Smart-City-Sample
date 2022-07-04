@@ -1,4 +1,8 @@
 
+### Prerequisite
+
+Follow the [instructions](setup-docker.md) to install the docker engine.  
+
 ### Docker Swarm Single Office Deployment
 
 Initialize docker swarm if you have not:
@@ -44,5 +48,4 @@ The command `make update` uploads the sample images to each worker node. If you 
 
 - [Utility Scripts](../../doc/script.md)   
 - [CMake Options](../../doc/cmake.md)   
-- [Intel VCAC-A Setup](../../doc/vcac-a.md)    
 
