@@ -3,7 +3,7 @@ The Smart City sample can be deployed with Kubernetes.
 
 ### Kubernetes Setup
 
-- Follow the [instructions](https://kubernetes.io/docs/setup) to setup your Kubernetes cluster. If you run into issues with Kubernetes/1.16 and Flannel/master, this [link](https://stackoverflow.com/questions/58024643/kubernetes-master-node-not-ready-state) might help.
+- Follow the [instructions](../../doc/setup-kubernetes.md) to setup your Kubernetes cluster. 
 
 - Optional: setup password-less access from the Kubernetes controller to each worker node (required by ```make update```):   
 
@@ -71,7 +71,7 @@ Each database instance requires about 2GB memory.
 
 ### See Also 
 
-- [Helm Charts](helm/smtc/README.md)
+- [Helm Charts](helm/smtc/README.md)  
 - [Utility Scripts](../../doc/script.md)   
-- [CMake Options](../../doc/cmake.md)
+- [CMake Options](../../doc/cmake.md)  
 

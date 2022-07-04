@@ -1,6 +1,6 @@
 
     cloud_gateway:
-        image: defn(`REGISTRY_PREFIX')smtc_api_gateway:latest
+        image: IMAGENAME(smtc_api_gateway)
         environment:
             DBHOST: "http://ifelse(defn(`NOFFICES'),1,db,cloud_db):9200"
             STHOST: "http://cloud_storage:8080"

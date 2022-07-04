@@ -2,7 +2,7 @@
 define(`UDPBASE',ifdef(`UDPBASE',defn(`UDPBASE'),0))dnl
 
     defn(`OFFICE_NAME')_webrtc:
-        image: defn(`REGISTRY_PREFIX')smtc_sensor_webrtc:latest
+        image: IMAGENAME(smtc_sensor_webrtc)
         command: [ "/bin/bash","-c","service mongodb start && service rabbitmq-server start && exec /home/launch.sh /home/webs.py" ]
         environment:
             OFFICE: "defn(`OFFICE_LOCATION')"

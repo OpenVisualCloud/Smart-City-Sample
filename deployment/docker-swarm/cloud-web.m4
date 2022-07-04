@@ -1,6 +1,6 @@
 
     cloud_web:
-        image: defn(`REGISTRY_PREFIX')smtc_web_cloud:latest
+        image: IMAGENAME(smtc_web_cloud)
         ports:
             - target: 8443
               published: 443

@@ -1,50 +1,47 @@
 #!/bin/bash -e
 
-function transfer_image {
-    image="$1"
-    nodeid="$2"
-    nodeip="$3"
+DIR=$(dirname $(readlink -f "$0"))
+digest_dir="$(pwd)/.digest"
+ssh_dir="$(pwd)/.ssh"
 
-    # overwrite vcac username
-    case "$4" in
-    *vcac-zone:yes*|*vcac_zone==yes*)
-        worker="root@$nodeip";;
-    *)
-        worker="$nodeip";;
-    esac
-
-    echo "Update image: $image to $worker"
-    sig1=$((docker image inspect -f {{.ID}} $image || ((docker pull $image 1>&2) && docker image inspect -f {{.ID}} $image)) | grep .)
-    echo " local: $sig1"
-
-    hostfile="$HOME/.vcac-hosts"
-    if [ ! -f "$hostfile" ]; then hostfile="/etc/vcac-hosts"; fi
-    host=$(awk -v node="$nodeid/$nodeip" '$1==node{print$2}' "$hostfile" 2>/dev/null || true)
-    if [ -z "$host" ]; then host=$(hostname); fi
-
-    CONNECTION_TIMEOUT=1
-    case "$(hostname -f)" in
-        $host | $host.*) # direct access
-            sig2=$(ssh -o ConnectTimeout=$CONNECTION_TIMEOUT $worker "docker image inspect -f {{.ID}} $image 2> /dev/null || echo" || true)
-            echo "remote: $sig2"
-
-            if test "$sig1" != "$sig2"; then
-                echo "Transfering image..."
-                (docker save $image | ssh -o ConnectTimeout=$CONNECTION_TIMEOUT $worker "docker load") || true
-            fi;;
-        *) # access via jump host
-            sig2=$(ssh -o ConnectTimeout=$CONNECTION_TIMEOUT $host "ssh -o ConnectTimeout=$CONNECTION_TIMEOUT $worker \"docker image inspect -f {{.ID}} $image 2> /dev/null || echo\"" || true)
-            echo "remote: $sig2"
-
-            if test "$sig1" != "$sig2"; then
-                echo "Transfering image..."
-                (docker save $image | ssh $host "ssh -o ConnectTimeout=$CONNECTION_TIMEOUT $worker \"docker load\"") || true
-            fi;;
-    esac
-    echo ""
+digest () {
+    docker inspect $1 2>/dev/null | grep Id | cut -f4 -d'"'
 }
 
-DIR=$(dirname $(readlink -f "$0"))
+is_containerd () {
+    major=($(kubectl version -o yaml 2>/dev/null | grep major: | cut -f2 -d'"'))
+    minor=($(kubectl version -o yaml 2>/dev/null | grep minor: | cut -f2 -d'"'))
+    if [ "${major[0]}" -gt 1 ] || [ "${minor[0]}" -ge 24 ]; then
+        echo "1"
+    fi
+}
+
+is_new () {
+    [ "$(cat "$digest_dir"/${1/*\//} 2>/dev/null)" != "$2" ] && return 0 || return 1
+}
+
+save_digest () {
+    echo "$1" > "$digest_dir"/${2/*\//}
+}
+
+remote_exec () {
+    options=()
+    while [[ "$1" = "-"* ]]; do
+        options+=("$1")
+        shift
+    done
+
+    ip=$1
+    shift
+
+    if [[ " $(hostname -I) " = *" $ip "* ]]; then
+        "$@"
+    else
+        ssh "${options[@]}" -o ControlMaster=auto -o ControlPath="$ssh_dir"/'%r@%h-%p' -o ControlPersist=5m -o TCPKeepAlive=yes $ip "$@"
+    fi
+}
+
+mkdir -p "$digest_dir" "$ssh_dir"
 docker node ls > /dev/null 2> /dev/null && (
     echo "Updating docker-swarm nodes..."
     for id in $(docker node ls -q 2> /dev/null); do
@@ -57,9 +54,16 @@ docker node ls > /dev/null 2> /dev/null && (
         if test "$ready" = "ready"; then
             if test "$active" = "active"; then
                 # skip unavailable or manager node
-                if test -z "$(hostname -I | grep --fixed-strings $nodeip)"; then
+                if [[ " $(hostname -I) " != *" $nodeip "* ]]; then
                     for image in $(awk -v labels="$labels node.role=${role}" -f "$DIR/scan-yaml.awk" "${DIR}/../deployment/docker-swarm/docker-compose.yml"); do
-                        transfer_image $image "$id" "$nodeip" "$labels"
+                        image_digest=$(digest $image)
+                        if [ -n "$image_digest" ]; then
+                            if is_new $image $image_digest; then
+                                echo "$image..."
+                                docker save $image | remote_exec $nodeip docker load
+                            fi
+                            save_digest $image_digest $image
+                        fi
                     done
                 fi
             fi
@@ -69,20 +73,25 @@ docker node ls > /dev/null 2> /dev/null && (
 
 kubectl get node >/dev/null 2>/dev/null && (
     echo "Updating Kubernetes nodes..."
-    for id in $(kubectl get nodes --selector='!node-role.kubernetes.io/master' 2> /dev/null | grep ' Ready ' | cut -f1 -d' '); do
+    containerd="$(is_containerd)"
+    for id in $(kubectl get nodes $([ -n "$containerd" ] || echo "--selector='!node-role.kubernetes.io/master'") 2> /dev/null | grep ' Ready ' | cut -f1 -d' '); do
         nodeip="$(kubectl describe node $id | grep InternalIP | sed -E 's/[^0-9]+([0-9.]+)$/\1/')"
         labels="$(kubectl describe node $id | awk '/Annotations:/{lf=0}/Labels:/{sub("Labels:","",$0);lf=1}lf==1{sub("=",":",$1);print$1}')"
 
-        image_set=""
-        for image in $(awk -v labels="$labels" -f "$DIR/scan-yaml.awk" "${DIR}/../deployment/kubernetes/yaml"/*.yaml) $(helm >/dev/null 2>/dev/null && (helm install --dry-run --namespace _temp --set connector.cloudHost="x@y" _temp "$DIR/../deployment/kubernetes/helm/smtc" | awk -v labels="$labels" -f "$DIR/scan-yaml.awk")); do
-            if docker image inspect $image >/dev/null 2>/dev/null; then
-                case "$image_set" in
-                *" $image "*);;
-                *)
-                    image_set="$image_set $image "
-                    transfer_image $image "$id" "$nodeip" "$labels"
-                    ;;
-                esac
+        for image in $( (helm version >/dev/null 2>/dev/null && helm template smtc "$DIR/../deployment/kubernetes/smtc" || docker run --rm -v "$DIR/../deployment/kubernetes/smtc":/apps:ro alpine/helm template smtc /apps) | awk -v labels="$labels" -f "$DIR/scan-yaml.awk"); do
+            image_digest=$(digest $image)
+            if [ -n "$image_digest" ]; then
+                if is_new $image $image_digest; then
+                    echo "$image..."
+                    docker save $image | (
+                        if [ -n "$containerd" ]; then
+                            remote_exec -t $nodeip sudo ctr -n k8s.io i import -
+                        else
+                            remote_exec $nodeip docker load
+                        fi
+                    )
+                    save_digest $image_digest $image
+                fi
             fi
         done
     done

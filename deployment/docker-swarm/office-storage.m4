@@ -1,6 +1,6 @@
 
     defn(`OFFICE_NAME')_storage:
-        image: defn(`REGISTRY_PREFIX')smtc_storage_manager:latest
+        image: IMAGENAME(smtc_storage_manager)
         environment:
             OFFICE: "defn(`OFFICE_LOCATION')"
             DBHOST: "http://ifelse(defn(`NOFFICES'),1,db,defn(`OFFICE_NAME')_db):9200"

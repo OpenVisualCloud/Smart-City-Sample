@@ -1,7 +1,7 @@
 
 ifelse(defn(`OT_TYPE'),`false',,`
     defn(`OFFICE_NAME')_object_tracking:
-        image: defn(`REGISTRY_PREFIX')smtc_object_tracking:latest
+        image: IMAGENAME(smtc_object_tracking)
         volumes:
             - /etc/localtime:/etc/localtime:ro
         environment:
