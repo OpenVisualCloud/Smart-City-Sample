@@ -1,7 +1,8 @@
 #!/bin/bash -e
 
 DIR=$(dirname $(readlink -f "$0"))
-digest_dir=".digest"
+digest_dir="$(pwd)/.digest"
+ssh_dir="$(pwd)/.ssh"
 
 digest () {
     docker inspect $1 2>/dev/null | grep Id | cut -f4 -d'"'
@@ -16,11 +17,11 @@ is_containerd () {
 }
 
 is_new () {
-    [ "$(cat $digest_dir/${1/*\//} 2>/dev/null)" != "$2" ] && return 0 || return 1
+    [ "$(cat "$digest_dir"/${1/*\//} 2>/dev/null)" != "$2" ] && return 0 || return 1
 }
 
 save_digest () {
-    echo "$1" > $digest_dir/${2/*\//}
+    echo "$1" > "$digest_dir"/${2/*\//}
 }
 
 remote_exec () {
@@ -36,11 +37,11 @@ remote_exec () {
     if [[ " $(hostname -I) " = *" $ip "* ]]; then
         "$@"
     else
-        ssh "${options[@]}" $ip "$@"
+        ssh "${options[@]}" -o ControlMaster=auto -o ControlPath="$ssh_dir"/'%r@%h-%p' -o ControlPersist=5m -o TCPKeepAlive=yes $ip "$@"
     fi
 }
 
-mkdir -p $digest_dir
+mkdir -p "$digest_dir" "$ssh_dir"
 docker node ls > /dev/null 2> /dev/null && (
     echo "Updating docker-swarm nodes..."
     for id in $(docker node ls -q 2> /dev/null); do
