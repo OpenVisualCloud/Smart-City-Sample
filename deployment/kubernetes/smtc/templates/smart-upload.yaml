@@ -1,0 +1,72 @@
+
+{{- range $scenarioIdx, $scenarioName := $.Values.scenario }}
+{{- $args := dict "scenarioName" $scenarioName "Values" $.Values }}
+{{- range $officeIdx := until ( int ( include "smtc.noffices" $args ) ) }}
+{{- $officeName := printf "%s-office%d" $scenarioName (add $officeIdx 1) }}
+{{- $scope1 := printf "office%d-svc" (add $officeIdx 1) }}
+{{- if contains $.Values.buildScope $scope1 }}
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $officeName }}-smart-upload
+  labels:
+     app: {{ $officeName }}-smart-upload
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ $officeName }}-smart-upload
+  template:
+    metadata:
+      labels:
+        app: {{ $officeName }}-smart-upload
+    spec:
+      securityContext:
+        fsGroup: {{ $.Values.groupId }}
+      enableServiceLinks: false
+      containers:
+        - name: {{ $officeName }}-smart-upload
+          image: {{ $.Values.registryPrefix }}smtc_smart_upload{{ $.Values.releaseSuffix }}
+          imagePullPolicy: IfNotPresent
+          resources:
+            limits:
+                cpu: "50m"
+          env:
+            - name: QUERY
+              value: "objects.detection.bounding_box.x_max-objects.detection.bounding_box.x_min>0.1"
+            - name: OFFICE
+              {{- $args := dict "scenarioName" $scenarioName "Values" $.Values "officeIdx" $officeIdx }}
+              value: {{ include "smtc.env.office" $args | quote }}
+            - name: DBHOST
+              {{- $args := dict "officeName" $officeName "Values" $.Values }}
+              value: {{ include "smtc.env.dbhost" $args | quote }}
+            - name: STHOST
+              value: "http://{{ $officeName }}-storage-service:8080/recording"
+            - name: STCHOST
+              value: "http://cloud-gateway-service:8080/cloud/api/upload"
+            - name: DBCHOST
+              value: "http://cloud-gateway-service:8080/cloud/api/db"
+            - name: SERVICE_INTERVAL
+              value: "30"
+            - name: NO_PROXY
+              value: "*"
+            - name: no_proxy
+              value: "*"
+          volumeMounts:
+            - mountPath: /etc/localtime
+              name: timezone
+              readOnly: true
+      volumes:
+          - name: timezone
+            hostPath:
+              path: /etc/localtime
+              type: File
+      {{ include "smtc.platform.node-selector" $ }}
+
+{{- end }}
+
+---
+
+{{- end }}
+{{- end }}

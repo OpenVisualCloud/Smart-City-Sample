@@ -39,7 +39,7 @@ function saveim() {
 }
 
 /- node\..*==.*/ && labels!="*" {
-    gsub(/[\" ]/,"",$2);
+    gsub(/[" ]/,"",$2);
     if (index(labels,$2)==0) {
         im=""; 
         matched=0;
@@ -47,7 +47,7 @@ function saveim() {
 }
 
 /- node\..*!=.*/ && labels!="*" {
-    gsub(/[\" ]/,"",$2);
+    gsub(/[" ]/,"",$2);
     gsub(/!=/,"==",$2);
     if (index(labels,$2)!=0) {
         im=""; 
@@ -74,7 +74,7 @@ function saveim() {
     match($0, /^ */);
     if (RLENGTH > n_space) {
        label_eqn=key":"$2
-       gsub(/[\" ]/,"",label_eqn);
+       gsub(/[" ]/,"",label_eqn);
        i=index(labels,label_eqn);
        if ((operator=="In" && i==0) || (operator=="NotIn" && i!=0)) {
            im=""; 

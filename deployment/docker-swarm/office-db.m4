@@ -24,7 +24,7 @@ ifelse(defn(`NOFFICES'),1,,`
 ')
 
     defn(`OFFICE_NAME')_db_init:
-        image: defn(`REGISTRY_PREFIX')smtc_db_init:latest
+        image: IMAGENAME(smtc_db_init)
         environment:
             OFFICE: "defn(`OFFICE_LOCATION')"
             DBHOST: "http://ifelse(defn(`NOFFICES'),1,db,defn(`OFFICE_NAME')_db):9200"

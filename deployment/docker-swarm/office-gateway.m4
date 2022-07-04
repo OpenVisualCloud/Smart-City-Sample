@@ -1,6 +1,6 @@
 
     defn(`OFFICE_NAME')_gateway:
-        image: defn(`REGISTRY_PREFIX')smtc_api_gateway:latest
+        image: IMAGENAME(smtc_api_gateway)
         environment:
             OFFICE: "defn(`OFFICE_LOCATION')"
             DBHOST: "http://ifelse(defn(`NOFFICES'),1,db,defn(`OFFICE_NAME')_db):9200"

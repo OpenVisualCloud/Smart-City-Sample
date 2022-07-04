@@ -1,5 +1,6 @@
 include(../../script/loop.m4)
 include(../../maintenance/db-init/sensor-info.m4)
+define(`IMAGENAME',`defn(`REGISTRY_PREFIX')$1`'defn(`RELEASE_SUFFIX')')
 
 version: "3.7"
 

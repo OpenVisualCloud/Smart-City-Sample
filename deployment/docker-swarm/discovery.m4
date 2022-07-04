@@ -2,7 +2,7 @@
 ifelse(defn(`DISCOVER_SIMULATED_CAMERA'),`true',`dnl
 
     defn(`OFFICE_NAME')_camera_discovery:
-        image: defn(`REGISTRY_PREFIX')smtc_onvif_discovery:latest
+        image: IMAGENAME(smtc_onvif_discovery)
         environment:
             PORT_SCAN: "-Pn"
             SIM_HOST: ifelse(eval(defn(`NCAMERAS')>0),1,"loop(`CAMERAIDX',1,defn(`NCAMERAS'),`defn(`OFFICE_NAME')_simulated_cameras:eval(defn(`CAMERA_RTSP_PORT')+defn(`CAMERAIDX')*defn(`CAMERA_PORT_STEP')-defn(`CAMERA_PORT_STEP'))/')",":0")
@@ -23,7 +23,7 @@ ifelse(defn(`DISCOVER_SIMULATED_CAMERA'),`true',`dnl
 
 ifelse(defn(`SCENARIO_NAME'),`stadium',`
     defn(`OFFICE_NAME')_camera_discovery_crowd:
-        image: defn(`REGISTRY_PREFIX')smtc_onvif_discovery:latest
+        image: IMAGENAME(smtc_onvif_discovery)
         environment:
             PORT_SCAN: "-Pn"
             SIM_HOST: ifelse(eval(defn(`NCAMERAS2')>0),1,"loop(`CAMERAIDX',1,defn(`NCAMERAS2'),`defn(`OFFICE_NAME')_simulated_cameras_crowd:eval(defn(`CAMERA_RTSP_PORT')+defn(`CAMERAIDX')*defn(`CAMERA_PORT_STEP')-defn(`CAMERA_PORT_STEP'))/')",":0")

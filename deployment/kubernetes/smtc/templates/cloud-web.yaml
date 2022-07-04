@@ -1,0 +1,77 @@
+
+{{- if contains $.Values.buildScope "cloud" }}
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: cloud-web-service
+  labels:
+    app: cloud-web
+spec:
+  ports:
+    - port: 443
+      targetPort: 8443
+      name: https1
+    - port: 8443
+      targetPort: 9443
+      name: https2
+  externalIPs:
+    - {{ .Values.cloudWebExternalIP }}
+  selector:
+    app: cloud-web
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cloud-web
+  labels:
+     app: cloud-web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cloud-web
+  template:
+    metadata:
+      labels:
+        app: cloud-web
+    spec:
+      securityContext:
+        fsGroup: {{ $.Values.groupId }}
+      enableServiceLinks: false
+      containers:
+        - name: cloud-web
+          image: {{ $.Values.registryPrefix }}smtc_web_cloud{{ $.Values.releaseSuffix }}
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8443
+            - containerPort: 9443
+          env:
+            - name: DBHOST
+              value: {{ printf "http://%s-service:9200" (include "smtc.db.name" .) | quote }}
+            - name: GWHOST
+              value: "http://cloud-gateway-service:8080"
+            - name: SCENARIO
+              value: {{ join "," $.Values.scenario | quote }}
+            - name: NO_PROXY
+              value: "*"
+            - name: no_proxy
+              value: "*"
+          volumeMounts:
+            - mountPath: /etc/localtime
+              name: timezone
+              readOnly: true
+            - mountPath: /var/run/secrets
+              name: self-signed-certificate
+              readOnly: true
+      volumes:
+        - name: timezone
+          hostPath:
+            path: /etc/localtime
+            type: File
+        - name: self-signed-certificate
+          secret:
+            secretName: self-signed-certificate
+      {{ include "smtc.platform.node-selector" . }}
+
+{{- end }}

@@ -1,6 +1,6 @@
 
     defn(`OFFICE_NAME')_simulated_cameras:
-        image: defn(`REGISTRY_PREFIX')smtc_sensor_simulation:latest
+        image: IMAGENAME(smtc_sensor_simulation)
         environment:
 ifelse(defn(`SCENARIO_NAME'),`traffic',`dnl
             FILES: "_traffic.mp4$$"
@@ -25,7 +25,7 @@ ifelse(defn(`SCENARIO_NAME'),`stadium',`dnl
 
 ifelse(defn(`SCENARIO_NAME'),`stadium',`
     defn(`OFFICE_NAME')_simulated_cameras_crowd:
-        image: defn(`REGISTRY_PREFIX')smtc_sensor_simulation:latest
+        image: IMAGENAME(smtc_sensor_simulation)
         environment:
             FILES: "_crowd.mp4$$"
             ALGORITHM: "crowd-counting"
@@ -43,7 +43,7 @@ ifelse(defn(`SCENARIO_NAME'),`stadium',`
                     - node.labels.vcac_zone!=yes
                     
     defn(`OFFICE_NAME')_simulated_cameras_entrance:
-        image: defn(`REGISTRY_PREFIX')smtc_sensor_simulation:latest
+        image: IMAGENAME(smtc_sensor_simulation)
         environment:
             FILES: "_entrance.mp4$$"
             ALGORITHM: "entrance-counting"

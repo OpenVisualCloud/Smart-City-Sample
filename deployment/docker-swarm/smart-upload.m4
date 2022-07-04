@@ -1,6 +1,6 @@
 
     defn(`OFFICE_NAME')_smart_upload:
-        image: defn(`REGISTRY_PREFIX')smtc_smart_upload:latest
+        image: IMAGENAME(smtc_smart_upload)
         environment:
             QUERY: "objects.detection.bounding_box.x_max-objects.detection.bounding_box.x_min>0.1"
             OFFICE: "defn(`OFFICE_LOCATION')"
