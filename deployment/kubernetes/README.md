@@ -3,7 +3,7 @@ The Smart City sample can be deployed with Kubernetes.
 
 ### Kubernetes Setup
 
-- Follow the [instructions](../../doc/setup-kubernetes.md) to setup your Kubernetes cluster. 
+- Follow the [instructions](setup-kubernetes.md) to setup your Kubernetes cluster. 
 
 - Optional: setup password-less access from the Kubernetes controller to each worker node (required by ```make update```):   
 

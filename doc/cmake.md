@@ -3,7 +3,7 @@
 
 Use the following definitions to customize the building process:   
 - **REGISTRY**: Specify the URL of the privcay docker registry.    
-- **PLATFORM**: Specify the target platform: `Xeon` or [`VCAC-A`](vcac-a.md).   
+- **PLATFORM**: Specify the target platform: `Xeon`.   
 - **SCENARIO**: Specify the sample scenario(s): `traffic`, `stadium`, or their combination `traffic,stadium`. As each scenario runs its own set of services and databases, it is recommended that you run multiple scenarios only on a multiple-node deployment setting.     
 - **NOFFICES**: Specify the number of offices in the deployment. Support 1-3 offices in the traffic scenario and 1 office in the stadium scenario.       
 - **NCAMERAS**: Specify the number of cameras served in each office. Currently support 1-8 cameras. In the **stadium** scenario, you can specify the camera numbers as `<#service_queue_counting>,[#crowd_counting],[#entrance_counting]`. 
