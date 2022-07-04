@@ -102,7 +102,6 @@ Launch your browser and browse to ```https://<hostname>``` for the sample UI.
 - [Configuration Options](doc/cmake.md)          
 - [Docker Swarm Setup](deployment/docker-swarm/README.md)      
 - [Kubernetes Setup](deployment/kubernetes/README.md)
-- [Intel VCAC-A Setup](doc/vcac-a.md)  
 - [REST API List](doc/restapi.md)  
 - [Demo Video](https://www.youtube.com/watch?v=BWU0SEqEfbo)  
 
