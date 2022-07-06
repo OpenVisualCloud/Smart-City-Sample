@@ -21,7 +21,7 @@ Follow the [instructions](https://docs.docker.com/engine/swarm/swarm-tutorial/cr
 
 - On each swarm node, 
   - Create a user of the same user id (uid) and group id (gid) as the current user of the manager node.      
-  - Follow the [instructions](https://www.elastic.co/guide/en/elasticsearch/reference/6.8/vm-max-map-count.html) to increase the VM mapping threshold.    
+  - Follow the [instructions](https://www.elastic.co/guide/en/elasticsearch/reference/7.10/vm-max-map-count.html) to increase the VM mapping threshold.    
 
 - Optional: on the swarm manager, setup password-less acess from the swarm manager to each swarm node (required by `make update`):   
 

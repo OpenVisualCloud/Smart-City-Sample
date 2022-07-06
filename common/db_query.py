@@ -111,7 +111,6 @@ class DBQuery(DBCommon):
         options={}
         if seq_no is not None: options["if_seq_no"]=seq_no
         if primary_term is not None: options["if_primary_term"]=primary_term
-        return self._request(self._requests.post,self._host+"/"+self._index+"/_doc/"+_id+"/_update",params=options,json={"doc":info})  #ES6.8
         return self._request(self._requests.post,self._host+"/"+self._index+"/_update/"+_id,params=options,json={"doc":info})  #ES7.4
 
     def update_bulk(self, updates, batch=500):
@@ -123,7 +122,6 @@ class DBQuery(DBCommon):
             for u in updates[0:batch]:
                 cmds.append({ "update": {
                     "_index":self._index,
-                    "_type":"_doc", #ES6.8
                     "_id": u[0],
                 }})
                 cmds.append({ "doc": u[1] })

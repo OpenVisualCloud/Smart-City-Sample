@@ -1,6 +1,6 @@
 
     ifelse(defn(`NOFFICES'),1,db,cloud_db):
-        image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.8.23
+        image: docker.elastic.co/elasticsearch/elasticsearch-oss:7.10.2
         environment:
 ifelse(defn(`NOFFICES'),1,`dnl
             - "discovery.type=single-node"
