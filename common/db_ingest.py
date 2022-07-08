@@ -18,8 +18,7 @@ class DBIngest(DBCommon):
             for b in bulk[0:batch]:
                 cmds.append({
                     "index":{
-                        "_index":self._index,
-                        "_type":"_doc",  # ES6.8
+                        "_index":self._index
                     },
                 })
                 cmds.append(b)
@@ -38,5 +37,4 @@ class DBIngest(DBCommon):
         options={}
         if seq_no is not None: options["if_seq_no"]=seq_no
         if primary_term is not None: options["if_primary_term"]=primary_term
-        return self._request(self._requests.post,self._host+"/"+self._index+"/_doc/"+_id+"/_update",params=options,json={"doc":info})  #ES6.8
-        #return self._request(self._requests.post,self._host+"/"+self._index+"/_update/"+_id,params=options,json={"doc":info})  #ES7.4
+        return self._request(self._requests.post,self._host+"/"+self._index+"/_update/"+_id,params=options,json={"doc":info})  #ES7.4
