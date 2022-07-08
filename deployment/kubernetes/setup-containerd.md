@@ -33,7 +33,7 @@ sudo systemctl restart containerd
 Optionally, follow the instructions if you need to setup any insecure registries, `foo.com:5000`:  
 
 ```
-sudo sed -i 's|config_path =.*|config_path = "/etc/containerd/certs_d"|' /etc/containerd/config.toml
+sudo sed -i 's|config_path =.*|config_path = "/etc/containerd/certs.d"|' /etc/containerd/config.toml
 
 sudo mkdir -p /etc/containerd/foo.com:5000
 cat | sudo tee /etc/containerd/certs.d/foo.com:5000/hosts.toml <<EOF
