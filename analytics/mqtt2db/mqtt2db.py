@@ -7,6 +7,7 @@ from signal import signal, SIGTERM
 from configuration import env
 import traceback
 import json
+import ssl
 
 mqtthost = env["MQTTHOST"]
 scenario = env["SCENARIO"]
@@ -29,9 +30,10 @@ class MQTT2DB(object):
         print("connecting mqtt", flush=True)
         timer = Timer(10, self._connect_watchdog)
         timer.start()
+        self._mqtt.tls_set("/run/secrets/self.crt","/run/secrets/mqtt_client.crt","/run/secrets/mqtt_client.key",cert_reqs=ssl.CERT_REQUIRED,tls_version=ssl.PROTOCOL_TLSv1_2)
         while True:
             try:
-                self._mqtt.connect(mqtthost)
+                self._mqtt.connect(mqtthost, port=8883)
                 break
             except:
                 pass

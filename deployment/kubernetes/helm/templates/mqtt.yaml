@@ -14,7 +14,7 @@ metadata:
     app: {{ $officeName }}-mqtt
 spec:
   ports:
-  - port: 1883
+  - port: 8883
     protocol: TCP
   selector:
     app: {{ $officeName }}-mqtt
@@ -38,10 +38,10 @@ spec:
       enableServiceLinks: false
       containers:
         - name: {{ $officeName }}-mqtt
-          image: eclipse-mosquitto:1.5.8
+          image: {{ $.Values.registryPrefix }}smtc_mqttserver{{ $.Values.releaseSuffix }}
           imagePullPolicy: IfNotPresent
           ports:
-            - containerPort: 1883
+            - containerPort: 8883
           env:
             - name: NO_PROXY
               value: "*"
@@ -51,6 +51,9 @@ spec:
             - mountPath: /etc/localtime
               name: timezone
               readOnly: true
+            - mountPath: /var/run/secrets
+              name: mqtt-server-certificate
+              readOnly: true
           securityContext:
             runAsUser: 1883
       volumes:
@@ -58,6 +61,9 @@ spec:
             hostPath:
                 path: /etc/localtime
                 type: File
+          - name: mqtt-server-certificate
+            secret:
+              secretName: mqtt{{ add $officeIdx 1 }}-server-certificate
       {{ include "smtc.platform.node-selector" $ }}
 
 {{- end }}
