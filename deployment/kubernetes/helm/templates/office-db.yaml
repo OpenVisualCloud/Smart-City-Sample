@@ -68,6 +68,8 @@ spec:
               value: "{{ if eq (mod (int $.Values.database.haOffice) 2) 0 }}{{ sub (int $.Values.database.haOffice) 1 }}{{ else }}{{ int $.Values.database.haOffice }}{{ end }}"
             - name: "discovery.zen.ping.unicast.hosts"
               value: "{{ $officeName }}-db-service"
+            - name: "cluster.initial_master_nodes"
+              value: "{{ $officeName }}"
             - name: NO_PROXY
               value: "*"
             - name: no_proxy
