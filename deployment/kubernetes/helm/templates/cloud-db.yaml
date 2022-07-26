@@ -61,6 +61,8 @@ spec:
               value: "{{ if eq (mod (int $.Values.database.haCloud) 2) 0 }}{{ sub (int $.Values.database.haCloud) 1 }}{{ else }}{{ int $.Values.database.haCloud }}{{ end }}"
             - name: "discovery.zen.ping.unicast.hosts"
               value: "{{ include "smtc.db.name" . }}-service"
+            - name: "cluster.initial_master_nodes"
+              value: "cloud-db"
             {{- else }}
             - name: "discovery.type"
               value: "single-node"
