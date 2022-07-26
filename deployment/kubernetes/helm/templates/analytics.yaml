@@ -144,6 +144,9 @@ spec:
               readOnly: true
             - mountPath: /tmp/rec
               name: recording
+            - mountPath: /var/run/secrets
+              name: mqtt-client-certificate
+              readOnly: true
             {{- include "smtc.platform.mounts" $ }}
       initContainers:
             - image: busybox:latest
@@ -162,6 +165,9 @@ spec:
             emptyDir:
                 medium: Memory
                 sizeLimit: 150Mi
+          - name: mqtt-client-certificate
+            secret:
+              secretName: mqtt{{ add $officeIdx 1 }}-client-certificate
           {{- include "smtc.platform.volumes" $ }}
       {{ include "smtc.platform.accel-selector" $ }}
 ---
@@ -219,6 +225,9 @@ spec:
               readOnly: true
             - mountPath: /tmp/rec
               name: recording
+            - mountPath: /var/run/secrets
+              name: mqtt-client-certificate
+              readOnly: true
             {{- include "smtc.platform.mounts" $ }}
       initContainers:
             - image: busybox:latest
@@ -237,6 +246,9 @@ spec:
             emptyDir:
                 medium: Memory
                 sizeLimit: 150Mi
+          - name: mqtt-client-certificate
+            secret:
+              secretName: mqtt{{ add $officeIdx 1 }}-client-certificate
           {{- include "smtc.platform.volumes" $ }}
       {{ include "smtc.platform.accel-selector" $ }}
 ---
@@ -298,6 +310,9 @@ spec:
               readOnly: true
             - mountPath: /tmp/rec
               name: recording
+            - mountPath: /var/run/secrets
+              name: mqtt-client-certificate
+              readOnly: true
             {{- include "smtc.platform.mounts" $ }}
       initContainers:
             - image: busybox:latest
@@ -316,6 +331,9 @@ spec:
             emptyDir:
                 medium: Memory
                 sizeLimit: 150Mi
+          - name: mqtt-client-certificate
+            secret:
+              secretName: mqtt{{ add $officeIdx 1 }}-client-certificate
           {{- include "smtc.platform.volumes" $ }}
       {{ include "smtc.platform.accel-selector" $ }}
 {{- end }}
