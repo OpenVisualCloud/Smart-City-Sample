@@ -10,6 +10,22 @@
             `SCENARIO': "defn(`SCENARIO_NAME')"
             NO_PROXY: "*"
             no_proxy: "*"
+        secrets:
+            - source: self_crt
+              target: self.crt
+              uid: "defn(`USER_ID')"
+              gid: "defn(`GROUP_ID')"
+              mode: 0444
+            - source: mqtt_client_key
+              target: mqtt_client.key
+              uid: "defn(`USER_ID')"
+              gid: "defn(`GROUP_ID')"
+              mode: 0440
+            - source: mqtt_client_crt
+              target: mqtt_client.crt
+              uid: "defn(`USER_ID')"
+              gid: "defn(`GROUP_ID')"
+              mode: 0440
         networks:
             - appnet
         deploy:

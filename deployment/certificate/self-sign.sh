@@ -16,18 +16,20 @@ function mqtt_cert(){
     SUBJ_SERVER_INFO="/C=US/ST=Oregon/L=Portland/O=Intel Corporation/OU=SERVER/CN=$2"
     SUBJ_CLIENT_INFO="/C=US/ST=Oregon/L=Portland/O=Intel Corporation/OU=CLIENT/CN=$2"
 
-    CUR_FOLDER=/home/$USER/office$1
+    CUR_FOLDER=/home/$USER/$1
     mkdir -p $CUR_FOLDER
 
     # server
-    openssl req -nodes -sha256 -new -subj "$SUBJ_SERVER_INFO" -keyout $CUR_FOLDER/mqtt_server.key -out $CUR_FOLDER/mqtt_server.csr
+    openssl req -nodes -sha256 -new -subj "$SUBJ_SERVER_INFO" -keyout $CUR_FOLDER/mqtt_server.key \
+	-out $CUR_FOLDER/mqtt_server.csr 2> /dev/null
     openssl x509 -req -sha256 -days 30 -CA /home/$USER/self.crt -CAkey /home/$USER/self.key \
-        -in $CUR_FOLDER/mqtt_server.csr -CAcreateserial -out $CUR_FOLDER/mqtt_server.crt
+        -in $CUR_FOLDER/mqtt_server.csr -CAcreateserial -out $CUR_FOLDER/mqtt_server.crt 2> /dev/null
     
     # client
-    openssl req -new -nodes -sha256 -subj "$SUBJ_CLIENT_INFO" -keyout $CUR_FOLDER/mqtt_client.key -out $CUR_FOLDER/mqtt_client.csr 
+    openssl req -new -nodes -sha256 -subj "$SUBJ_CLIENT_INFO" -keyout $CUR_FOLDER/mqtt_client.key \
+	-out $CUR_FOLDER/mqtt_client.csr 2> /dev/null
     openssl x509 -req -sha256 -days 30 -CA /home/$USER/self.crt -CAkey /home/$USER/self.key \
-        -in $CUR_FOLDER/mqtt_client.csr -CAcreateserial -out $CUR_FOLDER/mqtt_client.crt
+        -in $CUR_FOLDER/mqtt_client.csr -CAcreateserial -out $CUR_FOLDER/mqtt_client.crt 2> /dev/null
 
     chmod 644 $CUR_FOLDER/mqtt_server.key
     chmod 644 $CUR_FOLDER/mqtt_server.crt
@@ -47,7 +49,8 @@ case "$(cat /proc/1/sched | head -n 1)" in
 
     for i in `seq 1 $NOFFICE`
     do
-        mqtt_cert $i "$SCENARIO_NAME-office$i-mqtt-service"
+        mqtt_cert swarm-$i $SCENARIO_NAME"_office"$i"_mqtt"
+        mqtt_cert kuber-$i $SCENARIO_NAME-office$i-mqtt-service
     done
     ;;
 *)

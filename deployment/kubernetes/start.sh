@@ -18,8 +18,8 @@ case "N$SCOPE" in
         create_secret self-signed-certificate "${DIR}/../certificate/self.crt" "${DIR}/../certificate/self.key"
         for i in `seq 1 $NOFFICE`
         do
-            create_secret_p4 mqtt$i-server-certificate "${DIR}/../certificate/self.crt" "${DIR}/../certificate/office$i/mqtt_server.crt" "${DIR}/../certificate/office$i/mqtt_server.key"
-            create_secret_p4 mqtt$i-client-certificate "${DIR}/../certificate/self.crt" "${DIR}/../certificate/office$i/mqtt_client.crt" "${DIR}/../certificate/office$i/mqtt_client.key"
+            create_secret_p4 mqtt$i-server-certificate "${DIR}/../certificate/self.crt" "${DIR}/../certificate/kuber-$i/mqtt_server.crt" "${DIR}/../certificate/kuber-$i/mqtt_server.key"
+            create_secret_p4 mqtt$i-client-certificate "${DIR}/../certificate/self.crt" "${DIR}/../certificate/kuber-$i/mqtt_client.crt" "${DIR}/../certificate/kuber-$i/mqtt_client.key"
         done
         ;;
 esac
