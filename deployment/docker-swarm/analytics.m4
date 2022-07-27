@@ -25,12 +25,12 @@ PLATFORM_ENV_EXTRA()dnl
               uid: "defn(`USER_ID')"
               gid: "defn(`GROUP_ID')"
               mode: 0444
-            - source: mqtt_client_key
+            - source: mqtt-defn(`OFFICEIDX')-client-key
               target: mqtt_client.key
               uid: "defn(`USER_ID')"
               gid: "defn(`GROUP_ID')"
               mode: 0440
-            - source: mqtt_client_crt
+            - source: mqtt-defn(`OFFICEIDX')-client-crt
               target: mqtt_client.crt
               uid: "defn(`USER_ID')"
               gid: "defn(`GROUP_ID')"
@@ -68,12 +68,12 @@ PLATFORM_ENV_EXTRA()dnl
               uid: "defn(`USER_ID')"
               gid: "defn(`GROUP_ID')"
               mode: 0444
-            - source: mqtt_client_key
+            - source: mqtt-defn(`OFFICEIDX')-client-key
               target: mqtt_client.key
               uid: "defn(`USER_ID')"
               gid: "defn(`GROUP_ID')"
               mode: 0440
-            - source: mqtt_client_crt
+            - source: mqtt-defn(`OFFICEIDX')-client-crt
               target: mqtt_client.crt
               uid: "defn(`USER_ID')"
               gid: "defn(`GROUP_ID')"
@@ -109,12 +109,12 @@ PLATFORM_ENV_EXTRA()dnl
               uid: "defn(`USER_ID')"
               gid: "defn(`GROUP_ID')"
               mode: 0444
-            - source: mqtt_client_key
+            - source: mqtt-defn(`OFFICEIDX')-client-key
               target: mqtt_client.key
               uid: "defn(`USER_ID')"
               gid: "defn(`GROUP_ID')"
               mode: 0440
-            - source: mqtt_client_crt
+            - source: mqtt-defn(`OFFICEIDX')-client-crt
               target: mqtt_client.crt
               uid: "defn(`USER_ID')"
               gid: "defn(`GROUP_ID')"
@@ -151,12 +151,12 @@ PLATFORM_ENV_EXTRA()dnl
               uid: "defn(`USER_ID')"
               gid: "defn(`GROUP_ID')"
               mode: 0444
-            - source: mqtt_client_key
+            - source: mqtt-defn(`OFFICEIDX')-client-key
               target: mqtt_client.key
               uid: "defn(`USER_ID')"
               gid: "defn(`GROUP_ID')"
               mode: 0440
-            - source: mqtt_client_crt
+            - source: mqtt-defn(`OFFICEIDX')-client-crt
               target: mqtt_client.crt
               uid: "defn(`USER_ID')"
               gid: "defn(`GROUP_ID')"

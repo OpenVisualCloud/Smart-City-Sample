@@ -50,11 +50,17 @@ spec:
             - mountPath: /etc/localtime
               name: timezone
               readOnly: true
+            - mountPath: /var/run/secrets
+              name: mqtt-client-certificate
+              readOnly: true
       volumes:
           - name: timezone
             hostPath:
                 path: /etc/localtime
                 type: File
+          - name: mqtt-client-certificate
+            secret:
+              secretName: mqtt{{ add $officeIdx 1 }}-client-certificate
       {{ include "smtc.platform.node-selector" $ }}
 
 {{- end }}

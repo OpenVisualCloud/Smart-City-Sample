@@ -9,9 +9,9 @@
         secrets:
             - source: self_crt
               target: self.crt
-            - source: mqtt_server_key
+            - source: mqtt-defn(`OFFICEIDX')-server-key
               target: mqtt_server.key
-            - source: mqtt_server_crt
+            - source: mqtt-defn(`OFFICEIDX')-server-crt
               target: mqtt_server.crt
         networks:
             - appnet
