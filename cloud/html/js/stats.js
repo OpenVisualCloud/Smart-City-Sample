@@ -107,15 +107,34 @@ var stats={
                 }),
                 opacity: 0.6,
             }).bindPopup(div[0], { maxWidth:"auto",maxHeight:"auto" });
+            sensorctx.chart_icon.on("click", function (e){
+                if(sensorctx.chart._scache == null){
+                    return;
+                }
+                if(sensorctx.chart.canvas.offsetParent != null){
+                    sensorctx.chart.config.options.legend.display=(sensorctx.chart._scache.datasets.length<4);
+                    sensorctx.chart.config.data.labels = sensorctx.chart._scache.labels;
+                    sensorctx.chart.config.data.datasets = sensorctx.chart._scache.datasets;
+                    sensorctx.chart.update();
+                }
+            });
         }
     },
     update_chart: function (chart, data) {
-        var labels=chart.config.data.labels;
+
+        if(chart._scache == null){
+            chart._scache = {
+                labels: [],
+                datasets: []
+            }
+        }
+
+        var labels=chart._scache.labels;
         var time=new Date();
         labels.push(time);
 
         data=Object.assign({},data);
-        var datasets=chart.config.data.datasets;
+        var datasets=chart._scache.datasets;
         $.each(datasets, function (k,v) {
             if (!(v.label in data)) return;
             v.data.push({t:time,y:data[v.label]});
@@ -136,8 +155,14 @@ var stats={
                     datasets.splice(k,1);
             }
         }
-        chart.config.options.legend.display=(datasets.length<4);
-        chart.update();
+        
+        // update chart only when it is visiable.
+        if(chart.canvas.offsetParent != null){
+            chart.config.options.legend.display=(datasets.length<4);
+            chart.config.data.labels = labels;
+            chart.config.data.datasets = datasets;
+            chart.update();
+        }
     },
     update: function (layer, sensorctx, zoom, sensor, data1, loc) {
         var count=0, data={};
