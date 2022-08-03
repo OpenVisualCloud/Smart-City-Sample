@@ -1,49 +1,57 @@
 #!/usr/bin/python3
 
-from paho.mqtt.client import Client
 from db_ingest import DBIngest
 from threading import Event
 from vaserving.vaserving import VAServing
 from vaserving.pipeline import Pipeline
 from configuration import env
+from filewatch import FileWatcher
+from result2db import Result2DB
 import time
 import traceback
 import psutil
+import json
+from object_tracker import OT
 
-mqtthost = env["MQTTHOST"]
 dbhost = env["DBHOST"]
 every_nth_frame = int(env["EVERY_NTH_FRAME"])
 office = list(map(float, env["OFFICE"].split(",")))
 
 class RunVA(object):
-    def _test_mqtt_connection(self):
-        print("testing mqtt connection", flush=True)
-        mqtt = Client()
-        while True:
-            try:
-                mqtt.connect(mqtthost)
-                break
-            except:
-                print("Waiting for mqtt...", flush=True)
-                time.sleep(5)
-        print("mqtt connected", flush=True)
-        mqtt.disconnect()
     
     def __init__(self, pipeline, version="2", stop=Event()):
         super(RunVA, self).__init__()
-        self._test_mqtt_connection()
-
+        
         self._pipeline = pipeline
         self._version = version
         self._db = DBIngest(host=dbhost, index="algorithms", office=office)
-        self._stop=stop
+        self._stop = stop
+        self._mode = None
+        self._ot = OT()
+        self._result2db = None
+
+    def results_cb(self, data):
+        try:
+            metadata = json.loads(data)
+            if(self._mode == "analytics"):
+                self._result2db.add_analytics_result(metadata)
+            elif(self._mode == "relayanalytics"):
+                ret = self._ot.tracking(metadata)
+                self._result2db.add_analytics_result(ret)
+            else:
+                print("error mode = " + self._mode)
+        except:
+            print(traceback.format_exc(), flush=True)
 
     def stop(self):
         print("stopping", flush=True)
         self._stop.set()
 
-    def loop(self, sensor, location, uri, algorithm, algorithmName, options={}, topic="analytics"):
+    def loop(self, sensor, location, uri, algorithm, algorithmName, options={}, mode="analytics"):
         try:
+            
+            self._mode = mode
+
             VAServing.start({
                 'model_dir': '/home/models',
                 'pipeline_dir': '/home/pipelines',
@@ -51,15 +59,15 @@ class RunVA(object):
             })
 
             try:
+                result_filename = "/tmp/results_{}.jsonl".format(algorithm)
                 source={
                     "type": "uri",
                     "uri": uri,
                 }
                 destination={
-                    "type": "mqtt",
-                    "host": mqtthost,
-                    "clientid": algorithm,
-                    "topic": topic
+                    "type":"file",
+                    "path":result_filename,
+                    "format":"json-lines"
                 }
                 tags={
                     "sensor": sensor, 
@@ -85,6 +93,12 @@ class RunVA(object):
                 if instance_id is None:
                     raise Exception("Pipeline {} version {} Failed to Start".format(
                         self._pipeline, self._version))
+
+                filewatch = FileWatcher(result_filename)
+                filewatch.start(self)
+
+                self._result2db = Result2DB()
+                self._result2db.start()
 
                 self._stop.clear()
                 while not self._stop.is_set():
@@ -118,6 +132,10 @@ class RunVA(object):
 
                 self._stop=None
                 pipeline.stop()
+                
+                filewatch.stop()
+                self._result2db.stop()
+                self._result2db = None
             except:
                 print(traceback.format_exc(), flush=True)
 
