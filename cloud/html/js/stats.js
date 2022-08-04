@@ -94,6 +94,9 @@ var stats={
                 div1.find('a').click(function() {
                     page.data('stat').layer.removeLayer(marker1);
                 });
+
+                marker1._chart._scache = sensorctx.chart._scache;
+                stats.update_chart_if_visiable(marker1._chart);
             });
         });
         sensorctx.chart=stats.create_chart(div.find("canvas"));
@@ -111,12 +114,7 @@ var stats={
                 if(sensorctx.chart._scache == null){
                     return;
                 }
-                if(sensorctx.chart.canvas.offsetParent != null){
-                    sensorctx.chart.config.options.legend.display=(sensorctx.chart._scache.datasets.length<4);
-                    sensorctx.chart.config.data.labels = sensorctx.chart._scache.labels;
-                    sensorctx.chart.config.data.datasets = sensorctx.chart._scache.datasets;
-                    sensorctx.chart.update();
-                }
+                stats.update_chart_if_visiable(sensorctx.chart);
             });
         }
     },
@@ -156,11 +154,13 @@ var stats={
             }
         }
         
-        // update chart only when it is visiable.
+        stats.update_chart_if_visiable(chart);
+    },
+    update_chart_if_visiable: function(chart) {
         if(chart.canvas.offsetParent != null){
-            chart.config.options.legend.display=(datasets.length<4);
-            chart.config.data.labels = labels;
-            chart.config.data.datasets = datasets;
+            chart.config.options.legend.display=(chart._scache.datasets.length<4);
+            chart.config.data.labels = chart._scache.labels;
+            chart.config.data.datasets = chart._scache.datasets;
             chart.update();
         }
     },
