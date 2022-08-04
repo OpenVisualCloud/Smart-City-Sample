@@ -60,7 +60,7 @@ PLATFORM_VOLUME_EXTRA()dnl
         environment:
             PLATFORM_ENV(OFFICE): "defn(`OFFICE_LOCATION')"
             PLATFORM_ENV(DBHOST): "http://ifelse(defn(`NOFFICES'),1,db,defn(`OFFICE_NAME')_db):9200"
-            PLATFORM_ENV(VA_MODE): "analytics)"
+            PLATFORM_ENV(VA_MODE): "analytics"
             PLATFORM_ENV(EVERY_NTH_FRAME): "6"
             PLATFORM_ENV(``SCENARIO''): "defn(`SCENARIO_NAME')"
             PLATFORM_ENV(STHOST): "http://defn(`OFFICE_NAME')_storage:8080/api/upload"
