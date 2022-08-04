@@ -20,7 +20,7 @@ class Result2DB(object):
         self._cache = []
         self._cond = Condition()
         self._stop = True
-        self._thread = Thread(target=self.todbLoop)
+        self._thread = Thread(target=self.todb_loop)
 
     def start(self):
         if not self._stop:
@@ -64,7 +64,7 @@ class Result2DB(object):
 
         self._add1(metedata)
 
-    def todbLoop(self):
+    def todb_loop(self):
         while not self._stop:
             self._cond.acquire()
             self._cond.wait()

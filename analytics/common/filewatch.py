@@ -44,7 +44,7 @@ class FileWatcher():
                         file.seek(where)
                     else:
                         try:
-                            self.result_watcher.results_cb(line)
+                            self.result_watcher.result_cb(line)
                         except ValueError:
                             pass
             self._watching = False

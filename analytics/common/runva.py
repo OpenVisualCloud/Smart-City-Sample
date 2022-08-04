@@ -28,9 +28,9 @@ class RunVA(object):
         self._stop = stop
         self._mode = None
         self._ot = OT()
-        self._result2db = None
+        self._result2db = Result2DB()
 
-    def results_cb(self, data):
+    def result_cb(self, data):
         try:
             metadata = json.loads(data)
             if(self._mode == "analytics"):
@@ -57,9 +57,12 @@ class RunVA(object):
                 'pipeline_dir': '/home/pipelines',
                 'max_running_pipelines': 1,
             })
+            
+            result_filename = "/tmp/results_{}.jsonl".format(algorithm)
+            filewatch = FileWatcher(result_filename)
 
             try:
-                result_filename = "/tmp/results_{}.jsonl".format(algorithm)
+                
                 source={
                     "type": "uri",
                     "uri": uri,
@@ -94,10 +97,8 @@ class RunVA(object):
                     raise Exception("Pipeline {} version {} Failed to Start".format(
                         self._pipeline, self._version))
 
-                filewatch = FileWatcher(result_filename)
+                
                 filewatch.start(self)
-
-                self._result2db = Result2DB()
                 self._result2db.start()
 
                 self._stop.clear()
@@ -133,12 +134,12 @@ class RunVA(object):
                 self._stop=None
                 pipeline.stop()
                 
-                filewatch.stop()
-                self._result2db.stop()
-                self._result2db = None
             except:
                 print(traceback.format_exc(), flush=True)
 
+            filewatch.stop()
+            self._result2db.stop()
+                
             VAServing.stop()
         except:
             print(traceback.format_exc(), flush=True)
