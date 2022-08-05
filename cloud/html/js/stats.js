@@ -94,6 +94,9 @@ var stats={
                 div1.find('a').click(function() {
                     page.data('stat').layer.removeLayer(marker1);
                 });
+
+                marker1._chart._scache = sensorctx.chart._scache;
+                stats.update_chart_if_visiable(marker1._chart);
             });
         });
         sensorctx.chart=stats.create_chart(div.find("canvas"));
@@ -107,15 +110,29 @@ var stats={
                 }),
                 opacity: 0.6,
             }).bindPopup(div[0], { maxWidth:"auto",maxHeight:"auto" });
+            sensorctx.chart_icon.on("click", function (e){
+                if(sensorctx.chart._scache == null){
+                    return;
+                }
+                stats.update_chart_if_visiable(sensorctx.chart);
+            });
         }
     },
     update_chart: function (chart, data) {
-        var labels=chart.config.data.labels;
+
+        if(chart._scache == null){
+            chart._scache = {
+                labels: [],
+                datasets: []
+            }
+        }
+
+        var labels=chart._scache.labels;
         var time=new Date();
         labels.push(time);
 
         data=Object.assign({},data);
-        var datasets=chart.config.data.datasets;
+        var datasets=chart._scache.datasets;
         $.each(datasets, function (k,v) {
             if (!(v.label in data)) return;
             v.data.push({t:time,y:data[v.label]});
@@ -136,8 +153,16 @@ var stats={
                     datasets.splice(k,1);
             }
         }
-        chart.config.options.legend.display=(datasets.length<4);
-        chart.update();
+        
+        stats.update_chart_if_visiable(chart);
+    },
+    update_chart_if_visiable: function(chart) {
+        if(chart.canvas.offsetParent != null){
+            chart.config.options.legend.display=(chart._scache.datasets.length<4);
+            chart.config.data.labels = chart._scache.labels;
+            chart.config.data.datasets = chart._scache.datasets;
+            chart.update();
+        }
     },
     update: function (layer, sensorctx, zoom, sensor, data1, loc) {
         var count=0, data={};
