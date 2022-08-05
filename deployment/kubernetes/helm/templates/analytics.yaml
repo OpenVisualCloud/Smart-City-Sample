@@ -45,9 +45,7 @@ spec:
             - name: DBHOST
               {{- $args := dict "officeName" $officeName "Values" $.Values }}
               value: {{ include "smtc.env.dbhost" $args | quote }}
-            - name: MQTTHOST
-              value: "{{ $officeName }}-mqtt-service"
-            - name: MQTT_TOPIC
+            - name: VA_MODE
               {{- if (int $.Values.otType) }}
               value: "relayanalytics"
               {{- else }}
@@ -112,9 +110,7 @@ spec:
             - name: DBHOST
               {{- $args := dict "officeName" $officeName "Values" $.Values }}
               value: {{ include "smtc.env.dbhost" $args | quote }}
-            - name: MQTTHOST
-              value: "{{ $officeName }}-mqtt-service"
-            - name: MQTT_TOPIC
+            - name: VA_MODE
               {{- if (int $.Values.otType) }}
               value: "relayanalytics"
               {{- else }}
@@ -191,9 +187,7 @@ spec:
             - name: DBHOST
               {{- $args := dict "officeName" $officeName "Values" $.Values }}
               value: {{ include "smtc.env.dbhost" $args | quote }}
-            - name: MQTTHOST
-              value: "{{ $officeName }}-mqtt-service"
-            - name: MQTT_TOPIC
+            - name: VA_MODE
               value: "analytics"
             - name: STHOST
               value: "http://{{ $officeName }}-storage-service:8080/api/upload"
@@ -266,9 +260,7 @@ spec:
             - name: DBHOST
               {{- $args := dict "officeName" $officeName "Values" $.Values }}
               value: {{ include "smtc.env.dbhost" $args | quote }}
-            - name: MQTTHOST
-              value: "{{ $officeName }}-mqtt-service"
-            - name: MQTT_TOPIC
+            - name: VA_MODE
               {{- if (int $.Values.otType) }}
               value: "relayanalytics"
               {{- else }}

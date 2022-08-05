@@ -14,7 +14,7 @@ scenario = env["SCENARIO"]
 office = list(map(float, env["OFFICE"].split(",")))
 dbhost = env["DBHOST"]
 every_nth_frame = int(env["EVERY_NTH_FRAME"])
-mqtt_topic=env.get("MQTT_TOPIC","analytics")
+va_mode=env.get("VA_MODE","analytics")
 
 stop=Event()
 myAlgorithm=""
@@ -26,7 +26,7 @@ def connect(sensor, location, uri, algorithm, algorithmName):
         rec2db.start()
 
         runva=RunVA("object_detection", version, stop=stop)
-        runva.loop(sensor, location, uri, algorithm, algorithmName, topic=mqtt_topic)
+        runva.loop(sensor, location, uri, algorithm, algorithmName, mode=va_mode)
 
         rec2db.stop()
         raise Exception("VA exited. This should not happen.")
