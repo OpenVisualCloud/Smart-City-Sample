@@ -65,7 +65,7 @@ spec:
         - name: rabbitmq
           image: {{ $.Values.registryPrefix }}smtc_sensor_webrtc{{ $.Values.releaseSuffix }}
           imagePullPolicy: IfNotPresent
-          command: [ "/usr/sbin/rabbitmq-server" ]
+          command: [ "/home/launch.sh", "rabbitmq" ]
           env:
             - name: RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS
               value: "+sbwt none"
@@ -74,20 +74,21 @@ spec:
               name: timezone
               readOnly: true
           securityContext:
-            runAsUser: 106
+            runAsUser: 107
         - name: mongodb
           image: {{ $.Values.registryPrefix }}smtc_sensor_webrtc{{ $.Values.releaseSuffix }}
           imagePullPolicy: IfNotPresent
-          command: [ "/usr/bin/mongod","--config","/etc/mongodb.conf" ]
+          command: [ "/home/launch.sh", "mongodb" ]
           volumeMounts:
             - mountPath: /etc/localtime
               name: timezone
               readOnly: true
           securityContext:
-            runAsUser: 105
+            runAsUser: 106
         - name: webrtc
           image: {{ $.Values.registryPrefix }}smtc_sensor_webrtc{{ $.Values.releaseSuffix }}
           imagePullPolicy: IfNotPresent
+          command: [ "/home/launch.sh","webrtc","/home/webs.py" ]
           ports:
             - containerPort: 8888
 {{- range $portIdx := until ( int $.Values.webrtc.streamingLimit ) }}

@@ -1,5 +1,5 @@
 
-FROM openvisualcloud/xeon-ubuntu1804-service-owt:21.6.1
+FROM openvisualcloud/xeon-ubuntu2004-service-owt:22.3
 
 RUN  apt-get update -q && apt-get install -y -q nginx python3-tornado python3-requests python3-ply && rm -rf /var/lib/apt/lists/*
 
@@ -7,6 +7,7 @@ COPY *.conf /etc/nginx/
 RUN  sed -i "s/io(e,a)/io(undefined,Object.assign(a,{path:window.sessionStorage.officePath+'\/socket.io\/'}))/" /home/owt/apps/current_app/public/scripts/owt.js && \
      sed -i "s/^ssl =.*/ssl = false/" /home/owt/portal/portal.toml && \
      sed -i "s/^ssl =.*/ssl = false/" /home/owt/management_api/management_api.toml
+RUN sed -i "s/^bind_ip = 127.0.0.1/bind_ip = 0.0.0.0/" /etc/mongodb.conf
 COPY --from=smtc_common /home/*.py /home/
 COPY launch.sh config.sh /home/
 COPY *.py /home/
