@@ -15,10 +15,10 @@ office = list(map(float, env["OFFICE"].split(",")))
 dbhost = env["DBHOST"]
 every_nth_frame = int(env["EVERY_NTH_FRAME"])
 va_mode=env.get("VA_MODE","analytics")
+version=int(env["PIPELINE_VERSION"])
 
 stop=Event()
 myAlgorithm=""
-version=0
 
 def connect(sensor, location, uri, algorithm, algorithmName):
     try:
@@ -42,10 +42,8 @@ dba=DBIngest(host=dbhost, index="algorithms", office=office)
 dbs=DBQuery(host=dbhost, index="sensors", office=office)
 
 if scenario=="traffic":
-    version = 1
     myAlgorithm="object-detection"
 if scenario=="stadium":
-    version = 2
     myAlgorithm="svcq-counting"
 
 # register algorithm (while waiting for db to startup)
@@ -70,8 +68,9 @@ while not stop.is_set():
                 r=dbs.update(sensor["_id"],{"status":"streaming"},seq_no=sensor["_seq_no"],primary_term=sensor["_primary_term"])
 
                 if sensor["_source"]["url"].split(":")[0] == "rtmp":
-                    if scenario=="traffic": version = 3
-                    if scenario=="stadium": version = 4
+                    if scenario=="traffic" and version==1: version = 3
+                    if scenario=="traffic" and version==5: version = 6
+                    if scenario=="stadium" and version==2: version = 4
 
                 # stream from the sensor
                 print("Connected to "+sensor["_id"]+"...",flush=True)
