@@ -13,7 +13,7 @@ PLATFORM_VOLUME_EXTRA()dnl
             PLATFORM_ENV(EVERY_NTH_FRAME): 6
             PLATFORM_ENV(``SCENARIO''): "defn(`SCENARIO_NAME')"
             PLATFORM_ENV(STHOST): "http://defn(`OFFICE_NAME')_storage:8080/api/upload"
-            PLATFORM_ENV(PIPELINE_VERSION): 2
+            PLATFORM_ENV(PIPELINE_VERSION): 5
             PLATFORM_ENV(``NETWORK_PREFERENCE''): "{\"defn(`PLATFORM_DEVICE')\":\"defn(`NETWORK_PREFERENCE')\"}"
             PLATFORM_ENV(NO_PROXY): "*"
             PLATFORM_ENV(no_proxy): "*"
