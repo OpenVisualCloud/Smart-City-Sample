@@ -60,7 +60,7 @@ spec:
             - name: NETWORK_PREFERENCE
               value: "{\"{{ include "smtc.platform.device" $ }}\":\"{{ $.Values.networkPreference }}\"}"
             - name: PIPELINE_VERSION
-              value: "1"
+              value: "5"
             - name: NO_PROXY
               value: "*"
             - name: no_proxy
