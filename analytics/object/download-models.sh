@@ -26,7 +26,6 @@ download()
 	echo "python3 ${TOOLS_PATH}/downloader.py --name ${MODEL_NAME} --precisions ${MODEL_PRICISION} -o /mnt" >> $EX_FILE
 	echo "python3 ${TOOLS_PATH}/converter.py --name ${MODEL_NAME} --precisions ${MODEL_PRICISION} --download_dir /mnt -o /mnt" >> $EX_FILE
 
-	docker pull ${DATA_IMAGE}
 	docker run --rm -u $(id -u):$(id -g) -v "${MODEL_PATH}:/mnt:rw" -it ${DATA_IMAGE} bash /mnt/_download.sh
 
 	mv "${MODEL_PATH}/public/${MODEL_NAME}/${MODEL_PRICISION}" "${MODEL_PATH}"
