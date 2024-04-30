@@ -23,7 +23,7 @@ The sample implements the Smart-City [`traffic`](https://github.com/OpenVisualCl
 
 ### Software Stacks
 
-The sample is powered by the following OpenVisualCloud software stacks:      
+The sample is powered by the following OpenVisualCloud software stacks:
 - **Edge Low-latency Analytics**:   
   - [The GStreamer-based media analytics stack](https://github.com/OpenVisualCloud/Dockerfiles/tree/master/Xeon/ubuntu-20.04/analytics/gst) is used for object detection, people-counting, queue-counting and crowd-counting on camera streams. The software stack is optimized for [Intel® Xeon® Scalable Processors](https://github.com/OpenVisualCloud/Dockerfiles/tree/master/Xeon/ubuntu-20.04/analytics/gst).  
  
